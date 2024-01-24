@@ -44,9 +44,9 @@ import {getRatingHandler} from '../features/getallrating/createSlice';
 import {handleScaneer} from '../features/scan/scanSlice';
 import {wfhHandler} from '../features/wfh/createSlice';
 import {timelineHandler} from '../features/timeline/createSlice';
-import { profileHandler } from '../features/profile/createSlice';
-import { mevementHandler } from '../features/movement/createSlice';
-import { leaveBalanceHandler } from '../features/balanceleave/createSlice';
+import {profileHandler} from '../features/profile/createSlice';
+import {mevementHandler} from '../features/movement/createSlice';
+import {leaveBalanceHandler} from '../features/balanceleave/createSlice';
 const HomeScreen = props => {
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
@@ -111,8 +111,12 @@ const HomeScreen = props => {
         }
         const timeLineData = await dispatch(
           timelineHandler({employee_id: parsedData?.EMPLOYEE_ID}),
-        );  const profileData = await dispatch(
-          profileHandler({employee_id: parsedData?.EMPLOYEE_ID,branch_id:parsedData?.BRANCH_ID}),
+        );
+        const profileData = await dispatch(
+          profileHandler({
+            employee_id: parsedData?.EMPLOYEE_ID,
+            branch_id: parsedData?.BRANCH_ID,
+          }),
         );
         const movementData = await dispatch(
           mevementHandler({employee_id: parsedData?.EMPLOYEE_ID}),
@@ -216,50 +220,6 @@ const HomeScreen = props => {
       console.log('Clear');
     }
   };
-  // const [employeeId, setEmployeeId] = useState();
-  // const [employeePassword, setEmployeePassword] = useState();
-  // const onChangeEmpId = val => {
-  //   setEmployeeId(val);
-  // };
-  // const onChangeEmpPassword = val => {
-  //   setEmployeePassword(val);
-  // };
-
-  // const [isEnabled, setIsEnabled] = useState(true);
-  // const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-
-  // const onPressLogin = () => {
-  //   handleNavigate('Login');
-  // };
-
-  const homeHandler = () => {
-    setHomeState(true);
-    setIndexState(false);
-    setTagState(false);
-    setProfileState(false);
-  };
-  const indexHandler = () => {
-    props.navigation.navigate('Index');
-    setHomeState(false);
-    setIndexState(true);
-    setTagState(false);
-    setProfileState(false);
-  };
-  const tagHandler = () => {
-    // console.log("homelocal==",localData)
-    props.navigation.navigate('Scanner', localData);
-    setHomeState(false);
-    setIndexState(false);
-    setTagState(true);
-    setProfileState(false);
-  };
-  // const profileHandler = () => {
-  //   () => navigation.navigate('Profile');
-  //   setHomeState(false);
-  //   setIndexState(false);
-  //   setTagState(false);
-  //   setProfileState(true);
-  // };
 
   return (
     <SafeAreaView
@@ -281,7 +241,6 @@ const HomeScreen = props => {
         <HeaderTop
           onPressIcon={() => navigation.openDrawer()}
           iconName={'arrowleft'}
-          // text={'Change Password'}
         />
       </View>
       <Toast isShow={isShow} positionIndicator="top" style={styles.tost}>
@@ -393,6 +352,7 @@ const HomeScreen = props => {
           />
         )}
       </BottomSheet>
+
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -400,9 +360,10 @@ const HomeScreen = props => {
         <View style={styles.botContainer}>
           <View
             style={{
-              flex: 0.3,
+              flex: 0.33,
               justifyContent: 'center',
               alignItems: 'center',
+              // backgroundColor: 'green',
             }}>
             <Ficon
               type="light"
@@ -433,7 +394,7 @@ const HomeScreen = props => {
             style={{
               justifyContent: 'center',
               alignItems: 'center',
-              flex: 0.3,
+              flex: 0.33,
             }}>
             <Ficon
               type="light"
@@ -446,6 +407,8 @@ const HomeScreen = props => {
             <Text style={styles.serviceSection}>08:59:05</Text>
             <Text style={[styles.bootContText2]}>Attendance</Text>
           </View>
+
+          {/* <View style={{backgroundColor: 'grey', flex: 0.1}}></View> */}
         </View>
 
         <Card />
@@ -478,7 +441,7 @@ const HomeScreen = props => {
         {wfh?.count == '2' ? <></> : null}
       </ScrollView>
 
-      <View
+      {/* <View
         style={{
           backgroundColor: '#fff',
           position: 'relative',
@@ -492,7 +455,6 @@ const HomeScreen = props => {
             alignContent: 'center',
             alignItems: 'center',
           }}>
-          {/* <View style={{flex:0.1}}></View> */}
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={homeHandler}
@@ -549,7 +511,7 @@ const HomeScreen = props => {
             />
           </TouchableOpacity>
         </View>
-      </View>
+      </View> */}
     </SafeAreaView>
   );
 };
@@ -628,11 +590,11 @@ const styles = EStyleSheet.create({
     justifyContent: 'space-between',
   },
   botContainer: {
-    flex: 1,
-    height: hp(7),
-    marginTop: hp(3),
+    height: hp(10),
+    marginTop: hp(1.5),
     flexDirection: 'row',
     justifyContent: 'center',
+    marginHorizontal: wp('7'),
   },
   zetext: {
     color: '#fff',
@@ -733,7 +695,7 @@ const styles = EStyleSheet.create({
     borderRadius: 5,
   },
   monial: {
-    flex: 0.3,
+    flex: 0.33,
     justifyContent: 'center',
     alignItems: 'center',
     // paddingHorizontal: hp(2),

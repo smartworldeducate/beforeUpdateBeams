@@ -1,11 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import Icon from 'react-native-fontawesome-pro';
 import {useSelector} from 'react-redux';
 import {
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
   View,
   Image,
   Text,
@@ -31,7 +28,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HeaderTop = ({onPressIcon}) => {
   const [localData, setLocalData] = useState(null);
-  // const {EMP_PHOTO,EMP_DEPT,EMP_NAME}=item
   const data = [
     {id: 1, image: 'igt'},
     {id: 2, image: 'salman'},
@@ -56,7 +52,7 @@ const HeaderTop = ({onPressIcon}) => {
       console.error('Error retrieving data:', error);
     }
   }
-  // console.log(' header lacal data', localData?.EMP_PHOTO);
+
   useEffect(() => {
     getData('loginData');
   }, []);
@@ -68,20 +64,20 @@ const HeaderTop = ({onPressIcon}) => {
     }
   };
 
-  const [employeeId, setEmployeeId] = useState();
-  const [employeePassword, setEmployeePassword] = useState();
+  const [employeeId, setEmployeeId] = useState('');
+
   const keyboardVerticalOffset = Platform.OS === 'ios' ? 60 : 20;
+
   const onChangeEmpId = val => {
-    navigation.navigate('Search');
     setEmployeeId('');
+    navigation.navigate('Search');
   };
-  const onChangeEmpPassword = val => {
-    setEmployeePassword(val);
-  };
-  const [isEnabled, setIsEnabled] = useState(true);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-  const onPressLogin = () => {
-    handleNavigate('HomeScreen');
+
+  const textInputRef = useRef(null);
+  const onPressSearchIcon = () => {
+    if (textInputRef.current) {
+      textInputRef.current.focus();
+    }
   };
 
   return (
@@ -93,52 +89,78 @@ const HeaderTop = ({onPressIcon}) => {
         style={styles.mainHeader}>
         <View style={styles.headerChild}>
           <TouchableOpacity
-            activeOpacity={0.8}
-            style={styles.firstRow}
-            onPress={() => navigation.navigate('Profile')}>
-            <View style={styles.firstRowView}>
-              <Image
-                style={[styles.userImage, {borderRadius: hp(50)}]}
-                source={{uri: 'group'}}
-                resizeMode="cover"
-              />
-            </View>
-            <View style={styles.welcomTitle}>
-              <View>
-                <Text style={styles.welCome}>Welcome</Text>
-              </View>
-              <View>
-                <Text style={styles.userName}>{localData?.EMP_NAME}</Text>
-              </View>
-            </View>
+            onPress={() => navigation.navigate('Profile')}
+            activeOpacity={0.6}
+            style={{
+              flex: 0.15,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Image
+              style={{width: wp(12), height: hp(6), borderRadius: hp(5)}}
+              source={{uri: 'salman'}}
+              resizeMode="center"
+            />
           </TouchableOpacity>
-
-          <View style={styles.firstRowRightSection}>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={styles.bell}
-              onPress={() => handleNavigate('Notification')}>
-              <Icon type="light" name="bell" size={hp(3)} color="#fff" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={onPressIcon} style={styles.menu}>
-              <Image
-                style={styles.menustyle}
-                source={{uri: 'menuicon'}}
-                resizeMode="cover"
-              />
-              {/* <Menu name="menu" size={40} color="#fff" /> */}
-            </TouchableOpacity>
+          <View
+            style={{
+              flex: 0.55,
+              justifyContent: 'center',
+            }}>
+            <Text style={styles.welCome}>Welcome</Text>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode={'tail'}
+              style={styles.userName}>
+              {localData?.EMP_NAME}
+            </Text>
           </View>
+          <TouchableOpacity
+            onPress={() => handleNavigate('Notification')}
+            style={{
+              flex: 0.15,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Icon type="light" name="bell" size={hp(3)} color="#fff" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={onPressIcon}
+            style={{
+              flex: 0.15,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Image
+              style={styles.menustyle}
+              source={{uri: 'menuicon'}}
+              resizeMode="cover"
+            />
+          </TouchableOpacity>
         </View>
 
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={styles.homeSearch}
-          onPress={() => navigation.navigate('Search')}>
-          <View style={styles.homesearchView}>
+        <View
+          style={{
+            backgroundColor: '#fff',
+            marginHorizontal: wp('5'),
+            marginTop: hp('2.2'),
+            borderRadius: hp(1.5),
+            shadowColor: '#000',
+            shadowOpacity: 0.5,
+            shadowRadius: 4,
+            elevation: 4,
+            flexDirection: 'row',
+          }}>
+          <View
+            style={{
+              flex: 0.85,
+              borderTopLeftRadius: hp(1.5),
+              borderBottomLeftRadius: hp(1.5),
+            }}>
             <TextInput
+              ref={textInputRef}
               value={employeeId}
-              onChangeText={text => onChangeEmpId(text)}
+              onChangeText={onChangeEmpId}
               returnKeyType={'done'}
               iconName={'user'}
               placeholder={'Search Employee'}
@@ -146,12 +168,19 @@ const HeaderTop = ({onPressIcon}) => {
               iconColor={colors.loginIconColor}
               placeholderTextColor="gray"
               placeholderStyle={styles.plaseholderStyle}
-              style={styles.textInputCustomStyle}></TextInput>
+              style={styles.textInputCustomStyle}
+            />
           </View>
           <TouchableOpacity
             activeOpacity={0.8}
-            style={styles.searchicon}
-            onPress={() => {}}>
+            onPress={onPressSearchIcon}
+            style={{
+              flex: 0.15,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderTopRightRadius: hp(1.5),
+              borderBottomRightRadius: hp(1.5),
+            }}>
             <Icon
               type="light"
               name="magnifying-glass"
@@ -159,7 +188,7 @@ const HeaderTop = ({onPressIcon}) => {
               color="#292D32"
             />
           </TouchableOpacity>
-        </TouchableOpacity>
+        </View>
 
         <View style={styles.headerImageSection}>
           {data.slice(0, 7).map((item, i) => {
@@ -206,14 +235,14 @@ export default HeaderTop;
 
 const styles = EStyleSheet.create({
   mainHeader: {
-    height: hp(26.5),
-    borderBottomRightRadius: hp(2.5),
-    borderBottomLeftRadius: hp(2.5),
+    height: hp(27),
+    borderBottomRightRadius: hp(5),
+    borderBottomLeftRadius: hp(5),
   },
   headerChild: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     marginHorizontal: hp(2),
+    marginTop: hp('1.5'),
   },
   textstyle: {
     color: '#fff',
@@ -261,6 +290,7 @@ const styles = EStyleSheet.create({
     fontWeight: '500',
     fontFamily: fontFamily.ceraMedium,
     fontStyle: 'normal',
+    lineHeight: hp('2.15'),
   },
 
   welCome: {
@@ -271,10 +301,11 @@ const styles = EStyleSheet.create({
     fontFamily: fontFamily.ceraLight,
     fontStyle: 'normal',
     paddingBottom: hp(0.2),
+    // backgroundColor: 'grey',
   },
   textInputCustomStyle: {
-    width: wp(80),
-    // fontSize: hp('1.65'),
+    // width: wp(80),
+    fontSize: hp('1.65'),
     height: hp('6'),
     letterSpacing: -0.05,
     paddingLeft: wp('3'),
@@ -284,8 +315,8 @@ const styles = EStyleSheet.create({
     fontFamily: fontFamily.ceraLight,
   },
   firstRow: {
-    width: wp(50),
-    height: hp(7.9),
+    // width: wp(50),
+    // height: hp(7.9),
     flexDirection: 'row',
     paddingTop: hp(1),
   },
@@ -300,6 +331,7 @@ const styles = EStyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 4,
     elevation: 4,
+    backgroundColor: 'red',
   },
   welcomTitle: {marginTop: hp(1), marginLeft: hp(-2)},
   imageList: {
@@ -315,6 +347,7 @@ const styles = EStyleSheet.create({
     backgroundColor: '#58D68D ',
     borderRadius: hp(2),
     marginHorizontal: hp(1),
+    backgroundColor: 'green',
   },
   firstRowView: {
     width: wp(12),
@@ -336,7 +369,8 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: hp(2.5),
+    // marginVertical: hp(2.5),
+    marginTop: hp('3'),
   },
   imgStyle: {width: wp(10), height: hp(5), borderRadius: hp(50)},
   menustyle: {

@@ -144,7 +144,7 @@ const Fgraph = ({item}) => {
               <Text style={styles.numbertext}>{item?.UTILITIES}</Text>
             </View>
             <View>
-              <Text style={styles.basictext}>Utilities      </Text>
+              <Text style={styles.basictext}>Utilities </Text>
             </View>
           </View>
         </View>

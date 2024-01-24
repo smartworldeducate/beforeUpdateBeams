@@ -180,8 +180,6 @@ const Approcial = props => {
     );
   };
 
-  
-
   return (
     <>
       <View style={{flex: 1}}>
@@ -239,8 +237,7 @@ const Approcial = props => {
 
         {appraisal && (
           <>
-           
-             <ApComp/>
+            <ApComp />
           </>
         )}
         {objective && (

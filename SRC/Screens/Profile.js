@@ -11,7 +11,7 @@ import {
   CollapseHeader,
   CollapseBody,
 } from 'accordion-collapse-react-native';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Check from 'react-native-vector-icons/AntDesign';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import Icon from 'react-native-fontawesome-pro';
@@ -24,7 +24,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import ExpandableList from '../Components/expandlist/ExpandableList';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 const Profile = props => {
   const [localData, setLocalData] = useState('');
   const [expanded, setExpended] = useState(false);
@@ -44,12 +44,47 @@ const Profile = props => {
   useEffect(() => {
     getData('loginData');
   }, []);
-  console.log("localdata",localData)
+  console.log('localdata', localData);
   const onPress = ({item}) => {};
-  const profileData = useSelector((state) => state.profileState)
+  const profileData = useSelector(state => state.profileState);
   const seprateData = Object.assign({}, ...profileData?.user);
-  const {EMPLOYEE_ID,EMP_PHOTO}=localData
-  const {EMPLOYEE_NAME,COMPANY_ID,DESIGNATION,DEPARTMENT,CATEGORY,DEPT_HEAD_ID,BIRTH_DATE,CADRE,HIRING_DATE,AC_TITLE,RELIGION_NAME,EMP_STATUS,REGULAR_DATE,HIRING,CONFIRMATION_DATE,SERVICE_LENGTH,BASIC_SAL,GROSS_SAL,ALLOWANCES,TAKE_HOME,ADRESS,PHONE_NO,NIC_NUMBER,MOB_PHONE,PASSPORT_NUM,QUALIFICATION,EOBI_NUMBER,DEPARTMENT_ID,E_MAIL,BRANCH_ID,COMPANY,BRANCH,NATIONALITY,MARITAL_STATUS}=seprateData
+  const {EMPLOYEE_ID, EMP_PHOTO} = localData;
+  const {
+    EMPLOYEE_NAME,
+    COMPANY_ID,
+    DESIGNATION,
+    DEPARTMENT,
+    CATEGORY,
+    DEPT_HEAD_ID,
+    BIRTH_DATE,
+    CADRE,
+    HIRING_DATE,
+    AC_TITLE,
+    RELIGION_NAME,
+    EMP_STATUS,
+    REGULAR_DATE,
+    HIRING,
+    CONFIRMATION_DATE,
+    SERVICE_LENGTH,
+    BASIC_SAL,
+    GROSS_SAL,
+    ALLOWANCES,
+    TAKE_HOME,
+    ADRESS,
+    PHONE_NO,
+    NIC_NUMBER,
+    MOB_PHONE,
+    PASSPORT_NUM,
+    QUALIFICATION,
+    EOBI_NUMBER,
+    DEPARTMENT_ID,
+    E_MAIL,
+    BRANCH_ID,
+    COMPANY,
+    BRANCH,
+    NATIONALITY,
+    MARITAL_STATUS,
+  } = seprateData;
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#1C37A4'}}>
       <ScrollView style={{flex: 1}}>
@@ -123,62 +158,51 @@ const Profile = props => {
           <View>
             <View
               style={{
-                width: wp(50),
-                height: hp(7.9),
                 flexDirection: 'row',
-                marginTop: hp(3),
+                marginHorizontal: wp('12'),
+                marginTop: hp('4'),
               }}>
               <View
                 style={{
-                  width: wp(12),
-                  height: hp(6),
-                  backgroundColor: '#58D68D ',
-                  borderRadius: hp(2),
-                  marginVertical: hp(1),
-                  marginRight: hp(3),
+                  flex: 0.78,
+                  justifyContent: 'center',
                 }}>
-                {/* <Image style={{ width: wp(12), height: hp(6), borderRadius: hp(1) }} source={{ uri: 'artg' }} resizeMode='cover' /> */}
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode={'tail'}
+                  style={styles.zetext}>
+                  {EMPLOYEE_NAME}
+                </Text>
               </View>
-              <View style={{marginTop: hp(0.5)}}>
-                <View style={{flexDirection: 'row'}}>
-                  <View>
-                    <Text style={styles.zetext}>{EMPLOYEE_NAME}</Text>
-                  </View>
-                  <View
-                    style={{
-                      height: hp(2),
-                      marginTop: hp(0.8),
-                      marginLeft: 10,
-                      borderRadius: 5,
-                      backgroundColor: '#D4FFCC',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Text style={styles.textnum}>{localData?.EMPLOYEE_ID}</Text>
-                  </View>
-                </View>
-                <View style={{flexDirection: 'row', marginTop: hp(0)}}>
-                  <View style={{marginRight: hp(1)}}>
-                    <View style={{flexDirection: 'row', marginTop: hp(0)}}>
-                      <View style={{marginRight: hp(1)}}>
-                        <Text style={styles.zetext1}>
-                          {DESIGNATION}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                </View>
+              <View
+                style={{
+                  flex: 0.22,
+                  justifyContent: 'center',
+                  borderRadius: wp('5'),
+                  backgroundColor: '#D4FFCC',
+                  alignItems: 'center',
+                }}>
+                <Text style={styles.textnum}>{localData?.EMPLOYEE_ID}</Text>
               </View>
             </View>
+
+            <View
+              style={{marginHorizontal: wp('12'), marginVertical: hp('0.3')}}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode={'tail'}
+                style={styles.zetext1}>
+                {DESIGNATION}
+              </Text>
+            </View>
+
             <View
               style={{
                 width: wp(90),
                 height: 1,
                 backgroundColor: '#DBDBDB',
-                marginTop: hp(1),
-              }}>
-              {/* <Text>vxvdfbccfb</Text> */}
-            </View>
+                marginTop: hp(2.25),
+              }}></View>
 
             {/* card bottom content */}
 
@@ -187,7 +211,7 @@ const Profile = props => {
                 width: wp(90),
                 height: hp(7),
                 flexDirection: 'row',
-                marginTop: hp(2),
+                marginTop: hp(1.5),
                 justifyContent: 'center',
               }}>
               <View style={{flexDirection: 'row'}}>
@@ -243,608 +267,709 @@ const Profile = props => {
           </View>
         </View>
 
-    {/* //personal Information// */}
-            <View style={{marginTop: hp(1.5)}}>
-            <View
-              style={{
-                justifyContent: 'center',
-                backgroundColor: '#EAFAF1',
-                borderRadius: hp(1.5),
-                marginHorizontal: hp(2.5),
-                elevation: 4,
-              }}>
-              <Collapse isExpanded={expanded} onToggle={() => onPress(1)}>
-                <CollapseHeader
-                  style={{
-                    height: hp(7),
-                    marginHorizontal: hp(1),
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                 <View
+        {/* //personal Information// */}
+        <View style={{marginTop: hp(2.5)}}>
+          <View
+            style={{
+              justifyContent: 'center',
+              backgroundColor: '#EAFAF1',
+              borderRadius: hp(1.5),
+              marginHorizontal: hp(2.5),
+              elevation: 4,
+            }}>
+            <Collapse isExpanded={expanded} onToggle={() => onPress(1)}>
+              <CollapseHeader
                 style={{
+                  height: hp(7),
+                  marginHorizontal: hp(1),
                   flexDirection: 'row',
-                  justifyContent: 'space-between',
+                  alignItems: 'center',
                 }}>
-                <View style={{flexDirection:'row',paddingVertical:hp(1.5),flex:0.50,}}>
-                  <View style={{justifyContent:'center',alignItems:'center',paddingLeft: hp(1)}}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      paddingVertical: hp(1.5),
+                      flex: 0.5,
+                      // backgroundColor: 'red',
+                    }}>
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        paddingLeft: hp(1),
+                      }}>
+                      <Icon
+                        type="light"
+                        name="user"
+                        color="#979797"
+                        style={styles.iconSty}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        paddingHorizontal: hp(1.5),
+                      }}>
+                      <Text style={styles.smalltext}>Personal Information</Text>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'flex-end',
+                      paddingRight: hp(1),
+                      flex: 0.5,
+                    }}>
                     <Icon
                       type="light"
-                      name='user'
-                      color="#979797"
-                      style={styles.iconSty}
+                      name="chevron-right"
+                      size={hp(2)}
+                      color="gray"
+                      Size={hp(2)}
                     />
                   </View>
-                  <View style={{justifyContent: 'center', alignItems: 'center',paddingHorizontal:hp(1.5)}}>
-                    <Text style={styles.smalltext}>Personal Information</Text>
-                  </View>
                 </View>
-                <View style={{justifyContent: 'center', alignItems: 'flex-end',paddingRight:hp(1),flex:0.50,}}>
-                  <Icon
-                    type="light"
-                    name="chevron-right"
-                    size={hp(2)}
-                    color="gray"
-                    Size={hp(2)}
-                  />
-                </View>
-              </View>
-                </CollapseHeader>
-                <CollapseBody style={{marginHorizontal: hp(2.5)}}>
-                  <View
-                    style={{
-                      height: hp(5),
-                      marginHorizontal: hp(1),
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.testname}>Father Name</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.textnum}>{EMPLOYEE_NAME}</Text>
-                    </View>
-                  </View>
-    
-                  <View
-                    style={{
-                      height: hp(5),
-                      marginHorizontal: hp(1),
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.testname}>Religion</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.textnum}>{RELIGION_NAME}</Text>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      height: hp(5),
-                      marginHorizontal: hp(1),
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.testname}>Date Of Birth</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.textnum}>{BIRTH_DATE}</Text>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      height: hp(5),
-                      marginHorizontal: hp(1),
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.testname}>CNIC</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.textnum}>{NIC_NUMBER}</Text>
-                    </View>
-                  </View>
-               
-                </CollapseBody>
-              </Collapse>
-            </View>
-          </View>
-
-          {/* //Service Information */}
-          <View style={{marginTop: hp(1.5)}}>
-            <View
-              style={{
-                justifyContent: 'center',
-                backgroundColor: '#EAFAF1',
-                borderRadius: hp(1.5),
-                marginHorizontal: hp(2.5),
-                elevation: 4,
-              }}>
-              <Collapse isExpanded={expanded} onToggle={() => onPress(2)}>
-                <CollapseHeader
+              </CollapseHeader>
+              <CollapseBody style={{marginHorizontal: hp(2.5)}}>
+                <View
                   style={{
-                    height: hp(7),
+                    height: hp(5),
                     marginHorizontal: hp(1),
                     flexDirection: 'row',
-                    alignItems: 'center',
+                    justifyContent: 'space-between',
                   }}>
-                 <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <View style={{flexDirection:'row',paddingVertical:hp(1.5),flex:0.50,}}>
-                  <View style={{justifyContent:'center',alignItems:'center',paddingLeft: hp(1)}}>
-                    <Icon
-                      type="light"
-                      name='user-gear'
-                      color="#979797"
-                      style={styles.iconSty}
-                    />
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.testname}>Father Name</Text>
                   </View>
-                  <View style={{justifyContent: 'center', alignItems: 'center',paddingHorizontal:hp(1.5)}}>
-                    <Text style={styles.smalltext}>Service Information</Text>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.textnum}>{EMPLOYEE_NAME}</Text>
                   </View>
                 </View>
-                <View style={{justifyContent: 'center', alignItems: 'flex-end',paddingRight:hp(1),flex:0.50,}}>
-                  <Icon
-                    type="light"
-                    name="chevron-right"
-                    size={hp(2)}
-                    color="gray"
-                    Size={hp(2)}
-                  />
-                </View>
-              </View>
-                </CollapseHeader>
-                <CollapseBody style={{marginHorizontal: hp(2.5)}}>
-                  <View
-                    style={{
-                      height: hp(5),
-                      // marginHorizontal: hp(1),
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.testname}>cardre</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.textnum}>{CADRE}</Text>
-                    </View>
-                  </View>
-                 
-    
-                  <View
-                    style={{
-                      height: hp(5),
-                      // marginHorizontal: hp(1),
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.testname}>Department</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.textnum}>{DEPARTMENT.replace(/\s+$/, '')}</Text>
-                    </View>
-                  </View>
-                  
-                  <View
-                    style={{
-                      height: hp(5),
-                      // marginHorizontal: hp(1),
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.testname}>Branch</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.textnum}>{BRANCH}</Text>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      height: hp(5),
-                      // marginHorizontal: hp(1),
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.testname}>Employee Status</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.textnum}>{EMP_STATUS}</Text>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      height: hp(5),
-                      // marginHorizontal: hp(1),
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.testname}>Hire Date</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.textnum}>{HIRING_DATE}</Text>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      height: hp(5),
-                      // marginHorizontal: hp(1),
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.testname}>Regular Date</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.textnum}>{REGULAR_DATE}</Text>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      height: hp(5),
-                      // marginHorizontal: hp(1),
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.testname}>Confirm Date</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.textnum}>{CONFIRMATION_DATE}</Text>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      height: hp(5),
-                      // marginHorizontal: hp(1),
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.testname}>Service Length</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.textnum}>{SERVICE_LENGTH}</Text>
-                    </View>
-                  </View>
-               
-                </CollapseBody>
-              </Collapse>
-            </View>
-          </View>
 
-          {/* //financial Information */}
-          <View style={{marginTop: hp(1.5)}}>
-            <View
-              style={{
-                justifyContent: 'center',
-                backgroundColor: '#EAFAF1',
-                borderRadius: hp(1.5),
-                marginHorizontal: hp(2.5),
-                elevation: 4,
-              }}>
-              <Collapse isExpanded={expanded} onToggle={() => onPress(3)}>
-                <CollapseHeader
+                <View
                   style={{
-                    height: hp(7),
+                    height: hp(5),
                     marginHorizontal: hp(1),
                     flexDirection: 'row',
-                    alignItems: 'center',
+                    justifyContent: 'space-between',
                   }}>
-                 <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <View style={{flexDirection:'row',paddingVertical:hp(1.5),flex:0.50,}}>
-                  <View style={{justifyContent:'center',alignItems:'center',paddingLeft: hp(1)}}>
-                    <Icon
-                      type="light"
-                      name='money-bill-1-wave'
-                      color="#979797"
-                      style={styles.iconSty}
-                    />
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.testname}>Religion</Text>
                   </View>
-                  <View style={{justifyContent: 'center', alignItems: 'center',paddingHorizontal:hp(1.5)}}>
-                    <Text style={styles.smalltext}>Financial Information</Text>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.textnum}>{RELIGION_NAME}</Text>
                   </View>
                 </View>
-                <View style={{justifyContent: 'center', alignItems: 'flex-end',paddingRight:hp(1),flex:0.50,}}>
-                  <Icon
-                    type="light"
-                    name="chevron-right"
-                    size={hp(2)}
-                    color="gray"
-                    Size={hp(2)}
-                  />
-                </View>
-              </View>
-                </CollapseHeader>
-                <CollapseBody style={{marginHorizontal: hp(2.5)}}>
-                  <View
-                    style={{
-                      height: hp(5),
-                      // marginHorizontal: hp(1),
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.testname}>Basic Salary</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.textnum}>{BASIC_SAL}</Text>
-                    </View>
-                  </View>
-                 
-    
-                  <View
-                    style={{
-                      height: hp(5),
-                      // marginHorizontal: hp(1),
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.testname}>Gross Salary</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.textnum}>{GROSS_SAL}</Text>
-                    </View>
-                  </View>
-                  
-                  <View
-                    style={{
-                      height: hp(5),
-                      // marginHorizontal: hp(1),
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.testname}>ALLOWANCES</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.textnum}>{ALLOWANCES}</Text>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      height: hp(5),
-                      // marginHorizontal: hp(1),
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.testname}>Take Home</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.textnum}>{TAKE_HOME}</Text>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      height: hp(5),
-                      // marginHorizontal: hp(1),
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.testname}>Cost To School</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.textnum}>fdvgd</Text>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      height: hp(5),
-                      // marginHorizontal: hp(1),
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.testname}>Account Title</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.textnum}>{AC_TITLE}</Text>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      height: hp(5),
-                      // marginHorizontal: hp(1),
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.testname}>EOBI</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.textnum}>{EOBI_NUMBER}</Text>
-                    </View>
-                  </View>
-                 
-               
-                </CollapseBody>
-              </Collapse>
-            </View>
-          </View>
-
-          {/* //contact Information */}
-          <View style={{marginTop: hp(1.5)}}>
-            <View
-              style={{
-                justifyContent: 'center',
-                backgroundColor: '#EAFAF1',
-                borderRadius: hp(1.5),
-                marginHorizontal: hp(2.5),
-                elevation: 4,
-              }}>
-              <Collapse isExpanded={expanded} onToggle={() => onPress(3)}>
-                <CollapseHeader
+                <View
                   style={{
-                    height: hp(7),
+                    height: hp(5),
                     marginHorizontal: hp(1),
                     flexDirection: 'row',
-                    alignItems: 'center',
+                    justifyContent: 'space-between',
                   }}>
-                 <View
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.testname}>Date Of Birth</Text>
+                  </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.textnum}>{BIRTH_DATE}</Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    height: hp(5),
+                    marginHorizontal: hp(1),
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.testname}>CNIC</Text>
+                  </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.textnum}>{NIC_NUMBER}</Text>
+                  </View>
+                </View>
+              </CollapseBody>
+            </Collapse>
+          </View>
+        </View>
+
+        {/* //Service Information */}
+        <View style={{marginTop: hp(1.5)}}>
+          <View
+            style={{
+              justifyContent: 'center',
+              backgroundColor: '#EAFAF1',
+              borderRadius: hp(1.5),
+              marginHorizontal: hp(2.5),
+              elevation: 4,
+            }}>
+            <Collapse isExpanded={expanded} onToggle={() => onPress(2)}>
+              <CollapseHeader
                 style={{
+                  height: hp(7),
+                  marginHorizontal: hp(1),
                   flexDirection: 'row',
-                  justifyContent: 'space-between',
+                  alignItems: 'center',
                 }}>
-                <View style={{flexDirection:'row',paddingVertical:hp(1.5),flex:0.50,}}>
-                  <View style={{justifyContent:'center',alignItems:'center',paddingLeft: hp(1)}}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      paddingVertical: hp(1.5),
+                      flex: 0.5,
+                    }}>
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        paddingLeft: hp(1),
+                      }}>
+                      <Icon
+                        type="light"
+                        name="user-gear"
+                        color="#979797"
+                        style={styles.iconSty}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        paddingHorizontal: hp(1.5),
+                      }}>
+                      <Text style={styles.smalltext}>Service Information</Text>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'flex-end',
+                      paddingRight: hp(1),
+                      flex: 0.5,
+                    }}>
                     <Icon
                       type="light"
-                      name='clipboard-check'
-                      color="#979797"
-                      style={styles.iconSty}
+                      name="chevron-right"
+                      size={hp(2)}
+                      color="gray"
+                      Size={hp(2)}
                     />
                   </View>
-                  <View style={{justifyContent: 'center', alignItems: 'center',paddingHorizontal:hp(1.5)}}>
-                    <Text style={styles.smalltext}>Contact Information</Text>
+                </View>
+              </CollapseHeader>
+              <CollapseBody style={{marginHorizontal: hp(2.5)}}>
+                <View
+                  style={{
+                    height: hp(5),
+                    // marginHorizontal: hp(1),
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.testname}>cardre</Text>
+                  </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.textnum}>{CADRE}</Text>
                   </View>
                 </View>
-                <View style={{justifyContent: 'center', alignItems: 'flex-end',paddingRight:hp(1),flex:0.50,}}>
-                  <Icon
-                    type="light"
-                    name="chevron-right"
-                    size={hp(2)}
-                    color="gray"
-                    Size={hp(2)}
-                  />
+
+                <View
+                  style={{
+                    height: hp(5),
+                    // marginHorizontal: hp(1),
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.testname}>Department</Text>
+                  </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.textnum}>
+                      {DEPARTMENT.replace(/\s+$/, '')}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-                </CollapseHeader>
-                <CollapseBody style={{marginHorizontal: hp(2.5)}}>
-                  <View
-                    style={{
-                      height: hp(5),
-                      // marginHorizontal: hp(1),
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.testname}>Mobile1</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.textnum}>{PHONE_NO}</Text>
-                    </View>
+
+                <View
+                  style={{
+                    height: hp(5),
+                    // marginHorizontal: hp(1),
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.testname}>Branch</Text>
                   </View>
-                 
-    
-                  <View
-                    style={{
-                      height: hp(5),
-                      // marginHorizontal: hp(1),
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.testname}>Mobile2</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.textnum}>{MOB_PHONE}</Text>
-                    </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.textnum}>{BRANCH}</Text>
                   </View>
-                  
-                  <View
-                    style={{
-                      height: hp(5),
-                      // marginHorizontal: hp(1),
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.testname}>Email</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.textnum}>{E_MAIL}</Text>
-                    </View>
+                </View>
+                <View
+                  style={{
+                    height: hp(5),
+                    // marginHorizontal: hp(1),
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.testname}>Employee Status</Text>
                   </View>
-                  <View
-                    style={{
-                      height: hp(5),
-                      // marginHorizontal: hp(1),
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.testname}>Address</Text>
-                    </View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={styles.textnum}>{ADRESS}</Text>
-                    </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.textnum}>{EMP_STATUS}</Text>
                   </View>
-                
-                </CollapseBody>
-              </Collapse>
-            </View>
+                </View>
+                <View
+                  style={{
+                    height: hp(5),
+                    // marginHorizontal: hp(1),
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.testname}>Hire Date</Text>
+                  </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.textnum}>{HIRING_DATE}</Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    height: hp(5),
+                    // marginHorizontal: hp(1),
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.testname}>Regular Date</Text>
+                  </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.textnum}>{REGULAR_DATE}</Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    height: hp(5),
+                    // marginHorizontal: hp(1),
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.testname}>Confirm Date</Text>
+                  </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.textnum}>{CONFIRMATION_DATE}</Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    height: hp(5),
+                    // marginHorizontal: hp(1),
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.testname}>Service Length</Text>
+                  </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.textnum}>{SERVICE_LENGTH}</Text>
+                  </View>
+                </View>
+              </CollapseBody>
+            </Collapse>
           </View>
+        </View>
 
+        {/* //financial Information */}
+        <View style={{marginTop: hp(1.5)}}>
+          <View
+            style={{
+              justifyContent: 'center',
+              backgroundColor: '#EAFAF1',
+              borderRadius: hp(1.5),
+              marginHorizontal: hp(2.5),
+              elevation: 4,
+            }}>
+            <Collapse isExpanded={expanded} onToggle={() => onPress(3)}>
+              <CollapseHeader
+                style={{
+                  height: hp(7),
+                  marginHorizontal: hp(1),
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      paddingVertical: hp(1.5),
+                      flex: 0.5,
+                    }}>
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        paddingLeft: hp(1),
+                      }}>
+                      <Icon
+                        type="light"
+                        name="money-bill-1-wave"
+                        color="#979797"
+                        style={styles.iconSty}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        paddingHorizontal: hp(1.5),
+                      }}>
+                      <Text style={styles.smalltext}>
+                        Financial Information
+                      </Text>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'flex-end',
+                      paddingRight: hp(1),
+                      flex: 0.5,
+                    }}>
+                    <Icon
+                      type="light"
+                      name="chevron-right"
+                      size={hp(2)}
+                      color="gray"
+                      Size={hp(2)}
+                    />
+                  </View>
+                </View>
+              </CollapseHeader>
+              <CollapseBody style={{marginHorizontal: hp(2.5)}}>
+                <View
+                  style={{
+                    height: hp(5),
+                    // marginHorizontal: hp(1),
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.testname}>Basic Salary</Text>
+                  </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.textnum}>{BASIC_SAL}</Text>
+                  </View>
+                </View>
 
-          {/* //movement Information */}
-          <View style={{marginTop: hp(1.5)}}>
-            <TouchableOpacity
-            onPress={()=>props.navigation.navigate('MovementLine')}
+                <View
+                  style={{
+                    height: hp(5),
+                    // marginHorizontal: hp(1),
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.testname}>Gross Salary</Text>
+                  </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.textnum}>{GROSS_SAL}</Text>
+                  </View>
+                </View>
+
+                <View
+                  style={{
+                    height: hp(5),
+                    // marginHorizontal: hp(1),
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.testname}>ALLOWANCES</Text>
+                  </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.textnum}>{ALLOWANCES}</Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    height: hp(5),
+                    // marginHorizontal: hp(1),
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.testname}>Take Home</Text>
+                  </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.textnum}>{TAKE_HOME}</Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    height: hp(5),
+                    // marginHorizontal: hp(1),
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.testname}>Cost To School</Text>
+                  </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.textnum}>fdvgd</Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    height: hp(5),
+                    // marginHorizontal: hp(1),
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.testname}>Account Title</Text>
+                  </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.textnum}>{AC_TITLE}</Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    height: hp(5),
+                    // marginHorizontal: hp(1),
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.testname}>EOBI</Text>
+                  </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.textnum}>{EOBI_NUMBER}</Text>
+                  </View>
+                </View>
+              </CollapseBody>
+            </Collapse>
+          </View>
+        </View>
+
+        {/* //contact Information */}
+        <View style={{marginTop: hp(1.5)}}>
+          <View
+            style={{
+              justifyContent: 'center',
+              backgroundColor: '#EAFAF1',
+              borderRadius: hp(1.5),
+              marginHorizontal: hp(2.5),
+              elevation: 4,
+            }}>
+            <Collapse isExpanded={expanded} onToggle={() => onPress(3)}>
+              <CollapseHeader
+                style={{
+                  height: hp(7),
+                  marginHorizontal: hp(1),
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      paddingVertical: hp(1.5),
+                      flex: 0.5,
+                    }}>
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        paddingLeft: hp(1),
+                      }}>
+                      <Icon
+                        type="light"
+                        name="clipboard-check"
+                        color="#979797"
+                        style={styles.iconSty}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        paddingHorizontal: hp(1.5),
+                      }}>
+                      <Text style={styles.smalltext}>Contact Information</Text>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'flex-end',
+                      paddingRight: hp(1),
+                      flex: 0.5,
+                    }}>
+                    <Icon
+                      type="light"
+                      name="chevron-right"
+                      size={hp(2)}
+                      color="gray"
+                      Size={hp(2)}
+                    />
+                  </View>
+                </View>
+              </CollapseHeader>
+              <CollapseBody style={{marginHorizontal: hp(2.5)}}>
+                <View
+                  style={{
+                    height: hp(5),
+                    // marginHorizontal: hp(1),
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.testname}>Mobile1</Text>
+                  </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.textnum}>{PHONE_NO}</Text>
+                  </View>
+                </View>
+
+                <View
+                  style={{
+                    height: hp(5),
+                    // marginHorizontal: hp(1),
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.testname}>Mobile2</Text>
+                  </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.textnum}>{MOB_PHONE}</Text>
+                  </View>
+                </View>
+
+                <View
+                  style={{
+                    height: hp(5),
+                    // marginHorizontal: hp(1),
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.testname}>Email</Text>
+                  </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.textnum}>{E_MAIL}</Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    height: hp(5),
+                    // marginHorizontal: hp(1),
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.testname}>Address</Text>
+                  </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.textnum}>{ADRESS}</Text>
+                  </View>
+                </View>
+              </CollapseBody>
+            </Collapse>
+          </View>
+        </View>
+
+        {/* //movement Information */}
+        <View style={{marginTop: hp(1.5)}}>
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate('MovementLine')}
             activeOpacity={8}
-              style={{
-                justifyContent: 'center',
-                backgroundColor: '#EAFAF1',
-                borderRadius: hp(1.5),
-                marginHorizontal: hp(2.5),
-                elevation: 4,
-              }}>
-              <Collapse isExpanded={expanded} onToggle={() => onPress(3)}>
-                <CollapseHeader
-                  style={{
-                    height: hp(7),
-                    marginHorizontal: hp(1),
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                 <View
+            style={{
+              justifyContent: 'center',
+              backgroundColor: '#EAFAF1',
+              borderRadius: hp(1.5),
+              marginHorizontal: hp(2.5),
+              elevation: 4,
+            }}>
+            <Collapse isExpanded={expanded} onToggle={() => onPress(3)}>
+              <CollapseHeader
                 style={{
+                  height: hp(7),
+                  marginHorizontal: hp(1),
                   flexDirection: 'row',
-                  justifyContent: 'space-between',
+                  alignItems: 'center',
                 }}>
-                <View style={{flexDirection:'row',paddingVertical:hp(1.5),flex:0.50,}}>
-                  <View style={{justifyContent:'center',alignItems:'center',paddingLeft: hp(1)}}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      paddingVertical: hp(1.5),
+                      flex: 0.5,
+                    }}>
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        paddingLeft: hp(1),
+                      }}>
+                      <Icon
+                        type="light"
+                        name="child"
+                        color="#979797"
+                        style={styles.iconSty}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        paddingHorizontal: hp(1.5),
+                      }}>
+                      <Text style={styles.smalltext}>Movement Log</Text>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'flex-end',
+                      paddingRight: hp(1),
+                      flex: 0.5,
+                    }}>
                     <Icon
                       type="light"
-                      name='child'
-                      color="#979797"
-                      style={styles.iconSty}
+                      name="chevron-right"
+                      size={hp(2)}
+                      color="gray"
+                      Size={hp(2)}
                     />
                   </View>
-                  <View style={{justifyContent: 'center', alignItems: 'center',paddingHorizontal:hp(1.5)}}>
-                    <Text style={styles.smalltext}>Movement Log</Text>
-                  </View>
                 </View>
-                <View style={{justifyContent: 'center', alignItems: 'flex-end',paddingRight:hp(1),flex:0.50,}}>
-                  <Icon
-                    type="light"
-                    name="chevron-right"
-                    size={hp(2)}
-                    color="gray"
-                    Size={hp(2)}
-                  />
-                </View>
-              </View>
-                </CollapseHeader>
-              </Collapse>
-            </TouchableOpacity>
-          </View>
+              </CollapseHeader>
+            </Collapse>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -870,14 +995,14 @@ const styles = EStyleSheet.create({
   zetext: {
     color: '#363636',
     fontWeight: '700',
-    fontSize: '0.7rem',
+    fontSize: '0.73rem',
     fontFamily: fontFamily.ceraBold,
     fontStyle: 'normal',
   },
   zetext1: {
     color: '#363636',
     fontWeight: '500',
-    fontSize: '0.6rem',
+    fontSize: '0.61rem',
     fontFamily: fontFamily.ceraMedium,
   },
   smalltext: {

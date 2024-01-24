@@ -1,10 +1,4 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-} from 'react-native';
+import {View, Text, TouchableOpacity, Image, ScrollView} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
 import MainHeader from '../Components/Headers/MainHeader';
@@ -19,26 +13,28 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {reporteeHandleFun} from '../features/reportee/createSlice';
 import {currentEmpDateDataHandler} from '../features/currntdataofemployee/createSlice';
 import {useSelector, useDispatch} from 'react-redux';
-import { getLineMangerHandller } from '../features/lineManager/createSlice';
+import {getLineMangerHandller} from '../features/lineManager/createSlice';
 const Reportee = props => {
   const dispatch = useDispatch();
   const [reporteeData, setReporteeData] = useState([]);
   const [selectValue, setSelectValue] = useState(0);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [date, setDate] = useState('');
-  const [empLength,setEmpLength]=useState('');
-  const [mangerData,setMangerData]=useState([])
+  const [empLength, setEmpLength] = useState('');
+  const [mangerData, setMangerData] = useState([]);
   const lineMangerData = useSelector(state => state.getLineManger);
   const userData = useSelector(state => state.reportee);
-    console.log('line manger data', mangerData);
-
+  console.log('line manger data', mangerData);
 
   const lineMangerHandler = async () => {
     try {
       const lineMdata = await dispatch(getLineMangerHandller());
       console.log('line manager data', lineMdata?.payload?.data);
       if (lineMdata && lineMdata.payload && lineMdata.payload.data) {
-        console.log('line manager data inside dispatch', lineMdata?.payload?.data);
+        console.log(
+          'line manager data inside dispatch',
+          lineMdata?.payload?.data,
+        );
         setMangerData(lineMdata?.payload?.data);
       }
       return lineMdata;
@@ -47,14 +43,14 @@ const Reportee = props => {
       throw error;
     }
   };
-  const reporteeHandler = async (val) => {
+  const reporteeHandler = async val => {
     try {
       // console.log('selected value', val);
       const reportee = await dispatch(reporteeHandleFun(val));
       if (reportee && reportee.payload && reportee.payload.data) {
         // console.log('reprtee dada inside dispatch', reportee.payload?.data);
         setReporteeData(reportee.payload?.data);
-        setEmpLength(reportee.payload?.data?.length)
+        setEmpLength(reportee.payload?.data?.length);
       }
       return reportee;
     } catch (error) {
@@ -66,14 +62,14 @@ const Reportee = props => {
   useEffect(() => {
     setReporteeData(userData);
     const rd = reporteeHandler({
-      reportingToId: selectValue ? selectValue:'18776'
+      reportingToId: selectValue ? selectValue : '18776',
     });
     setReporteeData(rd.payload?.data);
     const lmd = lineMangerHandler();
-    console.log("linemanger data",lmd.payload?.data)
+    console.log('linemanger data', lmd.payload?.data);
     // setMangerData(lmd);
   }, [selectValue]);
- 
+
   const showDatePicker = () => {
     setDatePickerVisibility(true);
     setDate('');
@@ -363,10 +359,16 @@ const Reportee = props => {
               return (
                 <View style={styles.dropdown3BtnChildStyle}>
                   {selectedItem ? (
-                    <Image source={selectedItem.image} style={styles.dropdown3BtnImage} />
-                  ) : (""
-                   )}
-                  <Text style={[styles.dropdown3BtnTxt,{color:'#363636'}]}>{selectedItem ? selectedItem.EMP_NAME : ' Qasim Ali Khan'}</Text>
+                    <Image
+                      source={selectedItem.image}
+                      style={styles.dropdown3BtnImage}
+                    />
+                  ) : (
+                    ''
+                  )}
+                  <Text style={[styles.dropdown3BtnTxt, {color: '#363636'}]}>
+                    {selectedItem ? selectedItem.EMP_NAME : ' Qasim Ali Khan'}
+                  </Text>
                 </View>
               );
             }}
@@ -374,11 +376,12 @@ const Reportee = props => {
               return (
                 <View style={styles.dropdown3RowChildStyle}>
                   <Image source={item.image} style={styles.dropdownRowImage} />
-                  <Text style={styles.dropdown1RowTxtStyle}>{item.EMP_NAME}</Text>
+                  <Text style={styles.dropdown1RowTxtStyle}>
+                    {item.EMP_NAME}
+                  </Text>
                 </View>
               );
             }}
-           
             buttonStyle={styles.dropdown1BtnStyle}
             buttonTextStyle={styles.dropdown1BtnTxtStyle}
             dropdownStyle={styles.dropdown1DropdownStyle}
@@ -424,66 +427,65 @@ const Reportee = props => {
           </View>
         </TouchableOpacity>
       </View>
-     <View
-          style={{
-            height: hp(5),
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginHorizontal: hp(2.5),
-            marginTop: hp(2),
-          }}>
-          <View style={{flexDirection: 'row'}}>
-            <View style={{alignItems: 'center', paddingVertical: hp(0.4)}}>
-              <Icon
-                type="light"
-                name="circle-sterling"
-                size={hp(3)}
-                color="#8A2F9B"
-              />
-            </View>
-            <View style={{marginLeft: hp(0.8)}}>
-              <View>
-                <Text style={styles.smalltext}>15</Text>
-              </View>
-              <View style={{marginTop: hp(-0.2)}}>
-                <Text style={styles.smalltext1}>Total</Text>
-              </View>
-            </View>
+      <View
+        style={{
+          height: hp(5),
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginHorizontal: hp(2.5),
+          marginTop: hp(2),
+        }}>
+        <View style={{flexDirection: 'row'}}>
+          <View style={{alignItems: 'center', paddingVertical: hp(0.4)}}>
+            <Icon
+              type="light"
+              name="circle-sterling"
+              size={hp(3)}
+              color="#8A2F9B"
+            />
           </View>
-          <View style={{flexDirection: 'row', marginLeft: hp(3.5)}}>
-            <View style={{alignItems: 'center', paddingVertical: hp(0.4)}}>
-              <Icon type="light" name="circle-check" size={hp(3)} color="green" />
+          <View style={{marginLeft: hp(0.8)}}>
+            <View>
+              <Text style={styles.smalltext}>15</Text>
             </View>
-            <View style={{marginLeft: hp(0.5)}}>
-              <View>
-                <Text style={styles.smalltext}>06</Text>
-              </View>
-              <View style={{marginTop: hp(-0.2)}}>
-                <Text style={styles.smalltext1}>present</Text>
-              </View>
-            </View>
-          </View>
-          <View style={{flexDirection: 'row', marginLeft: hp(3.5)}}>
-            <View style={{alignItems: 'center', paddingVertical: hp(0.4)}}>
-              <Icon
-                type="light"
-                name="circle-xmark"
-                size={hp(3)}
-                color="#CD6155"
-              />
-            </View>
-            <View style={{marginLeft: hp(0.5)}}>
-              <View>
-                <Text style={styles.smalltext}>09</Text>
-              </View>
-              <View style={{marginTop: hp(-0.2)}}>
-                <Text style={styles.smalltext1}>Absent</Text>
-              </View>
+            <View style={{marginTop: hp(-0.2)}}>
+              <Text style={styles.smalltext1}>Total</Text>
             </View>
           </View>
         </View>
-      
-      
+        <View style={{flexDirection: 'row', marginLeft: hp(3.5)}}>
+          <View style={{alignItems: 'center', paddingVertical: hp(0.4)}}>
+            <Icon type="light" name="circle-check" size={hp(3)} color="green" />
+          </View>
+          <View style={{marginLeft: hp(0.5)}}>
+            <View>
+              <Text style={styles.smalltext}>06</Text>
+            </View>
+            <View style={{marginTop: hp(-0.2)}}>
+              <Text style={styles.smalltext1}>present</Text>
+            </View>
+          </View>
+        </View>
+        <View style={{flexDirection: 'row', marginLeft: hp(3.5)}}>
+          <View style={{alignItems: 'center', paddingVertical: hp(0.4)}}>
+            <Icon
+              type="light"
+              name="circle-xmark"
+              size={hp(3)}
+              color="#CD6155"
+            />
+          </View>
+          <View style={{marginLeft: hp(0.5)}}>
+            <View>
+              <Text style={styles.smalltext}>09</Text>
+            </View>
+            <View style={{marginTop: hp(-0.2)}}>
+              <Text style={styles.smalltext1}>Absent</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+
       <View
         style={{
           height: hp(0.05),
@@ -494,7 +496,6 @@ const Reportee = props => {
       <ScrollView>
         {reporteeData &&
           reporteeData.map((item, i) => {
-            
             const {
               DESIGNATION,
               EMP_IN_TM,
@@ -837,8 +838,8 @@ const styles = EStyleSheet.create({
     fontSize: '0.7rem',
     fontFamily: fontFamily.ceraMedium,
   },
-  dropdown3RowChildStyle:{
-    justifyContent:'center',
-    alignItems:'center'
-  }
+  dropdown3RowChildStyle: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

@@ -10,106 +10,12 @@ import Icon from 'react-native-fontawesome-pro';
 import fontFamily from '../Styles/fontFamily';
 import fontSize from '../Styles/fontSize';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { useSelector } from 'react-redux';
-const TimeLine = (props) => {
-const timeLineData=useSelector((state)=>state.timeLineState)
-console.log("timeLIneData",timeLineData?.user)
+import {useSelector} from 'react-redux';
+const TimeLine = props => {
+  const timeLineData = useSelector(state => state.timeLineState);
+  // console.log('timeLIneData', timeLineData?.user);
 
-
-  // const data1 = [
-  //   {
-  //     date: 'June 22, 2023',
-  //     status: 'HIRE',
-  //     text: 'Hired as a',
-  //     centext: 'Senior Officer UX/UI Designer',
-  //     in: 'in',
-  //     endtext: 'IT Department.',
-  //     bgclor: '#D4FFCC',
-  //     colr: '#2D8E00',
-  //   },
-  //   {
-  //     date: 'May 01, 2020',
-  //     status: 'confirmation',
-  //     text: 'Hired as a',
-  //     centext: 'Senior Officer UX/UI Designer',
-  //     in: 'in',
-  //     endtext: 'IT Department.',
-  //     bgclor: '#CCFFF3',
-  //     colr: '#008E8E',
-  //   },
-  //   {
-  //     date: 'Dec 31, 2020',
-  //     status: 'Appraisal',
-  //     text: 'Hired as a',
-  //     centext: 'Senior Officer UX/UI Designer',
-  //     in: 'in',
-  //     endtext: 'IT Department.',
-  //     bgclor: '#FFFDCC',
-  //     colr: '#8E7700',
-  //   },
-  //   {
-  //     date: 'Jun 06, 2021',
-  //     status: 'Promoted',
-  //     text: 'Hired as a',
-  //     centext: 'Senior Officer UX/UI Designer',
-  //     in: 'in',
-  //     endtext: 'IT Department.',
-  //     bgclor: '#E0CCFF',
-  //     colr: '#69008E',
-  //   },
-  //   {
-  //     date: 'July 15, 2021',
-  //     status: 'Transfer',
-  //     text: 'Hired as a',
-  //     centext: 'Senior Officer UX/UI Designer',
-  //     in: 'in',
-  //     endtext: 'IT Department.',
-  //     bgclor: '#FFE5CC',
-  //     colr: '#D69A03',
-  //   },
-  //   {
-  //     date: 'Dec 31, 2021',
-  //     status: 'Resign',
-  //     text: 'Hired as a',
-  //     centext: 'Senior Officer UX/UI Designer',
-  //     in: 'in',
-  //     endtext: 'IT Department.',
-  //     bgclor: '#FFCCCC',
-  //     colr: '#D80000',
-  //   },
-  //   {
-  //     date: 'Dec 31, 2020',
-  //     status: 'Appraisal',
-  //     text: 'Hired as a',
-  //     centext: ' Senior Officer UX/UI Designer',
-  //     in: 'in',
-  //     endtext: 'IT Department.',
-  //     bgclor: '#FFFDCC',
-  //     colr: '#8E7700',
-  //   },
-  //   {
-  //     date: 'Jun 06, 2021',
-  //     status: 'Promoted',
-  //     text: 'Hired as a',
-  //     centext: 'Senior Officer UX/UI Designer',
-  //     in: 'in',
-  //     endtext: 'IT Department.',
-  //     bgclor: '#E0CCFF',
-  //     colr: '#69008E',
-  //   },
-  //   {
-  //     date: 'July 15, 2021',
-  //     status: 'Transfer',
-  //     text: 'Hired as a',
-  //     centext: 'Senior Officer UX/UI Designer',
-  //     in: 'in',
-  //     endtext: 'IT Department.',
-  //     bgclor: '#FFE5CC',
-  //     colr: '#D69A03',
-  //   },
-  // ];
-
-  const renderItem=({item,index})=>{
+  const renderItem = ({item, index}) => {
     const bgcolor = [
       '#D4FFCC',
       '#CCFFF3',
@@ -126,105 +32,163 @@ console.log("timeLIneData",timeLineData?.user)
       '#D69A03',
       '#D80000',
     ];
-    const statusColore=[
-      "Hired as a",
-      "Promoted to",
-      "Confirmed as a",
-      "Awarded a",
-    ]
- 
-    return(
-      <View style={{flexDirection: 'row'}} >
-              <View>
-                <View
-                  style={{
-                    width: wp(6),
-                    height: hp(3),
-                    borderRadius: hp(50),
-                    borderWidth: 1,
-                    borderColor: '#1C37A4',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                  <View
-                    style={{
-                      width: wp(4),
-                      height: hp(2),
-                      borderRadius: hp(50),
-                      backgroundColor: '#1C37A4',
-                    }}></View>
-                </View>
-                <View
-                  style={{
-                    height: hp(9.8),
-                    width: wp(0.5),
-                    backgroundColor: '#1C37A4',
-                    marginLeft: hp(1.2),
-                    marginTop: hp(0.5),
-                    marginBottom: hp(0.5),
-                  }}></View>
-              </View>
-              <View
-                style={{
-                  flex: 1,
-                  marginLeft: hp(1),
-                  height: hp(12),
-                  borderRadius: hp(2),
-                  backgroundColor: '#FFF',
-                  shadowColor: '#000',
-                  shadowOpacity: 0.8,
-                  shadowRadius: 3,
-                  elevation: 1,
-                }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginHorizontal: hp(2),
-                    marginTop: hp(1),
-                  }}>
-                  <View>
-                    <Text
-                      style={styles.dtext}>
-                      {item?.TIMELINE_DATE}
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      backgroundColor:item?.TIMELINE_TYPE=='Appraisal' ? bgcolor[0]:item?.TIMELINE_TYPE=='Confirmation' ? bgcolor[2]:item?.TIMELINE_TYPE=='Hire' ? bgcolor[3]:item?.TIMELINE_TYPE=='m_log' ? bgcolor[3]:'',
-                      borderRadius: hp(5),
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Text
-                      style={[styles.ststext,{
-                        color:item?.TIMELINE_TYPE=='Appraisal' ? color[0]:item?.TIMELINE_TYPE=='Confirmation' ? color[2]:item?.TIMELINE_TYPE=='Hire' ? color[3]:item?.TIMELINE_TYPE=='m_log' ? color[3]:'',
-                        
-                      }]}>
-                      {item?.TIMELINE_TYPE}
-                    </Text>
-                  </View>
-                </View>
-                <View
-                  style={{
-                    marginHorizontal: hp(1),
-                    paddingVertical: hp(1),
-                    marginHorizontal: hp(2),
-                  }}>
-                  <Text style={styles.centertext}>
-                    {item?.TIMELINE_TYPE=='Hired' ? statusColore[0]:item?.TIMELINE_TYPE=='Confirmation' ? statusColore[2]:item?.TIMELINE_TYPE=='Appraisal' ? statusColore[3]:item?.TIMELINE_TYPE=='m_log' ? statusColore[0]:''}
-                      <Text style={[styles.prev,{color:item?.TIMELINE_TYPE =='Confirmation' ? color[2]:item?.TIMELINE_TYPE =='Appraisal' ? '#2ECC71':item?.TIMELINE_TYPE =='Promoted' ? 'green':''}]}> {item?.DESIGNATION}  </Text>
-                        in {item?.TIMELINE_TYPE=='Confirmation' ? (<Text style={[styles.prev]}>{item?.DEPT_NAME}</Text>):item?.TIMELINE_TYPE=='Promoted' ? (<Text style={styles.prev}>{item?.DEPT_NAME}</Text>):item?.TIMELINE_TYPE=='Promoted' ? (<Text style={styles.prev}>{item?.DEPT_NAME}</Text>):item?.TIMELINE_TYPE=='Appraisal' ? (<Text style={styles.prev}>rating for annual appraisals {item?.RATING_YEAR}</Text>):item?.TIMELINE_TYPE=='m_log' ? (<Text style={styles.prev}>rating for annual appraisals {item?.RATING_YEAR}</Text>):''}
-                  </Text>
-                </View>
-              </View>
+    const statusColore = [
+      'Hired as a',
+      'Promoted to',
+      'Confirmed as a',
+      'Awarded a',
+    ];
+
+    return (
+      <View style={{flexDirection: 'row'}}>
+        <View>
+          <View
+            style={{
+              width: wp(6),
+              height: hp(3),
+              borderRadius: hp(50),
+              borderWidth: 1,
+              borderColor: '#1C37A4',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <View
+              style={{
+                width: wp(4),
+                height: hp(2),
+                borderRadius: hp(50),
+                backgroundColor: '#1C37A4',
+              }}></View>
+          </View>
+          <View
+            style={{
+              height: hp(9.8),
+              width: wp(0.5),
+              backgroundColor: '#1C37A4',
+              marginLeft: hp(1.2),
+              marginTop: hp(0.5),
+              marginBottom: hp(0.5),
+            }}></View>
+        </View>
+        <View
+          style={{
+            flex: 1,
+            marginLeft: hp(1),
+            height: hp(12),
+            borderRadius: hp(2),
+            backgroundColor: '#FFF',
+            shadowColor: '#000',
+            shadowOpacity: 0.8,
+            shadowRadius: 3,
+            elevation: 1,
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginHorizontal: hp(2),
+              marginTop: hp(1),
+            }}>
+            <View>
+              <Text style={styles.dtext}>{item?.TIMELINE_DATE}</Text>
             </View>
-    )
-  }
+            <View
+              style={{
+                backgroundColor:
+                  item?.TIMELINE_TYPE == 'Appraisal'
+                    ? bgcolor[0]
+                    : item?.TIMELINE_TYPE == 'Confirmation'
+                    ? bgcolor[2]
+                    : item?.TIMELINE_TYPE == 'Hire'
+                    ? bgcolor[3]
+                    : item?.TIMELINE_TYPE == 'm_log'
+                    ? bgcolor[3]
+                    : '',
+                borderRadius: hp(5),
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={[
+                  styles.ststext,
+                  {
+                    color:
+                      item?.TIMELINE_TYPE == 'Appraisal'
+                        ? color[0]
+                        : item?.TIMELINE_TYPE == 'Confirmation'
+                        ? color[2]
+                        : item?.TIMELINE_TYPE == 'Hire'
+                        ? color[3]
+                        : item?.TIMELINE_TYPE == 'm_log'
+                        ? color[3]
+                        : '',
+                  },
+                ]}>
+                {item?.TIMELINE_TYPE}
+              </Text>
+            </View>
+          </View>
+          <View
+            style={{
+              marginHorizontal: hp(1),
+              paddingVertical: hp(1),
+              marginHorizontal: hp(2),
+            }}>
+            <Text style={styles.centertext}>
+              {item?.TIMELINE_TYPE == 'Hired'
+                ? statusColore[0]
+                : item?.TIMELINE_TYPE == 'Confirmation'
+                ? statusColore[2]
+                : item?.TIMELINE_TYPE == 'Appraisal'
+                ? statusColore[3]
+                : item?.TIMELINE_TYPE == 'm_log'
+                ? statusColore[0]
+                : ''}
+              <Text
+                style={[
+                  styles.prev,
+                  {
+                    color:
+                      item?.TIMELINE_TYPE == 'Confirmation'
+                        ? color[2]
+                        : item?.TIMELINE_TYPE == 'Appraisal'
+                        ? '#2ECC71'
+                        : item?.TIMELINE_TYPE == 'Promoted'
+                        ? 'green'
+                        : '',
+                  },
+                ]}>
+                {' '}
+                {item?.DESIGNATION}{' '}
+              </Text>
+              in rating for annual appraisals{' '}
+              {item?.TIMELINE_TYPE == 'Confirmation' ? (
+                <Text style={[styles.prev]}>{item?.DEPT_NAME}</Text>
+              ) : item?.TIMELINE_TYPE == 'Promoted' ? (
+                <Text style={styles.prev}>{item?.DEPT_NAME}</Text>
+              ) : item?.TIMELINE_TYPE == 'Promoted' ? (
+                <Text style={styles.prev}>{item?.DEPT_NAME}</Text>
+              ) : item?.TIMELINE_TYPE == 'Appraisal' ? (
+                <Text style={styles.prev}>{item?.RATING_YEAR}.</Text>
+              ) : item?.TIMELINE_TYPE == 'm_log' ? (
+                <Text style={styles.prev}>{item?.RATING_YEAR}.</Text>
+              ) : (
+                ''
+              )}
+            </Text>
+          </View>
+        </View>
+      </View>
+    );
+  };
   return (
     <>
       <View>
-        <MainHeader text={'Timeline'} iconName={'arrow-left'} onpressBtn={()=>props.navigation.goBack()}/>
+        <MainHeader
+          text={'Timeline'}
+          iconName={'arrow-left'}
+          onpressBtn={() => props.navigation.goBack()}
+        />
       </View>
       <View
         style={{
@@ -236,7 +200,12 @@ console.log("timeLIneData",timeLineData?.user)
         }}>
         <View style={{flexDirection: 'row'}}>
           <View style={{alignItems: 'center', paddingVertical: hp(0.3)}}>
-            <Icon type='light' name="circle-check" size={hp(3)} color="#239B56" />
+            <Icon
+              type="light"
+              name="circle-check"
+              size={hp(3)}
+              color="#239B56"
+            />
           </View>
           <View style={{marginLeft: hp(0.8)}}>
             <View>
@@ -274,12 +243,11 @@ console.log("timeLIneData",timeLineData?.user)
           </View>
         </View>
       </View>
-      <View
-        style={{flex: 1, marginHorizontal: hp(2.5), marginTop: hp(2)}}>
-       <FlatList
+      <View style={{flex: 1, marginHorizontal: hp(2.5), marginTop: hp(2)}}>
+        <FlatList
           data={timeLineData?.user}
           renderItem={renderItem}
-          keyExtractor={(item,index)=>index.toString()}
+          keyExtractor={(item, index) => index.toString()}
         />
       </View>
     </>
@@ -316,46 +284,45 @@ const styles = EStyleSheet.create({
     color: '#979797',
     fontStyle: 'normal',
     alignItems: 'center',
-    textTransform:'uppercase'
+    textTransform: 'uppercase',
   },
-  dtext:{
+  dtext: {
     color: '#353535',
     fontSize: '0.65rem',
     fontWeight: '700',
-    fontStyle:'normal',
+    fontStyle: 'normal',
     paddingVertical: hp(0.5),
     fontFamily: fontFamily.ceraBold,
   },
-  centertext:{
+  centertext: {
     fontFamily: fontFamily.ceraLight,
     fontSize: '0.65rem',
     fontWeight: '100',
-    fontStyle:'normal',
-    color:'#979797',
-    lineHeight:hp(2)
+    fontStyle: 'normal',
+    color: '#979797',
+    lineHeight: hp(2),
   },
-  ststext:{
-    fontSize:'0.5rem',
+  ststext: {
+    fontSize: '0.5rem',
     fontFamily: fontFamily.ceraBold,
     paddingHorizontal: hp(2.5),
     paddingVertical: hp(0.5),
     textTransform: 'uppercase',
-    fontWeight:'700',
-    fontStyle:'normal'
+    fontWeight: '700',
+    fontStyle: 'normal',
   },
-  prev:{
-  // color: '#4E69DA',
-  fontSize:'0.65rem',
-  fontFamily: fontFamily.ceraMedium,
-  fontWeight:'500',
-  fontStyle:'normal',
-},
-endtext:{
-  color: '#4E69DA',
-  fontSize:'0.65rem',
-  fontFamily: fontFamily.ceraMedium,
-  fontWeight:'500',
-  fontStyle:'normal',
-}
-
+  prev: {
+    // color: '#4E69DA',
+    fontSize: '0.65rem',
+    fontFamily: fontFamily.ceraMedium,
+    fontWeight: '500',
+    fontStyle: 'normal',
+  },
+  endtext: {
+    color: '#4E69DA',
+    fontSize: '0.65rem',
+    fontFamily: fontFamily.ceraMedium,
+    fontWeight: '500',
+    fontStyle: 'normal',
+  },
 });

@@ -1,6 +1,12 @@
 import React from 'react';
-import { StyleSheet, TextInput, View, Image, TouchableOpacity } from 'react-native';
-import { widthPercentageToDP } from 'react-native-responsive-screen';
+import {
+  StyleSheet,
+  TextInput,
+  View,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+import {widthPercentageToDP} from 'react-native-responsive-screen';
 import colors from '../../Styles/colors';
 import {
   widthPercentageToDP as wp,
@@ -48,10 +54,10 @@ const TextInputCustom = ({
           backgroundColor: '#FDEB13',
           borderRadius: wp('10'),
         }}>
-        <Icon type='light' name={iconName} color={iconColor} size={25} />
+        <Icon type="light" name={iconName} color={iconColor} size={25} />
       </View>
 
-      <View style={{ flex: 0.72, justifyContent: 'center' }}>
+      <View style={{flex: 0.72, justifyContent: 'center'}}>
         <TextInput
           style={style}
           onChangeText={onChangeText}
@@ -81,7 +87,9 @@ const TextInputCustom = ({
           // backgroundColor: '#FDEB13',
           // borderRadius: wp('10'),
         }}>
-        {iconRight && (<Icon type='light' name={iconRight} color={iconColor} size={25} />)}
+        {iconRight && (
+          <Icon type="light" name={iconRight} color={iconColor} size={18} />
+        )}
       </TouchableOpacity>
     </View>
   );

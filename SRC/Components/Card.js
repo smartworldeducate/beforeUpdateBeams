@@ -48,12 +48,12 @@ export default function Card({item}) {
   const [animation, setAnimation] = useState(true);
   const [offset, setOffset] = useState(1); // Initial offset
   const [msDetail, setMsDetail] = useState(null);
-  const [activeLoder,setActiveLoder]=useState(false)
+  const [activeLoder, setActiveLoder] = useState(false);
   const messagData = useSelector(state => state.empMessageState);
   // console.log("card data",messagData)
   async function getData(key) {
     try {
-      setActiveLoder(true)
+      setActiveLoder(true);
       const value = await AsyncStorage.getItem(key);
       if (value !== null) {
         const parsedData = JSON.parse(value);
@@ -66,7 +66,7 @@ export default function Card({item}) {
         );
         setMsgData([...msgData, ...empMsg?.payload?.data]);
         setFilterData([...filterData, ...empMsg?.payload?.data]);
-        setActiveLoder(false)
+        setActiveLoder(false);
         return value;
       } else {
         console.log('No data found for key:', key);
@@ -105,6 +105,8 @@ export default function Card({item}) {
 
   const handleReset = () => {
     setVisible(false);
+    setSelectedItemId(null);
+    setMsDetail(null);
   };
   const openBottomSheet = item => {
     setSelectedItemId(item);
@@ -126,8 +128,8 @@ export default function Card({item}) {
       fontSize: hp(1.5),
       lineHeight: hp(1.8),
       fontFamily: fontFamily.ceraMedium,
-    }, 
-    span: {color: 'green'}, 
+    },
+    span: {color: 'green'},
   };
 
   return (
@@ -161,6 +163,7 @@ export default function Card({item}) {
         style={{
           backgroundColor: colors.appBackGroundColor,
           flex: 1,
+          // backgroundColor: 'red',
         }}>
         <LinearGradient
           start={{x: 0, y: 0}}
@@ -172,7 +175,7 @@ export default function Card({item}) {
               marginHorizontal: hp(2.5),
               flexDirection: 'row',
               justifyContent: 'space-between',
-              position: 'relative',
+              // position: 'relative',
             }}>
             <View
               style={{
@@ -180,14 +183,21 @@ export default function Card({item}) {
                 marginTop: hp(0),
                 height: hp(5),
               }}>
-              <Text style={{color: '#fff', paddingBottom: hp(0.1)}}>
-                Massages
+              <Text
+                style={{
+                  color: '#fff',
+                  paddingBottom: hp(0.1),
+                  fontFamily: fontFamily.ceraMedium,
+                  fontSize: hp('2'),
+                }}>
+                Messages
               </Text>
             </View>
             <View
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
+                paddingHorizontal: wp('1.5'),
               }}>
               <TouchableOpacity
                 activeOpacity={0.8}
@@ -203,14 +213,13 @@ export default function Card({item}) {
             <View style={{}}>
               <View
                 style={{
-                  width: wp(50),
-                  height: hp(7.9),
                   flexDirection: 'row',
                 }}>
                 <View
                   style={{
-                    marginVertical: hp(1.5),
-                    paddingHorizontal: hp(0),
+                    flex: 0.15,
+                    justifyContent: 'center',
+                    alignItems: 'center',
                   }}>
                   <Image
                     style={{
@@ -218,18 +227,21 @@ export default function Card({item}) {
                       height: hp(6),
                       borderRadius: hp(50),
                     }}
-                    source={{uri: 'group'}}
+                    source={{uri: 'salman'}}
                     resizeMode="cover"
                   />
                 </View>
                 <View
                   style={{
-                    marginLeft: hp(0.5),
                     justifyContent: 'center',
-                    marginTop: hp(-0.7),
+                    flex: 0.85,
+                    justifyContent: 'center',
                   }}>
                   <View>
-                    <Text style={styles.cduserName}>
+                    <Text
+                      numberOfLines={1}
+                      ellipsizeMode={'tail'}
+                      style={styles.cduserName}>
                       {selectedItemId?.EMP_NAME}
                     </Text>
                   </View>
@@ -241,22 +253,18 @@ export default function Card({item}) {
                 </View>
               </View>
             </View>
-            <View style={{marginHorizontal: hp(1), marginVertical: hp(1)}}>
+            <View
+              style={{
+                marginHorizontal: hp(0.75),
+                marginTop: hp(2),
+              }}>
               <Text
                 style={{color: '#072374', fontSize: hp(2), fontWeight: 'bold'}}>
                 {msDetail?.ASMSG_TITLE}
               </Text>
             </View>
-            <View style={{marginHorizontal: hp(0.7)}}>
-              <Text
-                style={{
-                  fontSize: hp('1.85'),
-                  color: colors.appColor,
-                  marginBottom: hp('2'),
-                }}></Text>
-              <View
-                contentInsetAdjustmentBehavior="automatic"
-                style={{marginTop: hp(-6)}}>
+            <View style={{marginHorizontal: hp(1)}}>
+              <View contentInsetAdjustmentBehavior="automatic">
                 <RenderHtml
                   contentWidth={width}
                   source={{
@@ -331,9 +339,17 @@ export default function Card({item}) {
           horizontal={true}
           style={styles.container}
           showsHorizontalScrollIndicator={false}>
-             {activeLoder &&(<View style={{height:hp(20),width:wp(80),justifyContent:'center',alignItems:'center'}}>
-              <ActivityIndicator size='large' color='blue'/>
-              </View>)}
+          {activeLoder && (
+            <View
+              style={{
+                height: hp(20),
+                width: wp(80),
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <ActivityIndicator size="large" color="blue" />
+            </View>
+          )}
           {msgData &&
             msgData?.slice(0, 5).map((e, i) => {
               return (
@@ -371,7 +387,12 @@ export default function Card({item}) {
                           marginTop: hp(-0.7),
                         }}>
                         <View>
-                          <Text style={styles.userName}>{e?.EMP_NAME}</Text>
+                          <Text
+                            numberOfLines={1}
+                            ellipsizeMode={'tail'}
+                            style={styles.userName}>
+                            {e?.EMP_NAME}
+                          </Text>
                         </View>
                         <View style={{marginRight: hp(1)}}>
                           <Text style={styles.ctitle}>{e?.HIRE_DATE}</Text>
@@ -379,7 +400,12 @@ export default function Card({item}) {
                       </View>
                     </View>
                   </View>
-                  <View style={{marginHorizontal: hp(1.5), marginTop: hp(-2)}}>
+                  <View
+                    style={{
+                      marginHorizontal: hp(1.5),
+                      marginTop: hp(-2),
+                      // backgroundColor: 'red',
+                    }}>
                     <Text
                       style={styles.cardText}
                       numberOfLines={5}
@@ -399,6 +425,7 @@ export default function Card({item}) {
 const styles = EStyleSheet.create({
   container: {
     paddingHorizontal: hp(1),
+    marginLeft: wp('1.5'),
   },
 
   card: {
@@ -412,7 +439,7 @@ const styles = EStyleSheet.create({
     width: wp(80),
     borderRadius: hp(2),
     margin: 10,
-    marginRight: hp('1.5'),
+    // marginRight: hp('1.5'),
   },
   bootContText: {
     fontSize: fontSize.extraSmall,
@@ -470,7 +497,8 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: hp(2.3),
+    paddingHorizontal: hp(2.5),
+    marginLeft: wp('2'),
   },
   mainHeader: {
     height: hp(8),

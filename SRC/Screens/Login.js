@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import Modal from 'react-native-modal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import { loginUserHandle } from '../features/register/googleLoginSlice';
+import {loginUserHandle} from '../features/register/googleLoginSlice';
 import {
   SafeAreaView,
   StatusBar,
@@ -34,7 +34,7 @@ import {
   useNavigation,
   CommonActions,
 } from '@react-navigation/native';
-import { StackActions } from '@react-navigation/native';
+import {StackActions} from '@react-navigation/native';
 const Login = props => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -66,7 +66,7 @@ const Login = props => {
   const handleLogin = async () => {
     if (employeeId && employeePassword !== '') {
       var login_data = await dispatch(
-        loginUserHandle({ employeeId: employeeId, password: employeePassword }),
+        loginUserHandle({employeeId: employeeId, password: employeePassword}),
       );
       const loginObj = Object.assign({}, ...login_data.payload);
       saveData(loginObj);
@@ -107,10 +107,10 @@ const Login = props => {
       const userInfo = await GoogleSignin.signIn();
       console.log(userInfo);
       // handleNavigate('HomeScreen');
-      const { id, name, email, givenName, photo } = userInfo?.user;
+      const {id, name, email, givenName, photo} = userInfo?.user;
       //  console.log("google data",glData.payload.data)
-      await storeData({ google_id: id, photo: photo });
-      const glData = await dispatch(loginUser({ email: email, google_id: id }));
+      await storeData({google_id: id, photo: photo});
+      const glData = await dispatch(loginUser({email: email, google_id: id}));
       // console.log("google data",glData.payload.data)
       // glData.payload.data ? props.navigation.navigate('Home') : props.navigation.navigate('Register')
       // setAnimodal(false)
@@ -157,7 +157,7 @@ const Login = props => {
           Platform.OS === 'android' ? colors.white : colors.white,
       }}>
       <StatusBar barStyle={'default'} backgroundColor={colors.loginIconColor} />
-      {animation && (
+      {/* {animation && (
         <View>
           <Modal isVisible={animodal}>
             <View style={styles.modalView}>
@@ -170,15 +170,15 @@ const Login = props => {
             </View>
           </Modal>
         </View>
-      )}
+      )} */}
       <ImageBackground
-        source={{ uri: 'appbg' }}
-        style={{ flex: 1 }}
+        source={{uri: 'appbg'}}
+        style={{flex: 1}}
         resizeMode={'cover'}>
         <KeyboardAvoidingView
           behavior="position"
           keyboardVerticalOffset={keyboardVerticalOffset}>
-          <View style={{ marginHorizontal: wp('5') }}>
+          <View style={{marginHorizontal: wp('5')}}>
             <View
               style={{
                 marginTop: hp('8'),
@@ -186,50 +186,92 @@ const Login = props => {
                 alignItems: 'center',
               }}>
               <Image
-                source={{ uri: 'logo' }}
-                style={{ height: hp('25'), width: wp('50') }}
+                source={{uri: 'logonew'}}
+                style={{height: hp('25'), width: wp('50')}}
                 resizeMode={'contain'}
               />
             </View>
 
-            <View style={{ marginTop: hp('3'), marginBottom: hp('2') }}>
-              <Text
-                style={{ fontSize: hp('2.75'), color: colors.loginTextColor }}>
-                Login
-              </Text>
-            </View>
+            <View style={{marginHorizontal: wp('2')}}>
+              <View style={{marginTop: hp('3'), marginBottom: hp('2')}}>
+                <Text
+                  style={{fontSize: hp('2.75'), color: colors.loginTextColor}}>
+                  Login
+                </Text>
+              </View>
 
-            <View style={styles.textInputView}>
-              <TextInputCustom
-                value={employeeId}
-                onChangeText={onChangeEmpId}
-                keyboardType={'numeric'}
-                maxLength={11}
-                returnKeyType={'done'}
-                iconName={'user'}
-                placeholder={'Employee ID'}
-                placeholderColor={colors.loginTextColor}
-                // iconColor={colors.loginIconColor}
-                style={styles.textInputCustomStyle}
-              />
-            </View>
+              <View style={styles.textInputView}>
+                <TextInputCustom
+                  value={employeeId}
+                  onChangeText={onChangeEmpId}
+                  keyboardType={'numeric'}
+                  maxLength={11}
+                  returnKeyType={'done'}
+                  iconName={'user-tie'}
+                  placeholder={'Employee ID'}
+                  placeholderColor={colors.loginTextColor}
+                  // iconColor={colors.loginIconColor}
+                  style={styles.textInputCustomStyle}
+                />
+              </View>
 
-            <View style={styles.textInputView}>
-              <TextInputCustom
-                value={employeePassword}
-                onChangeText={onChangeEmpPassword}
-                keyboardType={'default'}
-                maxLength={11}
-                returnKeyType={'done'}
-                iconName={'key'}
-                iconRight={eyeType == true ? 'eye' : 'eye-slash'}
-                placeholder={'Password'}
-                placeholderColor={colors.loginTextColor}
-                secureTextEntry={showPassword}
-                iconColor={colors.loginIconColor}
-                onPressIcon={onPressShowPassword}
-                style={styles.textInputCustomStyle}
-              />
+              <View style={styles.textInputView}>
+                <TextInputCustom
+                  value={employeePassword}
+                  onChangeText={onChangeEmpPassword}
+                  keyboardType={'default'}
+                  maxLength={11}
+                  returnKeyType={'done'}
+                  iconName={'key'}
+                  iconRight={eyeType == true ? 'eye' : 'eye-slash'}
+                  placeholder={'Password'}
+                  placeholderColor={colors.loginTextColor}
+                  secureTextEntry={showPassword}
+                  iconColor={colors.loginIconColor}
+                  onPressIcon={onPressShowPassword}
+                  style={styles.textInputCustomStyle}
+                />
+              </View>
+
+              <View style={{flexDirection: 'row', marginVertical: hp('1')}}>
+                <View
+                  style={{
+                    flex: 0.2,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    alignItems: 'flex-start',
+                  }}>
+                  <Switch
+                    trackColor={{false: '#767577', true: '#061D7A'}}
+                    thumbColor={isEnabled ? '#FFFFFF' : '#f4f3f4'}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={toggleSwitch}
+                    value={isEnabled}
+                  />
+                </View>
+                <View
+                  style={{
+                    flex: 0.4,
+
+                    justifyContent: 'center',
+                  }}>
+                  <Text style={{fontSize: hp('1.75'), color: '#120D26'}}>
+                    Remember Me
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  onPress={() => navigation.navigate('ForgotPassword')}
+                  style={{
+                    flex: 0.4,
+                    justifyContent: 'center',
+                    alignItems: 'flex-end',
+                  }}>
+                  <Text style={{fontSize: hp('1.75'), color: '#120D26'}}>
+                    Forgot Password?
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
             <View
               style={{
@@ -241,7 +283,7 @@ const Login = props => {
                 activeOpacity={0.8}
                 onPress={handleLogin}
                 style={styles.loginbtn}>
-                <Text style={{ color: '#000' }}>LOGIN</Text>
+                <Text style={{color: '#061D7A'}}>LOGIN</Text>
               </TouchableOpacity>
             </View>
 
@@ -259,7 +301,7 @@ const Login = props => {
                     console.log(error);
                   })
               }>
-              <View style={{ flex: 0.15, backgroundColor: 'white' }}></View>
+              <View style={{flex: 0.15}}></View>
 
               <View
                 style={{
@@ -268,7 +310,7 @@ const Login = props => {
                   alignItems: 'center',
                 }}>
                 <Image
-                  source={{ uri: 'google' }}
+                  source={{uri: 'google'}}
                   style={{
                     height: hp('3.75'),
                     width: wp('7'),
@@ -277,27 +319,13 @@ const Login = props => {
                 />
               </View>
 
-              <View style={{ flex: 0.5 }}>
-                <Text style={{ color: colors.loginTextColor, fontSize: hp('2') }}>
+              <View style={{flex: 0.5}}>
+                <Text style={{color: colors.loginTextColor, fontSize: hp('2')}}>
                   {'Login with Google'}
                 </Text>
               </View>
 
-              <View style={{ flex: 0.1, backgroundColor: 'pink' }}></View>
-            </TouchableOpacity>
-          </View>
-          <View style={{ justifyContent: 'center', marginTop: hp(5) }}>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => handleNavigate('ForgotPassword')}
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{ color: colors.loginTextColor, fontSize: hp('1.75') }}>
-                Reset Password?
-              </Text>
+              <View style={{flex: 0.1}}></View>
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
@@ -317,13 +345,13 @@ const styles = StyleSheet.create({
   },
   loginbtn: {
     height: hp('7'),
-    width: wp('90'),
+    width: wp('85'),
     backgroundColor: colors.whiteColor,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: wp(10),
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 12 },
+    shadowOffset: {width: 0, height: 12},
     shadowOpacity: 0.58,
     shadowRadius: 16,
     elevation: 7,
@@ -368,6 +396,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     height: hp('7'),
+    marginHorizontal: wp('2'),
 
     borderRadius: wp('10'),
     marginBottom: hp('2'),

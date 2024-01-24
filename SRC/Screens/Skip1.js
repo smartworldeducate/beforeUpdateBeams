@@ -1,60 +1,31 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef} from 'react';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import LottieView from 'lottie-react-native';
 import {
   SafeAreaView,
   StatusBar,
-  StyleSheet,
   ImageBackground,
   View,
-  Image,
   Text,
-  Switch,
   TouchableOpacity,
   Platform,
-  KeyboardAvoidingView,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import Button from '../Components/Button/Button';
-import TextInputCustom from '../Components/TextInput/TextInput';
 import colors from '../Styles/colors';
 import {
   useLinkProps,
   useNavigation,
   CommonActions,
 } from '@react-navigation/native';
-import fontSize from '../Styles/fontSize';
+import {StackActions} from '@react-navigation/native';
 import fontFamily from '../Styles/fontFamily';
-const Skip1 = () => {
-  const [data, setData] = useState([
-    {
-      id: 1,
-      title1: 'Welcome',
-      title2: 'to BEAMS!',
-      disc: 'Were so excited to have you on board.',
-      image: 'appbg',
-    },
-    {
-      id: 1,
-      title1: 'We',
-      title2: 'Redesigned',
-      disc: 'The app to add new features that our users have been requesting',
-      image: 'appbg',
-    },
-    {
-      id: 1,
-      title1: 'Explore',
-      title2: ' the app',
-      disc: 'Take some time to explore the app and learn how it works.',
-      image: 'appbg',
-    },
-  ]);
-  const [initVal, setInitVal] = useState(0);
+import Ficon from 'react-native-fontawesome-pro';
 
+const Skip1 = () => {
   const swiperRef = useRef(null);
 
   const navigation = useNavigation();
@@ -64,95 +35,106 @@ const Skip1 = () => {
       console.log('Clear');
     }
   };
-  const handleSkip = () => {
-    if (swiperRef.current) {
-      swiperRef.current.scrollBy(1);
-    }
-  };
-
-  const keyboardVerticalOffset = Platform.OS === 'ios' ? 60 : 20;
-
-  const onChangeEmpId = val => {
-    setEmployeeId(val);
-  };
-  const onChangeEmpPassword = val => {
-    setEmployeePassword(val);
-  };
-
-  const [isEnabled, setIsEnabled] = useState(true);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   const onPressLogin = () => {
-    handleNavigate('Login');
+    navigation.dispatch(StackActions.replace('Login'));
   };
 
   return (
-    <View style={{flex: 1}}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor:
+          Platform.OS === 'android' ? colors.white : colors.white,
+      }}>
+      <StatusBar barStyle={'default'} backgroundColor={colors.loginIconColor} />
       <Swiper
         style={styles.wrapper}
         showsButtons={false}
         loop={false}
+        dotColor={'#D9D9D9'}
+        activeDotColor={'#061D7A'}
         ref={swiperRef}>
         <View style={styles.slide1}>
           <ImageBackground
             source={{uri: 'appbg'}}
             style={{flex: 1}}
             resizeMode={'cover'}>
-            <KeyboardAvoidingView
-              behavior="position"
-              keyboardVerticalOffset={keyboardVerticalOffset}>
+            <View
+              style={{
+                width: wp(100),
+                flexDirection: 'row',
+                marginTop: hp(5),
+              }}>
+              <View style={{width: wp(80)}}></View>
+              <TouchableOpacity
+                style={{flex: 20}}
+                activeOpacity={0.4}
+                onPress={onPressLogin}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    paddingVertical: hp('1'),
+                  }}>
+                  <View style={{flex: 0.5, alignItems: 'flex-end'}}>
+                    <Text
+                      style={{
+                        fontSize: hp(2),
+                        color: 'black',
+                        justifyContent: 'center',
+                      }}>
+                      SKIP
+                    </Text>
+                  </View>
+                  <View style={{flex: 0.5}}>
+                    <Ficon
+                      type="light"
+                      name="angles-right"
+                      color="#000"
+                      size={18}
+                    />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </View>
+            <View style={{width: wp(100), marginTop: hp(8)}}>
               <View
                 style={{
-                  width: wp(100),
-                  flexDirection: 'row',
-                  marginTop: hp(5),
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: hp(5),
                 }}>
-                <View style={{width: wp(50)}}></View>
-                <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={onPressLogin}
-                  style={{width: wp(50), marginLeft: hp(15)}}>
-                  <Text style={{fontSize: hp(2), color: 'black'}}>SKIP</Text>
-                </TouchableOpacity>
+                <Text style={styles.welcomeTextSkip}>
+                  Welcome to
+                  <Text style={styles.welcomeText2}> BEAMS!</Text>
+                </Text>
               </View>
-              <View style={{width: wp(100), marginTop: hp(12)}}>
-                <View
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <LottieView
                   style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginBottom: hp(5),
-                  }}>
-                  <Text style={styles.textSkip}>
-                    Welcome to
-                    <Text style={styles.skipbText}> BEAMS!</Text>
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <LottieView
-                    style={{
-                      width: wp(80),
-                      height: hp(40),
-                    }}
-                    source={require('../assets/animation_lm0fv0a2.json')}
-                    autoPlay
-                  />
-                </View>
-                <View
-                  style={{
-                    marginTop: hp(5),
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Text style={styles.textSkip}>
-                    We're so excited to have you on board.
-                  </Text>
-                </View>
+                    width: wp(80),
+                    height: hp(40),
+                  }}
+                  source={require('../assets/animation_lm0fv0a2.json')}
+                  autoPlay
+                />
               </View>
-            </KeyboardAvoidingView>
+              <View
+                style={{
+                  marginTop: hp(5),
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginHorizontal: wp('10'),
+                }}>
+                <Text style={[styles.textSkip, {textAlign: 'center'}]}>
+                  We're so excited to have you on board.
+                </Text>
+              </View>
+            </View>
           </ImageBackground>
         </View>
         <View style={styles.slide2}>
@@ -160,64 +142,83 @@ const Skip1 = () => {
             source={{uri: 'appbg'}}
             style={{flex: 1}}
             resizeMode={'cover'}>
-            <KeyboardAvoidingView
-              behavior="position"
-              keyboardVerticalOffset={keyboardVerticalOffset}>
+            <View
+              style={{
+                width: wp(100),
+                flexDirection: 'row',
+                marginTop: hp(5),
+              }}>
+              <View style={{width: wp(80)}}></View>
+              <TouchableOpacity
+                style={{flex: 20}}
+                activeOpacity={0.4}
+                onPress={onPressLogin}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    paddingVertical: hp('1'),
+                  }}>
+                  <View style={{flex: 0.5, alignItems: 'flex-end'}}>
+                    <Text
+                      style={{
+                        fontSize: hp(2),
+                        color: 'black',
+                        justifyContent: 'center',
+                      }}>
+                      SKIP
+                    </Text>
+                  </View>
+                  <View style={{flex: 0.5}}>
+                    <Ficon
+                      type="light"
+                      name="angles-right"
+                      color="#000"
+                      size={18}
+                    />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            <View style={{width: wp(100), marginTop: hp(8)}}>
               <View
                 style={{
-                  width: wp(100),
-                  flexDirection: 'row',
-                  marginTop: hp(5),
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: hp(5),
                 }}>
-                <View style={{width: wp(50)}}></View>
-                <TouchableOpacity
-                activeOpacity={0.8}
-                  onPress={handleSkip}
-                  style={{width: wp(50), marginLeft: hp(15)}}>
-                  <Text style={{fontSize: hp(2), color: 'black'}}>SKIP</Text>
-                </TouchableOpacity>
+                <Text style={styles.welcomeTextSkip}>
+                  We
+                  <Text style={styles.welcomeText2}> Redesigned!</Text>
+                </Text>
               </View>
-              <View style={{width: wp(100), marginTop: hp(12)}}>
-                <View
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <LottieView
                   style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginBottom: hp(5),
-                  }}>
-                  <Text style={styles.textSkip}>
-                    We
-                    <Text style={styles.skipbText}> Redesigned!</Text>
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <LottieView
-                    style={{
-                      width: wp(80),
-                      height: hp(30),
-                      // backgroundColor: '#eee',
-                    }}
-                    source={require('../assets/animation_lm0h8lv3.json')}
-                    autoPlay
-                  />
-                </View>
-                <View
-                  style={{
-                    marginLeft: hp(3.5),
-                    marginTop: hp(5),
-                    width: wp(90),
-                    alignItems: 'center',
-                  }}>
-                  <Text style={styles.textSkip}>
-                    The app to add new features that our users have been
-                    requesting
-                  </Text>
-                </View>
+                    width: wp(80),
+                    height: hp(40),
+                  }}
+                  source={require('../assets/animation_lm0h8lv3.json')}
+                  autoPlay
+                />
               </View>
-            </KeyboardAvoidingView>
+              <View
+                style={{
+                  marginTop: hp(5),
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginHorizontal: wp('10'),
+                }}>
+                <Text style={[styles.textSkip, {textAlign: 'center'}]}>
+                  The app to add new features that our users have been
+                  requesting
+                </Text>
+              </View>
+            </View>
           </ImageBackground>
         </View>
         <View style={styles.slide3}>
@@ -225,66 +226,86 @@ const Skip1 = () => {
             source={{uri: 'appbg'}}
             style={{flex: 1}}
             resizeMode={'cover'}>
-            <KeyboardAvoidingView
-              behavior="position"
-              keyboardVerticalOffset={keyboardVerticalOffset}>
+            <View
+              style={{
+                width: wp(100),
+                flexDirection: 'row',
+                marginTop: hp(5),
+              }}>
+              <View style={{width: wp(80)}}></View>
+              <TouchableOpacity
+                style={{flex: 20}}
+                activeOpacity={0.4}
+                onPress={onPressLogin}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    paddingVertical: hp('1'),
+                  }}>
+                  <View style={{flex: 0.5, alignItems: 'flex-end'}}>
+                    <Text
+                      style={{
+                        fontSize: hp(2),
+                        color: 'black',
+                        justifyContent: 'center',
+                      }}>
+                      SKIP
+                    </Text>
+                  </View>
+                  <View style={{flex: 0.5}}>
+                    <Ficon
+                      type="light"
+                      name="angles-right"
+                      color="#000"
+                      size={18}
+                    />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            <View style={{width: wp(100), marginTop: hp(8)}}>
               <View
                 style={{
+                  marginLeft: hp(16),
                   width: wp(100),
-                  flexDirection: 'row',
-                  marginTop: hp(5),
+                  marginBottom: hp(5),
                 }}>
-                <View style={{width: wp(50)}}></View>
-                <TouchableOpacity
-                activeOpacity={1}
-                  onPress={onPressLogin}
-                  style={{width: wp(50), marginLeft: hp(15)}}>
-                  <Text style={{fontSize: hp(2), color: 'black'}}>SKIP</Text>
-                </TouchableOpacity>
+                <Text style={styles.welcomeTextSkip}>
+                  Explore
+                  <Text style={styles.welcomeText2}> the app!</Text>
+                </Text>
               </View>
-              <View style={{width: wp(100), marginTop: hp(12)}}>
-                <View
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <LottieView
                   style={{
-                    marginLeft: hp(16),
-                    width: wp(100),
-                    marginBottom: hp(5),
-                  }}>
-                  <Text style={styles.textSkip}>
-                    Explore
-                    <Text style={styles.skipbText}> the app!</Text>
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <LottieView
-                    style={{
-                      width: wp(80),
-                      height: hp(30),
-                      // backgroundColor: '#fff',
-                    }}
-                    source={require('../assets/animation_lm0hbmk9.json')}
-                    autoPlay
-                  />
-                </View>
-                <View
-                  style={{
-                    marginLeft: hp(3.5),
-                    marginTop: hp(5),
-                    width: wp(90),
-                  }}>
-                  <Text style={styles.textSkip}>
-                    Take some time to explore the app and learn how it works.
-                  </Text>
-                </View>
+                    width: wp(80),
+                    height: hp(40),
+                  }}
+                  source={require('../assets/animation_lm0hbmk9.json')}
+                  autoPlay
+                />
               </View>
-            </KeyboardAvoidingView>
+              <View
+                style={{
+                  marginTop: hp(5),
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginHorizontal: wp('10'),
+                }}>
+                <Text style={[styles.textSkip, {textAlign: 'center'}]}>
+                  Take some time to explore the app and learn how it works.
+                </Text>
+              </View>
+            </View>
           </ImageBackground>
         </View>
       </Swiper>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -303,6 +324,19 @@ const styles = EStyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  welcomeTextSkip: {
+    color: '#626161',
+    fontSize: '1rem',
+    fontWeight: '500',
+    fontFamily: fontFamily.ceraMedium,
+  },
+  welcomeText2: {
+    color: '#061D7A',
+    fontSize: '1rem',
+    fontWeight: '500',
+    fontFamily: fontFamily.ceraMedium,
+    marginLeft: hp(1),
   },
   textSkip: {
     color: '#626161',
