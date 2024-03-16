@@ -17,141 +17,261 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {Image} from 'react-native';
 import colors from '../Styles/colors';
 import BssChild from '../Components/BssChild';
+import {useSelector} from 'react-redux';
+
+import {
+  Collapse,
+  CollapseHeader,
+  CollapseBody,
+} from 'accordion-collapse-react-native';
+import ProfileCardBody from '../Components/ProfileCard/ProfileCardBody';
+import ChildsInBss from '../Components/ChildsInBss/ChildsInBss';
+
 const ChildBss = props => {
-  const data = [
-    {
-      id: 283831,
-      name: 'Muhammad Moeez Zeeshan',
-      img: 'bss',
-      dob: '15 Oct, 2017',
-      date: 'One Violet',
-      school: 'LMA 11-FCC Gulberg, Lahore',
-      fee: '1010 (for Jul-Jul 2023)',
-      due: 'Due Date 13 July, 2023',
-      invoice: '2400000012345 (for Jul-Jul 2023)',
-    },
-    {
-      id: 283832,
-      name: 'Muhammad Moeez Zeeshan',
-      img: 'bss',
-      dob: '15 Oct, 2017',
-      date: 'One Violet',
-      school: 'IT Department',
-      fee: 'Head office',
-      due: 'Administrative Staff',
-      invoice: 'Regular',
-    },
-    {
-      id: 283833,
-      name: 'Muhammad Moeez Zeeshan',
-      img: 'bss',
-      dob: '15 Oct, 2017',
-      date: 'One Violet',
-      school: 'IT Department',
-      fee: 'Head office',
-      due: 'Administrative Staff',
-      invoice: 'Regular',
-    },
-  ];
+  const profileHere = useSelector(state => state.profileStore);
+  console.log('profileHereBSS>', profileHere?.userData?.bsschildResult_result);
+
+  const [expanded, setExpended] = useState(false);
+  const onPress = ({item}) => {
+    // console.log('itemExp', item);
+  };
+
+  const renderItem = ({item, index}) => {
+    return (
+      <View
+        style={{
+          marginVertical: hp('0.75'),
+          marginHorizontal: wp('2'),
+
+          backgroundColor: 'white',
+          borderRadius: wp('3'),
+          shadowColor: '#000',
+          shadowOpacity: 0.5,
+          shadowRadius: 4,
+          elevation: 4,
+          paddingVertical: hp('1'),
+        }}>
+        <Collapse isExpanded={expanded} onToggle={() => onPress(1)}>
+          <CollapseHeader>
+            <View style={{}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                }}>
+                <View
+                  style={{
+                    flex: 0.2,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: wp('1.5'),
+                  }}>
+                  <Image
+                    source={{uri: item?.CHILD_IMAGE}}
+                    style={{
+                      height: hp('8'),
+                      width: wp('16'),
+                      borderRadius: wp('3'),
+                    }}
+                    resizeMode={'contain'}
+                  />
+                </View>
+
+                <View style={{flex: 0.8}}>
+                  <View
+                    style={{
+                      flexDirection: 'column',
+                      marginTop: hp('0.25'),
+                    }}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        paddingVertical: wp('1'),
+                      }}>
+                      <View style={{flex: 0.7}}>
+                        <Text
+                          numberOfLines={1}
+                          ellipsizeMode={'tail'}
+                          style={styles.stdNameText}>
+                          {item?.STD_NAME}
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          flex: 0.3,
+                          backgroundColor: '#D4FFCC',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          borderRadius: wp('3'),
+                          marginRight: wp('2'),
+                        }}>
+                        <Text
+                          numberOfLines={1}
+                          ellipsizeMode={'tail'}
+                          style={styles.stdStdIdText}>
+                          {item?.BR_STD_ID}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'column',
+                      marginBottom: hp('0.5'),
+                    }}>
+                    <ChildsInBss
+                      leftText={'DOB:'}
+                      rightText={item?.DATE_OF_BIRTH}
+                    />
+                    <ChildsInBss
+                      leftText={'Class Section:'}
+                      rightText={item?.CLASS_SECTION}
+                    />
+                  </View>
+                </View>
+              </View>
+            </View>
+          </CollapseHeader>
+          <CollapseBody>
+            <View style={{}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginBottom: hp('1'),
+                }}>
+                <View
+                  style={{
+                    flex: 0.2,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: wp('1.5'),
+                  }}></View>
+                <View style={{flex: 0.8}}>
+                  <ChildsInBss leftText={'School'} rightText={item?.BR_NAME} />
+                  <ChildsInBss
+                    leftText={'Fee Due:'}
+                    rightText={item?.FEE_DUE}
+                  />
+                  <ChildsInBss
+                    leftText={'Due Date:'}
+                    rightText={item?.DUE_DATE}
+                  />
+                  <ChildsInBss
+                    leftText={'Invoice'}
+                    rightText={item?.INVOICE_NUM}
+                  />
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      marginVertical: hp('0.5'),
+                      height: hp('3.5'),
+                    }}>
+                    <View style={{flex: 0.65}}></View>
+                    <TouchableOpacity
+                      style={{
+                        flex: 0.3,
+                        backgroundColor: '#1C37A4',
+                        borderRadius: wp('5'),
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontSize: hp('1.25'),
+                          fontWeight: '300',
+                          fontFamily: fontFamily.ceraMedium,
+                        }}>
+                        PAY NOW
+                      </Text>
+                    </TouchableOpacity>
+                    <View style={{flex: 0.05}}></View>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </CollapseBody>
+        </Collapse>
+      </View>
+    );
+  };
 
   return (
-    <View style={{flex: 1, backgroundColor: colors.appBackGroundColor}}>
+    <>
       <View>
         <MainHeader
-          text={'Child’s in BSS'}
+          text={`Child's in BSS`}
           iconName={'arrow-left'}
           onpressBtn={() => props.navigation.goBack()}
         />
       </View>
-      <BssChild/>
-    </View>
+      {/* <BssChild/> */}
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          backgroundColor: '#f5f8fc',
+        }}>
+        <View
+          style={{
+            marginVertical: hp('3'),
+            marginHorizontal: wp('3'),
+            paddingHorizontal: wp('1'),
+          }}>
+          <FlatList
+            data={profileHere?.userData?.bsschildResult_result}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            ListEmptyComponent={
+              <Text style={styles.noDataText}>
+                Not a single your Children in Beaconhouse.
+              </Text>
+            }
+          />
+        </View>
+      </ScrollView>
+    </>
   );
 };
 
 export default ChildBss;
 
 const styles = EStyleSheet.create({
-  zetext: {
-    color: '#363636',
-    fontWeight: '700',
-    fontSize: '0.9rem',
-    fontFamily: fontFamily.ceraBlack,
-  },
-  zetext1: {
-    color: '#363636',
-    fontWeight: '500',
-    // marginTop: hp(1),
-    fontSize: '0.7rem',
-    fontFamily: fontFamily.ceraBlack,
-  },
-  smalltext: {
-    fontWeight: '700',
-    fontSize: '0.7375rem',
-    fontFamily: fontFamily.ceraBlack,
-    color: '#353535',
-    fontStyle: 'normal',
-  },
-  smalltext1: {
-    fontWeight: '500',
-    fontSize: '0.5rem',
-    fontFamily: fontFamily.ceraBlack,
-    color: '#353535',
-    fontStyle: 'normal',
-    alignItems: 'center',
-  },
-  dtext: {
-    color: '#353535',
-    fontSize: '0.8rem',
-    fontWeight: '700',
-    fontStyle: 'normal',
-    paddingVertical: hp(0.5),
-    fontFamily: fontFamily.ceraBlack,
-  },
-  centertext: {
-    fontFamily: fontFamily.ceraBlack,
-    fontSize: '0.75rem',
-    fontWeight: '700',
-    fontStyle: 'normal',
-    color: '#363636',
-  },
-  ststext: {
-    fontFamily: fontFamily.ceraBlack,
-    paddingHorizontal: hp(2.5),
-    paddingVertical: hp(0.5),
-    textTransform: 'uppercase',
-  },
-  childname: {
+  stdNameText: {
     color: '#353535',
     fontFamily: fontFamily.ceraBold,
-    fontSize: '0.6rem',
     fontWeight: '700',
-    fontStyle: 'normal',
+    fontSize: '0.67rem',
   },
-  number: {
-    color: '#2D8E00',
-    backgroundColor: '#D4FFCC',
-    borderRadius: hp(50),
-    paddingHorizontal: hp(0.8),
-    fontFamily: fontFamily.ceraBold,
-    fontSize: '0.5rem',
-    fontWeight: '700',
-    fontStyle: 'normal',
-  },
-  dob: {
-    color: '#363636',
-    fontFamily: fontFamily.ceraMedium,
-    fontSize: '0.5rem',
-    fontWeight: '300',
-    fontStyle: 'normal',
-  },
-  dobdata: {
-    color: '#353535',
+  stdStdIdText: {
+    color: 'black',
     // backgroundColor: '#D4FFCC',
-    borderRadius: hp(50),
-    paddingHorizontal: hp(0.8),
-    fontFamily: fontFamily.ceraMedium,
+    color: '#2D8E00',
+    fontFamily: fontFamily.ceraBold,
+    fontWeight: '700',
+    // paddingHorizontal: wp('1'),
+    paddingVertical: hp('0.5'),
     fontSize: '0.55rem',
+    borderRadius: wp('5'),
+  },
+  stdDetails: {
+    color: '#363636',
+    fontFamily: fontFamily.ceraLight,
     fontWeight: '300',
-    fontStyle: 'normal',
+    fontSize: '0.6rem',
+  },
+  stdValueDetails: {
+    color: '#353535',
+    fontFamily: fontFamily.ceraMedium,
+    fontWeight: '500',
+    fontSize: '0.6rem',
+  },
+  noDataText: {
+    fontSize: '0.6rem',
+    fontFamily: fontFamily.ceraMedium,
+    color: colors.drakGrey,
+    fontWeight: '300',
+    letterSpacing: 0.25,
+    textAlign: 'center',
+    paddingHorizontal: wp('2.5'),
+    paddingVertical: hp('0.5'),
   },
 });

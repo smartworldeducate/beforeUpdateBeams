@@ -1,6 +1,13 @@
-import {View, Text, TouchableOpacity, Image, ScrollView} from 'react-native';
+import {
+  SafeAreaView,
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  FlatList,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import SelectDropdown from 'react-native-select-dropdown';
 import MainHeader from '../Components/Headers/MainHeader';
 import Icon from 'react-native-fontawesome-pro';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -8,838 +15,536 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import moment from 'moment';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import fontFamily from '../Styles/fontFamily';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {reporteeHandleFun} from '../features/reportee/createSlice';
-import {currentEmpDateDataHandler} from '../features/currntdataofemployee/createSlice';
 import {useSelector, useDispatch} from 'react-redux';
-import {getLineMangerHandller} from '../features/lineManager/createSlice';
+import EmpCardPart from '../Components/EmpCardPart/EmpCardPart';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {AllRepoteesAction} from '../features/ReporteeSectionSlice/AllReportessSlice';
+import colors from '../Styles/colors';
+import LineSeprator from '../Components/LineSeprator/LineSeprator';
+import TeamModal from '../Components/Modal/TeamModal';
+import ReporteeProfileModal from '../Components/Modal/ReporteeProfileModal';
+
+const options = {day: 'numeric', month: 'short', year: 'numeric'};
+
 const Reportee = props => {
   const dispatch = useDispatch();
-  const [reporteeData, setReporteeData] = useState([]);
-  const [selectValue, setSelectValue] = useState(0);
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [date, setDate] = useState('');
-  const [empLength, setEmpLength] = useState('');
-  const [mangerData, setMangerData] = useState([]);
-  const lineMangerData = useSelector(state => state.getLineManger);
-  const userData = useSelector(state => state.reportee);
-  console.log('line manger data', mangerData);
+  const profileHere = useSelector(state => state.profileStore);
+  const allReporteesHere = useSelector(state => state.allReporteesStore);
+  console.log('profileHere', profileHere);
+  console.log('allReporteesHere', allReporteesHere);
 
-  const lineMangerHandler = async () => {
-    try {
-      const lineMdata = await dispatch(getLineMangerHandller());
-      console.log('line manager data', lineMdata?.payload?.data);
-      if (lineMdata && lineMdata.payload && lineMdata.payload.data) {
-        console.log(
-          'line manager data inside dispatch',
-          lineMdata?.payload?.data,
-        );
-        setMangerData(lineMdata?.payload?.data);
-      }
-      return lineMdata;
-    } catch (error) {
-      console.error('Error in reporteeHandler:', error);
-      throw error;
-    }
-  };
-  const reporteeHandler = async val => {
-    try {
-      // console.log('selected value', val);
-      const reportee = await dispatch(reporteeHandleFun(val));
-      if (reportee && reportee.payload && reportee.payload.data) {
-        // console.log('reprtee dada inside dispatch', reportee.payload?.data);
-        setReporteeData(reportee.payload?.data);
-        setEmpLength(reportee.payload?.data?.length);
-      }
-      return reportee;
-    } catch (error) {
-      console.error('Error in reporteeHandler:', error);
-      throw error;
+  const [modalVisible, setModalVisible] = useState(false);
+  const [reporteeModal, setReporteeModal] = useState(false);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toLocaleDateString('en-PK', options),
+  );
+  const [filterTextName, setFilterTextName] = useState(
+    profileHere?.userData?.emp_result?.EMP_NAME.split(' ')[0] + ' ' + 'Team',
+  );
+
+  const [selectReportee, setSelectReportee] = useState();
+
+  // console.log('profileHere', profileHere?.userData?.reporting_result?.data);
+
+  const [reportingToId, setReportingToId] = useState();
+  const navigation = useNavigation();
+  const handleNavigate = (routeName, clearStack, params) => {
+    navigation.navigate(routeName, params);
+    if (clearStack) {
+      console.log('Clear');
     }
   };
 
   useEffect(() => {
-    setReporteeData(userData);
-    const rd = reporteeHandler({
-      reportingToId: selectValue ? selectValue : '18776',
-    });
-    setReporteeData(rd.payload?.data);
-    const lmd = lineMangerHandler();
-    console.log('linemanger data', lmd.payload?.data);
-    // setMangerData(lmd);
-  }, [selectValue]);
+    const fetchData = async () => {
+      try {
+        const loginData = await AsyncStorage.getItem('loginData');
+        const parsedLoginData = JSON.parse(loginData);
 
-  const showDatePicker = () => {
+        const branchId = await AsyncStorage.getItem('branchId');
+        const parsedBranchId = JSON.parse(branchId);
+
+        const deptId = await AsyncStorage.getItem('deptId');
+        const parsedDeptId = JSON.parse(deptId);
+        dispatch(
+          AllRepoteesAction({
+            reportingToId: parsedLoginData,
+            branch_id: parsedBranchId,
+            dept_id: parsedDeptId,
+          }),
+        );
+      } catch (error) {
+        console.error('Error retrieving values from AsyncStorage:', error);
+      }
+    };
+
+    fetchData();
+  }, [dispatch]);
+
+  // useEffect(() => {
+  //   AsyncStorage.getItem('loginData')
+  //     .then(loginData => {
+  //       const parsedLoginData = JSON.parse(loginData);
+  //       setReportingToId(parsedLoginData);
+  //       dispatch(
+  //         AllRepoteesAction({
+  //           reportingToId: parsedLoginData,
+  //           month_date: moment(selectedDate, 'DD MMM YYYY').format(
+  //             'DD/MM/YYYY',
+  //           ),
+  //         }),
+  //       );
+  //     })
+  //     .catch(error => {
+  //       console.error('Error retrieving loginData from AsyncStorage:', error);
+  //     });
+  // }, [dispatch]);
+
+  const onPressModal = () => {
+    setModalVisible(!modalVisible);
+  };
+
+  const onPressDateModal = () => {
     setDatePickerVisibility(true);
-    setDate('');
   };
 
   const hideDatePicker = () => {
     setDatePickerVisibility(false);
   };
 
-  const handleDateConfirm = date => {
-    console.log(date);
-    const dt =
-      date.getDate() + '-' + date.getMonth() + '-' + date.getFullYear();
-    setDate(dt);
-    hideDatePicker();
-    setDateView(false);
-  };
-  const mainData = [
-    {
-      id: 22,
-      imag: 'artg',
-      text: 'Zeeshan A.Hafeez',
-      title: 'Senior Officer UX/UI Design',
-      timein: '08:44:47',
-      icondown: 'arrow-down-right',
-      timeout: '--:--:--',
-      number: '17-06-2023',
-      month: 'SUN',
-      backgroundColor: '#E5F7FF',
-      color: '#363636',
-      textInColor: '#10B727',
-      isWorking: 'working',
-      workingHours: 'Full Toil',
-      textoutcolor: '#363636',
-      day: 'sun',
-    },
-    {
-      id: 21,
-      imag: 'asd',
-      text: 'Yashfa Arslan',
-      title: 'Assistant Manager Software',
-      timein: '08:44:47',
-      icondown: 'arrow-down-right',
-      iconup: 'arrow-up-right',
-      timeout: '09:44:47',
-      number: '08:44:47',
-      month: 'MON',
-      color: '#363636',
-      textInColor: '#F64E60',
-      workingHours: '09:00',
-      day: 'mon',
-      textoutcolor: '#10B727',
-    },
-    {
-      id: 20,
-      imag: 'imran',
-      text: 'Maryam Ahmad',
-      title: 'Deputy Manager Software',
-      timein: '',
-      icondown: '',
-      icondown: '',
-      timeout: 'On Leave',
-      number: 'On Leave',
-      month: 'TUE',
-      color: '#363636',
-      textInColor: '#363636',
-      workingHours: '09:00',
-      textoutcolor: '#363636',
-    },
-    {
-      id: 19,
-      imag: 'salman',
-      text: 'Muhammad Moeez',
-      title: 'Deputy Manager Software',
-      timein: '',
-      icondown: '',
-      iconup: '',
-      timeout: 'Call for update',
-      number: '08:17:03',
-      month: 'TUE',
-      color: '#363636',
-      textInColor: '#363636',
-      workingHours: '09:00',
-      textoutcolor: '#363636',
-      borrds: '',
-    },
-    {
-      id: 22,
-      imag: 'artg',
-      text: 'Zeeshan A.Hafeez',
-      title: 'Senior Officer UX/UI Design',
-      timein: '08:44:47',
-      icondown: 'arrow-down-right',
-      timeout: '--:--:--',
-      number: '17-06-2023',
-      month: 'SUN',
-      backgroundColor: '#E5F7FF',
-      color: '#363636',
-      textInColor: '#10B727',
-      isWorking: 'working',
-      workingHours: 'Full Toil',
-      textoutcolor: '#363636',
-      day: 'sun',
-    },
-    {
-      id: 21,
-      imag: 'asd',
-      text: 'Yashfa Arslan',
-      title: 'Assistant Manager Software',
-      timein: '08:44:47',
-      icondown: 'arrow-down-right',
-      iconup: 'arrow-up-right',
-      timeout: '09:44:47',
-      number: '08:44:47',
-      month: 'MON',
-      color: '#363636',
-      textInColor: '#F64E60',
-      workingHours: '09:00',
-      day: 'mon',
-      textoutcolor: '#10B727',
-    },
-    {
-      id: 20,
-      imag: 'imran',
-      text: 'Maryam Ahmad',
-      title: 'Deputy Manager Software',
-      timein: '',
-      icondown: '',
-      icondown: '',
-      timeout: 'On Leave',
-      number: 'On Leave',
-      month: 'TUE',
-      color: '#363636',
-      textInColor: '#363636',
-      workingHours: '09:00',
-      textoutcolor: '#363636',
-    },
-    {
-      id: 19,
-      imag: 'salman',
-      text: 'Muhammad Moeez',
-      title: 'Deputy Manager Software',
-      timein: '',
-      icondown: '',
-      iconup: '',
-      timeout: 'Call for update',
-      number: '08:17:03',
-      month: 'TUE',
-      color: '#363636',
-      textInColor: '#363636',
-      workingHours: '09:00',
-      textoutcolor: '#363636',
-      borrds: '',
-    },
-    {
-      id: 22,
-      imag: 'artg',
-      text: 'Zeeshan A.Hafeez',
-      title: 'Senior Officer UX/UI Design',
-      timein: '08:44:47',
-      icondown: 'arrow-down-right',
-      timeout: '--:--:--',
-      number: '17-06-2023',
-      month: 'SUN',
-      backgroundColor: '#E5F7FF',
-      color: '#363636',
-      textInColor: '#10B727',
-      isWorking: 'working',
-      workingHours: 'Full Toil',
-      textoutcolor: '#363636',
-      day: 'sun',
-    },
-    {
-      id: 21,
-      imag: 'asd',
-      text: 'Yashfa Arslan',
-      title: 'Assistant Manager Software',
-      timein: '08:44:47',
-      icondown: 'arrow-down-right',
-      iconup: 'arrow-up-right',
-      timeout: '09:44:47',
-      number: '08:44:47',
-      month: 'MON',
-      color: '#363636',
-      textInColor: '#F64E60',
-      workingHours: '09:00',
-      day: 'mon',
-      textoutcolor: '#10B727',
-    },
-    {
-      id: 20,
-      imag: 'imran',
-      text: 'Maryam Ahmad',
-      title: 'Deputy Manager Software',
-      timein: '',
-      icondown: '',
-      icondown: '',
-      timeout: 'On Leave',
-      number: 'On Leave',
-      month: 'TUE',
-      color: '#363636',
-      textInColor: '#363636',
-      workingHours: '09:00',
-      textoutcolor: '#363636',
-    },
-    {
-      id: 19,
-      imag: 'salman',
-      text: 'Muhammad Moeez',
-      title: 'Deputy Manager Software',
-      timein: '',
-      icondown: '',
-      iconup: '',
-      timeout: 'Call for update',
-      number: '08:17:03',
-      month: 'TUE',
-      color: '#363636',
-      textInColor: '#363636',
-      workingHours: '09:00',
-      textoutcolor: '#363636',
-      borrds: '',
-    },
-    {
-      id: 20,
-      imag: 'imran',
-      text: 'Maryam Ahmad',
-      title: 'Deputy Manager Software',
-      timein: '',
-      icondown: '',
-      icondown: '',
-      timeout: 'On Leave',
-      number: 'On Leave',
-      month: 'TUE',
-      color: '#363636',
-      textInColor: '#363636',
-      workingHours: '09:00',
-      textoutcolor: '#363636',
-    },
-    {
-      id: 19,
-      imag: 'salman',
-      text: 'Muhammad Moeez',
-      title: 'Deputy Manager Software',
-      timein: '',
-      icondown: '',
-      iconup: '',
-      timeout: 'Call for update',
-      number: '08:17:03',
-      month: 'TUE',
-      color: '#363636',
-      textInColor: '#363636',
-      workingHours: '09:00',
-      textoutcolor: '#363636',
-      borrds: '',
-    },
-  ];
-  return (
-    <>
-      <View>
-        <MainHeader
-          text={'Reportees'}
-          iconName={'arrow-left'}
-          onpressBtn={() => props.navigation.goBack()}
-        />
-      </View>
-      <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode="date"
-        onConfirm={handleDateConfirm}
-        onCancel={hideDatePicker}
-      />
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginHorizontal: hp(2.5),
-          marginTop: hp(1),
-        }}>
-        <View style={{width: wp(43), zIndex: 1}}>
-          <SelectDropdown
-            data={mangerData}
-            onSelect={(selectedItem, index) => {
-              setSelectValue(selectedItem?.EMPLOYEE_ID);
-            }}
-            defaultButtonText={'Muhammad Qasim Ali Khan'}
-            renderCustomizedButtonChild={(selectedItem, index) => {
-              return (
-                <View style={styles.dropdown3BtnChildStyle}>
-                  {selectedItem ? (
-                    <Image
-                      source={selectedItem.image}
-                      style={styles.dropdown3BtnImage}
-                    />
-                  ) : (
-                    ''
-                  )}
-                  <Text style={[styles.dropdown3BtnTxt, {color: '#363636'}]}>
-                    {selectedItem ? selectedItem.EMP_NAME : ' Qasim Ali Khan'}
-                  </Text>
-                </View>
-              );
-            }}
-            renderCustomizedRowChild={(item, index) => {
-              return (
-                <View style={styles.dropdown3RowChildStyle}>
-                  <Image source={item.image} style={styles.dropdownRowImage} />
-                  <Text style={styles.dropdown1RowTxtStyle}>
-                    {item.EMP_NAME}
-                  </Text>
-                </View>
-              );
-            }}
-            buttonStyle={styles.dropdown1BtnStyle}
-            buttonTextStyle={styles.dropdown1BtnTxtStyle}
-            dropdownStyle={styles.dropdown1DropdownStyle}
-            rowStyle={styles.dropdown1RowStyle}
-            rowTextStyle={styles.dropdown1RowTxtStyle}
-            dropdownIconPosition={'left'}
-          />
-        </View>
+  const handleConfirm = date => {
+    const options = {day: 'numeric', month: 'short', year: 'numeric'};
+    const selectedDateOnConfirm = date.toLocaleDateString('en-PK', options);
 
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={showDatePicker}
+    dispatch(
+      AllRepoteesAction({
+        reportingToId: reportingToId,
+        month_date: moment(selectedDateOnConfirm, 'DD MMM YYYY').format(
+          'DD/MM/YYYY',
+        ),
+        reporteeId: selectReportee,
+      }),
+    );
+
+    setSelectedDate(selectedDateOnConfirm);
+    hideDatePicker();
+  };
+  const minDate = new Date();
+  minDate.setMonth(minDate.getMonth() - 6);
+
+  const [idHere, setIdHere] = useState(null);
+  const [branchIdHere, setBranchIdHere] = useState(null);
+  const [deptIdHere, setDeptIdHere] = useState(null);
+
+  const onPressReportee = item => {
+    setReporteeModal(!reporteeModal);
+    setIdHere(item?.item);
+    setBranchIdHere(item?.itemBranchId);
+    setDeptIdHere(item?.itemDeptId);
+  };
+  const onRequestClose = () => {
+    setReporteeModal(false);
+    setIdHere(null);
+    setBranchIdHere(null);
+    setDeptIdHere(null);
+  };
+
+  const onPressReporteeTeamMember = item => {
+    setFilterTextName(item?.itemName);
+    setSelectReportee(item?.itemId);
+    dispatch(
+      AllRepoteesAction({
+        reportingToId: reportingToId,
+        month_date: moment(selectedDate, 'DD MMM YYYY').format('DD/MM/YYYY'),
+        reporteeId: item?.itemId,
+      }),
+    );
+    setModalVisible(false);
+  };
+
+  const onPressMainReportee = () => {
+    // console.log('onPressMainReportee');
+    dispatch(
+      AllRepoteesAction({
+        reportingToId: reportingToId,
+        month_date: moment(selectedDate, 'DD MMM YYYY').format('DD/MM/YYYY'),
+      }),
+    );
+    setFilterTextName(
+      profileHere?.userData?.emp_result?.EMP_NAME.split(' ')[0] + ' ' + 'Team',
+    );
+    setModalVisible(false);
+  };
+
+  console.log('selectReportee', selectReportee);
+
+  const renderItem = ({item, index}) => {
+    return (
+      <View style={{}}>
+        <View
           style={{
-            width: wp(43),
+            flexDirection: 'row',
           }}>
           <View
             style={{
-              height: hp(6),
-              flexDirection: 'row',
-              borderColor: '#E4DFDF',
-              justifyContent: 'space-between',
-              borderWidth: 1,
-              borderRadius: hp(1.2),
-              backgroundColor: '#FFFFFF',
-              paddingLeft: hp(1.5),
+              flex: 0.12,
+              justifyContent: 'center',
+              alignItems: 'center',
             }}>
-            <View style={{justifyContent: 'center', alignItems: 'center'}}>
-              <Text style={{color: 'gray'}}>{date}</Text>
+            <Image
+              source={{uri: 'salman'}}
+              style={{
+                height: hp('4.5'),
+                width: wp('9'),
+                borderRadius: wp('5'),
+              }}
+              resizeMode={'cover'}
+            />
+          </View>
+          <TouchableOpacity
+            onPress={() =>
+              onPressReportee({
+                item: item?.EMPLOYEE_ID,
+                itemBranchId: item?.BRANCH_ID,
+                itemDeptId: item?.DEPARTMENT_ID,
+              })
+            }
+            activeOpacity={0.5}
+            style={{
+              flex: 0.45,
+              flexDirection: 'column',
+            }}>
+            <View style={{}}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode={'tail'}
+                style={styles.reporteeName}>
+                {item?.EMP_NAME}
+              </Text>
+            </View>
+            <View style={{}}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode={'tail'}
+                style={styles.reporteeDesignation}>
+                {item?.DESIGNATION}
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <View
+            style={{
+              flex: 0.215,
+              flexDirection: 'row',
+            }}>
+            <View
+              style={{
+                flex: 0.3,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Icon
+                type="regular"
+                name="arrow-down-right"
+                size={hp('2')}
+                color="#10B727"
+              />
             </View>
             <View
               style={{
+                flex: 0.7,
+                justifyContent: 'center',
+              }}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode={'tail'}
+                style={styles.empInOutTime}>
+                {item?.TIME_IN}
+              </Text>
+            </View>
+          </View>
+          <View
+            style={{
+              flex: 0.215,
+              flexDirection: 'row',
+            }}>
+            <View
+              style={{
+                flex: 0.3,
                 justifyContent: 'center',
                 alignItems: 'center',
-                paddingRight: hp(1.5),
               }}>
               <Icon
-                type="light"
-                name="angles-up-down"
-                size={hp(2)}
-                color="#cdcdcd"
+                type="regular"
+                name="arrow-up-right"
+                size={hp('2')}
+                color="#10B727"
+              />
+            </View>
+            <View
+              style={{
+                flex: 0.7,
+                justifyContent: 'center',
+              }}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode={'tail'}
+                style={styles.empInOutTime}>
+                {item?.TIME_OUT}
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        <LineSeprator
+          height={hp('0.15')}
+          backgroundColor={'#DBDBDB'}
+          maginVertical={hp('1.25')}
+        />
+      </View>
+    );
+  };
+
+  const renderItemTeam = ({item, index}) => {
+    // console.log('item>>>', item);
+    return (
+      <>
+        <TouchableOpacity
+          onPress={() =>
+            onPressReporteeTeamMember({
+              itemId: item.EMPLOYEE_ID,
+              itemName: item?.EMP_NAME,
+            })
+          }
+          activeOpacity={0.5}
+          style={{flexDirection: 'row'}}>
+          <View
+            style={{
+              flex: 0.2,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Image
+              source={{uri: item?.EMP_PHOTO}}
+              style={{
+                height: hp('4.5'),
+                width: wp('9'),
+                borderRadius: wp('5'),
+              }}
+              resizeMode={'cover'}
+            />
+          </View>
+
+          <View
+            style={{
+              flex: 0.8,
+              justifyContent: 'center',
+            }}>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode={'tail'}
+              style={styles.reporteeName}>
+              {item?.EMP_NAME}
+            </Text>
+          </View>
+        </TouchableOpacity>
+        <LineSeprator
+          height={hp('0.15')}
+          backgroundColor={'#DBDBDB'}
+          maginVertical={hp('1.25')}
+          marginHorizontal={wp('-5')}
+        />
+      </>
+    );
+  };
+
+  return (
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: colors.appBackGroundColor,
+      }}>
+      <>
+        <View>
+          <MainHeader
+            text={'Reportees'}
+            iconName={'arrow-left'}
+            onpressBtn={() => props.navigation.goBack()}
+          />
+        </View>
+
+        <ScrollView
+          contentContainerStyle={{
+            flexGrow: 1,
+            backgroundColor: '#f5f8fc',
+          }}>
+          <View style={{marginVertical: hp('3')}}>
+            <View style={{marginHorizontal: wp('5')}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  height: hp('6'),
+                }}>
+                <TouchableOpacity
+                  onPress={onPressModal}
+                  activeOpacity={0.5}
+                  style={{
+                    flex: 0.48,
+                    flexDirection: 'row',
+                    borderRadius: wp('3'),
+                    borderWidth: wp('0.15'),
+                  }}>
+                  <View
+                    style={{
+                      flex: 0.75,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text
+                      numberOfLines={1}
+                      ellipsizeMode={'tail'}
+                      style={styles.filterText}>
+                      {filterTextName}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flex: 0.25,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text style={{color: 'black'}}></Text>
+                  </View>
+                </TouchableOpacity>
+                <View style={{flex: 0.04}}></View>
+                <TouchableOpacity
+                  onPress={onPressDateModal}
+                  activeOpacity={0.5}
+                  style={{
+                    flex: 0.48,
+                    flexDirection: 'row',
+                    borderRadius: wp('3'),
+                    borderWidth: wp('0.15'),
+                  }}>
+                  <View
+                    style={{
+                      flex: 0.75,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text style={styles.filterText}>{selectedDate}</Text>
+                  </View>
+                  <View
+                    style={{
+                      flex: 0.25,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text style={{color: 'black'}}></Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{marginVertical: hp('2')}}>
+                <EmpCardPart
+                  firstText={'TOTAL'}
+                  statusValue={allReporteesHere?.userData?.reportee_length}
+                  secondText={'PRESENT'}
+                  serviceLengthValue={allReporteesHere?.userData?.PRESENT_EMP}
+                  thirdText={'ABSENT'}
+                  ageValue={allReporteesHere?.userData?.ABSENT_EMP}
+                />
+              </View>
+
+              <LineSeprator
+                height={hp('0.15')}
+                backgroundColor={'#DBDBDB'}
+                marginHorizontal={wp('-5')}
+              />
+
+              <View style={{marginBottom: hp('2')}}></View>
+              <FlatList
+                data={allReporteesHere?.userData?.data}
+                renderItem={renderItem}
+                keyExtractor={(item, index) => index.toString()}
               />
             </View>
           </View>
-        </TouchableOpacity>
-      </View>
-      <View
-        style={{
-          height: hp(5),
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginHorizontal: hp(2.5),
-          marginTop: hp(2),
-        }}>
-        <View style={{flexDirection: 'row'}}>
-          <View style={{alignItems: 'center', paddingVertical: hp(0.4)}}>
-            <Icon
-              type="light"
-              name="circle-sterling"
-              size={hp(3)}
-              color="#8A2F9B"
+
+          {/* {modalVisible ? (
+            <TeamModal
+              myData={profileHere?.userData?.reporting_result?.data}
+              renderItem={renderItemTeam}
+              keyExtractor={(item, index) => index.toString()}
+              onPressOpacity={onPressModal}
+              empName={profileHere?.userData?.emp_result?.EMP_NAME}
+              onPressMainReportee={onPressMainReportee}
             />
-          </View>
-          <View style={{marginLeft: hp(0.8)}}>
-            <View>
-              <Text style={styles.smalltext}>15</Text>
-            </View>
-            <View style={{marginTop: hp(-0.2)}}>
-              <Text style={styles.smalltext1}>Total</Text>
-            </View>
-          </View>
-        </View>
-        <View style={{flexDirection: 'row', marginLeft: hp(3.5)}}>
-          <View style={{alignItems: 'center', paddingVertical: hp(0.4)}}>
-            <Icon type="light" name="circle-check" size={hp(3)} color="green" />
-          </View>
-          <View style={{marginLeft: hp(0.5)}}>
-            <View>
-              <Text style={styles.smalltext}>06</Text>
-            </View>
-            <View style={{marginTop: hp(-0.2)}}>
-              <Text style={styles.smalltext1}>present</Text>
-            </View>
-          </View>
-        </View>
-        <View style={{flexDirection: 'row', marginLeft: hp(3.5)}}>
-          <View style={{alignItems: 'center', paddingVertical: hp(0.4)}}>
-            <Icon
-              type="light"
-              name="circle-xmark"
-              size={hp(3)}
-              color="#CD6155"
+          ) : (
+            <></>
+          )} */}
+
+          {isDatePickerVisible ? (
+            <DateTimePickerModal
+              isVisible={isDatePickerVisible}
+              mode="date"
+              onConfirm={handleConfirm}
+              onCancel={hideDatePicker}
+              minimumDate={minDate}
+              maximumDate={new Date()}
             />
-          </View>
-          <View style={{marginLeft: hp(0.5)}}>
-            <View>
-              <Text style={styles.smalltext}>09</Text>
-            </View>
-            <View style={{marginTop: hp(-0.2)}}>
-              <Text style={styles.smalltext1}>Absent</Text>
-            </View>
-          </View>
-        </View>
-      </View>
+          ) : (
+            <></>
+          )}
 
-      <View
-        style={{
-          height: hp(0.05),
-          backgroundColor: '#cdcdcd',
-          marginTop: hp(1),
-        }}></View>
-
-      <ScrollView>
-        {reporteeData &&
-          reporteeData.map((item, i) => {
-            const {
-              DESIGNATION,
-              EMP_IN_TM,
-              EMP_NAME,
-              EMP_OUT_TM,
-              EMP_PHOTO,
-              ISEARLY,
-              ISLATE,
-              LATE_TM,
-              LATE_OUT_TM,
-              REC_STATUS,
-              STATUS,
-            } = item;
-            return (
-              <View
-                style={{
-                  height: hp(6.5),
-                  flexDirection: 'row',
-                  marginHorizontal: hp(2.5),
-                  borderBottomColor: 'grey',
-                  borderBottomWidth: wp('0.1'),
-                }}
-                key={i}>
-                <View
-                  style={{
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    flex: 0.5,
-                    marginLeft: wp(1),
-                  }}>
-                  <View style={{}}>
-                    <Image
-                      style={{
-                        width: wp(7),
-                        height: hp(3.5),
-                        borderRadius: hp(50),
-                      }}
-                      source={{uri: 'group'}}
-                      resizeMode="cover"
-                    />
-                  </View>
-                  <View style={{paddingLeft: hp(1)}}>
-                    <View>
-                      <Text style={styles.testname}>{EMP_NAME}</Text>
-                    </View>
-                    <View>
-                      <Text style={styles.desig}>{DESIGNATION}</Text>
-                    </View>
-                  </View>
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    flex: 0.5,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  {EMP_IN_TM == null && EMP_OUT_TM == null ? (
-                    <View
-                      style={{
-                        backgroundColor: '#1C37A4',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        borderRadius: hp(5),
-                        height: hp(4),
-                        width: wp(35),
-                      }}>
-                      <Text style={{color: '#fff'}}>Call for update</Text>
-                    </View>
-                  ) : (
-                    <>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          flex: 0.5,
-                        }}>
-                        {item.icondown && (
-                          <View style={{justifyContent: 'center'}}>
-                            <Icon
-                              type="light"
-                              name={item.icondown}
-                              size={hp(2)}
-                              color={item.textInColor}
-                            />
-                          </View>
-                        )}
-                        <View
-                          style={{
-                            justifyContent: 'center',
-                            paddingLeft: hp(0.5),
-                          }}>
-                          <Text
-                            style={[
-                              styles.timestyle,
-                              {color: item.textInColor},
-                            ]}>
-                            {EMP_IN_TM != '' ? EMP_IN_TM : 'NULL'}
-                          </Text>
-                        </View>
-                      </View>
-                      {EMP_OUT_TM && (
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            flex: 0.5,
-                            // backgroundColor: 'pink',
-                          }}>
-                          <View style={{justifyContent: 'center'}}>
-                            <Icon
-                              type="light"
-                              name="arrow-up-right"
-                              size={hp(2)}
-                              color={LATE_TM ? 'red' : 'green'}
-                            />
-                          </View>
-
-                          <View
-                            style={{
-                              justifyContent: 'center',
-                              paddingLeft: hp(0.5),
-                            }}>
-                            <Text
-                              style={[
-                                styles.timestyle,
-                                {color: LATE_TM ? 'red' : 'green'},
-                              ]}>
-                              {EMP_OUT_TM != '' ? EMP_OUT_TM : 'NULL'}
-                            </Text>
-                          </View>
-                        </View>
-                      )}
-                    </>
-                  )}
-                </View>
-              </View>
-            );
-          })}
-      </ScrollView>
-    </>
+          {reporteeModal ? (
+            <ReporteeProfileModal
+              onPressBackIcon={onRequestClose}
+              modalVisible={reporteeModal}
+              onRequestClose={onRequestClose}
+              reporteeId={idHere}
+              my_branch_id={branchIdHere}
+              my_DEPARTMENT_ID={deptIdHere}
+            />
+          ) : (
+            <></>
+          )}
+        </ScrollView>
+      </>
+    </SafeAreaView>
   );
 };
 
 export default Reportee;
 
 const styles = EStyleSheet.create({
-  smalltext: {
-    fontWeight: '500',
-    fontSize: '0.9rem',
-    fontFamily: fontFamily.ceraMedium,
-    color: '#363636',
-    fontStyle: 'normal',
-  },
-  smalltext1: {
-    fontWeight: '500',
-    fontSize: '0.5rem',
-    fontFamily: fontFamily.ceraMedium,
-    color: '#353535',
-    fontStyle: 'normal',
-    alignItems: 'center',
-  },
-  iconSty: {
-    fontSize: hp(2.5),
-    color: '#A6ACAF',
-    fontWeight: 100,
-  },
-  headertext: {
-    fontSize: '0.75rem',
-    fontFamily: fontFamily.ceraMedium,
-    fontStyle: 'normal',
-    color: '#363636',
-    fontWeight: '500',
-  },
-  duction: {
-    color: '#979797',
-    fontSize: '0.6rem',
-    fontFamily: fontFamily.ceraMedium,
-    fontStyle: 'normal',
-    fontWeight: '500',
-  },
-
-  textnum: {
-    color: '#343434',
-    fontSize: '0.6rem',
-    fontFamily: fontFamily.ceraMedium,
-    fontStyle: 'normal',
-    fontWeight: '500',
-  },
-  circularText: {
-    fontSize: '0.75rem',
-    color: '#646464',
-    fontWeight: '700',
-    fontFamily: fontFamily.ceraBold,
-    fontStyle: 'normal',
-  },
-  circularText1: {
-    fontSize: '0.5rem',
-    color: '#979797',
-    fontWeight: '500',
-    fontFamily: fontFamily.ceraMedium,
-    fontStyle: 'normal',
-    marginHorizontal: hp(0.9),
-    textTransform: 'uppercase',
-  },
-  numbertext: {
-    color: '#353535',
-    fontSize: '0.7rem',
-    fontWeight: '700',
-    fontFamily: fontFamily.ceraBold,
-    fontStyle: 'normal',
-    textTransform: 'uppercase',
-  },
-  basictext: {
-    color: '#979797',
-    fontSize: '0.5rem',
-    fontWeight: '500',
-    fontFamily: fontFamily.ceraMedium,
-    fontStyle: 'normal',
-    textTransform: 'uppercase',
-  },
-  duction: {
-    color: '#979797',
-    fontSize: '0.6rem',
-    fontFamily: fontFamily.ceraMedium,
-    fontStyle: 'normal',
-    fontWeight: '500',
-  },
-  testname: {
-    color: '#343434',
+  filterText: {
+    paddingHorizontal: wp('1'),
+    color: 'black',
     fontSize: '0.55rem',
     fontFamily: fontFamily.ceraMedium,
-    fontStyle: 'normal',
     fontWeight: '500',
   },
-  textnum: {
+  reporteeName: {
+    fontSize: '0.6rem',
+    fontFamily: fontFamily.ceraMedium,
+    fontWeight: '500',
     color: '#343434',
-    fontSize: '0.6rem',
+  },
+  reporteeDesignation: {
+    fontSize: '0.5rem',
     fontFamily: fontFamily.ceraMedium,
-    fontStyle: 'normal',
     fontWeight: '500',
-  },
-  textobj: {
-    color: '#505255',
-    fontSize: '0.6rem',
-    fontFamily: fontFamily.ceraMedium,
-    fontStyle: 'normal',
-    fontWeight: '300',
-    lineHeight: hp(1.8),
-  },
-  objnum: {
-    color: '#969696',
-    fontSize: '0.6rem',
-    fontFamily: fontFamily.ceraMedium,
-    fontStyle: 'normal',
-    fontWeight: '500',
-  },
-  zetext: {
-    color: '#363636',
-    fontWeight: '700',
-    fontSize: '0.9rem',
-    fontFamily: fontFamily.ceraBlack,
-  },
-  zetext1: {
-    color: '#363636',
-    fontWeight: '500',
-    // marginTop: hp(1),
-    fontSize: '0.7rem',
-    fontFamily: fontFamily.ceraBlack,
-  },
-  smalltext: {
-    fontWeight: '700',
-    fontSize: '0.7rem',
-    fontFamily: fontFamily.ceraBold,
-    color: '#353535',
-    fontStyle: 'normal',
-  },
-  smalltext1: {
-    fontWeight: '300',
-    fontSize: '0.45rem',
-    fontFamily: fontFamily.ceraLight,
     color: '#979797',
-    fontStyle: 'normal',
-    alignItems: 'center',
-    textTransform: 'uppercase',
   },
-  dtext: {
-    color: '#353535',
-    fontSize: '0.65rem',
-    fontWeight: '700',
-    fontStyle: 'normal',
-    paddingVertical: hp(0.5),
-    fontFamily: fontFamily.ceraBold,
-  },
-  desig: {
-    color: '#343434',
-    fontSize: '0.45rem',
-    fontFamily: fontFamily.ceraLight,
-    fontStyle: 'normal',
-    fontWeight: '300',
-  },
-  timestyle: {
-    color: '#343434',
-    fontSize: '0.6rem',
+  empInOutTime: {
+    fontSize: '0.43rem',
     fontFamily: fontFamily.ceraMedium,
-    fontStyle: 'normal',
     fontWeight: '500',
-  },
-  dropdown1BtnStyle: {
-    width: '100%',
-    height: hp(5.9),
-    backgroundColor: '#FFF',
-    borderRadius: hp(1),
-    borderWidth: 1,
-    borderColor: '#cdcdcd',
-    // elevation: 8,
-  },
-  dropdown1BtnTxtStyle: {
-    color: '#363636',
-    fontSize: '0.7rem',
-    fontFamily: fontFamily.ceraMedium,
-    textAlign: 'left',
-  },
-  dropdown1DropdownStyle: {
-    backgroundColor: '#EFEFEF',
-    marginTop: hp(-5),
-    borderRadius: hp(1.5),
-  },
-  dropdown3RowStyle: {
-    backgroundColor: '#EFEFEF',
-    borderBottomColor: '#C5C5C5',
-    width: wp(100),
-  },
-  dropdown1RowTxtStyle: {
-    color: '#444',
-    textAlign: 'left',
-    color: '#363636',
-    fontSize: '0.7rem',
-    fontFamily: fontFamily.ceraMedium,
-  },
-  dropdown3RowChildStyle: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    color: '#10B727',
   },
 });

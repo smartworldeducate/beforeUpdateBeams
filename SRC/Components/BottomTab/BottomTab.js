@@ -3,32 +3,12 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import Ficon from 'react-native-fontawesome-pro';
 import Menu from 'react-native-vector-icons/Entypo';
 import {
-    widthPercentageToDP as wp,
-    heightPercentageToDP as hp,
-  } from 'react-native-responsive-screen';
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import colors from '../../Styles/colors';
 import fontFamily from '../../Styles/fontFamily';
-import { useState } from 'react';
 const BottomTab = ({state, descriptors, navigation, props}) => {
-  const [isConnected, setIsConnected] = useState(null);
-//   const notificationsHere = useSelector(state => state.notifications);
-  // const notificationsCount = useSelector(state => state.notificationsCount);
-
-//   const handleNavigate = (routeName, clearStack, params) => {
-//     navigation.navigate(routeName, params ?? notificationsHere?.swipeIndex);
-//     if (clearStack) {
-//       console.log('Clear');
-//     }
-//   };
-
-//   let allNotifications = notificationsHere?.notifications?.notifications;
-//   let totalCount = 0;
-//   allNotifications?.map(item => {
-//     if (item.status_read == 0) {
-//       totalCount = totalCount + 1;
-//     }
-//   });
-
   return (
     <>
       <View style={{backgroundColor: colors.white}}>
@@ -43,10 +23,6 @@ const BottomTab = ({state, descriptors, navigation, props}) => {
                 : route.name;
 
             const isFocused = state.index === index;
-            // // console.log('index ==== ', index);
-            // if (index == 1) {
-            //   RNExitApp.exitApp();
-            // }
 
             const onPress = () => {
               const event = navigation.emit({
@@ -66,31 +42,27 @@ const BottomTab = ({state, descriptors, navigation, props}) => {
               <View key={index} style={styles.innerMainView}>
                 {index === 0 ? (
                   <View style={{flexDirection: 'column'}}>
-                   
-                      <View
-                        style={{
-                          justifyContent: 'center',
-                          zIndex: 1,
-                          marginBottom: hp('-3'),
-                          right: wp('-10'),
-                          top: hp('2.25'),
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        zIndex: 1,
+                        marginBottom: hp('-3'),
+                        right: wp('-10'),
+                        top: hp('2.25'),
 
-                          backgroundColor: 'red',
-                          height: hp('3.15'),
-                          width: wp('6'),
-                          borderRadius: wp('50'),
-                        }}>
-                        <Text
-                          style={{
-                            textAlign: 'center',
-                            color: colors.white,
-                            fontSize: hp('1.5'),
-                            fontFamily: fontFamily.innerBold,
-                          }}>
-                         
-                        </Text>
-                      </View>
-                   
+                        backgroundColor: 'red',
+                        height: hp('3.15'),
+                        width: wp('6'),
+                        borderRadius: wp('50'),
+                      }}>
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          color: colors.white,
+                          fontSize: hp('1.5'),
+                          fontFamily: fontFamily.innerBold,
+                        }}></Text>
+                    </View>
 
                     <TouchableOpacity
                       onPress={onPress}
@@ -98,10 +70,9 @@ const BottomTab = ({state, descriptors, navigation, props}) => {
                       <Menu
                         name="home"
                         size={hp(3)}
-                        color= '#1C37A4' 
+                        color="#1C37A4"
                         style={{}}
-                        />
-                      {/* <Text style={styles.textStyle}>Home</Text> */}
+                      />
                     </TouchableOpacity>
                   </View>
                 ) : index === 1 ? (
@@ -115,55 +86,36 @@ const BottomTab = ({state, descriptors, navigation, props}) => {
                       onPress={onPress}
                       style={styles.centralIcon}>
                       <Ficon
-                            type="light"
-                            name="book-bookmark"
-                            size={hp(3)}
-                            color= '#1C37A4'
-                        />
+                        type="light"
+                        name="book-bookmark"
+                        size={hp(3)}
+                        color="#1C37A4"
+                      />
                     </TouchableOpacity>
-                    {/* <View style={{}}>
-                      <Text style={styles.centralText}>Student Profile</Text>
-                    </View> */}
                   </View>
                 ) : index === 2 ? (
                   <TouchableOpacity
                     onPress={onPress}
                     style={styles.touchableIcon}>
                     <Ficon style={{}} name="qrcode" size={hp(4)} color="blue" />
-                    {/* <Text style={styles.textStyle}>Contact Us</Text> */}
                   </TouchableOpacity>
                 ) : index === 3 ? (
-                    <TouchableOpacity
-                      onPress={onPress}
-                      style={styles.touchableIcon}>
-                      <Ficon
-                        type="light"
-                        name="user-tag"
-                        size={hp(3.5)}
-                        color='#1C37A4' 
-                        />
-                      {/* <Text style={styles.textStyle}>Contact Us</Text> */}
-                    </TouchableOpacity>
-                  ) : index === 4 ? (
-                    <TouchableOpacity
-                      onPress={onPress}
-                      style={styles.touchableIcon}>
-                      <Ficon
-                        type="light"
-                        name="user-tie"
-                        size={hp(3)}
-                        color= '#1C37A4'
-                        />
-                      {/* <Text style={styles.textStyle}>Contact Us</Text> */}
-                    </TouchableOpacity>
-                  ) : null}
+                  <TouchableOpacity
+                    onPress={onPress}
+                    style={styles.touchableIcon}>
+                    <Ficon
+                      type="light"
+                      name="user-tag"
+                      size={hp(3.5)}
+                      color="#1C37A4"
+                    />
+                  </TouchableOpacity>
+                ) : null}
               </View>
             );
           })}
         </View>
       </View>
-      {/* {isConnected ? null : <InterConnectionDesign />} */}
-      {/* <InternetCheck setIsConnected={setIsConnected} /> */}
     </>
   );
 };
@@ -221,4 +173,3 @@ const styles = EStyleSheet.create({
 });
 
 export default BottomTab;
-

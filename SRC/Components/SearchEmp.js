@@ -36,7 +36,6 @@ export default SearchEmp = ({item}) => {
   const [search, setSearch] = useState('');
 
   const onpressSearch = async search => {
-    // console.log('search ', search);
     const response = await axios.post(
       'https://b2training.beaconhouse.net/beams_ci/index.php/api/search',
       {searchEmp: search},
@@ -47,21 +46,18 @@ export default SearchEmp = ({item}) => {
         },
       },
     );
-    // console.log("search single record",response?.data?.data)
     setEmpData(response.data?.data);
-    // console.log('search response', response.data?.data);
   };
 
   const onPress = item => {};
 
   const getAllEmpPress = async () => {
-    // console.log('load function call====', offset);
     const emp = await dispatch(
       getAllEmployeeHandler({
         ofset: offset,
       }),
     );
-    setEmpData([...empData , ...emp?.payload?.data]);
+    setEmpData([...empData, ...emp?.payload?.data]);
   };
   useEffect(() => {
     getAllEmpPress();
@@ -69,8 +65,8 @@ export default SearchEmp = ({item}) => {
   const handleLoadMore = async () => {
     setOffset(empData?.length);
     // console.log("handle function call",offset)
-    await getAllEmpPress()
-      // console.log("handle function after",offset)
+    await getAllEmpPress();
+    // console.log("handle function after",offset)
   };
 
   const renderItem = ({item, index}) => {
@@ -266,7 +262,6 @@ export default SearchEmp = ({item}) => {
         end={{x: 1, y: 0}}
         colors={['#1C37A5', '#4D69DC']}
         style={styles.mainHeader}>
-        {/* <StatusBar translucent backgroundColor="transparent" /> */}
         <View style={styles.headerChild}>
           <TouchableOpacity
             activeOpacity={0.8}
@@ -353,7 +348,7 @@ const styles = EStyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '700',
   },
-  
+
   container: {
     flex: 1,
     marginTop: hp(0),

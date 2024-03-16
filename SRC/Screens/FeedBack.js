@@ -1,384 +1,432 @@
 import {
+  SafeAreaView,
+  ScrollView,
   View,
   Text,
-  ScrollView,
   TouchableOpacity,
   TextInput,
-  ToastAndroid
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import MainHeader from '../Components/Headers/MainHeader';
-import { Rating } from 'react-native-ratings';
+import StarRating from 'react-native-star-rating-widget';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import fontFamily from '../Styles/fontFamily';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { useDispatch, useSelector } from 'react-redux';
-import { feedBackHandler } from '../features/feeback/createSlice';
-import { ratingHandler } from '../features/rating/createSlice';
-import { updateRatingHandler } from '../features/updaterating/createSlice';
+import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import colors from '../Styles/colors';
+import {
+  RatingAction,
+  updateRating,
+} from '../features/RatingAndFeedbackSlice/RatingSlice';
+import {UpdateRatingAction} from '../features/RatingAndFeedbackSlice/UpdateRatingSlice';
+import Toast from 'react-native-simple-toast';
+import {SuggestionFeedbackAction} from '../features/RatingAndFeedbackSlice/SuggestionFeedback';
+
 const FeedBack = props => {
   const dispatch = useDispatch();
-  const getAllRating = useSelector((state) => state.getallRating)
-  // console.log("rating data===", getAllRating?.user);
-  const [salary, setSalary] = useState(true);
-  const [history, setHistory] = useState(false);
-  const [feedTitle, setFeedTitle] = useState('')
-  const [feedDesc, setFeedDesc] = useState('')
-  const [suggestionTitle, setSuggestionTitle] = useState('')
-  const [suggestionDesc, setSuggestionDesc] = useState('')
-  const [rating, setRating] = useState(null)
-  const [localData, setLocalData] = useState(null);
-  const [rData, setRdata] = useState('')
-  const salaryHandler = () => {
-    setSalary(true);
-    setHistory(false);
-  };
-  const historyHandler = () => {
-    setHistory(true);
-    setSalary(false);
-  };
+  const updateRatingSuccess = useSelector(
+    state => state.updateRatingStore.success,
+  );
+  const updateRatingMessage = useSelector(
+    state => state.updateRatingStore.message,
+  );
+  console.log('updateRatingSuccess', updateRatingSuccess);
 
-  async function getData(key) {
+  const ratingHereStore = useSelector(
+    state => state.ratingStore?.userData[0]?.RATING_ID,
+  );
+  console.log('ratingHereStore', ratingHereStore);
+
+  const userId = useSelector(
+    state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
+  );
+
+  const suggestionFeedbackHere = useSelector(
+    state => state.suggestionFeedbackStore,
+  );
+
+  console.log('suggestionFeedbackHere', suggestionFeedbackHere?.success);
+
+  const [feedback, setFeedbak] = useState(true);
+  const [suggestion, setSuggestion] = useState(false);
+  const [rating, setRating] = useState(null);
+  const [title, setTitle] = useState('');
+  const [suggestionDesc, setSuggestionDesc] = useState('');
+
+  const fetchLatestRating = async () => {
     try {
-      const value = await AsyncStorage.getItem(key);
-      if (value !== null) {
-        const parsedData = JSON.parse(value);
-        setLocalData(parsedData);
-        const ratData = await dispatch(
-          ratingHandler({
-            employee_id: parsedData?.EMPLOYEE_ID,
+      AsyncStorage.getItem('loginData').then(loginData => {
+        const parsedLoginData = JSON.parse(loginData);
+        dispatch(
+          RatingAction({
+            employee_id: parsedLoginData,
           }),
         );
-        const rObj = Object.assign({}, ...ratData?.payload?.data)
-
-        setRdata(rObj?.RATING_ID)
-      } else {
-        console.log('No data found for key:', key);
-      }
+      });
     } catch (error) {
-      console.error('Error retrieving data:', error);
+      console.error('Error fetching latest rating:', error);
     }
-  }
+  };
 
   useEffect(() => {
-    getData('loginData');
-  }, []);
+    fetchLatestRating();
+  }, [dispatch]);
 
-  // const feedHandler = async () => {
-  //   if (rating == '') {
-  //     ToastAndroid.showWithGravity(
-  //       "rating is required",
-  //       ToastAndroid.LONG,
-  //       ToastAndroid.CENTER
-  //     );
-  //   } else {
-  //     try {
-  //       await dispatch(feedBackHandler({ employee_id: localData?.EMPLOYEE_ID, type_id: 1, title: feedTitle, feedback_desc: feedDesc, rating_id: rating }));
-  //       ToastAndroid.showWithGravity(
-  //         "Thank You For FeedBack",
-  //         ToastAndroid.LONG,
-  //         ToastAndroid.CENTER
+  // useEffect(() => {
+  //   AsyncStorage.getItem('loginData')
+  //     .then(loginData => {
+  //       const parsedLoginData = JSON.parse(loginData);
+  //       dispatch(
+  //         RatingAction({
+  //           employee_id: parsedLoginData,
+  //         }),
   //       );
-  //       setFeedDesc('');
-  //       setFeedTitle('');
-  //     } catch (error) {
-  //       console.error('Error in reporteeHandler:', error);
-  //       throw error;
-  //     }
-  //   }
+  //     })
+  //     .catch(error => {
+  //       console.error('Error retrieving loginData from AsyncStorage:', error);
+  //     });
+  // }, [dispatch]);
 
-  // };
-
-  const suggetionHandler = async () => {
-    if (suggestionTitle == '') {
-      ToastAndroid.showWithGravity(
-        "All fields are required",
-        ToastAndroid.LONG,
-        ToastAndroid.CENTER
-      );
-    }
-    else if (suggestionDesc == '') {
-      ToastAndroid.showWithGravity(
-        "All field are required",
-        ToastAndroid.LONG,
-        ToastAndroid.CENTER
-      );
+  useEffect(() => {
+    if (ratingHereStore == undefined) {
+      setRating(0);
     } else {
-      try {
-        await dispatch(feedBackHandler({ employee_id: localData?.EMPLOYEE_ID, type_id: 2, title: suggestionTitle, feedback_desc: suggestionDesc,rating_id:rating })); setFeedDesc('');
-        ToastAndroid.showWithGravity(
-          "Thank You For Suggestion",
-          ToastAndroid.LONG,
-          ToastAndroid.CENTER
-        );
-        setSuggestionDesc('');
-        setSuggestionTitle('');
-      } catch (error) {
-        console.error('Error in reporteeHandler:', error);
-        throw error;
-      }
+      setRating(ratingHereStore);
     }
+  }, [ratingHereStore]);
 
+  const onPressFeedback = () => {
+    setFeedbak(true);
+    setSuggestion(false);
+  };
+  const onPressSuggestion = () => {
+    setSuggestion(true);
+    setFeedbak(false);
   };
 
+  const onChangeTitle = val => {
+    setTitle(val);
+  };
 
-  const upRatingHandler = async () => {
-    if (rating == '') {
-      ToastAndroid.showWithGravity(
-        "rating is required",
-        ToastAndroid.LONG,
-        ToastAndroid.CENTER
-      );
-    } else {
-      try {
-        await dispatch(updateRatingHandler({ employee_id: localData?.EMPLOYEE_ID,rating_id: rating }));
-        ToastAndroid.showWithGravity(
-          "Thank You For FeedBack",
-          ToastAndroid.LONG,
-          ToastAndroid.CENTER
-        );
-        setFeedDesc('');
-        setFeedTitle('');
-      } catch (error) {
-        console.error('Error in reporteeHandler:', error);
-        throw error;
-      }
+  const onChangeSuggestionDesc = val => {
+    setSuggestionDesc(val);
+  };
+
+  const onChangeRating = val => {
+    console.log('onChangeRating');
+    dispatch(updateRating(val));
+    setRating(val);
+  };
+
+  const onPressSubmitRating = () => {
+    dispatch(
+      UpdateRatingAction({
+        employee_id: userId,
+        rating_id: rating,
+        type_id: 1,
+      }),
+    );
+    fetchLatestRating();
+    // if (updateRatingSuccess == 1) {
+    //   Toast.show(updateRatingMessage, Toast.SHORT);
+    // }
+  };
+
+  const onPressSuggestionSubmit = () => {
+    console.log('onPressSuggestionSubmit');
+    dispatch(
+      SuggestionFeedbackAction({
+        employee_id: userId,
+        title: title,
+        feedback_desc: suggestionDesc,
+        type_id: 2,
+      }),
+    );
+  };
+
+  useEffect(() => {
+    if (suggestionFeedbackHere?.success == 1) {
+      // Toast.showWithGravity(
+      //   'This is a long toast at the top.',
+      //   Toast.LONG,
+      //   Toast.TOP,
+      // );
+
+      setTitle('');
+      setSuggestionDesc('');
     }
+  }, [suggestionFeedbackHere]);
 
-  };
+  console.log('rating', rating);
 
-  const ratingCompleted = rating => {
-    console.log('Rating is: ' + rating);
-    setRating(rating)
-  };
   return (
-    <>
-      <View>
-        <MainHeader
-          text={'Feedback'}
-          iconName={'arrow-left'}
-          onpressBtn={() => props.navigation.goBack()}
-        />
-      </View>
-
-      <View
-        style={{
-          height: hp(7),
-          marginHorizontal: hp(2.5),
-          borderRadius: hp(1),
-          backgroundColor: '#E7E7E7',
-          marginTop: hp(2),
-        }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignContent: 'center',
-            marginHorizontal: hp(1),
-            marginVertical: hp(0.7),
-          }}>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={salaryHandler}
-            style={{
-              height: hp(5.5),
-              backgroundColor: salary == true ? '#fff' : '#E7E7E7',
-              paddingVertical: hp(1),
-              borderRadius: hp(1),
-              paddingHorizontal: hp(6),
-              justifyContent: 'center',
-            }}>
-            <Text
-              style={styles.headertext}>
-              Feedback
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={historyHandler}
-            style={{
-              height: hp(5.5),
-              backgroundColor: history == true ? '#fff' : '#E7E7E7',
-              paddingVertical: hp(1),
-              borderRadius: hp(1),
-              paddingHorizontal: hp(5.5),
-              justifyContent: 'center',
-            }}>
-            <Text
-              style={styles.headertext}>
-              Suggestion
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      {salary == true && (<>
-
-        <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: hp(3) }}>
-          <Text style={{ color: '#000', fontSize: hp(2.5) }}>How Do You Rate to This App?</Text>
-        </View>
-        <View style={{ marginHorizontal: hp(2.5), marginTop: hp(2) }}>
-          <Rating
-            type="custom"
-            // showRating
-            reviews={["Terrible", "Bad", "Meh", "OK", "good"]}
-            onFinishRating={ratingCompleted}
-            tintColor={'#f2f2f2'}
-            startingValue={rData}
-            ratingBackgroundColor={'#d9d9d9'}
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: colors.appBackGroundColor,
+      }}>
+      <>
+        <View>
+          <MainHeader
+            text={'Feedback'}
+            iconName={'arrow-left'}
+            onpressBtn={() => props.navigation.goBack()}
           />
-          {getAllRating && getAllRating?.user?.map((item, i) => {
+        </View>
 
-            return (
-             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-              {rating == item.rating_id && (
-                <Text style={{ color: '#212F3D', fontSize: hp(2.5),paddingVertical:hp(2)}}>{item.rating_desc}</Text>
+        <ScrollView
+          contentContainerStyle={{
+            flexGrow: 1,
+            backgroundColor: colors.appBackGroundColor,
+          }}>
+          <View style={{marginVertical: hp('3')}}>
+            <View style={{marginHorizontal: wp('5')}}>
+              <View
+                style={{
+                  backgroundColor: '#E7E7E7',
+                  height: hp('7'),
+                  borderRadius: wp('2'),
+                  justifyContent: 'center',
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    height: hp('5'),
+                    marginHorizontal: wp('2'),
+                  }}>
+                  <TouchableOpacity
+                    onPress={onPressFeedback}
+                    activeOpacity={0.5}
+                    style={{
+                      flex: 0.46,
+                      backgroundColor: feedback ? colors.whiteColor : '#E7E7E7',
+                      borderRadius: wp('2'),
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text style={styles.upperText}>Feedback</Text>
+                  </TouchableOpacity>
+                  <View
+                    style={{
+                      flex: 0.08,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}></View>
+                  <TouchableOpacity
+                    onPress={onPressSuggestion}
+                    activeOpacity={0.5}
+                    style={{
+                      flex: 0.46,
+                      backgroundColor: suggestion
+                        ? colors.whiteColor
+                        : '#E7E7E7',
+                      borderRadius: wp('2'),
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text style={styles.upperText}>Suggestion</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              {feedback && (
+                <>
+                  <View
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginVertical: hp('3'),
+                    }}>
+                    <Text style={styles.mainText}>
+                      How do you rate this App?
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{justifyContent: 'center', alignItems: 'center'}}>
+                    <StarRating
+                      rating={rating}
+                      onChange={onChangeRating}
+                      maxStars={5}
+                      starSize={hp('5.5')}
+                      color={'#fdd835'}
+                      emptyColor={'#fdd835'}
+                      enableHalfStar={false}
+                      // style={{borderColor: 'red', borderWidth: 1}}
+                      // starStyle={{borderColor: 'red', borderWidth: 1}}
+                    />
+                  </View>
+
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      marginHorizontal: wp('4'),
+                      marginVertical: hp('2'),
+                    }}>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      style={styles.btnView1}>
+                      <Text style={styles.btnText}>Not Now</Text>
+                    </TouchableOpacity>
+                    <View style={{flex: 0.35}}></View>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      onPress={onPressSubmitRating}
+                      style={styles.btnView2}>
+                      <Text style={styles.btnText}>Submit</Text>
+                    </TouchableOpacity>
+                  </View>
+                </>
               )}
-            </View>)
-              
-           
-          })}
-         
-        </View>
-        {!rData && (  <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: hp(2.5), marginVertical: hp(2) }}>
-          <TouchableOpacity
-            onPress={() => props.navigation.navigate("HomeScreen")}
-            activeOpacity={0.8}
-            style={{
-              width: wp(30),
-              height: hp(5),
-              borderRadius: hp(5),
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: '#212F3D',
-              shadowColor: '#000',
-              shadowOpacity: 0.5,
-              shadowRadius: 4,
-              elevation: 4,
-            }}>
-            <Text style={styles.submittext}>Not Now</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={upRatingHandler}
-            activeOpacity={0.8}
-            style={{
-              width: wp(30),
-              height: hp(5),
-              borderRadius: hp(5),
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: '#1C37A4',
-              shadowColor: '#000',
-              shadowOpacity: 0.5,
-              shadowRadius: 4,
-              elevation: 4,
-            }}>
-            <Text style={styles.submittext}>SUBMIT</Text>
-          </TouchableOpacity>
-        </View>)}
-      
 
-      </>)}
-      {history == true && (<>
+              {suggestion && (
+                <>
+                  <View style={styles.titleView}>
+                    <TextInput
+                      value={title}
+                      onChangeText={onChangeTitle}
+                      style={styles.titleInputStyle}
+                      placeholder={'Title'}
+                      placeholderTextColor={colors.drakGrey}
+                      maxLength={100}
+                      keyboardType={'default'}
+                      multiline={false}
+                      returnKeyType={'next'}
+                    />
+                  </View>
 
-        <View
-          style={{
-            marginHorizontal: hp(2.5),
-            height: hp(7),
-            borderRadius: hp(2),
-            marginTop: hp(2),
-            backgroundColor: '#ffffff',
-            shadowColor: '#000',
-            shadowOpacity: 0.5,
-            shadowRadius: 4,
-            elevation: 4,
-          }}>
-          <TextInput
-            value={suggestionTitle}
-            onChangeText={(text) => setSuggestionTitle(text)}
-            returnKeyType={'done'}
-            iconName={'user'}
-            placeholder={'Title'}
-            placeholderColor={'gray'}
-            //   iconColor={colors.loginIconColor}
-            placeholderTextColor="gray"
-            style={[styles.textInputCustomStyle, { marginTop: hp(1.2) }]}></TextInput>
-        </View>
-        <View
-          style={{
-            marginHorizontal: hp(2.5),
-            height: hp(50),
-            borderRadius: hp(2),
-            marginTop: hp(2),
-            backgroundColor: '#ffffff',
-            shadowColor: '#000',
-            shadowOpacity: 0.5,
-            shadowRadius: 4,
-            elevation: 4,
-          }}>
-          <TextInput
-            value={suggestionDesc}
-            onChangeText={(text) => setSuggestionDesc(text)}
-            returnKeyType={'done'}
-            iconName={'user'}
-            placeholder={'Suggestion'}
-            placeholderColor={'gray'}
-            //   iconColor={colors.loginIconColor}
-            placeholderTextColor="gray"
-            style={styles.textInputCustomStyle}></TextInput>
-        </View>
+                  <View style={styles.suggestionView}>
+                    <TextInput
+                      value={suggestionDesc}
+                      onChangeText={onChangeSuggestionDesc}
+                      style={styles.suggestionDescInputStyle}
+                      placeholder={'Suggestion'}
+                      placeholderTextColor={colors.drakGrey}
+                      keyboardType={'default'}
+                      multiline={true}
+                      returnKeyType={'done'}
+                    />
+                  </View>
 
-        <TouchableOpacity
-          onPress={suggetionHandler}
-          activeOpacity={0.8}
-          style={{
-            marginHorizontal: hp(2.5),
-            height: hp(7),
-            borderRadius: hp(5),
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: hp(5),
-            backgroundColor: '#1C37A4',
-            shadowColor: '#000',
-            shadowOpacity: 0.5,
-            shadowRadius: 4,
-            elevation: 4,
-          }}>
-          <Text style={styles.submittext}>SUBMIT</Text>
-        </TouchableOpacity>
-      </>)}
-    </>
+                  <TouchableOpacity
+                    onPress={onPressSuggestionSubmit}
+                    activeOpacity={0.8}
+                    style={styles.submitBtn}>
+                    <Text style={styles.btnSubmitText}>Submit</Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            </View>
+          </View>
+        </ScrollView>
+      </>
+    </SafeAreaView>
   );
 };
 
 export default FeedBack;
 
 const styles = EStyleSheet.create({
-  textInputCustomStyle: {
+  mainText: {
+    color: '#363636',
+    fontFamily: fontFamily.ceraMedium,
+    fontWeight: '500',
+    fontSize: '0.8rem',
+    letterSpacing: 0,
+  },
+  upperText: {
+    color: '#363636',
+    fontFamily: fontFamily.ceraMedium,
+    fontWeight: '500',
+    fontSize: hp('1.8'),
+  },
+  btnView1: {
+    flex: 0.325,
+    backgroundColor: '#4a4949',
+    height: hp('5'),
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: wp('5'),
+  },
+  btnView2: {
+    flex: 0.325,
+    backgroundColor: '#1C37A4',
+    height: hp('5'),
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: wp('5'),
+  },
+  btnText: {
+    color: 'white',
+    fontFamily: fontFamily.ceraMedium,
+    fontWeight: '500',
+    fontSize: '0.63rem',
+  },
+  titleView: {
+    marginTop: wp('5'),
+    backgroundColor: 'white',
+    borderColor: colors.greyColor,
+    borderWidth: 0.5,
+    borderRadius: wp('3.5'),
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: wp('10'),
+    shadowRadius: wp('10'),
+    elevation: 10,
+  },
+
+  suggestionView: {
+    marginTop: wp('5'),
+    backgroundColor: 'white',
+    borderColor: colors.greyColor,
+    borderWidth: 0.5,
+    borderRadius: wp('3.5'),
+    marginBottom: hp('2'),
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: wp('10'),
+    shadowRadius: wp('10'),
+    elevation: 10,
+  },
+
+  titleInputStyle: {
     fontSize: hp('1.65'),
-    height: hp(32),
+    height: hp('7'),
     letterSpacing: -0.05,
-    paddingLeft: wp('5'),
-    marginRight: hp(2),
-    color: 'black',
+    paddingLeft: wp('3'),
+    color: colors.loginIconColor,
+  },
+  suggestionDescInputStyle: {
+    fontSize: hp('1.65'),
+    height: hp('20'),
+    letterSpacing: -0.05,
+    paddingLeft: wp('3'),
+    color: colors.loginIconColor,
     textAlignVertical: 'top',
   },
-  headertext: {
-    fontSize: '0.75rem',
-    fontFamily: fontFamily.ceraMedium,
-    fontStyle: 'normal',
-    color: '#363636',
-    fontWeight: '500',
-
+  submitBtn: {
+    height: hp('5.5'),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#1C37A4',
+    borderRadius: wp('10'),
+    marginVertical: hp('3'),
   },
-  submittext: {
-    color: '#fff',
+  btnSubmitText: {
+    color: 'white',
     fontFamily: fontFamily.ceraMedium,
-    fontSize: '0.8rem',
-    // color:'#363636',
-    fontWait: '500',
-  }
+    fontWeight: '500',
+    fontSize: '0.7rem',
+  },
 });

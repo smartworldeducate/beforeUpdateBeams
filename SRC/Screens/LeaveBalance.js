@@ -1,5 +1,12 @@
-import {View, Text, SafeAreaView} from 'react-native';
-import React from 'react';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
+import React, {useEffect} from 'react';
 import MainHeader from '../Components/Headers/MainHeader';
 import {
   widthPercentageToDP as wp,
@@ -7,106 +14,199 @@ import {
 } from 'react-native-responsive-screen';
 import fontFamily from '../Styles/fontFamily';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import Pie from 'react-native-pie';
-import Icon from 'react-native-fontawesome-pro';
-import GraphLeave from '../Components/GraphLeave';
-import { useSelector } from 'react-redux';
-import { ScrollView } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import {useSelector, useDispatch} from 'react-redux';
+import colors from '../Styles/colors';
+import {PieChart} from 'react-native-gifted-charts';
+import LeaveBalanceComponent from '../Components/LeaveBalanceComponent/LeaveBalanceComponent';
+import LineSeprator from '../Components/LineSeprator/LineSeprator';
+import {LeaveBalanceAction} from '../features/LeaveBalanceSlice/LeaveBalanceSlice';
+import Loader from '../Components/Loader/Loader';
 
 const LeaveBalance = props => {
-  const leaveBalanceData=useSelector((state)=>state.leaveBalanceState)
-  console.log("leaveBalance data==",leaveBalanceData?.user)
+  const dispatch = useDispatch();
+  const leaveBalanceHere = useSelector(state => state.leaveBalanceStore);
+  console.log('leaveBalanceHereData', leaveBalanceHere?.userData);
+  console.log('leaveBalanceHere', leaveBalanceHere?.success);
+
+  const annual = leaveBalanceHere?.userData?.anual_percentage;
+  const casual = leaveBalanceHere?.userData?.casual_percentage;
+  const sick = leaveBalanceHere?.userData?.sick_percentage;
+  const maternity = leaveBalanceHere?.userData?.materenity_percentage;
+  const hajj = leaveBalanceHere?.userData?.hajj_percentage;
+  const without = leaveBalanceHere?.userData?.withoutpay_percentage;
+  const pending = leaveBalanceHere?.userData?.pandding_balance_percentage;
+  const long = leaveBalanceHere?.userData?.long_percentage;
+
+  console.log('annualLeaves', annual, casual, sick);
+
+  // useEffect(() => {
+  //   AsyncStorage.getItem('loginData')
+  //     .then(loginData => {
+  //       const parsedLoginData = JSON.parse(loginData);
+  //       dispatch(
+  //         LeaveBalanceAction({
+  //           employee_id: parsedLoginData,
+  //         }),
+  //       );
+  //     })
+  //     .catch(error => {
+  //       console.error('Error retrieving loginData from AsyncStorage:', error);
+  //     });
+  // }, [dispatch]);
+
+  const renderItem = ({item, index}) => {
+    // ${item?.PENDING}
+    return (
+      <>
+        <LeaveBalanceComponent
+          iconName={item?.ICONNAME}
+          iconColor={item?.CLOR}
+          upperText={item?.LEAVE_TYPE}
+          LowerText={`${item?.leave_text}`}
+          availLeaves={item?.APPRV_LVS == null ? '0' : item?.APPRV_LVS}
+          totalLeaves={item?.total}
+        />
+        <LineSeprator
+          height={hp('0.1')}
+          backgroundColor={'silver'}
+          marginHorizontal={wp('1')}
+          maginVertical={hp('1')}
+        />
+      </>
+    );
+  };
 
   return (
-    <>
-      <View>
-        <MainHeader
-          text={'Leave Balance'}
-          iconName={'arrow-left'}
-          onpressBtn={() => props.navigation.goBack()}
-        />
-      </View>
-      <View
-        style={{
-          shadowColor: '#000',
-          shadowOpacity: 0.5,
-          shadowRadius: 4,
-          elevation: 4,
-          height: hp(28),
-          borderRadius: hp(2),
-          marginHorizontal: hp(2.5),
-          marginTop: hp(2),
-          backgroundColor: '#FFFFFF',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: hp(2.5),
-          }}>
-          <GraphLeave />
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: colors.appBackGroundColor,
+      }}>
+      <>
+        <View>
+          <MainHeader
+            text={'Leave Balance'}
+            iconName={'arrow-left'}
+            onpressBtn={() => props.navigation.goBack()}
+          />
         </View>
-      </View>
-      <ScrollView style={{flex: 1, marginHorizontal: hp(2.5), marginTop: hp(2)}}>
-        {leaveBalanceData && leaveBalanceData?.user?.result?.map((item, i) => {
-          return (
-            <View key={i}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginTop: hp(1),
-                }}
-                key={i}>
-                <View
-                  style={{
-                    height: hp(5),
-                    marginHorizontal: hp(1),
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'center',
-                      marginVertical: hp(1),
-                    }}>
-                    <View style={{}}>
-                      <Icon
-                        type="light"
-                        name={item?.ICONNAME}
-                        size={hp(3.5)}
-                        color={item?.CLOR}
-                      />
-                    </View>
-                    <View style={{paddingLeft: hp(1), marginTop: hp(-0.5)}}>
-                      <View>
-                        <Text style={styles.testname}>{item?.LEAVE_TYPE}</Text>
-                      </View>
-                      <View>
-                        <Text style={styles.desig}>{item?.PENDING} Pending Leaves</Text>
-                      </View>
-                    </View>
-                  </View>
-                </View>
 
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                  <Text style={styles.timestyle}>{item?.ENTL}/{item?.ENTL}</Text>
-                </View>
-              </View>
+        {leaveBalanceHere?.isLoading && <Loader></Loader>}
+
+        <ScrollView
+          contentContainerStyle={{
+            flexGrow: 1,
+            backgroundColor: colors.appBackGroundColor,
+          }}>
+          <View style={{marginVertical: hp('3')}}>
+            <View style={{marginHorizontal: wp('5')}}>
+              {leaveBalanceHere?.success == 1 && (
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  style={{
+                    height: hp('27.5'),
+                    backgroundColor: 'white',
+                    borderRadius: wp('3'),
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginHorizontal: wp('1'),
+
+                    shadowColor: '#000',
+                    shadowOpacity: 0.5,
+                    shadowRadius: 4,
+                    elevation: 4,
+                  }}>
+                  <PieChart
+                    data={[
+                      {
+                        value: annual,
+                        color: '#5bcfb5',
+                      },
+                      {
+                        value: casual,
+                        color: '#7151ce',
+                      },
+                      {
+                        value: sick,
+                        color: '#b245ce',
+                      },
+                      {
+                        value: maternity,
+                        color: '#4161ca',
+                      },
+                      {
+                        value: long,
+                        color: '#e3e3e3',
+                      },
+                      {
+                        value: hajj,
+                        color: '#5fce6a',
+                      },
+                      {
+                        value: without,
+                        color: 'red',
+                      },
+                      {
+                        value: pending,
+                        color: 'grey',
+                      },
+                    ]}
+                    donut
+                    //   showGradient
+                    sectionAutoFocus
+                    radius={75}
+                    innerRadius={65}
+                    centerLabelComponent={() => {
+                      return (
+                        <View
+                          style={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}>
+                          <Text
+                            style={{
+                              fontSize: hp('4'),
+                              color: '#646464',
+                              fontFamily: fontFamily.ceraBold,
+                              fontWeight: '700',
+                            }}>
+                            {leaveBalanceHere?.userData?.total_count}
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: hp('1.85'),
+                              color: '#979797',
+                              fontFamily: fontFamily.ceraMedium,
+                              fontWeight: '500',
+                            }}>
+                            BALANCE
+                          </Text>
+                        </View>
+                      );
+                    }}
+                  />
+                </TouchableOpacity>
+              )}
+
               <View
                 style={{
-                  height: 1,
-                  backgroundColor: '#DBDBDB',
-                  marginTop: hp(1.5),
-                }}></View>
+                  marginTop: hp('4'),
+                  marginBottom: hp('2'),
+                  marginHorizontal: wp('1'),
+                }}>
+                <FlatList
+                  data={leaveBalanceHere?.userData?.result}
+                  renderItem={renderItem}
+                  keyExtractor={(item, index) => index.toString()}
+                />
+              </View>
             </View>
-          );
-        })}
-      </ScrollView>
-    </>
+          </View>
+        </ScrollView>
+      </>
+    </SafeAreaView>
   );
 };
 

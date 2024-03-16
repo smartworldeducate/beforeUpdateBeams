@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, useCallback} from 'react';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import Icon from 'react-native-fontawesome-pro';
 import {useSelector} from 'react-redux';
@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   TextInput,
+  FlatList,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -18,6 +19,7 @@ import {
   useLinkProps,
   useNavigation,
   CommonActions,
+  useFocusEffect,
 } from '@react-navigation/native';
 import colors from '../../Styles/colors';
 import Card from '../Card';
@@ -26,58 +28,63 @@ import fontSize from '../../Styles/fontSize';
 import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const HeaderTop = ({onPressIcon}) => {
-  const [localData, setLocalData] = useState(null);
-  const data = [
-    {id: 1, image: 'igt'},
-    {id: 2, image: 'salman'},
-    {id: 3, image: 'qasim'},
-    {id: 4, image: 'imran'},
-    {id: 5, image: 'im'},
-    {id: 6, image: 'asd'},
-    {id: 7, image: 'artg'},
-  ];
-  async function getData(key) {
-    try {
-      const value = await AsyncStorage.getItem(key);
-      if (value !== null) {
-        const parsedData = JSON.parse(value);
-        // console.log('Data retrieved successfully:', parsedData);
-        setLocalData(parsedData);
-        return value;
-      } else {
-        console.log('No data found for key:', key);
-      }
-    } catch (error) {
-      console.error('Error retrieving data:', error);
-    }
-  }
-
-  useEffect(() => {
-    getData('loginData');
-  }, []);
+const HeaderTop = ({
+  onPressAllReportiess,
+  onPressReporteesProfile,
+  onPressUserImg,
+  userImg,
+  welcomeText,
+  userName,
+  onPressIcon,
+}) => {
   const navigation = useNavigation();
-  const handleNavigate = (routeName, clearStack, params) => {
-    navigation.navigate(routeName, params);
-    if (clearStack) {
-      console.log('Clear');
-    }
-  };
 
-  const [employeeId, setEmployeeId] = useState('');
+  const profileHere = useSelector(state => state.profileStore);
+  // console.log('logInHTop>', profileHere?.userData);
 
-  const keyboardVerticalOffset = Platform.OS === 'ios' ? 60 : 20;
+  const slicedData = profileHere?.userData?.reporting_result?.data.slice(0, 7);
 
-  const onChangeEmpId = val => {
-    setEmployeeId('');
-    navigation.navigate('Search');
-  };
+  // console.log('slicedData', profileHere?.userData?.reporting_result);
+  const renderItem = ({item, index}) => {
+    return (
+      <TouchableOpacity
+        onPress={index === 6 ? onPressAllReportiess : onPressReporteesProfile}
+        activeOpacity={0.6}
+        style={{
+          paddingLeft: index == 0 ? wp('2') : wp('0'),
+          justifyContent: 'center',
+        }}>
+        <Image
+          source={{uri: item?.EMP_PHOTO}}
+          style={{
+            height: hp('4.5'),
+            width: wp('9'),
+            borderRadius: wp('10'),
+            marginLeft: wp('-1.5'),
+            backgroundColor: index === 3 && 'rgba(0,0,0,0.5)',
+          }}
+          resizeMode={'cover'}
+        />
 
-  const textInputRef = useRef(null);
-  const onPressSearchIcon = () => {
-    if (textInputRef.current) {
-      textInputRef.current.focus();
-    }
+        {index === 6 && (
+          <View
+            style={{
+              position: 'absolute',
+              // top: '0%',
+              left: '-18%',
+              // transform: [{translateX: wp('-2.8')}, {translateY: hp('-1.4')}],
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              borderRadius: wp('10'),
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: hp('5'),
+              width: wp('10'),
+            }}>
+            <Icon type="regular" name="plus" size={hp('2')} color="#fff" />
+          </View>
+        )}
+      </TouchableOpacity>
+    );
   };
 
   return (
@@ -86,10 +93,18 @@ const HeaderTop = ({onPressIcon}) => {
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
         colors={['#1C37A5', '#4D69DC']}
-        style={styles.mainHeader}>
+        style={[
+          styles.mainHeader,
+          {
+            height:
+              profileHere?.userData?.reporting_result?.reportee_length > 0
+                ? hp('23')
+                : hp('20'),
+          },
+        ]}>
         <View style={styles.headerChild}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('Profile')}
+            onPress={onPressUserImg}
             activeOpacity={0.6}
             style={{
               flex: 0.15,
@@ -98,8 +113,8 @@ const HeaderTop = ({onPressIcon}) => {
             }}>
             <Image
               style={{width: wp(12), height: hp(6), borderRadius: hp(5)}}
-              source={{uri: 'salman'}}
-              resizeMode="center"
+              source={{uri: userImg}}
+              resizeMode="cover"
             />
           </TouchableOpacity>
           <View
@@ -107,12 +122,12 @@ const HeaderTop = ({onPressIcon}) => {
               flex: 0.55,
               justifyContent: 'center',
             }}>
-            <Text style={styles.welCome}>Welcome</Text>
+            <Text style={styles.welCome}>{welcomeText}</Text>
             <Text
               numberOfLines={1}
               ellipsizeMode={'tail'}
               style={styles.userName}>
-              {localData?.EMP_NAME}
+              {userName}
             </Text>
           </View>
           <TouchableOpacity
@@ -139,7 +154,9 @@ const HeaderTop = ({onPressIcon}) => {
           </TouchableOpacity>
         </View>
 
-        <View
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => navigation.navigate('Search')}
           style={{
             backgroundColor: '#fff',
             marginHorizontal: wp('5'),
@@ -150,30 +167,27 @@ const HeaderTop = ({onPressIcon}) => {
             shadowRadius: 4,
             elevation: 4,
             flexDirection: 'row',
+            height: hp('5'),
           }}>
           <View
             style={{
               flex: 0.85,
               borderTopLeftRadius: hp(1.5),
               borderBottomLeftRadius: hp(1.5),
+              justifyContent: 'center',
+              paddingLeft: wp('3'),
             }}>
-            <TextInput
-              ref={textInputRef}
-              value={employeeId}
-              onChangeText={onChangeEmpId}
-              returnKeyType={'done'}
-              iconName={'user'}
-              placeholder={'Search Employee'}
-              placeholderColor={'gray'}
-              iconColor={colors.loginIconColor}
-              placeholderTextColor="gray"
-              placeholderStyle={styles.plaseholderStyle}
-              style={styles.textInputCustomStyle}
-            />
+            <Text
+              style={{
+                fontSize: hp('1.75'),
+                color: 'grey',
+                fontFamily: fontFamily.ceraLight,
+                letterSpacing: 0.5,
+              }}>
+              Search Employee
+            </Text>
           </View>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={onPressSearchIcon}
+          <View
             style={{
               flex: 0.15,
               justifyContent: 'center',
@@ -187,44 +201,22 @@ const HeaderTop = ({onPressIcon}) => {
               size={hp(3)}
               color="#292D32"
             />
-          </TouchableOpacity>
-        </View>
+          </View>
+        </TouchableOpacity>
 
-        <View style={styles.headerImageSection}>
-          {data.slice(0, 7).map((item, i) => {
-            if (i < 6) {
-              return (
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('Reportee')}
-                  style={styles.imageList}
-                  key={i}>
-                  <Image
-                    style={styles.imgStyle}
-                    source={{uri: item.image}}
-                    resizeMode="cover"
-                  />
-                </TouchableOpacity>
-              );
-            } else {
-              return (
-                <View style={styles.imageList} key={i}>
-                  <ImageBackground
-                    style={styles.imgStyle}
-                    source={{uri: item.image}}
-                    resizeMode="cover">
-                    <View style={styles.overlyImage}>
-                      <Icon
-                        type="regular"
-                        name="plus"
-                        size={hp(2.5)}
-                        color="#fff"
-                      />
-                    </View>
-                  </ImageBackground>
-                </View>
-              );
-            }
-          })}
+        <View
+          style={{
+            marginHorizontal: wp('10'),
+            marginTop: hp('2'),
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <FlatList
+            data={slicedData}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            horizontal={true}
+          />
         </View>
       </LinearGradient>
     </>
@@ -301,10 +293,9 @@ const styles = EStyleSheet.create({
     fontFamily: fontFamily.ceraLight,
     fontStyle: 'normal',
     paddingBottom: hp(0.2),
-    // backgroundColor: 'grey',
+    letterSpacing: 1,
   },
   textInputCustomStyle: {
-    // width: wp(80),
     fontSize: hp('1.65'),
     height: hp('6'),
     letterSpacing: -0.05,
@@ -315,8 +306,6 @@ const styles = EStyleSheet.create({
     fontFamily: fontFamily.ceraLight,
   },
   firstRow: {
-    // width: wp(50),
-    // height: hp(7.9),
     flexDirection: 'row',
     paddingTop: hp(1),
   },
@@ -335,10 +324,9 @@ const styles = EStyleSheet.create({
   },
   welcomTitle: {marginTop: hp(1), marginLeft: hp(-2)},
   imageList: {
-    width: wp(10.7),
     marginLeft: hp(-0.5),
     borderColor: '#fff',
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderRadius: hp(50),
   },
   homesearchView: {
@@ -369,12 +357,11 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    // marginVertical: hp(2.5),
     marginTop: hp('3'),
   },
   imgStyle: {width: wp(10), height: hp(5), borderRadius: hp(50)},
   menustyle: {
-    width: '1.3rem',
+    width: '1rem',
     height: '1rem',
   },
   searchicon: {marginTop: hp(1.5), marginRight: hp(2)},

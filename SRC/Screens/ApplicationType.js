@@ -1,5 +1,5 @@
-import { View, Text, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import {View, Text, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
 import MainHeader from '../Components/Headers/MainHeader';
 import Icon from 'react-native-fontawesome-pro';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -11,10 +11,9 @@ import {
 import fontFamily from '../Styles/fontFamily';
 import colors from '../Styles/colors';
 const ApplicationType = props => {
-
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{ flex: hp(0.8) }}>
+    <View style={{flex: 1}}>
+      <View style={{flex: hp(0.8)}}>
         <MainHeader
           text={'Application Type'}
           iconName={'arrow-left'}
@@ -29,41 +28,34 @@ const ApplicationType = props => {
               style={{
                 height: hp(10.5),
                 flexDirection: 'row',
-                // marginVertical: hp(1),
-                marginHorizontal: hp(1),
               }}>
               <View
                 style={{
-                  flexDirection: 'row',
+                  flex: 0.22,
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <View
-                  style={{
-                    paddingHorizontal: hp(3),
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Icon
-                    type="light"
-                    name="calendar-days"
-                    size={hp(3)}
-                    color="#979797"
-                  />
-                </View>
-                <View style={{ paddingVertical: hp(2.5), marginLeft: hp(-1.5) }}>
-                  <Text style={styles.zetext1}>Leave</Text>
-                </View>
+                <Icon
+                  type="light"
+                  name="calendar-days"
+                  size={hp(3.25)}
+                  color="#979797"
+                />
               </View>
               <View
                 style={{
-                  marginLeft: hp(11),
-                  paddingVertical: hp(0.5),
-
-                  position: 'absolute',
-                  left: hp(30),
-                  right: 0,
-                  bottom: 0,
+                  flex: 0.63,
+                  justifyContent: 'center',
+                }}>
+                <Text style={styles.zetext1}>Leave</Text>
+              </View>
+              <View
+                style={{
+                  flex: 0.15,
+                  justifyContent: 'flex-end',
+                  alignItems: 'flex-end',
+                  paddingRight: wp('3'),
+                  paddingBottom: wp('2'),
                 }}>
                 <Icon
                   type="light"
@@ -87,36 +79,31 @@ const ApplicationType = props => {
               }}>
               <View
                 style={{
-                  flexDirection: 'row',
+                  flex: 0.22,
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <View
-                  style={{
-                    paddingHorizontal: hp(3),
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Icon
-                    type="light"
-                    name="business-time"
-                    size={hp(3.5)}
-                    color="#979797"
-                  />
-                </View>
-                <View style={{ paddingVertical: hp(2.5), marginLeft: hp(-1.5) }}>
-                  <Text style={styles.zetext1}>Outstation</Text>
-                </View>
+                <Icon
+                  type="light"
+                  name="business-time"
+                  size={hp(3.25)}
+                  color="#979797"
+                />
               </View>
               <View
                 style={{
-                  marginLeft: hp(11),
-                  paddingVertical: hp(0.5),
-
-                  position: 'absolute',
-                  left: hp(30),
-                  right: 0,
-                  bottom: 0,
+                  flex: 0.63,
+                  justifyContent: 'center',
+                }}>
+                <Text style={styles.zetext1}>Outstation</Text>
+              </View>
+              <View
+                style={{
+                  flex: 0.15,
+                  justifyContent: 'flex-end',
+                  alignItems: 'flex-end',
+                  paddingRight: wp('3'),
+                  paddingBottom: wp('2'),
                 }}>
                 <Icon
                   type="light"
@@ -140,36 +127,31 @@ const ApplicationType = props => {
               }}>
               <View
                 style={{
-                  flexDirection: 'row',
+                  flex: 0.22,
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <View
-                  style={{
-                    paddingHorizontal: hp(3),
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Icon
-                    type="light"
-                    name="calendar-circle-exclamation"
-                    size={hp(3.5)}
-                    color="#979797"
-                  />
-                </View>
-                <View style={{ paddingVertical: hp(2.5), marginLeft: hp(-1.5) }}>
-                  <Text style={styles.zetext1}>Attendance Not Marked</Text>
-                </View>
+                <Icon
+                  type="light"
+                  name="calendar-circle-exclamation"
+                  size={hp(3.25)}
+                  color="#979797"
+                />
               </View>
               <View
                 style={{
-                  marginLeft: hp(11),
-                  paddingVertical: hp(0.5),
-
-                  position: 'absolute',
-                  left: hp(30),
-                  right: 0,
-                  bottom: 0,
+                  flex: 0.63,
+                  justifyContent: 'center',
+                }}>
+                <Text style={styles.zetext1}>Attendance Not Marked</Text>
+              </View>
+              <View
+                style={{
+                  flex: 0.15,
+                  justifyContent: 'flex-end',
+                  alignItems: 'flex-end',
+                  paddingRight: wp('3'),
+                  paddingBottom: wp('2'),
                 }}>
                 <Icon
                   type="light"
@@ -193,36 +175,31 @@ const ApplicationType = props => {
               }}>
               <View
                 style={{
-                  flexDirection: 'row',
+                  flex: 0.22,
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <View
-                  style={{
-                    paddingHorizontal: hp(3),
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Icon
-                    type="light"
-                    name="clock-nine-thirty"
-                    size={hp(3.5)}
-                    color="#979797"
-                  />
-                </View>
-                <View style={{ paddingVertical: hp(2.5), marginLeft: hp(-1.5) }}>
-                  <Text style={styles.zetext1}>Late Arrival</Text>
-                </View>
+                <Icon
+                  type="light"
+                  name="calendar-circle-exclamation"
+                  size={hp(3.25)}
+                  color="#979797"
+                />
               </View>
               <View
                 style={{
-                  marginLeft: hp(11),
-                  paddingVertical: hp(0.5),
-
-                  position: 'absolute',
-                  left: hp(30),
-                  right: 0,
-                  bottom: 0,
+                  flex: 0.63,
+                  justifyContent: 'center',
+                }}>
+                <Text style={styles.zetext1}>Late Arrival</Text>
+              </View>
+              <View
+                style={{
+                  flex: 0.15,
+                  justifyContent: 'flex-end',
+                  alignItems: 'flex-end',
+                  paddingRight: wp('3'),
+                  paddingBottom: wp('2'),
                 }}>
                 <Icon
                   type="light"
@@ -247,36 +224,32 @@ const ApplicationType = props => {
               }}>
               <View
                 style={{
-                  flexDirection: 'row',
+                  flex: 0.22,
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <View
-                  style={{
-                    paddingHorizontal: hp(3),
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Icon
-                    type="light"
-                    name="clock-three-thirty"
-                    size={hp(3.5)}
-                    color="#979797"
-                  />
-                </View>
-                <View style={{ paddingVertical: hp(2.5), marginLeft: hp(-1.5) }}>
-                  <Text style={styles.zetext1}>Early Leaving</Text>
-                </View>
+                <Icon
+                  type="light"
+                  name="calendar-circle-exclamation"
+                  size={hp(3.25)}
+                  color="#979797"
+                />
               </View>
               <View
                 style={{
-                  marginLeft: hp(11),
-                  paddingVertical: hp(0.5),
+                  flex: 0.63,
+                  justifyContent: 'center',
+                }}>
+                <Text style={styles.zetext1}>Early Leaving</Text>
+              </View>
 
-                  position: 'absolute',
-                  left: hp(30),
-                  right: 0,
-                  bottom: 0,
+              <View
+                style={{
+                  flex: 0.15,
+                  justifyContent: 'flex-end',
+                  alignItems: 'flex-end',
+                  paddingRight: wp('3'),
+                  paddingBottom: wp('2'),
                 }}>
                 <Icon
                   type="light"
@@ -300,36 +273,32 @@ const ApplicationType = props => {
               }}>
               <View
                 style={{
-                  flexDirection: 'row',
+                  flex: 0.22,
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <View
-                  style={{
-                    paddingHorizontal: hp(3),
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Icon
-                    type="light"
-                    name="calendar-clock"
-                    size={hp(3.5)}
-                    color="#979797"
-                  />
-                </View>
-                <View style={{ paddingVertical: hp(2.5), marginLeft: hp(-1.5) }}>
-                  <Text style={styles.zetext1}>Toil</Text>
-                </View>
+                <Icon
+                  type="light"
+                  name="calendar-circle-exclamation"
+                  size={hp(3.25)}
+                  color="#979797"
+                />
               </View>
               <View
                 style={{
-                  marginLeft: hp(11),
-                  paddingVertical: hp(0.5),
+                  flex: 0.63,
+                  justifyContent: 'center',
+                }}>
+                <Text style={styles.zetext1}>Toil</Text>
+              </View>
 
-                  position: 'absolute',
-                  left: hp(30),
-                  right: 0,
-                  bottom: 0,
+              <View
+                style={{
+                  flex: 0.15,
+                  justifyContent: 'flex-end',
+                  alignItems: 'flex-end',
+                  paddingRight: wp('3'),
+                  paddingBottom: wp('2'),
                 }}>
                 <Icon
                   type="light"
@@ -342,8 +311,6 @@ const ApplicationType = props => {
           </TouchableOpacity>
         </View>
       </View>
-
-
     </View>
   );
 };
@@ -362,12 +329,12 @@ const styles = EStyleSheet.create({
     marginBottom: hp(2),
   },
   ap1: {
-    marginHorizontal: hp(2.5),
+    marginHorizontal: wp(6),
     height: hp(50),
-    marginTop: hp(2),
+    marginTop: hp(3.5),
   },
   zetext1: {
-    fontSize: '0.72rem',
+    fontSize: '0.73rem',
     fontWeight: '700',
     fontFamily: fontFamily.ceraBold,
     color: '#343434',

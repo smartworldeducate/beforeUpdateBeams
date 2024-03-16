@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {View, Text, Button, Image, FlatList, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  Button,
+  Image,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 import {
   Collapse,
   CollapseHeader,
@@ -24,7 +31,7 @@ export default BssChild = ({item}) => {
 
   const renderItem = ({item, index}) => {
     return (
-      <View style={{marginTop: hp(1)}}>
+      <View style={{marginVertical: hp(0.5)}}>
         <View
           style={{
             justifyContent: 'center',
@@ -77,9 +84,10 @@ export default BssChild = ({item}) => {
                           justifyContent: 'center',
                           alignItems: 'center',
                           marginRight: hp(2),
-                         
                         }}>
-                        <Text style={[styles.number,{padding:hp(0.5)}]}>{item?.BR_STD_ID}</Text>
+                        <Text style={[styles.number, {padding: hp(0.5)}]}>
+                          {item?.BR_STD_ID}
+                        </Text>
                       </View>
                     </View>
                     <View
@@ -97,7 +105,7 @@ export default BssChild = ({item}) => {
                           alignItems: 'center',
                           marginRight: hp(2),
                         }}>
-                        <Text style={[styles.textnum,{paddingRight:5}]}>
+                        <Text style={[styles.textnum, {paddingRight: 5}]}>
                           {item?.DATE_OF_BIRTH}
                         </Text>
                       </View>
@@ -117,7 +125,7 @@ export default BssChild = ({item}) => {
                           alignItems: 'center',
                           marginRight: hp(2),
                         }}>
-                        <Text style={[styles.textnum, {paddingRight:5}]}>
+                        <Text style={[styles.textnum, {paddingRight: 5}]}>
                           {item?.CLASS_SECTION.replace(/\s+$/, '')}
                         </Text>
                       </View>
@@ -183,8 +191,16 @@ export default BssChild = ({item}) => {
                 <View style={{justifyContent: 'center'}}>
                   {/* <Text style={styles.testname}>Invoice</Text> */}
                 </View>
-                <TouchableOpacity style={{justifyContent: 'center',width:wp(18),height:hp(4),borderRadius:hp(5),backgroundColor:'#1C37A4',alignItems:'center'}}>
-                  <Text style={[styles.textnum,{color:'#fff'}]}>Pay</Text>
+                <TouchableOpacity
+                  style={{
+                    justifyContent: 'center',
+                    width: wp(18),
+                    height: hp(4),
+                    borderRadius: hp(5),
+                    backgroundColor: '#1C37A4',
+                    alignItems: 'center',
+                  }}>
+                  <Text style={[styles.textnum, {color: '#fff'}]}>Pay</Text>
                 </TouchableOpacity>
               </View>
               {/* <View style={{height: 1, backgroundColor: '#DBDBDB'}}></View> */}
@@ -196,7 +212,7 @@ export default BssChild = ({item}) => {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, marginTop: hp('1')}}>
       <FlatList
         data={childData?.user}
         renderItem={renderItem}

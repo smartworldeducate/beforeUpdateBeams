@@ -5,12 +5,12 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Image
+  Image,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import MainHeader from '../Components/Headers/MainHeader';
 import colors from '../Styles/colors';
-import { Div, ThemeProvider, Radio } from 'react-native-magnus';
+import {Div, ThemeProvider, Radio} from 'react-native-magnus';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import SelectDropdown from 'react-native-select-dropdown';
 import Ficon from 'react-native-fontawesome-pro';
@@ -25,9 +25,9 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import fontFamily from '../Styles/fontFamily';
 import ViewInputTwo from '../Components/ViewInputTwo';
 import Icon from 'react-native-fontawesome-pro';
-import { reporteeHandleFun } from '../features/reportee/createSlice';
-import { getLineMangerHandller } from '../features/lineManager/createSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import {reporteeHandleFun} from '../features/reportee/createSlice';
+import {getLineMangerHandller} from '../features/lineManager/createSlice';
+import {useDispatch, useSelector} from 'react-redux';
 
 const EarliLeaving = props => {
   const dispatch = useDispatch();
@@ -49,17 +49,19 @@ const EarliLeaving = props => {
   const [selectLeave, setSelectLeave] = useState('');
   const [reporteeData, setReporteeData] = useState([]);
   const [empLength, setEmpLength] = useState('');
-  const [mangerData, setMangerData] = useState([])
+  const [mangerData, setMangerData] = useState([]);
   const reportee = ['Muhammad Qasim Ali Khan', 'Asad Numan Shahid'];
   const userData = useSelector(state => state.reportee);
-
 
   const lineMangerHandler = async () => {
     try {
       const lineMdata = await dispatch(getLineMangerHandller());
       console.log('line manager data', lineMdata?.payload?.data);
       if (lineMdata && lineMdata.payload && lineMdata.payload.data) {
-        console.log('line manager data inside dispatch', lineMdata?.payload?.data);
+        console.log(
+          'line manager data inside dispatch',
+          lineMdata?.payload?.data,
+        );
         setMangerData(lineMdata?.payload?.data);
       }
       return lineMdata;
@@ -68,14 +70,14 @@ const EarliLeaving = props => {
       throw error;
     }
   };
-  const reporteeHandler = async (val) => {
+  const reporteeHandler = async val => {
     try {
       // console.log('selected value', val);
       const reportee = await dispatch(reporteeHandleFun(val));
       if (reportee && reportee.payload && reportee.payload.data) {
         console.log('reprtee dada inside dispatch', reportee.payload?.data);
         setReporteeData(reportee.payload?.data);
-        setEmpLength(reportee.payload?.data?.length)
+        setEmpLength(reportee.payload?.data?.length);
       }
       return reportee;
     } catch (error) {
@@ -87,11 +89,11 @@ const EarliLeaving = props => {
   useEffect(() => {
     setReporteeData(userData);
     const rd = reporteeHandler({
-      reportingToId: selectValue ? selectValue : '18776'
+      reportingToId: selectValue ? selectValue : '18776',
     });
     setReporteeData(rd.payload?.data);
     const lmd = lineMangerHandler();
-    console.log("linemanger data", lmd.payload?.data)
+    console.log('linemanger data', lmd.payload?.data);
     // setMangerData(lmd);
   }, [selectValue]);
   //one
@@ -184,7 +186,7 @@ const EarliLeaving = props => {
     setWithOutPay(!withOutPay);
   };
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#F5F8FC' }}>
+    <ScrollView style={{flex: 1, backgroundColor: '#F5F8FC'}}>
       <DateTimePickerModal
         isVisible={isTimePickerVisible}
         mode="time"
@@ -210,11 +212,12 @@ const EarliLeaving = props => {
         mode="date"
       />
       <MainHeader
-        text={'EarliLeaving'}
+        text={'Early Leaving'}
         iconName={'arrow-left'}
         onpressBtn={() => props.navigation.goBack()}
       />
-      <View style={{}}>
+
+      <>
         <View
           style={{
             marginTop: hp(2),
@@ -234,158 +237,165 @@ const EarliLeaving = props => {
             placeholder={'Tue, Jun 27, 2023'}
             placeholderColor={colors.loginTextColor}
             iconColor={colors.loginIconColor}
-          // style={styles.textInputCustomStyle}
           />
         </View>
-      </View>
-      <View
-        style={{
-          marginTop: hp(2),
-          marginHorizontal: wp('5'),
-          backgroundColor: '#fff',
-          borderRadius: wp(10),
-          shadowColor: '#000',
-          shadowOpacity: 1,
-          shadowRadius: wp('15'),
-          elevation: 10,
-        }}>
-        <ViewInput
-          dateText={dateTwo}
-          dateFun={showDatePickerTwo}
-          iconName={'arrow-right'}
-          placeholder={'Tue, Jun 27, 2023'}
-          placeholderColor={colors.loginTextColor}
-          iconColor={colors.loginIconColor}
-        // style={styles.textInputCustomStyle}
-        />
-      </View>
-      <View
-        style={{
-          marginTop: hp(2),
-          marginHorizontal: wp('5'),
-          backgroundColor: '#fff',
-          borderRadius: wp(10),
-          shadowColor: '#000',
-          shadowOpacity: 1,
-          shadowRadius: wp('15'),
-          elevation: 10,
-        }}>
-        <ViewInput
-          dateText={dateThree}
-          dateFun={showDatePickerThree}
-          iconName={'calendar-days'}
-          placeholder={'8 Days'}
-          placeholderColor={colors.loginTextColor}
-          iconColor={colors.loginIconColor}
-        // style={styles.textInputCustomStyle}
-        />
-      </View>
-      <View
-        style={{
-          marginTop: hp(2),
-          marginHorizontal: wp('5'),
-          backgroundColor: '#fff',
-          borderRadius: wp(10),
-          shadowColor: '#000',
-          shadowOpacity: 1,
-          shadowRadius: wp('15'),
-          elevation: 10,
-        }}>
-        <ViewInput
-          dateText={stime}
-          dateFun={showTimePicker}
-          iconName={'clock'}
-          placeholder={'Departure'}
-          placeholderColor={colors.loginTextColor}
-          iconColor={colors.loginIconColor}
-        // style={styles.textInputCustomStyle}
-        />
-      </View>
 
-      <View
-        style={{
-          backgroundColor: '#fff',
-          borderRadius: hp(1.5),
-          shadowColor: '#000',
-          shadowOpacity: 0.5,
-          shadowRadius: 4,
-          elevation: 8,
-          marginHorizontal: wp(5),
-          marginTop: hp('2'),
-        }}>
-        <TextInput
-          placeholder={'Reason'}
-          placeholderColor={'gray'}
-          placeholderTextColor="black"
-          style={{
-            height: hp(15),
-            textAlignVertical: 'top',
-            paddingLeft: wp('3'),
-            color: '#000'
-          }}
-        />
-      </View>
-
-      <View style={{ height: hp('7'), marginVertical: hp('2'), marginHorizontal: hp('2.5'), elevation: 8, backgroundColor: "white", borderRadius: hp(50), flexDirection: 'row' }}>
         <View
           style={{
-            flex: 0.19,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#FDEB13',
-            borderRadius: wp('10'),
+            marginTop: hp(2),
+            marginHorizontal: wp('5'),
+            backgroundColor: '#fff',
+            borderRadius: wp(10),
+            shadowColor: '#000',
+            shadowOpacity: 1,
+            shadowRadius: wp('15'),
+            elevation: 10,
           }}>
-          <Ficon type="light" name='user' color='#000' size={25} />
+          <ViewInput
+            dateText={dateTwo}
+            dateFun={showDatePickerTwo}
+            iconName={'arrow-right'}
+            placeholder={'Tue, Jun 27, 2023'}
+            placeholderColor={colors.loginTextColor}
+            iconColor={colors.loginIconColor}
+            // style={styles.textInputCustomStyle}
+          />
         </View>
-
-        <View style={{ flex: 0.80 }}>
-          <SelectDropdown
-            data={mangerData}
-            onSelect={(selectedItem, index) => {
-              setSelectValue(selectedItem?.EMPLOYEE_ID);
-            }}
-            defaultButtonText={'Muhammad Qasim Ali Khan'}
-            renderCustomizedButtonChild={(selectedItem, index) => {
-              return (
-                <Text style={styles.dropdown1BtnTxt}>{selectedItem ? selectedItem.EMP_NAME : ' Qasim Ali Khan'}</Text>
-              );
-            }}
-            renderCustomizedRowChild={(item, index) => {
-              return (
-                <View style={styles.dropdown1RowChildStyle}>
-                  <Image source={item.image} style={styles.dropdownRowImage} />
-                  <Text style={styles.dropdown1RowTxtStyle}>{item.EMP_NAME}</Text>
-                </View>
-              );
-            }}
-
-            buttonStyle={styles.dropdown1BtnStyle}
-            buttonTextStyle={styles.dropdown1BtnTxtStyle}
-            dropdownStyle={styles.dropdown1DropdownStyle}
-            rowStyle={styles.dropdown1RowStyle}
-            rowTextStyle={styles.dropdown1RowTxtStyle}
-            dropdownIconPosition={'left'}
+        <View
+          style={{
+            marginTop: hp(2),
+            marginHorizontal: wp('5'),
+            backgroundColor: '#FFF2CC',
+            borderRadius: wp(10),
+            shadowColor: '#000',
+            shadowOpacity: 1,
+            shadowRadius: wp('15'),
+            elevation: 10,
+          }}>
+          <ViewInput
+            dateText={dateThree}
+            dateFun={showDatePickerThree}
+            iconName={'calendar-days'}
+            placeholder={'8 Days'}
+            placeholderColor={colors.loginTextColor}
+            iconColor={colors.loginIconColor}
+          />
+        </View>
+        <View
+          style={{
+            marginTop: hp(2),
+            marginHorizontal: wp('5'),
+            backgroundColor: '#fff',
+            borderRadius: wp(10),
+            shadowColor: '#000',
+            shadowOpacity: 1,
+            shadowRadius: wp('15'),
+            elevation: 10,
+          }}>
+          <ViewInput
+            dateText={stime}
+            dateFun={showTimePicker}
+            iconName={'clock-three'}
+            placeholder={'Departure'}
+            placeholderColor={colors.loginTextColor}
+            iconColor={colors.loginIconColor}
           />
         </View>
 
-        <View style={{ flex: 0.23, justifyContent: 'center', alignItems: 'center', marginRight: hp(-1) }}>
-          <Ficon type="light" name="angles-up-down" color="#cdcdcd" size={20} />
+        <View
+          style={{
+            backgroundColor: '#fff',
+            borderRadius: hp(1.5),
+            shadowColor: '#000',
+            shadowOpacity: 0.5,
+            shadowRadius: 4,
+            elevation: 8,
+            marginHorizontal: wp(5.5),
+            marginTop: hp('2'),
+          }}>
+          <TextInput
+            placeholder={'Reason'}
+            placeholderTextColor="#363636"
+            style={{
+              height: hp(17),
+              textAlignVertical: 'top',
+              paddingLeft: wp('4'),
+              color: '#363636',
+              borderRadius: hp(1.5),
+              fontFamily: fontFamily.ceraMedium,
+              fontWeight: '500',
+            }}
+          />
         </View>
-      </View>
-      <TouchableOpacity
-        style={{
-          marginTop: hp(6),
-          marginHorizontal: hp(2.5),
-          height: hp(6.5),
-          justifyContent: 'center',
-          backgroundColor: '#1C37A4',
 
-          borderRadius: hp(50),
-        }}>
-        <View style={{ alignItems: 'center' }}>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={{
+            flexDirection: 'row',
+            marginTop: hp(1.5),
+            marginHorizontal: wp('5'),
+            backgroundColor: '#FFF2CC',
+            borderRadius: wp(10),
+            shadowColor: '#000',
+            shadowOpacity: 1,
+            shadowRadius: wp('15'),
+            elevation: 10,
+            height: hp('7'),
+            backgroundColor: 'white',
+          }}>
+          <View
+            style={{
+              flex: 0.16,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: '#FDEB13',
+              borderRadius: wp('10'),
+            }}>
+            <Ficon type="light" name={'user-tie'} color={'#000'} size={25} />
+          </View>
+          <View
+            style={{
+              flex: 0.7,
+              justifyContent: 'center',
+              paddingLeft: wp(3),
+            }}>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode={'tail'}
+              style={styles.dropdown1BtnTxt}>
+              Muhammad Qasim Ali Khan
+            </Text>
+          </View>
+          <View
+            activeOpacity={0.8}
+            style={{
+              flex: 0.14,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Ficon
+              type="light"
+              name="angles-up-down"
+              color="#cdcdcd"
+              size={16}
+            />
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={{
+            marginTop: hp(15),
+            marginHorizontal: hp(2.75),
+            height: hp(6.5),
+            justifyContent: 'center',
+            backgroundColor: '#1C37A4',
+            borderRadius: hp(50),
+            alignItems: 'center',
+          }}>
           <Text style={styles.submittext}>SUBMIT REQUEST</Text>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </>
     </ScrollView>
   );
 };
@@ -460,14 +470,14 @@ const styles = EStyleSheet.create({
     width: wp('50'),
     height: hp(7),
     backgroundColor: '#fff',
-    marginVertical: hp(0)
+    marginVertical: hp(0),
   },
   dropdown1BtnTxt: {
     justifyContent: 'center',
     alignItems: 'center',
     fontFamily: fontFamily.ceraMedium,
     fontSize: '0.7rem',
-    color: 'gray',
+    color: '#363636',
     fontWaight: 700,
   },
   dropdown1DropdownStyle: {

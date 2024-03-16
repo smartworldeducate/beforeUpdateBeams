@@ -92,22 +92,16 @@ const WorkFromHome = props => {
     calculateTotalTime();
   };
 
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     setCurrentTime(new Date());
-  //   }, 1000);
-  //   return () => clearInterval(intervalId);
-  // }, []);
+  const [formattedTime, setFormattedTime] = useState(
+    moment().format('h:mm:ss'),
+  );
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setFormattedTime(moment().format('h:mm:ss'));
+    }, 1000);
 
-  const formatTimeInPakistan = date => {
-    const options = {
-      timeZone: 'Asia/Karachi',
-      hour12: false,
-      era: 'long',
-    };
-
-    return date.toLocaleTimeString();
-  };
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <>
@@ -142,95 +136,92 @@ const WorkFromHome = props => {
       </View>
 
       {timeState == true && (
-        <View>
+        <>
           <View
             style={{
-              marginTop: hp(7),
+              flex: 0.7,
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+            }}>
+            <Text style={styles.time1}>{formattedTime}</Text>
+            <Text style={styles.timetext}>{`${moment().format(
+              'dddd, MMMM D',
+            )}`}</Text>
+          </View>
+
+          <View
+            style={{
+              flex: 1.8,
               justifyContent: 'center',
               alignItems: 'center',
-              marginLeft: hp(1.5),
             }}>
-            <View style={{justifyContent: 'center', alignItems: 'center'}}>
-              <Text style={styles.time1}>{`${formatTimeInPakistan(
-                currentTime,
-              )}`}</Text>
-              <Text style={styles.timetext}>{wfh?.att_date}</Text>
+            <TouchableOpacity
+              onPress={inTimeHandler}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              disabled={wfh?.count == 2 ? isDisabledTimein : null}>
+              <Image
+                style={{width: wp(55), height: hp(27.5)}}
+                source={{uri: wfh?.count == 0 ? 'timein' : 'outimg'}}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          </View>
+
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              marginHorizontal: wp('10'),
+              // backgroundColor: 'red',
+            }}>
+            <View
+              style={{
+                flex: 0.334,
+                alignItems: 'center',
+                paddingVertical: wp('4'),
+              }}>
+              <Image
+                style={{width: wp(8), height: hp(4)}}
+                source={{uri: 'timeione'}}
+                resizeMode="contain"
+              />
+              <Text style={[styles.serviceSection]}>{`09:10:12`}</Text>
+              <Text style={[styles.bootContText2]}>{`TIME IN`}</Text>
+            </View>
+            <View
+              style={{
+                flex: 0.334,
+                alignItems: 'center',
+                paddingVertical: wp('4'),
+              }}>
+              <Image
+                style={{width: wp(8), height: hp(4)}}
+                source={{uri: 'timeout'}}
+                resizeMode="contain"
+              />
+              <Text style={[styles.serviceSection]}>{`09:10:12`}</Text>
+              <Text style={[styles.bootContText2]}>{`TIME OUT`}</Text>
+            </View>
+            <View
+              style={{
+                flex: 0.334,
+                alignItems: 'center',
+                paddingVertical: wp('4'),
+              }}>
+              <Image
+                style={{width: wp(8), height: hp(4)}}
+                source={{uri: 'chkimg'}}
+                resizeMode="contain"
+              />
+              <Text style={[styles.serviceSection]}>{`09:10:12`}</Text>
+              <Text style={[styles.bootContText2]}>{`Working hr’s`}</Text>
             </View>
           </View>
-          <TouchableOpacity
-            onPress={inTimeHandler}
-            style={{
-              height: hp(20),
-              marginTop: hp(10),
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-            disabled={wfh?.count == 2 ? isDisabledTimein : null}>
-            <Image
-              style={{width: wp(56), height: hp(28)}}
-              source={{uri: wfh?.count == 0 ? 'timein' : 'outimg'}}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-        </View>
+        </>
       )}
-
-      <View style={styles.botContainer}>
-        <View
-          activeOpacity={0.8}
-          onPress={timeinHandler}
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Image
-            style={{width: wp(8), height: hp(4)}}
-            source={{uri: 'timeione'}}
-            resizeMode="contain"
-          />
-          <Text style={[styles.serviceSection]}>
-            {wfh?.count ? wfh?.time_in : ''}
-          </Text>
-
-          <Text style={[styles.bootContText2]}>TIME IN</Text>
-        </View>
-        <View
-          activeOpacity={0.8}
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingHorizontal: hp(2),
-          }}>
-          <Image
-            style={{width: wp(8), height: hp(4)}}
-            source={{uri: 'timeout'}}
-            resizeMode="contain"
-          />
-
-          <Text style={[styles.serviceSection]}>
-            {wfh?.count == 2 ? wfh?.time_out : ''}
-          </Text>
-          <Text style={[styles.bootContText2]}>TIME out</Text>
-        </View>
-
-        <View
-          activeOpacity={0.8}
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Image
-            style={{width: wp(8), height: hp(4)}}
-            source={{uri: 'chkimg'}}
-            resizeMode="contain"
-          />
-
-          <Text style={styles.serviceSection}>
-            {totalTime}:{totalMinut}
-          </Text>
-          <Text style={[styles.bootContText2]}>Working hr’s</Text>
-        </View>
-      </View>
     </>
   );
 };

@@ -25,16 +25,32 @@ const MainHeader = ({text, iconName, onpressBtn, rightIcon, yearText}) => {
         colors={['#1C37A5', '#4D69DC']}
         style={styles.mainHeader}>
         <StatusBar translucent backgroundColor="transparent" />
-        <View style={styles.headerChild}>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: hp(6),
+            height: hp('5'),
+            marginHorizontal: wp('2'),
+          }}>
           <TouchableOpacity
             onPress={onpressBtn}
-            style={{padding:10,marginTop:hp(-1)}}>
+            style={{
+              flex: 0.15,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
             <Icon type="light" name={iconName} size={hp(2.5)} color="#fff" />
           </TouchableOpacity>
-          <View style={{marginLeft: hp(-1.5)}}>
+          <View
+            style={{
+              flex: 0.7,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
             <Text style={styles.textstyle}>{text}</Text>
           </View>
-          <View style={{marginVertical: hp(0.5)}}>
+          <View style={{flex: 0.15}}>
             {rightIcon && (
               <Icon type="light" name={rightIcon} size={hp(2.5)} color="#fff" />
             )}
@@ -69,5 +85,6 @@ const styles = EStyleSheet.create({
     fontWeight: '500',
     fontFamily: fontFamily.ceraMedium,
     fontStyle: 'normal',
+    letterSpacing: 0.35,
   },
 });

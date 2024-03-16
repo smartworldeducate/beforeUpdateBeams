@@ -7,6 +7,7 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import {loginUserHandle} from '../features/register/googleLoginSlice';
+import Toast from 'react-native-toast-message';
 import {
   SafeAreaView,
   StatusBar,
@@ -21,6 +22,7 @@ import {
   KeyboardAvoidingView,
   ActivityIndicator,
   ToastAndroid,
+  Alert,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -35,6 +37,7 @@ import {
   CommonActions,
 } from '@react-navigation/native';
 import {StackActions} from '@react-navigation/native';
+import {LoginAction} from '../features/loginSlice/loginSlice';
 const Login = props => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -149,6 +152,61 @@ const Login = props => {
     setShowPassword(!showPassword);
     setEyeType(!eyeType);
   };
+
+  const loginHere = useSelector(state => state.loginStore);
+  const successHere = useSelector(state => state.loginStore.success);
+
+  console.log('successHere', successHere);
+
+  const onPressLoginBtn = () => {
+    console.log('onPressLoginBtn');
+    dispatch(LoginAction({employeeId: employeeId, password: employeePassword}));
+  };
+
+  useEffect(() => {
+    async function fetchData() {
+      if (successHere === 1) {
+        await AsyncStorage.setItem(
+          'loginData',
+          loginHere?.userData[0]?.EMPLOYEE_ID,
+        );
+        await AsyncStorage.setItem(
+          'branchId',
+          loginHere?.userData[0]?.BRANCH_ID,
+        );
+        await AsyncStorage.setItem(
+          'deptId',
+          loginHere?.userData[0]?.DEPARTMENT_ID,
+        );
+        setEmployeeId(null);
+        setEmployeePassword(null);
+
+        props.navigation.dispatch(StackActions.replace('HomeScreen'));
+      }
+    }
+    fetchData();
+  }, [successHere]);
+
+  // useEffect(() => {
+  //   console.log('HomeScreen');
+  //   AsyncStorage.getItem('loginData')
+  //     .then(loginData => {
+  //       // console.log('loginData', loginData);
+  //       const parsedLoginData = JSON.parse(loginData);
+  //       console.log('parsedLoginData', parsedLoginData);
+
+  //       dispatch(
+  //         LoginAction({employeeId: employeeId, password: employeePassword}),
+  //       );
+  //       if (successHere) {
+  //         props.navigation.dispatch(StackActions.replace('HomeScreen'));
+  //       }
+  //     })
+  //     .catch(error => {
+  //       console.error('Error retrieving loginData from AsyncStorage:', error);
+  //     });
+  // }, [dispatch]);
+
   return (
     <SafeAreaView
       style={{
@@ -157,6 +215,7 @@ const Login = props => {
           Platform.OS === 'android' ? colors.white : colors.white,
       }}>
       <StatusBar barStyle={'default'} backgroundColor={colors.loginIconColor} />
+
       {/* {animation && (
         <View>
           <Modal isVisible={animodal}>
@@ -281,7 +340,8 @@ const Login = props => {
               }}>
               <TouchableOpacity
                 activeOpacity={0.8}
-                onPress={handleLogin}
+                // onPress={handleLogin}
+                onPress={onPressLoginBtn}
                 style={styles.loginbtn}>
                 <Text style={{color: '#061D7A'}}>LOGIN</Text>
               </TouchableOpacity>

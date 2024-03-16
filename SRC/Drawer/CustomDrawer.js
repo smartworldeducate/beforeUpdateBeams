@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ImageBackground,
+  Linking,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-fontawesome-pro';
@@ -16,38 +17,32 @@ import {Image} from 'react-native';
 import fontFamily from '../Styles/fontFamily';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import LinearGradient from 'react-native-linear-gradient';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {logoutSuccess} from '../features/loginSlice/loginSlice';
+import {clearUserProfileState} from '../features/profileSlice/profileSlice';
 const CustomDrawer = ({navigation}) => {
-  const [localData, setLocalData] = useState(null);
-  const [data, setData] = useState([]);
-  const userData = useSelector(state => state.userLogin);
-  console.log('drawer data', userData?.user);
-  async function getData(key) {
-    try {
-      const value = await AsyncStorage.getItem(key);
-      if (value !== null) {
-        // console.log('Data retrieved successfully:', value);
-        const parsedData = JSON.parse(value);
-        setLocalData(parsedData);
-        return value;
-      } else {
-        console.log('No data found for key:', key);
-      }
-    } catch (error) {
-      console.error('Error retrieving data:', error);
-    }
-  }
+  const profileHere = useSelector(state => state.profileStore);
+  console.log(
+    'profileHere',
+    profileHere?.userData?.reporting_result?.reportee_length,
+  );
 
+  const dispatch = useDispatch();
   async function saveData() {
     console.log('logout');
     await AsyncStorage.removeItem('loginData');
+    await AsyncStorage.removeItem('branchId');
+    await AsyncStorage.removeItem('deptId');
+    dispatch(clearUserProfileState());
+    dispatch(logoutSuccess());
+
     navigation.dispatch(StackActions.replace('Login'));
   }
-  // console.log(' drawer lacal data', localData?.EMP_PHOTO);
-  useEffect(() => {
-    getData('loginData');
-  }, []);
+
+  const ourValHere = useSelector(state => state.loginStore);
+  // console.log('ourValHere', ourValHere);
+
   return (
     <>
       <LinearGradient
@@ -57,9 +52,9 @@ const CustomDrawer = ({navigation}) => {
         style={{flex: 1}}>
         <View
           style={{
-            height: hp(8),
+            height: hp(7),
             flexDirection: 'row',
-            marginTop: hp(7),
+            marginTop: hp(6.5),
           }}>
           <View
             style={{
@@ -79,43 +74,47 @@ const CustomDrawer = ({navigation}) => {
                 color: '#fff',
                 fontSize: hp(3),
               }}>
-              <Icon type="light" name="xmark" size={hp(3.5)} color="#fff" />
+              <Icon type="light" name="xmark" size={hp(3)} color="#fff" />
             </View>
           </TouchableOpacity>
         </View>
-        <View style={{flex: 1, marginHorizontal: hp(5.5)}}>
-          <View
+        <View style={{flex: 1, marginHorizontal: hp(3)}}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => navigation.navigate('ProfileDrawer')}
             style={{
               flexDirection: 'row',
-              marginHorizontal: hp(2),
-              marginTop: hp(1),
             }}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Profile')}
+            <View
               style={{
-                borderRadius: hp(50),
-                marginRight: hp(3),
-                flex: 0.15,
+                flex: 0.25,
+                justifyContent: 'center',
+                alignItems: 'center',
               }}>
               <Image
                 style={{
                   width: wp(14),
-                  borderWidth: 1,
-                  borderColor: 'gray',
+                  borderWidth: 0,
+                  borderColor: '#b0bbeb',
                   height: hp(7),
                   borderRadius: hp(50),
                 }}
-                source={{uri: 'salman'}}
+                source={{uri: profileHere?.userData?.emp_result?.EMP_PHOTO}}
                 resizeMode="cover"
               />
-            </TouchableOpacity>
-            <View style={{flex: 0.85}}>
-              <View>
+            </View>
+            <View
+              style={{
+                flex: 0.75,
+                justifyContent: 'center',
+                paddingLeft: wp('4'),
+              }}>
+              <View style={{}}>
                 <Text
                   numberOfLines={1}
                   ellipsizeMode={'tail'}
                   style={styles.username}>
-                  Salman Ali
+                  {profileHere?.userData?.emp_result?.EMP_NAME}
                 </Text>
               </View>
               <View style={{flexDirection: 'row', marginTop: hp(0)}}>
@@ -128,8 +127,8 @@ const CustomDrawer = ({navigation}) => {
                 </View>
               </View>
             </View>
-          </View>
-          <View style={[styles.listnameStyle, {marginTop: hp(4)}]}>
+          </TouchableOpacity>
+          <View style={[styles.listnameStyle, {marginTop: hp(3)}]}>
             <TouchableOpacity
               onPress={() => navigation.navigate('HomeScreenDrawer')}>
               <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
@@ -140,7 +139,8 @@ const CustomDrawer = ({navigation}) => {
             </TouchableOpacity>
           </View>
           <View style={styles.listnameStyle}>
-            <TouchableOpacity onPress={() => navigation.navigate('Attendance')}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('AttendanceDrawer')}>
               <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
                 <View style={styles.homeleft}>
                   <Text style={styles.textlistStyle}>Attendance</Text>
@@ -149,7 +149,8 @@ const CustomDrawer = ({navigation}) => {
             </TouchableOpacity>
           </View>
           <View style={styles.listnameStyle}>
-            <TouchableOpacity onPress={() => navigation.navigate('Financial')}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('FinancialDrawer')}>
               <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
                 <View style={styles.homeleft}>
                   <Text style={styles.textlistStyle}>Financials</Text>
@@ -158,7 +159,8 @@ const CustomDrawer = ({navigation}) => {
             </TouchableOpacity>
           </View>
           <View style={styles.listnameStyle}>
-            <TouchableOpacity onPress={() => navigation.navigate('TimeLine')}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('TimeLineDrawer')}>
               <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
                 <View style={styles.homeleft}>
                   <Text style={styles.textlistStyle}>Timeline</Text>
@@ -166,17 +168,23 @@ const CustomDrawer = ({navigation}) => {
               </View>
             </TouchableOpacity>
           </View>
-          <View style={styles.listnameStyle}>
-            <TouchableOpacity onPress={() => navigation.navigate('Reportee')}>
-              <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
-                <View style={styles.homeleft}>
-                  <Text style={styles.textlistStyle}>Reportees</Text>
+
+          {profileHere?.userData?.reporting_result?.reportee_length > 0 && (
+            <View style={styles.listnameStyle}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('ReporteeDrawer')}>
+                <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
+                  <View style={styles.homeleft}>
+                    <Text style={styles.textlistStyle}>Reportees</Text>
+                  </View>
                 </View>
-              </View>
-            </TouchableOpacity>
-          </View>
+              </TouchableOpacity>
+            </View>
+          )}
+
           <View style={styles.listnameStyle}>
-            <TouchableOpacity onPress={() => navigation.navigate('Approcial')}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('ApprocialDrawer')}>
               <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
                 <View style={styles.homeleft}>
                   <Text style={styles.textlistStyle}>Appraisal</Text>
@@ -185,7 +193,8 @@ const CustomDrawer = ({navigation}) => {
             </TouchableOpacity>
           </View>
           <View style={styles.listnameStyle}>
-            <TouchableOpacity onPress={() => navigation.navigate('ChildBss')}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('ChildBSSDrawer')}>
               <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
                 <View style={styles.homeleft}>
                   <Text style={styles.textlistStyle}>Children in BSS</Text>
@@ -194,7 +203,10 @@ const CustomDrawer = ({navigation}) => {
             </TouchableOpacity>
           </View>
           <View style={styles.listnameStyle}>
-            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+            <TouchableOpacity
+              onPress={() => Linking.openURL('https://index.beaconhouse.net/')}
+              //  onPress={() => navigation.navigate('Profile')}
+            >
               <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
                 <View style={styles.homeleft}>
                   <Text style={styles.textlistStyle}>Index</Text>
@@ -203,7 +215,8 @@ const CustomDrawer = ({navigation}) => {
             </TouchableOpacity>
           </View>
           <View style={styles.listnameStyle}>
-            <TouchableOpacity onPress={() => navigation.navigate('FeedBack')}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('FeedBackDrawer')}>
               <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
                 <View style={styles.homeleft}>
                   <Text style={styles.textlistStyle}>Feedback</Text>
@@ -212,7 +225,8 @@ const CustomDrawer = ({navigation}) => {
             </TouchableOpacity>
           </View>
           <View style={styles.listnameStyle}>
-            <TouchableOpacity onPress={() => navigation.navigate('Utility')}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('UtilityDrawer')}>
               <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
                 <View style={styles.homeleft}>
                   <Text style={styles.textlistStyle}>Utility</Text>
@@ -222,7 +236,7 @@ const CustomDrawer = ({navigation}) => {
           </View>
           <View style={{flexDirection: 'row'}}>
             <View>
-              <View style={styles.listnameStyle}>
+              {/* <View style={styles.listnameStyle}>
                 <TouchableOpacity
                   onPress={() => navigation.navigate('TestScreen')}>
                   <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
@@ -231,7 +245,7 @@ const CustomDrawer = ({navigation}) => {
                     </View>
                   </View>
                 </TouchableOpacity>
-              </View>
+              </View> */}
               <View style={styles.listnameStyle}>
                 <TouchableOpacity onPress={saveData}>
                   <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
@@ -242,7 +256,7 @@ const CustomDrawer = ({navigation}) => {
                 </TouchableOpacity>
               </View>
             </View>
-            <View>
+            <View style={{marginTop: hp(5)}}>
               <Image
                 style={{width: wp(40), height: hp(20)}}
                 source={{uri: 'dimg'}}
@@ -263,7 +277,7 @@ const styles = EStyleSheet.create({
     fontSize: '0.7rem',
     color: '#fff',
     fontWeight: '700',
-    marginTop: hp(1),
+    // marginTop: hp(1),
     fontFamily: fontFamily.ceraBold,
     fontStyle: 'normal',
   },

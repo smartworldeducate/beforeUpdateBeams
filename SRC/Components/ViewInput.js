@@ -19,14 +19,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import fontFamily from '../Styles/fontFamily';
 import Ficon from 'react-native-fontawesome-pro';
 
-const ViewInput = ({
-  placeholder,
-  dateText,
-  dateFun,
-  iconName,
-  iconColor,
- 
-}) => {
+const ViewInput = ({placeholder, dateText, dateFun, iconName, iconColor}) => {
   return (
     <TouchableOpacity
       activeOpacity={0.8}
@@ -52,12 +45,17 @@ const ViewInput = ({
           justifyContent: 'center',
           paddingLeft: wp(1),
         }}>
-        <View >
-          {dateText ? (<Text style={[styles.inpText,{marginTop:hp(3.5)}]}>{dateText}</Text>):(<Text style={[styles.inpText,{marginTop:hp(3.5),color:'gray'}]}>{placeholder}</Text>)}
-            
-          
-            
-         
+        <View>
+          {dateText ? (
+            <Text style={[styles.inpText, {marginTop: hp(3.5)}]}>
+              {dateText}
+            </Text>
+          ) : (
+            <Text
+              style={[styles.inpText, {marginTop: hp(3.5), color: '#363636'}]}>
+              {placeholder}
+            </Text>
+          )}
         </View>
       </View>
       <TouchableOpacity
@@ -69,7 +67,7 @@ const ViewInput = ({
           alignItems: 'center',
           // backgroundColor:'red'
         }}>
-        <Ficon type="light" name="angles-up-down" color="#cdcdcd" size={20} />
+        <Ficon type="light" name="angles-up-down" color="#cdcdcd" size={16} />
       </TouchableOpacity>
     </TouchableOpacity>
   );

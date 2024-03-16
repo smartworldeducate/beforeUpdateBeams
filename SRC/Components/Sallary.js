@@ -131,6 +131,8 @@ const SallaryComp = () => {
   };
   const [salary, setSalary] = useState(true);
 
+  console.log('employeeSallary', employeeSallary);
+
   return (
     <View style={{flex: 1}}>
       <DateTimePickerModal
@@ -578,6 +580,7 @@ const SallaryComp = () => {
           <ScrollView>
             {employeeSallary &&
               employeeSallary?.user.map((item, i) => {
+                console.log('item', item);
                 return (
                   <View key={i}>
                     <View style={{flex: 1}}>

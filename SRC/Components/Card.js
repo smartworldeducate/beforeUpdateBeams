@@ -55,12 +55,13 @@ export default function Card({item}) {
     try {
       setActiveLoder(true);
       const value = await AsyncStorage.getItem(key);
+      const valhere = await AsyncStorage.getItem('loginData');
       if (value !== null) {
         const parsedData = JSON.parse(value);
         setLocalData(parsedData);
         const empMsg = await dispatch(
           empMessageHandler({
-            employeeId: parsedData?.EMPLOYEE_ID,
+            employeeId: valhere,
             ofset: offset,
           }),
         );
@@ -326,15 +327,17 @@ export default function Card({item}) {
         </View>
       </BottomSheet>
 
-      <View style={{marginTop: hp(3)}}>
-        <View style={styles.cardHeading}>
-          <View>
+      <View style={{marginTop: hp(0)}}>
+        {/* <View style={styles.cardHeading}>
+          <View style={{marginLeft: wp('1.5')}}>
             <Text style={styles.message}>Messages</Text>
           </View>
-          <TouchableOpacity onPress={() => navigation.navigate('Messages')}>
+          <TouchableOpacity
+            style={{marginRight: wp('2')}}
+            onPress={() => navigation.navigate('Messages')}>
             <Text style={styles.viewAll}>View All</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
         <ScrollView
           horizontal={true}
           style={styles.container}
@@ -425,7 +428,7 @@ export default function Card({item}) {
 const styles = EStyleSheet.create({
   container: {
     paddingHorizontal: hp(1),
-    marginLeft: wp('1.5'),
+    marginLeft: wp('1'),
   },
 
   card: {
@@ -497,7 +500,7 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: hp(2.5),
+    paddingHorizontal: wp(2.5),
     marginLeft: wp('2'),
   },
   mainHeader: {

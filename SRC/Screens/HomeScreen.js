@@ -3,10 +3,13 @@ import Ficon from 'react-native-fontawesome-pro';
 import Menu from 'react-native-vector-icons/Entypo';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import LinearGradient from 'react-native-linear-gradient';
+import Icon from 'react-native-fontawesome-pro';
+
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import Modal from 'react-native-modal';
 import {Toast} from 'galio-framework';
 import {BottomSheet} from '@rneui/themed';
+
 import {
   ScrollView,
   SafeAreaView,
@@ -14,9 +17,9 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Linking,
-  ActivityIndicator,
   RefreshControl,
+  FlatList,
+  Image,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -27,198 +30,167 @@ import {useDispatch, useSelector} from 'react-redux';
 import colors from '../Styles/colors';
 import HeaderTop from '../Components/Headers/HeaderTop';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Card from '../Components/Card';
 import Calinder from '../Components/Calinder';
 import fontSize from '../Styles/fontSize';
 import fontFamily from '../Styles/fontFamily';
-import {salaryHistoryHandler} from '../features/history/createSlice';
-import {empSlaryHandler} from '../features/empSalary/createSlice';
-import {utilityHandler} from '../features/utility/createSlice';
-import {appraisalHandler} from '../features/appraisal/createSlice';
-import {bssChildHandler} from '../features/childbss/createSlice';
-import {getAllTags} from '../features/tags/tagSlice';
-import {getAllCats} from '../features/category/allCatSlice';
-import {salMonthHandleFun} from '../features/salmonth/createSlice';
-import {getSingleTag} from '../features/tagsingle/singletagSlice';
-import {getRatingHandler} from '../features/getallrating/createSlice';
-import {handleScaneer} from '../features/scan/scanSlice';
-import {wfhHandler} from '../features/wfh/createSlice';
-import {timelineHandler} from '../features/timeline/createSlice';
-import {profileHandler} from '../features/profile/createSlice';
-import {mevementHandler} from '../features/movement/createSlice';
-import {leaveBalanceHandler} from '../features/balanceleave/createSlice';
+import {PieChart} from 'react-native-gifted-charts';
+import {profileAction} from '../features/profileSlice/profileSlice';
+import Loader from '../Components/Loader/Loader';
+import {messagesAction} from '../features/MessagesSlice/MessagesSlice';
+import {LeaveBalanceAction} from '../features/LeaveBalanceSlice/LeaveBalanceSlice';
+import LineSeprator from '../Components/LineSeprator/LineSeprator';
 const HomeScreen = props => {
   const dispatch = useDispatch();
-  const [data, setData] = useState([]);
-  const [homeState, setHomeState] = useState(true);
-  const [indexState, setIndexState] = useState(false);
-  const [tagState, setTagState] = useState(false);
-  const [profileState, setProfileState] = useState(false);
-  const [localData, setLocalData] = useState(null);
-  const [tagData, setTagData] = useState([]);
-  const [dateEmp, setDateEmp] = useState('2023-01-01');
-  const [animodal, setAnimodal] = useState(false);
-  const [modalState, setModalState] = useState(false);
-  const [animation, setAnimation] = useState(true);
-  const [isShow, setShow] = useState(false);
-  const [visibleBtn, setVisibleBtn] = useState(false);
-  const [sData, setSdata] = useState([]);
-  const [visible, setVisible] = useState(false);
-  const [wfh, setWfh] = useState('');
-  const [refreshing, setRefreshing] = useState(false);
-  const [state, setState] = useState({
-    scan: false,
-    ScanResult: false,
-    result: '',
-  });
-  const {scan, ScanResult, result} = state;
-  const userData = useSelector(state => state.userLogin);
-  async function getData(key) {
+
+  const profileHere = useSelector(state => state.profileStore);
+  // console.log('profileHere', profileHere?.userData);
+
+  const messagesHere = useSelector(state => state.messagesStore);
+  // console.log('messagesHere', messagesHere);
+
+  const slicedMessages = messagesHere?.userData?.slice(0, 5);
+  // console.log('slicedMessages', slicedMessages);
+
+  const leaveBalanceHere = useSelector(state => state.leaveBalanceStore);
+  // console.log('leaveBalanceHereData', leaveBalanceHere?.userData);
+  // console.log('leaveBalanceHere', leaveBalanceHere?.success);
+
+  const navigation = useNavigation();
+
+  const fetchData = async () => {
     try {
-      const value = await AsyncStorage.getItem(key);
-      if (value !== null) {
-        const parsedData = JSON.parse(value);
-        setLocalData(parsedData);
-        const empSalary = await dispatch(
-          empSlaryHandler({
-            employeeId: parsedData?.EMPLOYEE_ID,
-            sal_date: dateEmp,
+      const loginData = await AsyncStorage.getItem('loginData');
+      const parsedLoginData = JSON.parse(loginData);
+
+      // Check if parsedLoginData exists
+      if (parsedLoginData) {
+        const branchId = await AsyncStorage.getItem('branchId');
+        const parsedBranchId = JSON.parse(branchId);
+
+        const deptId = await AsyncStorage.getItem('deptId');
+        const parsedDeptId = JSON.parse(deptId);
+
+        // Dispatch actions to update Redux store
+        dispatch(
+          profileAction({
+            employee_id: parsedLoginData,
+            branch_id: parsedBranchId,
+            dept_id: parsedDeptId,
           }),
         );
-        const hisData = await dispatch(
-          salaryHistoryHandler({employeeId: parsedData?.EMPLOYEE_ID}),
-        );
-        const appData = await dispatch(
-          appraisalHandler({employeeId: parsedData?.EMPLOYEE_ID}),
-        );
-        const bssData = await dispatch(
-          bssChildHandler({employeeId: parsedData?.EMPLOYEE_ID}),
-        );
-        const tagData = await dispatch(getAllTags());
-        const catData = await dispatch(getAllCats());
-        const empsal = await dispatch(salMonthHandleFun());
-        const getRatingData = await dispatch(getRatingHandler());
-        const utilityData = await dispatch(utilityHandler());
-        const wfhData = await dispatch(
-          wfhHandler({employee_id: parsedData?.EMPLOYEE_ID}),
-        );
-        if (wfhData?.payload?.data != '' && wfhData?.payload?.data != null) {
-          // console.log("wfhdata==", wfhData)
-          const wfhObj = Object.assign({}, ...wfhData?.payload?.data);
-          setWfh(wfhObj);
-        } else {
-          // console.log("wfhdata==", wfhData)
-        }
-        const timeLineData = await dispatch(
-          timelineHandler({employee_id: parsedData?.EMPLOYEE_ID}),
-        );
-        const profileData = await dispatch(
-          profileHandler({
-            employee_id: parsedData?.EMPLOYEE_ID,
-            branch_id: parsedData?.BRANCH_ID,
+
+        dispatch(
+          messagesAction({
+            employeeId: parsedLoginData,
+            ofset: 1,
           }),
         );
-        const movementData = await dispatch(
-          mevementHandler({employee_id: parsedData?.EMPLOYEE_ID}),
+
+        dispatch(
+          LeaveBalanceAction({
+            employee_id: parsedLoginData,
+          }),
         );
-        const leaveBalanceData = await dispatch(
-          leaveBalanceHandler({employee_id: parsedData?.EMPLOYEE_ID}),
-        );
-        // console.log("testdata",movementData)
-        // console.log("home profile Data",profileData?.payload?.data)
-      } else {
-        console.log('No data found for key:', key);
       }
     } catch (error) {
-      console.error('Error retrieving data:', error);
+      console.error('Error retrieving values from AsyncStorage:', error);
     }
-  }
-
-  useFocusEffect(
-    useCallback(() => {
-      onRefresh();
-      setIndexState(false);
-      setTagState(false);
-      setProfileState(false);
-    }, []),
-  );
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    getData('loginData');
-    setData(userData);
-    setRefreshing(false);
-  }, []);
+  };
 
   useEffect(() => {
-    getData('loginData');
-    setData(userData);
-    // getcatHandle();
-  }, []);
+    fetchData();
+  }, [dispatch]);
 
-  const scanner = useRef(null);
-  const onSuccess = async e => {
-    const check = e.data.substring(0, 4);
-    setState({
-      result: e,
-      scan: false,
-      ScanResult: true,
-    });
-    if (check === 'http') {
-      Linking.openURL(e.data).catch(err =>
-        console.error('An error occured', err),
-      );
-    } else {
-      await dispatch(
-        handleScaneer({
-          tag_id: e.data,
-          employeeId: localData?.EMPLOYEE_ID,
-        }),
-      );
+  const annual = leaveBalanceHere?.userData?.anual_percentage;
+  const casual = leaveBalanceHere?.userData?.casual_percentage;
+  const sick = leaveBalanceHere?.userData?.sick_percentage;
+  const maternity = leaveBalanceHere?.userData?.materenity_percentage;
+  const hajj = leaveBalanceHere?.userData?.hajj_percentage;
+  const without = leaveBalanceHere?.userData?.withoutpay_percentage;
+  const pending = leaveBalanceHere?.userData?.pandding_balance_percentage;
+  const long = leaveBalanceHere?.userData?.long_percentage;
 
-      setState({
-        result: e.data,
-        scan: false,
-        ScanResult: true,
-      });
-      const catData = await dispatch(
-        getSingleTag({employee_id: localData?.EMPLOYEE_ID}),
-      );
-      await setTagData(catData?.payload?.data);
-      setVisible(false);
-      // console.log('scan data', e.data);
-      setModalState(true);
-    }
-  };
+  const renderItem = ({item, index}) => {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={() =>
+          navigation.navigate('ViewMessageDetail', {messagedata: item})
+        }
+        style={{
+          height: hp('14'),
+          width: wp('74'),
 
-  const activeQR = e => {
-    setState({
-      scan: true,
-    });
-  };
+          marginRight: wp('3'),
+          marginLeft: wp('2'),
+          borderRadius: wp('3'),
+          flexDirection: 'column',
+          paddingHorizontal: wp('2'),
 
-  const handleQrcode = () => {
-    // setShow(true)
-    setVisible(true);
-    activeQR('active qr');
-  };
+          backgroundColor: '#FFFFFF',
+          shadowColor: '#000',
+          shadowOpacity: 0.5,
+          shadowRadius: 4,
+          elevation: 4,
+          marginVertical: hp('1'),
+        }}>
+        <View
+          style={{
+            height: hp('7'),
 
-  const handleReset = () => {
-    setState({scan: false});
-    setVisible(false);
-  };
-  const [leave, setLeave] = useState(false);
-  const [clinder, setClinder] = useState(false);
-  const handleLeave = () => {
-    setLeave(true);
-    setClinder(false);
-  };
-  const navigation = useNavigation();
-  const handleNavigate = (routeName, clearStack, params) => {
-    navigation.navigate(routeName, params);
-    if (clearStack) {
-      console.log('Clear');
-    }
+            justifyContent: 'center',
+            flexDirection: 'row',
+          }}>
+          <View
+            style={{
+              flex: 0.17,
+
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Image
+              source={{uri: item?.EMP_PHOTO}}
+              style={{height: hp('4.5'), width: wp('9'), borderRadius: wp(50)}}
+              resizeMode="cover"
+            />
+          </View>
+          <View
+            style={{
+              flex: 0.83,
+              paddingHorizontal: wp('1'),
+              justifyContent: 'center',
+            }}>
+            <Text
+              numberOfLines={2}
+              letterSpacing={'tail'}
+              style={styles.messageCardEmpName}>
+              {item?.EMP_NAME}
+            </Text>
+            <Text style={styles.messageCardDate}>{item?.HIRE_DATE}</Text>
+          </View>
+        </View>
+        <View
+          style={{
+            height: hp('10'),
+            marginVertical: hp('0.5'),
+            paddingHorizontal: wp('2'),
+          }}>
+          <Text
+            numberOfLines={2}
+            ellipsizeMode={'tail'}
+            style={{
+              color: '#343434',
+              fontFamily: fontFamily.ceraLight,
+              fontWeight: '300',
+              fontSize: hp('1.75'),
+              letterSpacing: 0.5,
+              lineHeight: hp('2.5'),
+            }}>
+            {item?.MSG_SUBJECT}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
   };
 
   return (
@@ -235,283 +207,286 @@ const HomeScreen = props => {
         end={{x: 1, y: 0}}
         colors={['#1C37A5', '#4D69DC']}
         style={{height: hp('5')}}>
-        <StatusBar translucent backgroundColor="transparent" />
-      </LinearGradient>
-      <View>
-        <HeaderTop
-          onPressIcon={() => navigation.openDrawer()}
-          iconName={'arrowleft'}
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle={'light-content'}
         />
-      </View>
-      <Toast isShow={isShow} positionIndicator="top" style={styles.tost}>
-        <Text style={{color: '#fff'}}>please enter valid Qrcode</Text>
-      </Toast>
+      </LinearGradient>
 
-      {modalState && (
-        <View>
-          <Modal isVisible={modalState}>
-            {tagData &&
-              tagData?.map((item, i) => {
-                return (
-                  <View style={styles.modalstateView} key={i}>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
-                      <View></View>
-                      <TouchableOpacity
-                        onPress={() => setModalState(false)}
-                        style={styles.tgDataView}>
-                        <Text style={{color: '#fff'}}>X</Text>
-                      </TouchableOpacity>
-                    </View>
-                    <View style={{alignItems: 'center', marginTop: hp(2)}}>
-                      <Text style={styles.tgdsuccess}>
-                        Tag Scan successfully
-                      </Text>
-                    </View>
-                    <View style={{marginLeft: hp(5), marginTop: hp(1)}}>
-                      <Text style={styles.modalText}>
-                        Tag ID : {item?.tag_id}
-                      </Text>
-                      <Text style={styles.modalText}>
-                        Employee ID : {item?.employee_id}
-                      </Text>
-                      <Text style={styles.modalText}>
-                        IN TIME : {item?.scan_time}
-                      </Text>
-                      <Text style={styles.modalText}>
-                        OUT TIME : {item?.scan_time2}
-                      </Text>
-                    </View>
-                  </View>
-                );
-              })}
-          </Modal>
-        </View>
-      )}
-
-      {animation && (
-        <View>
-          <Modal isVisible={animodal}>
-            <View style={styles.actiindicator}>
-              <View style={{}}>
-                <ActivityIndicator animating={animation} size={'large'} />
-              </View>
-            </View>
-          </Modal>
-        </View>
-      )}
-      <BottomSheet
-        isVisible={visible}
-        style={{
-          width: wp(100),
-          height: hp(100),
-          backgroundColor: '#fff',
-          flex: 1,
-        }}>
-        <View
-          style={{
-            width: wp(100),
-            position: 'relative',
-            zIndex: 1,
-            marginBottom: hp(20),
-          }}>
-          <TouchableOpacity
-            onPress={handleReset}
-            style={{
-              width: wp(10),
-              height: hp(5),
-              // borderRadius: hp(50),
-              justifyContent: 'center',
-              alignItems: 'center',
-              position: 'absolute',
-              top: 20,
-              left: hp(45),
-            }}>
-            <Text style={{color: 'gray', fontSize: hp(2)}}>X</Text>
-          </TouchableOpacity>
-        </View>
-
-        {scan && (
-          <QRCodeScanner
-            cameraStyl={{height: hp(120)}}
-            reactivate={true}
-            showMarker={true}
-            ref={scanner}
-            onRead={onSuccess}
-            bottomContent={
+      {profileHere.isLoading ||
+      messagesHere.isLoading ||
+      leaveBalanceHere?.isLoading ? (
+        <Loader></Loader>
+      ) : (
+        <>
+          <View>
+            <HeaderTop
+              onPressUserImg={() => navigation.navigate('Profile')}
+              userImg={profileHere?.userData?.emp_result?.EMP_PHOTO}
+              welcomeText={'Welcome'}
+              userName={profileHere?.userData?.emp_result?.EMP_NAME}
+              onPressIcon={() => navigation.openDrawer()}
+              iconName={'arrowleft'}
+            />
+          </View>
+          <ScrollView contentContainerStyle={{flexGrow: 1}}>
+            <View style={styles.botContainer}>
               <View
                 style={{
-                  paddingTop: hp(8),
+                  flex: 0.33,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Ficon
+                  type="light"
+                  name="bars-progress"
+                  size={hp(3.5)}
+                  color="#4D69DC"
+                />
+
+                <Text style={[styles.serviceSection]}>
+                  {profileHere?.userData?.emp_result?.SERVICE_LENGTH}
+                </Text>
+
+                <Text style={[styles.bootContText2]}>Service Length</Text>
+              </View>
+              <View style={styles.monial}>
+                <Ficon
+                  type="light"
+                  name="chart-area"
+                  size={hp(3.5)}
+                  color="#4D69DC"
+                />
+
+                <Text style={[styles.serviceSection]}>
+                  {profileHere?.userData?.emp_result?.EMP_STATUS_DESCRIPTION}
+                </Text>
+                <Text style={[styles.bootContText2]}>Status</Text>
+              </View>
+
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flex: 0.33,
+                }}>
+                <Ficon
+                  type="light"
+                  containerStyle={styles.iconStyle}
+                  name="calendar-days"
+                  size={hp(3.5)}
+                  color="#4D69DC"
+                />
+
+                <Text style={styles.serviceSection}>08:59:05</Text>
+                <Text style={[styles.bootContText2]}>Attendance</Text>
+              </View>
+            </View>
+
+            <View style={{marginHorizontal: wp('5.5'), marginTop: hp('1.75')}}>
+              <View
+                style={{
                   flexDirection: 'row',
-                  marginTop: hp(8),
-                }}></View>
-            }
-          />
-        )}
-      </BottomSheet>
+                  marginBottom: hp('1'),
+                  height: hp('4'),
+                }}>
+                <View
+                  style={{
+                    flex: 0.3,
+                    justifyContent: 'center',
+                  }}>
+                  <Text style={styles.messageText}>Messages</Text>
+                </View>
+                <View style={{flex: 0.45}}></View>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => navigation.navigate('ViewAllMessages')}
+                  style={{
+                    flex: 0.25,
+                    justifyContent: 'center',
+                    alignItems: 'flex-end',
+                  }}>
+                  <Text style={[styles.messageText, {fontSize: hp('1.65')}]}>
+                    View All
+                  </Text>
+                </TouchableOpacity>
+              </View>
 
-      <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }>
-        <View style={styles.botContainer}>
-          <View
-            style={{
-              flex: 0.33,
-              justifyContent: 'center',
-              alignItems: 'center',
-              // backgroundColor: 'green',
-            }}>
-            <Ficon
-              type="light"
-              name="bars-progress"
-              size={hp(3.5)}
-              color="#4D69DC"
-            />
-
-            <Text style={[styles.serviceSection]}>
-              {localData?.SERVICE_LENGTH}
-            </Text>
-
-            <Text style={[styles.bootContText2]}>Service Length</Text>
-          </View>
-          <View style={styles.monial}>
-            <Ficon
-              type="light"
-              name="chart-area"
-              size={hp(3.5)}
-              color="#4D69DC"
-            />
-
-            <Text style={[styles.serviceSection]}>{localData?.EMP_STATUS}</Text>
-            <Text style={[styles.bootContText2]}>Status</Text>
-          </View>
-
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              flex: 0.33,
-            }}>
-            <Ficon
-              type="light"
-              containerStyle={styles.iconStyle}
-              name="calendar-days"
-              size={hp(3.5)}
-              color="#4D69DC"
-            />
-
-            <Text style={styles.serviceSection}>08:59:05</Text>
-            <Text style={[styles.bootContText2]}>Attendance</Text>
-          </View>
-
-          {/* <View style={{backgroundColor: 'grey', flex: 0.1}}></View> */}
-        </View>
-
-        <Card />
-
-        <View style={{marginBottom: hp(1)}}>
-          <Calinder />
-        </View>
-
-        {wfh?.count == '0' || wfh?.count == '1' ? (
-          <View>
-            <View style={{marginHorizontal: hp(2.2), marginTop: hp(2)}}>
-              <Text style={styles.clText1}>W.F.H</Text>
+              <View style={{marginHorizontal: wp('-2'), marginTop: hp('-1')}}>
+                <FlatList
+                  data={slicedMessages}
+                  renderItem={renderItem}
+                  keyExtractor={(item, index) => index.toString()}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                />
+              </View>
             </View>
-            <View style={styles.wfh}>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() =>
-                  props.navigation.navigate('WorkFromHome', {
-                    myKey1: localData,
-                    myCount: wfh?.count,
-                  })
-                }
-                style={styles.mrf}>
-                <Text style={styles.clbtnStyle}>Mark Attendance</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        ) : null}
 
-        {wfh?.count == '2' ? <></> : null}
-      </ScrollView>
+            {/* <Card /> */}
 
-      {/* <View
-        style={{
-          backgroundColor: '#fff',
-          position: 'relative',
-          bottom: hp(0),
-        }}>
-        <View
-          style={{
-            height: hp(7),
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignContent: 'center',
-            alignItems: 'center',
-          }}>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={homeHandler}
-            style={{flex: 0.2, alignItems: 'center'}}>
-            <Menu
-              name="home"
-              size={hp(3)}
-              color={homeState ? '#1C37A4' : 'gray'}
-              style={{}}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={indexHandler}
-            style={{flex: 0.2, paddingTop: hp(0.5), alignItems: 'center'}}>
-            <Ficon
-              type="light"
-              name="book-bookmark"
-              size={hp(3)}
-              color={indexState ? '#1C37A4' : 'gray'}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={handleQrcode}
-            style={{
-              flex: 0.2,
-              alignItems: 'center',
-            }}>
-            <View style={styles.scanView}>
-              <Ficon style={{}} name="qrcode" size={hp(4)} color="#fff" />
+            {/* <Calinder /> */}
+            <View style={{marginHorizontal: wp('5.5'), marginTop: hp('1')}}>
+              <Text style={styles.messageText}>Leaves</Text>
             </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            style={{flex: 0.2, alignItems: 'center'}}
-            onPress={tagHandler}>
-            <Ficon
-              type="light"
-              name="user-tag"
-              size={hp(3.5)}
-              color={tagState ? '#1C37A4' : 'gray'}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => props.navigation.navigate('Profile')}
-            style={{flex: 0.2, alignItems: 'center', paddingTop: hp(0)}}>
-            <Ficon
-              type="light"
-              name="user-tie"
-              size={hp(3)}
-              color={profileState ? '#1C37A4' : 'gray'}
-            />
-          </TouchableOpacity>
-        </View>
-      </View> */}
+
+            {leaveBalanceHere?.success == 1 && (
+              <View
+                style={{
+                  flexDirection: 'column',
+                  backgroundColor: 'white',
+                  marginHorizontal: wp('5.5'),
+                  marginTop: hp('1'),
+                  borderRadius: wp('2'),
+
+                  shadowColor: '#000',
+                  shadowOpacity: 0.5,
+                  shadowRadius: 4,
+                  elevation: 4,
+                }}>
+                <View style={styles.LBMainView}>
+                  <TouchableOpacity
+                    activeOpacity={0.75}
+                    onPress={() => navigation.navigate('LeaveBalance')}
+                    style={styles.LBLeftView}>
+                    <PieChart
+                      data={[
+                        {
+                          value: annual,
+                          color: '#5bcfb5',
+                        },
+                        {
+                          value: casual,
+                          color: '#7151ce',
+                        },
+                        {
+                          value: sick,
+                          color: '#b245ce',
+                        },
+                        {
+                          value: maternity,
+                          color: '#4161ca',
+                        },
+                        {
+                          value: long,
+                          color: '#e3e3e3',
+                        },
+                        {
+                          value: hajj,
+                          color: '#5fce6a',
+                        },
+                        {
+                          value: without,
+                          color: 'red',
+                        },
+                        {
+                          value: pending,
+                          color: 'grey',
+                        },
+                      ]}
+                      donut
+                      // showGradient
+                      sectionAutoFocus
+                      radius={60}
+                      innerRadius={55}
+                      centerLabelComponent={() => {
+                        return (
+                          <View
+                            style={{
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}>
+                            <Text style={styles.LBCountText}>
+                              {leaveBalanceHere?.userData?.total_count}
+                            </Text>
+                            <Text style={styles.LBText}>LEAVE BALANCE</Text>
+                          </View>
+                        );
+                      }}
+                    />
+                  </TouchableOpacity>
+                  <View
+                    style={{
+                      flex: 0.45,
+                    }}>
+                    <View style={styles.leaveBalRightView}>
+                      <View style={styles.LBNestedLeftView}>
+                        <Icon
+                          type="light"
+                          name="masks-theater"
+                          size={hp(4)}
+                          color="#BB8FCE"
+                        />
+                      </View>
+                      <View style={styles.LBNestedRightView}>
+                        <Text style={styles.countText}>15</Text>
+                        <Text style={styles.titleText}>CASUAL LEAVES</Text>
+                      </View>
+                    </View>
+
+                    <View style={styles.leaveBalRightView}>
+                      <View style={styles.LBNestedLeftView}>
+                        <Icon
+                          type="light"
+                          name="temperature-half"
+                          size={hp(4)}
+                          color="#DC7633"
+                        />
+                      </View>
+                      <View style={styles.LBNestedRightView}>
+                        <Text style={styles.countText}>15</Text>
+                        <Text style={styles.titleText}>SICK LEAVES</Text>
+                      </View>
+                    </View>
+
+                    <View style={styles.leaveBalRightView}>
+                      <View style={styles.LBNestedLeftView}>
+                        <Icon
+                          type="light"
+                          name="island-tropical"
+                          size={hp(3)}
+                          color="#58D68D"
+                        />
+                      </View>
+                      <View style={styles.LBNestedRightView}>
+                        <Text style={styles.countText}>15</Text>
+                        <Text style={styles.titleText}>ANNUAL LEAVES</Text>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+
+                <LineSeprator
+                  height={hp('0.15')}
+                  backgroundColor={'#D9D9D9'}
+                  marginHorizontal={wp('4')}
+                  marginVertical={hp('1.25')}
+                />
+
+                <View style={styles.LBBtnMainView}>
+                  <TouchableOpacity
+                    activeOpacity={0.5}
+                    onPress={() => navigation.navigate('ApplyLeave')}
+                    style={styles.LBBtnView}>
+                    <Text style={[styles.btnText, {color: '#1C37A4'}]}>
+                      Apply Leave
+                    </Text>
+                  </TouchableOpacity>
+                  <View style={{flex: 0.1}}></View>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={[styles.LBBtnView, {backgroundColor: '#1C37A4'}]}>
+                    <Text style={[styles.btnText, {color: '#FFFFFF'}]}>
+                      View Calendar
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+          </ScrollView>
+        </>
+      )}
     </SafeAreaView>
   );
 };
@@ -623,7 +598,6 @@ const styles = EStyleSheet.create({
     fontWeight: '700',
     fontFamily: fontFamily.robotoMedium,
     fontStyle: 'normal',
-    // paddingHorizontal: hp(2),
     color: '#353535',
     paddingTop: hp(0.3),
   },
@@ -659,6 +633,7 @@ const styles = EStyleSheet.create({
     fontFamily: fontFamily.ceraBold,
     paddingBottom: hp(0.5),
     color: '#646464',
+    marginHorizontal: hp(2),
     fontStyle: 'normal',
   },
   clbtnText: {
@@ -701,7 +676,7 @@ const styles = EStyleSheet.create({
     // paddingHorizontal: hp(2),
   },
   wfh: {
-    marginHorizontal: hp(2),
+    marginHorizontal: hp(2.5),
     borderRadius: hp(2),
     height: hp(12),
     backgroundColor: '#FFFFFF',
@@ -748,6 +723,96 @@ const styles = EStyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: hp(15),
+  },
+  messageText: {
+    fontSize: hp('2.1'),
+    fontFamily: fontFamily.ceraMedium,
+    fontWeight: '500',
+    color: '#646464',
+    letterSpacing: 0.1,
+  },
+  messageCardEmpName: {
+    color: '#6A6A6A',
+    fontFamily: fontFamily.ceraBold,
+    fontWeight: '700',
+    fontSize: '0.67rem',
+  },
+  messageCardDate: {
+    color: '#979797',
+    fontFamily: fontFamily.ceraMedium,
+    fontWeight: '500',
+    fontSize: '0.52rem',
+  },
+  LBMainView: {
+    flexDirection: 'row',
+  },
+  LBLeftView: {
+    flex: 0.55,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: hp('2'),
+    marginBottom: hp('1'),
+  },
+  leaveBalRightView: {
+    flexDirection: 'row',
+    marginTop: hp('2'),
+  },
+  LBCountText: {
+    fontSize: '1.15rem',
+    color: '#646464',
+    fontFamily: fontFamily.ceraBold,
+    fontWeight: '700',
+  },
+  LBText: {
+    fontSize: '0.45rem',
+    color: '#979797',
+    fontFamily: fontFamily.ceraMedium,
+    fontWeight: '500',
+    letterSpacing: 0.15,
+  },
+  LBNestedLeftView: {
+    flex: 0.25,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  LBNestedRightView: {
+    flex: 0.75,
+    justifyContent: 'center',
+  },
+  countText: {
+    fontFamily: fontFamily.ceraBold,
+    fontWeight: '700',
+    color: '#353535',
+    fontSize: '0.78rem',
+    letterSpacing: 0.2,
+  },
+  titleText: {
+    fontFamily: fontFamily.ceraMedium,
+    fontWeight: '500',
+    color: '#747474',
+    fontSize: '0.45rem',
+    letterSpacing: 0.25,
+  },
+  LBBtnMainView: {
+    marginHorizontal: wp('3'),
+    flexDirection: 'row',
+    marginVertical: hp('1.25'),
+  },
+  LBBtnView: {
+    flex: 0.45,
+    height: hp('4.25'),
+    borderRadius: wp('10'),
+    borderColor: '#1C37A4',
+    borderWidth: wp('0.1'),
+
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  btnText: {
+    fontFamily: fontFamily.ceraMedium,
+    fontSize: '0.5rem',
+    fontWeight: '500',
+    letterSpacing: 0.2,
   },
 });
 

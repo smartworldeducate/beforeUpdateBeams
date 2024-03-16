@@ -2,35 +2,63 @@ import {
   View,
   Text,
   TouchableOpacity,
-  ScrollView,
   SafeAreaView,
-  FlatList,
+  ScrollView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import MainHeader from '../Components/Headers/MainHeader';
-import {AnimatedCircularProgress} from 'react-native-circular-progress';
-import ViewPager from '@react-native-community/viewpager';
-import LinearGradient from 'react-native-linear-gradient';
-
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import {PieChart} from 'react-native-gifted-charts';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import fontFamily from '../Styles/fontFamily';
-import GraphChart from '../Components/LineChart';
-import ApComp from '../Components/AppraisalGraphList';
+import colors from '../Styles/colors';
+import Appraisal from '../Components/Appraisal/Appraisal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {AppraisalAction} from '../features/AppraisalYearsSlice/AppraisalYearsSlice';
+import {useSelector, useDispatch} from 'react-redux';
+import Objectives from '../Components/Appraisal/Objectives';
+import {ObjectiveYearsAction} from '../features/AppraisalYearsSlice/ObjectivesYearsSlice';
+import Loader from '../Components/Loader/Loader';
+
 const Approcial = props => {
+  const navigation = useNavigation();
+
+  const dispatch = useDispatch();
+  const appraisalYearsHere = useSelector(state => state.appraisalYearsStore);
+  const objectiveYearsHere = useSelector(state => state.objectiveYearsStore);
+
+  console.log('appraisalYearsHere>', appraisalYearsHere?.userData);
+  console.log(
+    'objectiveYearsHere>',
+    objectiveYearsHere?.userData?.apprasal_years,
+  );
+
+  useEffect(() => {
+    AsyncStorage.getItem('loginData')
+      .then(loginData => {
+        const parsedLoginData = JSON.parse(loginData);
+        dispatch(
+          AppraisalAction({
+            employeeId: parsedLoginData,
+          }),
+        );
+        dispatch(
+          ObjectiveYearsAction({
+            employee_id: parsedLoginData,
+          }),
+        );
+      })
+      .catch(error => {
+        console.error('Error retrieving loginData from AsyncStorage:', error);
+      });
+  }, [dispatch]);
+
   const [appraisal, setAppraisal] = useState(true);
   const [objective, setObjective] = useState(false);
-  const [clinder, setClinder] = useState(null);
-  const [defalut, setDefalut] = useState(true);
-
-  const clinderHandler = item => {
-    setClinder(item);
-    setDefalut(false);
-    console.log('my item  time out', item);
-  };
 
   const onPressAppraisal = () => {
     setAppraisal(true);
@@ -42,147 +70,193 @@ const Approcial = props => {
     setObjective(true);
   };
 
-  const years = [
-    {id: 1, month: '2020'},
-    {id: 2, month: '2021'},
-    {id: 3, month: '2022'},
-    {id: 4, month: '2023'},
-    {id: 5, month: '2024'},
-  ];
-  const data = [
-    {
-      text: 'BEAMS Design Inner Pages, Student and Employee Dashboards',
-      number: '30/12/23',
-    },
-    {
-      text: 'BEAMS Design Inner Pages, Student and Employee Dashboards',
-      number: '30/12/23',
-    },
-    {
-      text: 'BEAMS Design Inner Pages, Student and Employee Dashboards',
-      number: '30/12/23',
-    },
-    {
-      text: 'BEAMS Design Inner Pages, Student and Employee Dashboards',
-      number: '30/12/23',
-    },
-    {
-      text: 'BEAMS Design Inner Pages, Student and Employee Dashboards',
-      number: '30/12/23',
-    },
-    {
-      text: 'BEAMS Design Inner Pages, Student and Employee Dashboards',
-      number: '30/12/23',
-    },
-    {
-      text: 'BEAMS Design Inner Pages, Student and Employee Dashboards',
-      number: '30/12/23',
-    },
-  ];
+  const renderItem = ({item, index}) => {
+    const totalPercentage = 100;
+    const gettingPercentage = item?.VALUE;
+    const convertGettingPercentage = parseInt(gettingPercentage, 10);
+    const lostPercentage = totalPercentage - gettingPercentage;
 
-  const calenderItem = ({item, index}) => {
-    // console.log('index', index);
     return (
       <TouchableOpacity
         activeOpacity={0.8}
-        onPress={() => clinderHandler(item.id)}
-        // key={i}
-        style={{}}>
+        style={{
+          marginBottom: hp('1.75'),
+          height: hp('14'),
+          marginHorizontal: wp('2'),
+          backgroundColor: 'white',
+          shadowColor: '#000',
+          shadowOpacity: 0.5,
+          shadowRadius: 4,
+          elevation: 4,
+          borderRadius: wp('5'),
+        }}>
         <View
           style={{
-            height: hp(4),
-            paddingHorizontal: hp(3),
-            borderRadius: hp(20),
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: index == 2 ? '#4D69DC' : ' ',
-            marginHorizontal: hp(0.5),
+            flexDirection: 'row',
           }}>
           <View
             style={{
+              flex: 0.3,
               justifyContent: 'center',
               alignItems: 'center',
+              paddingLeft: wp('2'),
+              paddingTop: hp('1'),
             }}>
-            <Text
+            <PieChart
+              data={[
+                {value: convertGettingPercentage, color: '#D4E9FF'},
+                {value: lostPercentage, color: '#E7E7E7'},
+              ]}
+              donut
+              sectionAutoFocus
+              radius={40}
+              innerRadius={30}
+              centerLabelComponent={() => {
+                return (
+                  <View
+                    style={{justifyContent: 'center', alignItems: 'center'}}>
+                    <Text
+                      style={{
+                        fontSize: hp('1.75'),
+                        color: '#646464',
+                        fontFamily: fontFamily.ceraBold,
+                        fontWeight: '700',
+                      }}>
+                      {item?.LABEL}
+                    </Text>
+                  </View>
+                );
+              }}
+            />
+          </View>
+          <View style={{flex: 0.05}}></View>
+          <View
+            style={{
+              flex: 0.65,
+              flexDirection: 'column',
+              justifyContent: 'center',
+            }}>
+            <View
               style={{
-                color: index == 2 ? '#FFF' : 'gray',
-                fontSize: hp(1.5),
+                flexDirection: 'row',
+                height: hp('11'),
+                paddingTop: hp('2'),
               }}>
-              {item.month}
-            </Text>
+              <View
+                style={{
+                  flex: 0.55,
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <View
+                  style={{
+                    flex: 0.1,
+                    backgroundColor: '#D4E9FF',
+                    height: hp('4'),
+                  }}></View>
+                <View
+                  style={{
+                    flex: 0.9,
+                    flexDirection: 'column',
+                    paddingLeft: wp('2'),
+                    justifyContent: 'center',
+                  }}>
+                  <View style={{}}>
+                    <Text
+                      style={{
+                        fontSize: hp('2'),
+                        fontFamily: fontFamily.ceraBold,
+                        color: '#353535',
+                        fontWeight: '700',
+                      }}>
+                      {`${item?.VALUE}%`}
+                    </Text>
+                  </View>
+                  <View style={{}}>
+                    <Text
+                      numberOfLines={1}
+                      ellipsizeMode={'tail'}
+                      style={{
+                        fontSize: hp('1.25'),
+                        fontFamily: fontFamily.ceraMedium,
+                        color: '#979797',
+                        fontWeight: '500',
+                      }}>
+                      {item?.RATING_DESC}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+              <View
+                style={{
+                  flex: 0.45,
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <View
+                  style={{
+                    flex: 0.1,
+                    backgroundColor: '#E7E7E7',
+                    height: hp('4'),
+                  }}></View>
+                <View
+                  style={{
+                    flex: 0.9,
+                    flexDirection: 'column',
+                    paddingLeft: wp('2'),
+                    justifyContent: 'center',
+                  }}>
+                  <View style={{}}>
+                    <Text
+                      style={{
+                        fontSize: hp('2'),
+                        fontFamily: fontFamily.ceraBold,
+                        color: '#353535',
+                        fontWeight: '700',
+                      }}>
+                      {item?.SAL_INCR}
+                    </Text>
+                  </View>
+                  <View style={{}}>
+                    <Text
+                      numberOfLines={1}
+                      ellipsizeMode={'tail'}
+                      style={{
+                        fontSize: hp('1.25'),
+                        fontFamily: fontFamily.ceraMedium,
+                        color: '#979797',
+                        fontWeight: '500',
+                      }}>
+                      INCREASE
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+            <View
+              style={{
+                height: hp('3'),
+                alignItems: 'flex-end',
+                paddingRight: wp('3'),
+              }}></View>
           </View>
         </View>
       </TouchableOpacity>
     );
   };
-  const renderItemGradient = ({item, index}) => {
-    // console.log('index', index);
-    return (
-      <View>
-        {clinder == item.id && (
-          <TouchableOpacity activeOpacity={0.8}>
-            <LinearGradient
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 0}}
-              colors={['#1C37A5', '#4D69DC']}
-              style={{
-                height: hp(3.7),
-                paddingHorizontal: hp(3),
-                borderRadius: hp(20),
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: '#4D69DC',
-                marginHorizontal: hp(2),
-              }}>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text
-                  style={{
-                    color: '#FFF',
-                    fontSize: hp(1.5),
-                    paddingHorizontal: hp(0.5),
-                  }}>
-                  {item.month}
-                </Text>
-              </View>
-            </LinearGradient>
-          </TouchableOpacity>
-        )}
-        {clinder !== item.id && (
-          <TouchableOpacity onPress={() => clinderHandler(item.id)}>
-            <View
-              style={{
-                height: hp(3.7),
-                paddingHorizontal: hp(2.7),
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text
-                  style={{
-                    color: 'gray',
-                    fontSize: hp(1.5),
-                  }}>
-                  {item.month}
-                </Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        )}
-      </View>
-    );
-  };
 
   return (
     <>
-      <View style={{flex: 1}}>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor:
+            Platform.OS === 'android'
+              ? colors.appBackGroundColor
+              : colors.appBackGroundColor,
+        }}>
         <View>
           <MainHeader
             text={'Appraisal'}
@@ -190,131 +264,77 @@ const Approcial = props => {
             onpressBtn={() => props.navigation.goBack()}
           />
         </View>
+        {appraisalYearsHere.isLoading ||
+          (objectiveYearsHere.isLoading && <Loader />)}
 
-        <View
-          style={{
-            flexDirection: 'row',
-            alignContent: 'center',
-            marginHorizontal: hp(1),
-            justifyContent: 'center',
-            marginVertical: hp('2'),
-            backgroundColor: '#E7E7E7',
-            marginHorizontal: wp('5'),
-            borderRadius: wp('3'),
+        <ScrollView
+          contentContainerStyle={{
+            flexGrow: 1,
+            backgroundColor: colors.appBackGroundColor,
           }}>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={onPressAppraisal}
-            style={{
-              flex: 0.49,
-              height: hp('5'),
-              borderRadius: hp(1),
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: appraisal == true ? '#fff' : '#E7E7E7',
-              marginHorizontal: wp('2'),
-              marginVertical: hp('0.75'),
-            }}>
-            <Text style={styles.headertext}>Appraisal</Text>
-          </TouchableOpacity>
-          <View style={{flex: 0.02}}></View>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={onPressObjective}
-            style={{
-              flex: 0.49,
-              height: hp('5'),
-              borderRadius: hp(1),
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: objective == true ? '#fff' : '#E7E7E7',
-              marginHorizontal: wp('2'),
-              marginVertical: hp('0.75'),
-            }}>
-            <Text style={styles.headertext}>Objective</Text>
-          </TouchableOpacity>
-        </View>
-
-        {appraisal && (
-          <>
-            <ApComp />
-          </>
-        )}
-        {objective && (
-          <>
-            {defalut == true && (
+          <View style={{marginVertical: hp('3')}}>
+            <View style={{marginHorizontal: wp('5')}}>
               <View
                 style={{
-                  height: hp(7),
-                  marginTop: hp(2),
-                  marginHorizontal: hp(2.5),
-                }}>
-                <FlatList
-                  data={years}
-                  renderItem={calenderItem}
-                  horizontal={true}
-                  keyExtractor={item => item.id}
-                />
-              </View>
-            )}
-            {defalut !== true && (
-              <View
-                style={{
-                  height: hp(7),
-                  marginTop: hp(2),
-                  marginHorizontal: hp(2.5),
-                }}>
-                <FlatList
-                  data={years}
-                  renderItem={renderItemGradient}
-                  horizontal={true}
-                  // inverted={true}
-                  keyExtractor={item => item.id}
-                />
-              </View>
-            )}
-
-            <View style={{marginHorizontal: hp(2.5)}}>
-              <View
-                style={{
-                  height: hp(4.5),
                   backgroundColor: '#E7E7E7',
+                  height: hp('7'),
+                  borderRadius: wp('2'),
                   justifyContent: 'center',
-                  paddingLeft: hp(1),
                 }}>
-                <Text style={styles.duction}>Description</Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    height: hp('5'),
+                    marginHorizontal: wp('2'),
+                  }}>
+                  <TouchableOpacity
+                    onPress={onPressAppraisal}
+                    activeOpacity={0.5}
+                    style={{
+                      flex: 0.46,
+                      backgroundColor: appraisal
+                        ? colors.whiteColor
+                        : '#E7E7E7',
+                      borderRadius: wp('2'),
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text style={styles.upperText}>Appraisal</Text>
+                  </TouchableOpacity>
+                  <View
+                    style={{
+                      flex: 0.08,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}></View>
+                  <TouchableOpacity
+                    onPress={onPressObjective}
+                    activeOpacity={0.5}
+                    style={{
+                      flex: 0.46,
+                      backgroundColor: objective
+                        ? colors.whiteColor
+                        : '#E7E7E7',
+                      borderRadius: wp('2'),
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text style={styles.upperText}>Objective</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-              <ScrollView>
-                {data.map((item, i) => {
-                  return (
-                    <View key={i}>
-                      <View
-                        style={{
-                          paddingVertical: hp(1),
-                          marginHorizontal: hp(1),
-                        }}>
-                        <View
-                          style={{
-                            justifyContent: 'center',
-                            paddingVertical: hp(1),
-                          }}>
-                          <Text style={styles.textobj}>{item.text}</Text>
-                        </View>
-                        <View
-                          style={{justifyContent: 'center', marginTop: hp(-1)}}>
-                          <Text style={styles.objnum}>{item.number}</Text>
-                        </View>
-                      </View>
-                      <View
-                        style={{height: 1, backgroundColor: '#DBDBDB'}}></View>
-                    </View>
-                  );
-                })}
-              </ScrollView>
+              {appraisal && (
+                <Appraisal
+                  dataList={appraisalYearsHere?.userData}
+                  renderItem={renderItem}
+                  keyExtractor={(item, index) => index.toString()}
+                />
+              )}
+              {objective && <Objectives />}
             </View>
-          </>
-        )}
-      </View>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     </>
   );
 };
@@ -322,6 +342,19 @@ const Approcial = props => {
 export default Approcial;
 
 const styles = EStyleSheet.create({
+  upperText: {
+    color: '#363636',
+    fontFamily: fontFamily.ceraMedium,
+    fontWeight: '500',
+    fontSize: hp('1.8'),
+  },
+  upperSalaryText: {
+    color: '#353535',
+    fontFamily: fontFamily.ceraBold,
+    fontWeight: '700',
+    fontSize: '0.6rem',
+  },
+
   smalltext: {
     fontWeight: '500',
     fontSize: '0.9rem',
