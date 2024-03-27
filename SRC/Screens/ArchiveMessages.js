@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef, useCallback} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   ScrollView,
   StatusBar,
@@ -21,102 +21,10 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {useSelector, useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import colors from '../Styles/colors';
-import {messagesAction} from '../features/MessagesSlice/MessagesSlice';
 
-const ViewAllMessages = props => {
+const ArchiveMessages = props => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const profileHereEmpId = useSelector(
-    state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
-  );
-  const messagesHere = useSelector(state => state.messagesStore);
-
-  const [messagesData, setMessagesData] = useState([]);
-  const [pageOffset, setPageOffset] = useState(1);
-
-  useEffect(() => {
-    setMessagesData(messagesHere?.userData);
-  }, [messagesHere]);
-
-  console.log('messagesData', messagesData);
-
-  const renderItem = ({item, index}) => {
-    return (
-      <View
-        activeOpacity={0.8}
-        style={{
-          flexDirection: 'row',
-          marginBottom: hp('2'),
-        }}>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('ViewMessageDetail', {messagedata: item})
-          }
-          style={{
-            flex: 0.13,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Image
-            source={{uri: item?.EMP_PHOTO}}
-            style={{height: hp('5'), width: wp('10'), borderRadius: wp(50)}}
-            resizeMode="cover"
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('ViewMessageDetail', {messagedata: item})
-          }
-          style={{
-            flex: 0.6,
-            paddingVertical: hp('0.35'),
-            paddingLeft: wp('2.5'),
-          }}>
-          <Text
-            numberOfLines={2}
-            letterSpacing={'tail'}
-            style={styles.messageCardEmpName}>
-            {item?.EMP_NAME}
-          </Text>
-          <Text
-            numberOfLines={1}
-            ellipsizeMode={'tail'}
-            style={styles.msgSubject}>
-            {item?.MSG_SUBJECT}
-          </Text>
-        </TouchableOpacity>
-        <View
-          style={{
-            flex: 0.27,
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-          }}>
-          <View style={{}}>
-            <Text
-              numberOfLines={1}
-              letterSpacing={'tail'}
-              style={styles.messageCardDate}>
-              {item?.HIRE_DATE}
-            </Text>
-          </View>
-          <TouchableOpacity
-            onPress={() => onPressStar({item})}
-            style={{
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              paddingTop: hp('1'),
-              width: wp('10'),
-            }}>
-            <Icon type="light" name={'star'} size={hp(2.5)} color="#A09DA1" />
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  };
-
-  const onPressStar = ({item}) => {
-    console.log('onPressStar', item);
-  };
 
   const textInputRef = useRef(null);
   const [searchText, setSearchText] = useState(null);
@@ -128,14 +36,6 @@ const ViewAllMessages = props => {
   const onChangeSearchText = val => {
     setSearchText(val);
   };
-
-  const handleLoadMore = useCallback(() => {
-    console.log('Offset:', pageOffset + 1);
-    setPageOffset(prevOffset => prevOffset + 1);
-    // Here you can fetch more data from your data source
-  }, [pageOffset]);
-
-  console.log('pageOffset', pageOffset);
 
   return (
     <>
@@ -176,7 +76,7 @@ const ViewAllMessages = props => {
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}>
-                  <Text style={styles.headerText}>Messages</Text>
+                  <Text style={styles.headerText}>Archive</Text>
                 </View>
                 <View style={{flex: 0.15}}></View>
               </View>
@@ -234,34 +134,11 @@ const ViewAllMessages = props => {
           </LinearGradient>
         </>
       </View>
-
-      <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-          backgroundColor: '#f5f8fc',
-        }}>
-        <View style={{marginTop: hp('3')}}>
-          <View style={{marginHorizontal: wp('5')}}>
-            <FlatList
-              data={messagesData}
-              renderItem={renderItem}
-              keyExtractor={(item, index) => index.toString()}
-              // horizontal={true}
-              // showsHorizontalScrollIndicator={false}
-              showsVerticalScrollIndicator={false}
-              onEndReached={handleLoadMore}
-              onEndReachedThreshold={0.5}
-              enableEmptySections={true}
-              ListFooterComponent={() => <View style={{height: 50}} />} // Placeholder to prevent multiple calls
-            />
-          </View>
-        </View>
-      </ScrollView>
     </>
   );
 };
 
-export default ViewAllMessages;
+export default ArchiveMessages;
 
 const styles = EStyleSheet.create({
   mainHeader: {

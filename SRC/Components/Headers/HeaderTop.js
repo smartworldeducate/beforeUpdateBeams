@@ -71,14 +71,15 @@ const HeaderTop = ({
             style={{
               position: 'absolute',
               // top: '0%',
-              left: '-18%',
+              left: '-20%',
               // transform: [{translateX: wp('-2.8')}, {translateY: hp('-1.4')}],
               backgroundColor: 'rgba(0,0,0,0.5)',
+              // backgroundColor: 'red',
               borderRadius: wp('10'),
               justifyContent: 'center',
               alignItems: 'center',
-              height: hp('5'),
-              width: wp('10'),
+              height: hp('4.5'),
+              width: wp('9'),
             }}>
             <Icon type="regular" name="plus" size={hp('2')} color="#fff" />
           </View>

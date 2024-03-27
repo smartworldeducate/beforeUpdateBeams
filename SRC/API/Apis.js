@@ -30,5 +30,17 @@ export const APIS = {
 
   MessagesAPI: BASE_URL + 'selectMesage',
   MessagesDetailAPI: BASE_URL + 'selectMesageDetail',
+
+  MessagesReadAPI: BASE_URL + 'message_like',
+
+  MessagesStatusLikeAPI: BASE_URL + 'status_like',
+
   UtilityAPI: BASE_URL + 'utility',
+
+  UtilityMiscLogAPI: BASE_URL + 'misc_utility_log',
+
+  FinYearAPI: BASE_URL + 'fin_year',
+
+  WorkFromHomeGetAPI: BASE_URL + 'wfh',
+  WorkFromHomePostAPI: BASE_URL + 'wfhinsert',
 };

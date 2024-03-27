@@ -33,6 +33,7 @@ import TimeLine from './SRC/Screens/TimeLine';
 import ChildBss from './SRC/Screens/ChildBss';
 import FeedBack from './SRC/Screens/FeedBack';
 import WorkFromHome from './SRC/Screens/WorkFromHome';
+import WFHScreen from './SRC/Screens/WFHScreen';
 import Approcial from './SRC/Screens/Approcial';
 import Attendance from './SRC/Screens/Attendance';
 import Reportee from './SRC/Screens/Reportee';
@@ -50,9 +51,13 @@ import MovementLine from './SRC/Screens/MovementLine';
 
 import ViewAllMessages from './SRC/Screens/ViewAllMessages';
 import ViewMessageDetail from './SRC/Screens/ViewMessageDetail';
+import FavouriteMessages from './SRC/Screens/FavouriteMessages';
+import ArchiveMessages from './SRC/Screens/ArchiveMessages';
 
 import QcodeScreen from './SRC/Screens/Qrcode';
 import BottomTab from './SRC/Components/CustomTab/BottomTab';
+
+import MessagesTab from './SRC/Components/CustomTab/MessagesTab';
 
 import Utility from './SRC/Screens/Utility';
 
@@ -68,7 +73,7 @@ function DrawerStack() {
         headerShown: false,
         drawerPosition: 'right',
         drawerType: 'slide',
-        drawerStyle: {width: wp('80'), backgroundColor: '#E6E6E6'},
+        drawerStyle: {width: wp('85'), backgroundColor: '#E6E6E6'},
       }}
       drawerContent={props => <CustomDrawer {...props} />}>
       <Drawer.Screen name="HomeDrawer" component={TabNavigator} />
@@ -121,6 +126,22 @@ function TabNavigator() {
       <Tab.Screen name="ViewAllMessagesTab" component={ViewAllMessages} />
       <Tab.Screen name="AttendanceTab" component={Attendance} />
       <Tab.Screen name="ProfileTab" component={Profile} />
+    </Tab.Navigator>
+  );
+}
+
+function MessagesNavigator() {
+  return (
+    <Tab.Navigator
+      // headerMode={"none"}
+      initialRouteName={'ViewAllMessagesTab'}
+      tabBar={props => <MessagesTab {...props} />}
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Tab.Screen name="ViewAllMessagesTab" component={ViewAllMessages} />
+      <Tab.Screen name="FavouriteMessagesTab" component={FavouriteMessages} />
+      <Tab.Screen name="ArchiveMessagesTab" component={ArchiveMessages} />
     </Tab.Navigator>
   );
 }
@@ -201,11 +222,13 @@ const Routes = () => {
         <Stack.Screen name="HomeScreen" component={DrawerStack} />
         <Stack.Screen name="LeaveBalance" component={LeaveBalance} />
         <Stack.Screen name="Search" component={Search} />
-        <Stack.Screen name="ViewAllMessages" component={ViewAllMessages} />
+        <Stack.Screen name="ViewAllMessages" component={MessagesNavigator} />
         <Stack.Screen name="ViewMessageDetail" component={ViewMessageDetail} />
         <Stack.Screen name="MovementLine" component={MovementLine} />
         <Stack.Screen name="ChildBSS" component={ChildBss} />
         <Stack.Screen name="ApplyLeave" component={ApplyLeave} />
+        <Stack.Screen name="WorkFromHome" component={WorkFromHome} />
+        <Stack.Screen name="WFHScreen" component={WFHScreen} />
         {/* <Stack.Screen name="ApplicationType" component={BottomTabApplication} />
         <Stack.Screen name="ApplyLeave" component={ApplyLeave} />
         <Stack.Screen name="Outstation" component={Outstation} />

@@ -11,6 +11,7 @@ import LeftRightText from '../../Components/LeftRightText/LeftRightText';
 import LineSeprator from '../../Components/LineSeprator/LineSeprator';
 import {PieChart} from 'react-native-gifted-charts';
 import {useSelector, useDispatch} from 'react-redux';
+import Loader from '../Loader/Loader';
 
 const SalarySlip = ({
   finalAllowances,
@@ -34,6 +35,7 @@ const SalarySlip = ({
   const financialHere = useSelector(state => state.financialStore);
   return (
     <View>
+      {financialHere?.isLoading && <Loader></Loader>}
       {financialHere?.success == 1 && (
         <>
           <View

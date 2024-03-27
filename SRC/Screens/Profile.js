@@ -58,11 +58,11 @@ const Profile = props => {
             // onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
             // onPress={() => props.navigation.openDrawer()}
             style={styles.topLeftRightView}>
-            <Image
+            {/* <Image
               style={styles.menustyle}
               source={{uri: 'menuicon'}}
               resizeMode="cover"
-            />
+            /> */}
           </TouchableOpacity>
         </View>
 
@@ -115,28 +115,15 @@ const Profile = props => {
                   flexDirection: 'column',
                   marginHorizontal: wp('2'),
                 }}>
-                <View style={{flexDirection: 'row'}}>
-                  <View style={{flex: 0.75}}>
-                    <Text
-                      numberOfLines={1}
-                      ellipsizeMode={'tail'}
-                      style={styles.empName}>
-                      {profileHere?.userData?.emp_result?.EMP_NAME}
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      flex: 0.25,
-                      backgroundColor: '#D4FFCC',
-                      borderRadius: wp('3'),
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Text style={styles.empId}>
-                      {profileHere?.userData?.emp_result?.EMPLOYEE_ID}
-                    </Text>
-                  </View>
+                <View style={{}}>
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode={'tail'}
+                    style={styles.empName}>
+                    {profileHere?.userData?.emp_result?.EMP_NAME}
+                  </Text>
                 </View>
+
                 <View>
                   <Text
                     numberOfLines={1}
@@ -275,6 +262,7 @@ const Profile = props => {
             marginBottom: hp('2'),
           }}>
           <ProfileCard
+            empId={profileHere?.userData?.emp_result?.EMPLOYEE_ID}
             empFatherName={profileHere?.userData?.profile_result?.FATHER_NAME}
             empGender={profileHere?.userData?.emp_result?.EMP_GENDER}
             empReligion={profileHere?.userData?.profile_result?.RELIGION_NAME}
@@ -348,7 +336,7 @@ const styles = EStyleSheet.create({
   empDesignation: {
     fontSize: '0.6rem',
     fontFamily: fontFamily.ceraMedium,
-    color: '#363636',
+    color: '#979797',
     fontWeight: '500',
   },
   firstText: {

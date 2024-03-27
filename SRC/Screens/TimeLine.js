@@ -21,6 +21,7 @@ import {TimelineAction} from '../features/TimeLineSlice/TimeLineSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RenderHTML from 'react-native-render-html';
+import Loader from '../Components/Loader/Loader';
 
 const TimeLine = props => {
   const dispatch = useDispatch();
@@ -73,7 +74,7 @@ const TimeLine = props => {
               // height: hp('1'),
               // borderRadius: wp('5'),
             }}>
-            <Text style={{color: circleColor}}>🔵</Text>
+            <Icon type="solid" name="circle" size={hp(2.25)} color="#1C37A4" />
           </View>
           <View
             style={{
@@ -179,6 +180,8 @@ const TimeLine = props => {
           onpressBtn={() => props.navigation.goBack()}
         />
       </View>
+
+      {timeLineHere?.isLoading && <Loader></Loader>}
 
       <ScrollView
         contentContainerStyle={{

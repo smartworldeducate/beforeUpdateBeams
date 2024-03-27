@@ -16,6 +16,7 @@ import ProfileCardHeader from './ProfileCardHeader';
 import ProfileCardBody from './ProfileCardBody';
 
 const ProfileCard = ({
+  empId,
   empFatherName,
   empGender,
   empReligion,
@@ -68,6 +69,7 @@ const ProfileCard = ({
                 />
               </CollapseHeader>
               <CollapseBody>
+                <ProfileCardBody leftText={'Employee Id'} rightText={empId} />
                 <ProfileCardBody
                   leftText={"Father's Name"}
                   rightText={empFatherName}

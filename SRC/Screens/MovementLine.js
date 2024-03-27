@@ -8,7 +8,7 @@ import MainHeader from '../Components/Headers/MainHeader';
 import fontFamily from '../Styles/fontFamily';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {useSelector} from 'react-redux';
-
+import Icon from 'react-native-fontawesome-pro';
 import EmpCardPart from '../Components/EmpCardPart/EmpCardPart';
 
 const MovementLine = props => {
@@ -37,7 +37,8 @@ const MovementLine = props => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Text style={{color: 'black'}}>🔵</Text>
+            <Icon type="solid" name="circle" size={hp(2.25)} color="#1C37A4" />
+            {/* <Text style={{color: 'black'}}>🔵</Text> */}
           </View>
           <View
             style={{

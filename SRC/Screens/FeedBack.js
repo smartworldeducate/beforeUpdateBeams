@@ -5,10 +5,12 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import MainHeader from '../Components/Headers/MainHeader';
 import StarRating from 'react-native-star-rating-widget';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -31,15 +33,14 @@ const FeedBack = props => {
   const updateRatingSuccess = useSelector(
     state => state.updateRatingStore.success,
   );
-  const updateRatingMessage = useSelector(
-    state => state.updateRatingStore.message,
-  );
-  console.log('updateRatingSuccess', updateRatingSuccess);
+  const updateRatingHere = useSelector(state => state.updateRatingStore);
+  console.log('updateRatingHere', updateRatingHere);
 
-  const ratingHereStore = useSelector(
-    state => state.ratingStore?.userData[0]?.RATING_ID,
-  );
-  console.log('ratingHereStore', ratingHereStore);
+  const ratingHereStore = useSelector(state => state.ratingStore);
+  // console.log('ratingHereStore', ratingHereStore?.userData?.RATING_ID);
+
+  const ratingGet = ratingHereStore?.userData?.RATING_ID;
+  console.log('ratingGet', ratingGet);
 
   const userId = useSelector(
     state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
@@ -49,15 +50,18 @@ const FeedBack = props => {
     state => state.suggestionFeedbackStore,
   );
 
-  console.log('suggestionFeedbackHere', suggestionFeedbackHere?.success);
+  // console.log('suggestionFeedbackHere', suggestionFeedbackHere?.success);
 
   const [feedback, setFeedbak] = useState(true);
   const [suggestion, setSuggestion] = useState(false);
+
   const [rating, setRating] = useState(null);
+  const [desc, setDesc] = useState(null);
+
   const [title, setTitle] = useState('');
   const [suggestionDesc, setSuggestionDesc] = useState('');
 
-  const fetchLatestRating = async () => {
+  useEffect(() => {
     try {
       AsyncStorage.getItem('loginData').then(loginData => {
         const parsedLoginData = JSON.parse(loginData);
@@ -70,34 +74,37 @@ const FeedBack = props => {
     } catch (error) {
       console.error('Error fetching latest rating:', error);
     }
+  }, [dispatch]);
+
+  useEffect(() => {
+    setRating(ratingGet);
+  }, [ratingGet]);
+
+  const onChangeRating = val => {
+    console.log('onChangeRating');
+    // dispatch(updateRating(val));
+    setRating(val);
+  };
+
+  const onPressSubmitRating = () => {
+    dispatch(
+      UpdateRatingAction({
+        employee_id: userId,
+        rating_id: rating,
+        type_id: 1,
+      }),
+    );
   };
 
   useEffect(() => {
-    fetchLatestRating();
-  }, [dispatch]);
-
-  // useEffect(() => {
-  //   AsyncStorage.getItem('loginData')
-  //     .then(loginData => {
-  //       const parsedLoginData = JSON.parse(loginData);
-  //       dispatch(
-  //         RatingAction({
-  //           employee_id: parsedLoginData,
-  //         }),
-  //       );
-  //     })
-  //     .catch(error => {
-  //       console.error('Error retrieving loginData from AsyncStorage:', error);
-  //     });
-  // }, [dispatch]);
-
-  useEffect(() => {
-    if (ratingHereStore == undefined) {
-      setRating(0);
-    } else {
-      setRating(ratingHereStore);
+    if (updateRatingHere?.success == 1) {
+      setDesc(updateRatingHere?.userData?.message);
+      console.log(
+        'updateRatingHereSuccess',
+        updateRatingHere?.userData?.message,
+      );
     }
-  }, [ratingHereStore]);
+  }, [updateRatingHere]);
 
   const onPressFeedback = () => {
     setFeedbak(true);
@@ -116,26 +123,6 @@ const FeedBack = props => {
     setSuggestionDesc(val);
   };
 
-  const onChangeRating = val => {
-    console.log('onChangeRating');
-    dispatch(updateRating(val));
-    setRating(val);
-  };
-
-  const onPressSubmitRating = () => {
-    dispatch(
-      UpdateRatingAction({
-        employee_id: userId,
-        rating_id: rating,
-        type_id: 1,
-      }),
-    );
-    fetchLatestRating();
-    // if (updateRatingSuccess == 1) {
-    //   Toast.show(updateRatingMessage, Toast.SHORT);
-    // }
-  };
-
   const onPressSuggestionSubmit = () => {
     console.log('onPressSuggestionSubmit');
     dispatch(
@@ -150,18 +137,24 @@ const FeedBack = props => {
 
   useEffect(() => {
     if (suggestionFeedbackHere?.success == 1) {
-      // Toast.showWithGravity(
-      //   'This is a long toast at the top.',
-      //   Toast.LONG,
-      //   Toast.TOP,
-      // );
-
       setTitle('');
       setSuggestionDesc('');
     }
   }, [suggestionFeedbackHere]);
 
   console.log('rating', rating);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setDesc(null);
+      setFeedbak(true);
+      setSuggestion(false);
+
+      return () => {
+        console.log('Page1 is unfocused');
+      };
+    }, []),
+  );
 
   return (
     <SafeAreaView

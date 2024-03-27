@@ -45,11 +45,17 @@ const CustomDrawer = ({navigation}) => {
 
   return (
     <>
-      <LinearGradient
+      {/* <LinearGradient
         start={{x: 1, y: 0}}
         end={{x: 0, y: 1}}
         colors={['#1C37A5', '#4D69DC']}
-        style={{flex: 1}}>
+        style={{flex: 1}}> */}
+
+      <ImageBackground
+        source={{uri: 'drawerbg'}}
+        // source={require('../Images/splashhere.jpg')}
+        style={{flex: 1}}
+        resizeMode={'cover'}>
         <View
           style={{
             height: hp(7),
@@ -90,13 +96,13 @@ const CustomDrawer = ({navigation}) => {
                 flex: 0.25,
                 justifyContent: 'center',
                 alignItems: 'center',
+                // backgroundColor: 'red',
               }}>
               <Image
                 style={{
-                  width: wp(14),
-                  borderWidth: 0,
+                  width: wp(16),
                   borderColor: '#b0bbeb',
-                  height: hp(7),
+                  height: hp(8),
                   borderRadius: hp(50),
                 }}
                 source={{uri: profileHere?.userData?.emp_result?.EMP_PHOTO}}
@@ -107,7 +113,7 @@ const CustomDrawer = ({navigation}) => {
               style={{
                 flex: 0.75,
                 justifyContent: 'center',
-                paddingLeft: wp('4'),
+                paddingLeft: wp('1'),
               }}>
               <View style={{}}>
                 <Text
@@ -131,7 +137,7 @@ const CustomDrawer = ({navigation}) => {
           <View style={[styles.listnameStyle, {marginTop: hp(3)}]}>
             <TouchableOpacity
               onPress={() => navigation.navigate('HomeScreenDrawer')}>
-              <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
+              <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
                 <View style={styles.homeleft}>
                   <Text style={styles.textlistStyle}>Home</Text>
                 </View>
@@ -141,7 +147,7 @@ const CustomDrawer = ({navigation}) => {
           <View style={styles.listnameStyle}>
             <TouchableOpacity
               onPress={() => navigation.navigate('AttendanceDrawer')}>
-              <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
+              <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
                 <View style={styles.homeleft}>
                   <Text style={styles.textlistStyle}>Attendance</Text>
                 </View>
@@ -151,7 +157,7 @@ const CustomDrawer = ({navigation}) => {
           <View style={styles.listnameStyle}>
             <TouchableOpacity
               onPress={() => navigation.navigate('FinancialDrawer')}>
-              <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
+              <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
                 <View style={styles.homeleft}>
                   <Text style={styles.textlistStyle}>Financials</Text>
                 </View>
@@ -161,7 +167,7 @@ const CustomDrawer = ({navigation}) => {
           <View style={styles.listnameStyle}>
             <TouchableOpacity
               onPress={() => navigation.navigate('TimeLineDrawer')}>
-              <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
+              <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
                 <View style={styles.homeleft}>
                   <Text style={styles.textlistStyle}>Timeline</Text>
                 </View>
@@ -173,7 +179,7 @@ const CustomDrawer = ({navigation}) => {
             <View style={styles.listnameStyle}>
               <TouchableOpacity
                 onPress={() => navigation.navigate('ReporteeDrawer')}>
-                <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
+                <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
                   <View style={styles.homeleft}>
                     <Text style={styles.textlistStyle}>Reportees</Text>
                   </View>
@@ -185,7 +191,7 @@ const CustomDrawer = ({navigation}) => {
           <View style={styles.listnameStyle}>
             <TouchableOpacity
               onPress={() => navigation.navigate('ApprocialDrawer')}>
-              <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
+              <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
                 <View style={styles.homeleft}>
                   <Text style={styles.textlistStyle}>Appraisal</Text>
                 </View>
@@ -195,7 +201,7 @@ const CustomDrawer = ({navigation}) => {
           <View style={styles.listnameStyle}>
             <TouchableOpacity
               onPress={() => navigation.navigate('ChildBSSDrawer')}>
-              <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
+              <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
                 <View style={styles.homeleft}>
                   <Text style={styles.textlistStyle}>Children in BSS</Text>
                 </View>
@@ -207,7 +213,7 @@ const CustomDrawer = ({navigation}) => {
               onPress={() => Linking.openURL('https://index.beaconhouse.net/')}
               //  onPress={() => navigation.navigate('Profile')}
             >
-              <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
+              <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
                 <View style={styles.homeleft}>
                   <Text style={styles.textlistStyle}>Index</Text>
                 </View>
@@ -217,7 +223,7 @@ const CustomDrawer = ({navigation}) => {
           <View style={styles.listnameStyle}>
             <TouchableOpacity
               onPress={() => navigation.navigate('FeedBackDrawer')}>
-              <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
+              <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
                 <View style={styles.homeleft}>
                   <Text style={styles.textlistStyle}>Feedback</Text>
                 </View>
@@ -227,45 +233,26 @@ const CustomDrawer = ({navigation}) => {
           <View style={styles.listnameStyle}>
             <TouchableOpacity
               onPress={() => navigation.navigate('UtilityDrawer')}>
-              <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
+              <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
                 <View style={styles.homeleft}>
-                  <Text style={styles.textlistStyle}>Utility</Text>
+                  <Text style={styles.textlistStyle}>Miscellaneous</Text>
                 </View>
               </View>
             </TouchableOpacity>
           </View>
-          <View style={{flexDirection: 'row'}}>
-            <View>
-              {/* <View style={styles.listnameStyle}>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('TestScreen')}>
-                  <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
-                    <View style={styles.homeleft}>
-                      <Text style={styles.textlistStyle}>Change Password</Text>
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              </View> */}
-              <View style={styles.listnameStyle}>
-                <TouchableOpacity onPress={saveData}>
-                  <View style={{flexDirection: 'row', marginLeft: hp(3)}}>
-                    <View style={styles.homeleft}>
-                      <Text style={styles.textlistStyle}>Logout</Text>
-                    </View>
-                  </View>
-                </TouchableOpacity>
+
+          <View style={styles.listnameStyle}>
+            <TouchableOpacity onPress={saveData}>
+              <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
+                <View style={styles.homeleft}>
+                  <Text style={styles.textlistStyle}>Logout</Text>
+                </View>
               </View>
-            </View>
-            <View style={{marginTop: hp(5)}}>
-              <Image
-                style={{width: wp(40), height: hp(20)}}
-                source={{uri: 'dimg'}}
-                resizeMode={'contain'}
-              />
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
-      </LinearGradient>
+      </ImageBackground>
+      {/* </LinearGradient> */}
     </>
   );
 };
@@ -298,7 +285,7 @@ const styles = EStyleSheet.create({
   },
   listnameStyle: {
     width: wp(50),
-    height: hp(5),
+    height: hp('5.5'),
     marginTop: hp(0.4),
     justifyContent: 'center',
   },

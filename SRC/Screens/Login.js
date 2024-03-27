@@ -292,7 +292,7 @@ const Login = props => {
                 />
               </View>
 
-              <View style={{flexDirection: 'row', marginVertical: hp('1')}}>
+              {/* <View style={{flexDirection: 'row', marginVertical: hp('1')}}>
                 <View
                   style={{
                     flex: 0.2,
@@ -330,7 +330,7 @@ const Login = props => {
                     Forgot Password?
                   </Text>
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </View>
             <View
               style={{

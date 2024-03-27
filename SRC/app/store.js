@@ -56,8 +56,19 @@ import leaveBalanceSliceReducer from '../features/LeaveBalanceSlice/LeaveBalance
 
 import messagesSliceReducer from '../features/MessagesSlice/MessagesSlice';
 import messageDetailSliceReducer from '../features/MessagesSlice/MessageDetailSlice';
+import MessageLikeSliceReducer from '../features/MessagesSlice/MessageLikeSlice';
+
+import MessageStatusLikeSliceReducer from '../features/MessagesSlice/MessageStatusLike';
 
 import UtilitySliceReducer from '../features/UtilitySlice/UtilitySlice';
+
+import UtilityMiscLogSliceReducer from '../features/UtilitySlice/UtilityMiscLog';
+
+import FinYearSliceReducer from '../features/FinYearSlice/FinYearSlice';
+
+import WorkFromHomeGetSliceReducer from '../features/WorkFromHomeSlice/WorkFromHomeGet';
+
+import WorkFromHomePostSliceReducer from '../features/WorkFromHomeSlice/WorkFromHomePost';
 
 export const store = configureStore({
   reducer: {
@@ -116,7 +127,17 @@ export const store = configureStore({
     leaveBalanceStore: leaveBalanceSliceReducer,
     messagesStore: messagesSliceReducer,
     messageDetailStore: messageDetailSliceReducer,
+    messageLikeStore: MessageLikeSliceReducer,
+
+    messageStatusLikeStore: MessageStatusLikeSliceReducer,
+
     utilityStore: UtilitySliceReducer,
+
+    utilityMiscLogStore: UtilityMiscLogSliceReducer,
+
+    finYearStore: FinYearSliceReducer,
+    WorkFromHomeGetStore: WorkFromHomeGetSliceReducer,
+    WorkFromHomePostStore: WorkFromHomePostSliceReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

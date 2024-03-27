@@ -52,24 +52,59 @@ const BottomTab = ({state, descriptors, navigation, props}) => {
                     activeOpacity={0.2}
                     onPress={onPress}
                     style={styles.touchableIcon}>
-                    <Menu
-                      name="home"
-                      size={hp(3)}
-                      color={isFocused ? '#1C37A4' : '#8a8a8a'}
-                      style={{}}
-                    />
+                    <View
+                      style={{
+                        height: hp('5'),
+                        justifyContent: 'center',
+                        paddingTop: hp('0.5'),
+                      }}>
+                      <Menu
+                        name="home"
+                        size={hp(3)}
+                        color={isFocused ? '#1C37A4' : '#8a8a8a'}
+                        style={{}}
+                      />
+                    </View>
+
+                    {isFocused && (
+                      <View style={{height: hp('1.5')}}>
+                        <Ficon
+                          type="solid"
+                          name="circle"
+                          size={hp(1)}
+                          color={'#1C37A4'}
+                        />
+                      </View>
+                    )}
                   </TouchableOpacity>
                 ) : index === 1 ? (
                   <TouchableOpacity
                     activeOpacity={0.2}
                     onPress={onPress}
                     style={styles.touchableIcon}>
-                    <Ficon
-                      type="light"
-                      name="book-bookmark"
-                      size={hp(3)}
-                      color={isFocused ? '#1C37A4' : '#8a8a8a'}
-                    />
+                    <View
+                      style={{
+                        height: hp('5'),
+                        justifyContent: 'center',
+                        paddingTop: hp('0.5'),
+                      }}>
+                      <Ficon
+                        type="light"
+                        name="book-bookmark"
+                        size={hp(3)}
+                        color={isFocused ? '#1C37A4' : '#8a8a8a'}
+                      />
+                    </View>
+                    {isFocused && (
+                      <View style={{height: hp('1.5')}}>
+                        <Ficon
+                          type="solid"
+                          name="circle"
+                          size={hp(1)}
+                          color={'#1C37A4'}
+                        />
+                      </View>
+                    )}
                   </TouchableOpacity>
                 ) : index === 2 ? (
                   <TouchableOpacity
@@ -89,30 +124,72 @@ const BottomTab = ({state, descriptors, navigation, props}) => {
                       size={hp(2.25)}
                       color={isFocused ? 'white' : 'white'}
                     />
+                    {/* {isFocused && (
+                      <Ficon
+                        type="solid"
+                        name="circle"
+                        size={hp(1)}
+                        color={'#1C37A4'}
+                      />
+                    )} */}
                   </TouchableOpacity>
                 ) : index === 3 ? (
                   <TouchableOpacity
                     activeOpacity={0.2}
                     onPress={onPress}
                     style={styles.touchableIcon}>
-                    <Ficon
-                      type="light"
-                      name="calendar-days"
-                      size={hp(3)}
-                      color={isFocused ? '#1C37A4' : '#8a8a8a'}
-                    />
+                    <View
+                      style={{
+                        height: hp('5'),
+                        justifyContent: 'center',
+                        paddingTop: hp('0.5'),
+                      }}>
+                      <Ficon
+                        type="light"
+                        name="calendar-days"
+                        size={hp(3)}
+                        color={isFocused ? '#1C37A4' : '#8a8a8a'}
+                      />
+                    </View>
+                    {isFocused && (
+                      <View style={{height: hp('1.5')}}>
+                        <Ficon
+                          type="solid"
+                          name="circle"
+                          size={hp(1)}
+                          color={'#1C37A4'}
+                        />
+                      </View>
+                    )}
                   </TouchableOpacity>
                 ) : index === 4 ? (
                   <TouchableOpacity
                     activeOpacity={0.2}
                     onPress={onPress}
                     style={styles.touchableIcon}>
-                    <Ficon
-                      type="light"
-                      name="user-tie"
-                      size={hp(3)}
-                      color={isFocused ? '#1C37A4' : '#8a8a8a'}
-                    />
+                    <View
+                      style={{
+                        height: hp('5'),
+                        justifyContent: 'center',
+                        paddingTop: hp('0.5'),
+                      }}>
+                      <Ficon
+                        type="light"
+                        name="user-tie"
+                        size={hp(3)}
+                        color={isFocused ? '#1C37A4' : '#8a8a8a'}
+                      />
+                    </View>
+                    {isFocused && (
+                      <View style={{height: hp('1.5')}}>
+                        <Ficon
+                          type="solid"
+                          name="circle"
+                          size={hp(1)}
+                          color={'#1C37A4'}
+                        />
+                      </View>
+                    )}
                   </TouchableOpacity>
                 ) : null}
               </View>
@@ -142,6 +219,7 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     paddingVertical: hp('1.5'),
     paddingHorizontal: wp('2'),
+    // backgroundColor: 'pink',
   },
   imgStyle: {
     height: hp('5.25'),

@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
+  RefreshControl,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import MainHeader from '../Components/Headers/MainHeader';
@@ -37,7 +38,13 @@ const Approcial = props => {
     objectiveYearsHere?.userData?.apprasal_years,
   );
 
+  const [refreshing, setRefreshing] = useState(false);
+
   useEffect(() => {
+    getAppraisal();
+  }, [dispatch]);
+
+  const getAppraisal = () => {
     AsyncStorage.getItem('loginData')
       .then(loginData => {
         const parsedLoginData = JSON.parse(loginData);
@@ -55,7 +62,14 @@ const Approcial = props => {
       .catch(error => {
         console.error('Error retrieving loginData from AsyncStorage:', error);
       });
-  }, [dispatch]);
+  };
+
+  const onRefresh = () => {
+    console.log('onRefresh');
+    setRefreshing(true);
+    getAppraisal();
+    setRefreshing(false);
+  };
 
   const [appraisal, setAppraisal] = useState(true);
   const [objective, setObjective] = useState(false);
@@ -247,6 +261,17 @@ const Approcial = props => {
     );
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      setAppraisal(true);
+      setObjective(false);
+
+      return () => {
+        console.log('Page1 is unfocused');
+      };
+    }, []),
+  );
+
   return (
     <>
       <SafeAreaView
@@ -271,7 +296,16 @@ const Approcial = props => {
           contentContainerStyle={{
             flexGrow: 1,
             backgroundColor: colors.appBackGroundColor,
-          }}>
+          }}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={['#1C37A5', '#4D69DC']}
+              progressBackgroundColor={'#f7f5f5'}
+              tintColor={'#1C37A4'}
+            />
+          }>
           <View style={{marginVertical: hp('3')}}>
             <View style={{marginHorizontal: wp('5')}}>
               <View

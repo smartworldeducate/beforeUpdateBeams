@@ -161,31 +161,15 @@ const ReporteeProfileModal = ({
                       flexDirection: 'column',
                       marginHorizontal: wp('2'),
                     }}>
-                    <View style={{flexDirection: 'row'}}>
-                      <View style={{flex: 0.75}}>
-                        <Text
-                          numberOfLines={1}
-                          ellipsizeMode={'tail'}
-                          style={styles.empName}>
-                          {reporteeProfileHere?.userData?.emp_result?.EMP_NAME}
-                        </Text>
-                      </View>
-                      <View
-                        style={{
-                          flex: 0.25,
-                          backgroundColor: '#D4FFCC',
-                          borderRadius: wp('3'),
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}>
-                        <Text style={styles.empId}>
-                          {
-                            reporteeProfileHere?.userData?.emp_result
-                              ?.EMPLOYEE_ID
-                          }
-                        </Text>
-                      </View>
+                    <View style={{}}>
+                      <Text
+                        numberOfLines={1}
+                        ellipsizeMode={'tail'}
+                        style={styles.empName}>
+                        {reporteeProfileHere?.userData?.emp_result?.EMP_NAME}
+                      </Text>
                     </View>
+
                     <View>
                       <Text
                         numberOfLines={1}
@@ -325,6 +309,7 @@ const ReporteeProfileModal = ({
 
             <View style={{marginHorizontal: wp('4'), marginTop: hp('2')}}>
               <ProfileCard
+                empId={reporteeProfileHere?.userData?.emp_result?.EMPLOYEE_ID}
                 empFatherName={
                   reporteeProfileHere?.userData?.profile_result?.FATHER_NAME
                 }
@@ -471,7 +456,7 @@ const styles = EStyleSheet.create({
   empDesignation: {
     fontSize: '0.6rem',
     fontFamily: fontFamily.ceraMedium,
-    color: '#363636',
+    color: '#979797',
     fontWeight: '500',
   },
 });

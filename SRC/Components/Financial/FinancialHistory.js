@@ -29,7 +29,7 @@ import LineSeprator from '../LineSeprator/LineSeprator';
 import LeftRightText from '../LeftRightText/LeftRightText';
 import colors from '../../Styles/colors';
 
-const FinancialHistory = ({lastYearProp}) => {
+const FinancialHistory = ({}) => {
   const dispatch = useDispatch();
   const salaryHistoryHere = useSelector(state => state.salaryYearsStore);
   console.log('salaryHistoryHere', salaryHistoryHere);
@@ -37,11 +37,20 @@ const FinancialHistory = ({lastYearProp}) => {
     state => state.salaryHistoryWithYearsStore,
   );
 
-  console.log('salaryHistoryWithYearsHere', salaryHistoryWithYearsHere);
+  // console.log('salaryHistoryWithYearsHere', salaryHistoryWithYearsHere);
+
+  // const lastMonthIndex = salaryHistoryHere?.userData?.total_years?.length - 1;
+  // console.log('lastMonthIndex', lastMonthIndex);
+
+  const [getIndex, setGetIndex] = useState(
+    salaryHistoryHere?.userData?.total_years?.length - 1,
+  );
+
+  console.log('getIndex', getIndex);
 
   const lastYear =
     salaryHistoryHere?.userData?.total_years &&
-    salaryHistoryHere?.userData?.total_years[lastYearProp];
+    salaryHistoryHere?.userData?.total_years[getIndex];
 
   const yourRef = useRef(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -72,33 +81,42 @@ const FinancialHistory = ({lastYearProp}) => {
 
   const renderItem = ({item, index}) => {
     return (
-      <TouchableOpacity
-        activeOpacity={0.7}
-        onPress={() => onPressYear({item, index})}
-        style={{}}>
-        <View
-          style={{
-            marginHorizontal: wp('1'),
-            paddingHorizontal: wp('4'),
-            paddingVertical: hp('1'),
-            borderRadius: wp('8'),
-            backgroundColor: '#1C37A4',
-          }}>
-          <Text
-            style={{
-              fontSize: hp('1.35'),
-              fontFamily: fontFamily.ceraMedium,
-              color: 'white',
-              fontWeight: '500',
-            }}>
-            {item}
-          </Text>
-        </View>
-      </TouchableOpacity>
+      <LinearGradient
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 0}}
+        colors={
+          index == getIndex ? ['#1C37A5', '#4D69DC'] : ['#F5F8FC', '#F5F8FC']
+        }
+        style={{
+          borderRadius: wp('8'),
+          height: hp('4'),
+          width: wp('17'),
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() => onPressYear({item, index})}
+          style={{}}>
+          <View>
+            <Text
+              style={{
+                fontSize: hp('1.75'),
+                fontFamily: fontFamily.ceraMedium,
+                color: index == getIndex ? 'white' : '#1C37A4',
+                fontWeight: '500',
+              }}>
+              {item}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </LinearGradient>
     );
   };
 
   const onPressYear = ({item, index}) => {
+    console.log('onPressYearIndex', index);
+    setGetIndex(index);
     AsyncStorage.getItem('loginData').then(loginData => {
       const parsedLoginData = JSON.parse(loginData);
       dispatch(

@@ -5,28 +5,27 @@ import {APIS} from '../../API/Apis';
 const initialState = {
   success: null,
   message: '',
-  userData: [],
+  userData: null,
   isLoading: false,
 };
 
-export const UpdateRatingAction = createAsyncThunk(
-  'UpdateRating',
+export const UtilityMiscLogAction = createAsyncThunk(
+  'UtilityMiscLog',
   async values => {
     console.log('values', values);
     return axios
-      .post(`${APIS.UpdateRatingAPI}`, values, {
+      .post(`${APIS.UtilityMiscLogAPI}`, values, {
         headers: {
           api_key: 'X5Ne0km78x2Q1ykny9FfcIK',
           api_secret: 'Q1X5NeknkyV5v6VkT78y9F',
-          'Content-Type': 'multipart/form-data',
         },
       })
       .then(response => response.data);
   },
 );
 
-const UpdateRatingSlice = createSlice({
-  name: 'UpdateRating',
+const UtilityMiscLogSlice = createSlice({
+  name: 'UtilityMiscLog',
   initialState,
   reducers: {
     clearAllState: (state, action) => {
@@ -35,21 +34,21 @@ const UpdateRatingSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(UpdateRatingAction.pending, state => {
+    builder.addCase(UtilityMiscLogAction.pending, state => {
       state.isLoading = true;
     });
-    builder.addCase(UpdateRatingAction.rejected, state => {
+    builder.addCase(UtilityMiscLogAction.rejected, state => {
       state.isLoading = false;
     });
-    builder.addCase(UpdateRatingAction.fulfilled, (state, action) => {
+    builder.addCase(UtilityMiscLogAction.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.success = action.payload.success;
+      state.success = action.payload.status;
       state.message = action.payload.message;
       state.userData = action.payload.data;
     });
   },
 });
 
-export const {clearAllState} = UpdateRatingSlice.actions;
+export const {clearAllState} = UtilityMiscLogSlice.actions;
 
-export default UpdateRatingSlice.reducer;
+export default UtilityMiscLogSlice.reducer;

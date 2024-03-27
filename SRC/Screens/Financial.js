@@ -8,6 +8,7 @@ import {
 import React, {useEffect, useState} from 'react';
 import MainHeader from '../Components/Headers/MainHeader';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -28,10 +29,10 @@ const Financial = props => {
   const financialHere = useSelector(state => state.financialStore);
   const salaryHistoryHere = useSelector(state => state.salaryYearsStore);
 
-  console.log('salaryHistoryHere>', salaryHistoryHere?.userData);
+  // console.log('salaryHistoryHere>', salaryHistoryHere?.userData);
 
   const lastMonthIndex = salaryHistoryHere?.userData?.total_years_count - 1;
-  console.log('lastMonthIndex>', lastMonthIndex);
+  // console.log('lastMonthIndex>', lastMonthIndex);
 
   const [salarySlip, setSalarySlip] = useState(true);
   const [salaryHistory, setSalaryHistory] = useState(false);
@@ -82,6 +83,17 @@ const Financial = props => {
   const percentageUtilities = (empUtilities / empGrossSalary) * 100;
 
   const amount = 1000;
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setSalarySlip(true);
+      setSalaryHistory(false);
+
+      return () => {
+        console.log('Page1 is unfocused');
+      };
+    }, []),
+  );
 
   return (
     <SafeAreaView
@@ -178,7 +190,8 @@ const Financial = props => {
                 />
               )}
               {salaryHistory && (
-                <FinancialHistory lastYearProp={lastMonthIndex} />
+                // <FinancialHistory lastYearProp={lastMonthIndex} />
+                <FinancialHistory />
               )}
             </View>
           </View>

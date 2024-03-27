@@ -60,20 +60,26 @@ const LeaveBalance = props => {
     // ${item?.PENDING}
     return (
       <>
-        <LeaveBalanceComponent
-          iconName={item?.ICONNAME}
-          iconColor={item?.CLOR}
-          upperText={item?.LEAVE_TYPE}
-          LowerText={`${item?.leave_text}`}
-          availLeaves={item?.APPRV_LVS == null ? '0' : item?.APPRV_LVS}
-          totalLeaves={item?.total}
-        />
-        <LineSeprator
-          height={hp('0.1')}
-          backgroundColor={'silver'}
-          marginHorizontal={wp('1')}
-          maginVertical={hp('1')}
-        />
+        {item?.LEAVE_TYPE == 'Maternity Leave' ? (
+          <></>
+        ) : (
+          <>
+            <LeaveBalanceComponent
+              iconName={item?.ICONNAME}
+              iconColor={item?.CLOR}
+              upperText={item?.LEAVE_TYPE}
+              LowerText={`${item?.leave_text}`}
+              availLeaves={item?.APPRV_LVS == null ? '0' : item?.APPRV_LVS}
+              totalLeaves={item?.total}
+            />
+            <LineSeprator
+              height={hp('0.1')}
+              backgroundColor={'silver'}
+              marginHorizontal={wp('1')}
+              maginVertical={hp('1')}
+            />
+          </>
+        )}
       </>
     );
   };

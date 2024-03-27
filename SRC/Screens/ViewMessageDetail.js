@@ -22,32 +22,92 @@ import Icon from 'react-native-fontawesome-pro';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import RenderHtml from 'react-native-render-html';
 import Loader from '../Components/Loader/Loader';
+import {messageLikeAction} from '../features/MessagesSlice/MessageLikeSlice';
+import {messageStatusLikeAction} from '../features/MessagesSlice/MessageStatusLike';
 
 const ViewMessageDetail = ({route}) => {
-  console.log('routeData', route?.params?.messagedata);
+  // console.log('routeData', route?.params?.messagedata);
+
   const dispatch = useDispatch();
   // console.log('ViewMessageDetail');
   const navigation = useNavigation();
   const {width} = useWindowDimensions();
 
-  const messageDetailHere = useSelector(state => state.messageDetailStore);
-  console.log('messageDetailHere', messageDetailHere);
-  const msgDescription = messageDetailHere?.userData;
-  //   console.log('msgDescription', msgDescription);
+  const [msgLike, setMsgLike] = useState(null);
 
-  const [thumbsUpIcon, setThumbsUpIcon] = useState(false);
+  const userIdProfileHere = useSelector(
+    state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
+  );
+  // console.log('userIdProfileHere', userIdProfileHere);
+
+  const messageDetailHere = useSelector(state => state.messageDetailStore);
+  // console.log('messageDetailHere', messageDetailHere?.ACK_STATUS);
+  // const msgDescription = messageDetailHere?.userData?.MSG_DETAIL_SUBSTRING;
+  // console.log('msgDescription', msgDescription);
+
+  // const messageReadHere = useSelector(state => state.messageLikeStore);
+  // console.log('messageReadHere', messageReadHere);
+
+  const messageStatusLikeHere = useSelector(
+    state => state.messageStatusLikeStore,
+  );
+  // console.log('messageStatusLikeHere', messageStatusLikeHere);
+
+  // const [thumbsUpIcon, setThumbsUpIcon] = useState(false);
 
   useEffect(() => {
     dispatch(
       messageDetailAction({
+        employee_id: userIdProfileHere,
         messageId: route?.params?.messagedata?.MSG_ID,
+      }),
+    );
+
+    dispatch(
+      messageLikeAction({
+        employee_id: userIdProfileHere,
+        messageId: route?.params?.messagedata?.MSG_ID,
+        read_status: 'Y',
       }),
     );
   }, [dispatch]);
 
+  useEffect(() => {
+    if (messageDetailHere?.success == 1) {
+      setMsgLike(messageDetailHere?.userData?.ACK_STATUS);
+    }
+  }, [messageDetailHere]);
+
+  // console.log('msgLike', msgLike);
+
   const onPressThumbUpIcon = () => {
-    setThumbsUpIcon(!thumbsUpIcon);
+    console.log('onPressThumbUpIcon');
+    dispatch(
+      messageStatusLikeAction({
+        employee_id: userIdProfileHere,
+        messageId: route?.params?.messagedata?.MSG_ID,
+        ack_status: 'Y',
+      }),
+    );
+    setMsgLike('Y');
   };
+
+  const onPressInElse = () => {
+    console.log('onPressInElse');
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setMsgLike(null);
+
+      return () => {
+        console.log('message detail page is render');
+        // Add any cleanup logic here
+      };
+    }, []),
+  );
+
+  console.log('msgLike', msgLike);
 
   return (
     <SafeAreaView
@@ -164,14 +224,14 @@ const ViewMessageDetail = ({route}) => {
                   marginTop: hp('0'),
                   marginHorizontal: wp('0.5'),
                   marginBottom: hp('25'),
-                  // backgroundColor: 'red',
                 }}>
                 <RenderHtml
                   contentWidth={width}
                   source={{
-                    html: msgDescription,
+                    html: messageDetailHere?.userData?.MSG_DETAIL_SUBSTRING,
                   }}
                   tagsStyles={tagsStyles}
+                  ignoredDomTags={["wb'<", 'customTag']}
                 />
               </View>
             </View>
@@ -186,8 +246,10 @@ const ViewMessageDetail = ({route}) => {
           flexDirection: 'row',
         }}>
         <View style={{flex: 0.75}}></View>
+
         <TouchableOpacity
-          onPress={onPressThumbUpIcon}
+          activeOpacity={msgLike != 'Y' ? 0.8 : 1}
+          onPress={msgLike != 'Y' ? onPressThumbUpIcon : onPressInElse}
           style={{
             flex: 0.25,
             paddingVertical: hp('1.25'),
@@ -195,7 +257,7 @@ const ViewMessageDetail = ({route}) => {
             alignItems: 'center',
           }}>
           <Icon
-            type={thumbsUpIcon ? 'solid' : 'light'}
+            type={msgLike == 'Y' ? 'solid' : 'light'}
             name="thumbs-up"
             color="#1C37A4"
             size={hp(4)}

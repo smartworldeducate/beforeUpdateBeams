@@ -44,7 +44,7 @@ const Search = ({
           alignItems: 'center',
           paddingHorizontal: wp('1'),
           backgroundColor: '#FDEB13',
-        //   borderRadius: wp('10'),
+          //   borderRadius: wp('10'),
         }}>
         <Icon name={iconName} color={iconColor} size={30} />
       </View>

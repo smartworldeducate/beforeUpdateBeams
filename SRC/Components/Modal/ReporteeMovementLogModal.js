@@ -49,7 +49,8 @@ const ReporteeMovementLogModal = ({
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Text style={{color: 'black'}}>🔵</Text>
+            <Icon type="solid" name="circle" size={hp(2.25)} color="#1C37A4" />
+            {/* <Text style={{color: 'black'}}>🔵</Text> */}
           </View>
           <View
             style={{

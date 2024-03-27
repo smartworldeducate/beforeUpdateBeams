@@ -26,6 +26,7 @@ import {
 } from 'accordion-collapse-react-native';
 import ProfileCardBody from '../Components/ProfileCard/ProfileCardBody';
 import ChildsInBss from '../Components/ChildsInBss/ChildsInBss';
+import Loader from '../Components/Loader/Loader';
 
 const ChildBss = props => {
   const profileHere = useSelector(state => state.profileStore);
@@ -204,6 +205,9 @@ const ChildBss = props => {
           onpressBtn={() => props.navigation.goBack()}
         />
       </View>
+
+      {profileHere?.isLoading && <Loader></Loader>}
+
       {/* <BssChild/> */}
       <ScrollView
         contentContainerStyle={{

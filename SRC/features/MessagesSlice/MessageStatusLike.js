@@ -5,16 +5,16 @@ import {APIS} from '../../API/Apis';
 const initialState = {
   success: null,
   message: '',
-  userData: [],
+  userData: null,
   isLoading: false,
 };
 
-export const UpdateRatingAction = createAsyncThunk(
-  'UpdateRating',
+export const messageStatusLikeAction = createAsyncThunk(
+  'MessageStatusLike',
   async values => {
-    console.log('values', values);
+    console.log('valuesLike', values);
     return axios
-      .post(`${APIS.UpdateRatingAPI}`, values, {
+      .post(`${APIS.MessagesStatusLikeAPI}`, values, {
         headers: {
           api_key: 'X5Ne0km78x2Q1ykny9FfcIK',
           api_secret: 'Q1X5NeknkyV5v6VkT78y9F',
@@ -25,8 +25,8 @@ export const UpdateRatingAction = createAsyncThunk(
   },
 );
 
-const UpdateRatingSlice = createSlice({
-  name: 'UpdateRating',
+const MessageStatusLikeSlice = createSlice({
+  name: 'MessageStatusLike',
   initialState,
   reducers: {
     clearAllState: (state, action) => {
@@ -35,13 +35,13 @@ const UpdateRatingSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(UpdateRatingAction.pending, state => {
+    builder.addCase(messageStatusLikeAction.pending, state => {
       state.isLoading = true;
     });
-    builder.addCase(UpdateRatingAction.rejected, state => {
+    builder.addCase(messageStatusLikeAction.rejected, state => {
       state.isLoading = false;
     });
-    builder.addCase(UpdateRatingAction.fulfilled, (state, action) => {
+    builder.addCase(messageStatusLikeAction.fulfilled, (state, action) => {
       state.isLoading = false;
       state.success = action.payload.success;
       state.message = action.payload.message;
@@ -50,6 +50,6 @@ const UpdateRatingSlice = createSlice({
   },
 });
 
-export const {clearAllState} = UpdateRatingSlice.actions;
+export const {clearAllState} = MessageStatusLikeSlice.actions;
 
-export default UpdateRatingSlice.reducer;
+export default MessageStatusLikeSlice.reducer;

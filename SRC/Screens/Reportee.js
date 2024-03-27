@@ -27,6 +27,7 @@ import colors from '../Styles/colors';
 import LineSeprator from '../Components/LineSeprator/LineSeprator';
 import TeamModal from '../Components/Modal/TeamModal';
 import ReporteeProfileModal from '../Components/Modal/ReporteeProfileModal';
+import Loader from '../Components/Loader/Loader';
 
 const options = {day: 'numeric', month: 'short', year: 'numeric'};
 
@@ -376,6 +377,8 @@ const Reportee = props => {
             onpressBtn={() => props.navigation.goBack()}
           />
         </View>
+
+        {allReporteesHere?.isLoading && <Loader></Loader>}
 
         <ScrollView
           contentContainerStyle={{

@@ -39,6 +39,8 @@ import Loader from '../Components/Loader/Loader';
 import {messagesAction} from '../features/MessagesSlice/MessagesSlice';
 import {LeaveBalanceAction} from '../features/LeaveBalanceSlice/LeaveBalanceSlice';
 import LineSeprator from '../Components/LineSeprator/LineSeprator';
+import {FinYearAction} from '../features/FinYearSlice/FinYearSlice';
+import {WorkFromHomeAction} from '../features/WorkFromHomeSlice/WorkFromHomeGet';
 const HomeScreen = props => {
   const dispatch = useDispatch();
 
@@ -46,23 +48,32 @@ const HomeScreen = props => {
   // console.log('profileHere', profileHere?.userData);
 
   const messagesHere = useSelector(state => state.messagesStore);
-  // console.log('messagesHere', messagesHere);
+  console.log('messagesHere', messagesHere);
 
   const slicedMessages = messagesHere?.userData?.slice(0, 5);
   // console.log('slicedMessages', slicedMessages);
 
   const leaveBalanceHere = useSelector(state => state.leaveBalanceStore);
+  const leaveBalanceHereResult = useSelector(
+    state => state.leaveBalanceStore?.userData,
+  );
+
   // console.log('leaveBalanceHereData', leaveBalanceHere?.userData);
   // console.log('leaveBalanceHere', leaveBalanceHere?.success);
 
+  const FinYearHere = useSelector(state => state.finYearStore);
+  // console.log('FinYearHere', FinYearHere?.userData?.FRM_DATE);
+
   const navigation = useNavigation();
+
+  const [parsedLoginData, setParsedLoginData] = useState(null);
 
   const fetchData = async () => {
     try {
       const loginData = await AsyncStorage.getItem('loginData');
       const parsedLoginData = JSON.parse(loginData);
+      setParsedLoginData(parsedLoginData);
 
-      // Check if parsedLoginData exists
       if (parsedLoginData) {
         const branchId = await AsyncStorage.getItem('branchId');
         const parsedBranchId = JSON.parse(branchId);
@@ -70,7 +81,6 @@ const HomeScreen = props => {
         const deptId = await AsyncStorage.getItem('deptId');
         const parsedDeptId = JSON.parse(deptId);
 
-        // Dispatch actions to update Redux store
         dispatch(
           profileAction({
             employee_id: parsedLoginData,
@@ -86,11 +96,7 @@ const HomeScreen = props => {
           }),
         );
 
-        dispatch(
-          LeaveBalanceAction({
-            employee_id: parsedLoginData,
-          }),
-        );
+        dispatch(FinYearAction());
       }
     } catch (error) {
       console.error('Error retrieving values from AsyncStorage:', error);
@@ -101,6 +107,19 @@ const HomeScreen = props => {
     fetchData();
   }, [dispatch]);
 
+  useEffect(() => {
+    if (FinYearHere && FinYearHere.userData) {
+      dispatch(
+        LeaveBalanceAction({
+          employee_id: parsedLoginData,
+          from_date: FinYearHere?.userData?.FRM_DATE,
+          to_date: FinYearHere?.userData?.TO_DATE,
+          fin_year_desc: FinYearHere?.userData?.FIN_YEAR_DESC,
+        }),
+      );
+    }
+  }, [FinYearHere, parsedLoginData, dispatch]);
+
   const annual = leaveBalanceHere?.userData?.anual_percentage;
   const casual = leaveBalanceHere?.userData?.casual_percentage;
   const sick = leaveBalanceHere?.userData?.sick_percentage;
@@ -109,6 +128,8 @@ const HomeScreen = props => {
   const without = leaveBalanceHere?.userData?.withoutpay_percentage;
   const pending = leaveBalanceHere?.userData?.pandding_balance_percentage;
   const long = leaveBalanceHere?.userData?.long_percentage;
+
+  // console.log('maternity', maternity);
 
   const renderItem = ({item, index}) => {
     return (
@@ -190,6 +211,69 @@ const HomeScreen = props => {
           </Text>
         </View>
       </TouchableOpacity>
+    );
+  };
+
+  const renderItemLeaves = ({item, index}) => {
+    return (
+      <>
+        {item?.LEAVE_TYPE == 'Casual Leave' && (
+          <View style={styles.leaveBalRightView}>
+            <View style={styles.LBNestedLeftView}>
+              <Icon
+                type="light"
+                name="masks-theater"
+                size={hp(4)}
+                color="#BB8FCE"
+              />
+            </View>
+            <View style={styles.LBNestedRightView}>
+              <Text style={styles.countText}>
+                {item?.BALANCE == null ? '0' : item?.BALANCE}
+              </Text>
+              <Text style={styles.titleText}>Casual Leaves</Text>
+            </View>
+          </View>
+        )}
+
+        {item?.LEAVE_TYPE == 'Sick Leave' && (
+          <View style={styles.leaveBalRightView}>
+            <View style={styles.LBNestedLeftView}>
+              <Icon
+                type="light"
+                name="temperature-half"
+                size={hp(4)}
+                color="#DC7633"
+              />
+            </View>
+            <View style={styles.LBNestedRightView}>
+              <Text style={styles.countText}>
+                {item?.BALANCE == null ? '0' : item?.BALANCE}
+              </Text>
+              <Text style={styles.titleText}>Sick Leaves</Text>
+            </View>
+          </View>
+        )}
+
+        {item?.LEAVE_TYPE == 'Annual Leave' && (
+          <View style={styles.leaveBalRightView}>
+            <View style={styles.LBNestedLeftView}>
+              <Icon
+                type="light"
+                name="island-tropical"
+                size={hp(4)}
+                color="#58D68D"
+              />
+            </View>
+            <View style={styles.LBNestedRightView}>
+              <Text style={styles.countText}>
+                {item?.BALANCE == null ? '0' : item?.BALANCE}
+              </Text>
+              <Text style={styles.titleText}>Annual Leavess</Text>
+            </View>
+          </View>
+        )}
+      </>
     );
   };
 
@@ -354,35 +438,35 @@ const HomeScreen = props => {
                       data={[
                         {
                           value: annual,
-                          color: '#5bcfb5',
+                          color: '#B141CE',
                         },
                         {
                           value: casual,
-                          color: '#7151ce',
+                          color: '#41CE68',
                         },
                         {
                           value: sick,
-                          color: '#b245ce',
+                          color: '#CE5141',
                         },
                         {
                           value: maternity,
-                          color: '#4161ca',
+                          color: '#41CE68',
                         },
                         {
                           value: long,
-                          color: '#e3e3e3',
+                          color: '#4167C4',
                         },
                         {
                           value: hajj,
-                          color: '#5fce6a',
+                          color: '#41CEB4',
                         },
                         {
                           value: without,
-                          color: 'red',
+                          color: '#7051CE',
                         },
                         {
                           value: pending,
-                          color: 'grey',
+                          color: '#edebeb',
                         },
                       ]}
                       donut
@@ -410,50 +494,11 @@ const HomeScreen = props => {
                     style={{
                       flex: 0.45,
                     }}>
-                    <View style={styles.leaveBalRightView}>
-                      <View style={styles.LBNestedLeftView}>
-                        <Icon
-                          type="light"
-                          name="masks-theater"
-                          size={hp(4)}
-                          color="#BB8FCE"
-                        />
-                      </View>
-                      <View style={styles.LBNestedRightView}>
-                        <Text style={styles.countText}>15</Text>
-                        <Text style={styles.titleText}>CASUAL LEAVES</Text>
-                      </View>
-                    </View>
-
-                    <View style={styles.leaveBalRightView}>
-                      <View style={styles.LBNestedLeftView}>
-                        <Icon
-                          type="light"
-                          name="temperature-half"
-                          size={hp(4)}
-                          color="#DC7633"
-                        />
-                      </View>
-                      <View style={styles.LBNestedRightView}>
-                        <Text style={styles.countText}>15</Text>
-                        <Text style={styles.titleText}>SICK LEAVES</Text>
-                      </View>
-                    </View>
-
-                    <View style={styles.leaveBalRightView}>
-                      <View style={styles.LBNestedLeftView}>
-                        <Icon
-                          type="light"
-                          name="island-tropical"
-                          size={hp(3)}
-                          color="#58D68D"
-                        />
-                      </View>
-                      <View style={styles.LBNestedRightView}>
-                        <Text style={styles.countText}>15</Text>
-                        <Text style={styles.titleText}>ANNUAL LEAVES</Text>
-                      </View>
-                    </View>
+                    <FlatList
+                      data={leaveBalanceHere?.userData?.result}
+                      renderItem={renderItemLeaves}
+                      keyExtractor={(item, index) => index.toString()}
+                    />
                   </View>
                 </View>
 
@@ -483,6 +528,35 @@ const HomeScreen = props => {
                   </TouchableOpacity>
                 </View>
               </View>
+            )}
+
+            {profileHere?.userData?.wfh_result == 1 && (
+              <>
+                <View style={{marginHorizontal: wp('5.5'), marginTop: hp('1')}}>
+                  <Text style={styles.messageText}>W.F.H</Text>
+                </View>
+
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => navigation.navigate('WFHScreen')}
+                  style={{
+                    backgroundColor: '#1C37A4',
+                    marginHorizontal: wp('5.5'),
+                    marginVertical: hp('2'),
+                    borderRadius: wp('10'),
+                    height: hp('5'),
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={[
+                      styles.btnText,
+                      {color: '#FFFFFF', fontSize: hp('1.85')},
+                    ]}>
+                    Work From Home
+                  </Text>
+                </TouchableOpacity>
+              </>
             )}
           </ScrollView>
         </>

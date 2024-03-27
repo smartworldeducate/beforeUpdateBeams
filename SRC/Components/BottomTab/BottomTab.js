@@ -50,7 +50,7 @@ const BottomTab = ({state, descriptors, navigation, props}) => {
                         right: wp('-10'),
                         top: hp('2.25'),
 
-                        backgroundColor: 'red',
+                        // backgroundColor: 'red',
                         height: hp('3.15'),
                         width: wp('6'),
                         borderRadius: wp('50'),
