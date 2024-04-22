@@ -22,8 +22,9 @@ import Icon from 'react-native-fontawesome-pro';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import RenderHtml from 'react-native-render-html';
 import Loader from '../Components/Loader/Loader';
-import {messageLikeAction} from '../features/MessagesSlice/MessageLikeSlice';
+
 import {messageStatusLikeAction} from '../features/MessagesSlice/MessageStatusLike';
+import MainHeader from '../Components/Headers/MainHeader';
 
 const ViewMessageDetail = ({route}) => {
   // console.log('routeData', route?.params?.messagedata);
@@ -60,14 +61,6 @@ const ViewMessageDetail = ({route}) => {
       messageDetailAction({
         employee_id: userIdProfileHere,
         messageId: route?.params?.messagedata?.MSG_ID,
-      }),
-    );
-
-    dispatch(
-      messageLikeAction({
-        employee_id: userIdProfileHere,
-        messageId: route?.params?.messagedata?.MSG_ID,
-        read_status: 'Y',
       }),
     );
   }, [dispatch]);
@@ -120,50 +113,49 @@ const ViewMessageDetail = ({route}) => {
           flex: 1,
           backgroundColor: colors.appBackGroundColor,
         }}>
-        <LinearGradient
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-          colors={['#1C37A5', '#4D69DC']}
-          style={styles.mainHeader}>
+        <MainHeader
+          text={'Message'}
+          iconName={'arrow-left'}
+          onpressBtn={() => navigation.goBack()}
+        />
+
+        <ScrollView
+          contentContainerStyle={{
+            flexGrow: 1,
+          }}>
           <View
             style={{
               flexDirection: 'row',
-              marginTop: hp('4'),
+              marginHorizontal: wp('6'),
+              marginTop: hp('3'),
             }}>
             <View
               style={{
-                flex: 0.3,
+                flex: 0.85,
                 justifyContent: 'center',
-                alignItems: 'flex-end',
               }}>
-              <Text style={styles.topText}>Message</Text>
+              <Text
+                numberOfLines={2}
+                letterSpacing={'tail'}
+                style={styles.messageCardEmpName}>
+                {route?.params?.messagedata?.MSG_SUBJECT}
+              </Text>
             </View>
-            <View style={{flex: 0.5}}></View>
             <View
               style={{
-                flex: 0.2,
+                flex: 0.15,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => navigation.goBack()}
-                style={{
-                  justifyContent: 'center',
-                  marginTop: hp(0),
-                  padding: hp('1.25'),
-                }}>
-                <Icon type="light" name="xmark" size={hp(3)} color="#fff" />
-              </TouchableOpacity>
+              <Icon type="solid" name="star" size={hp('3')} color="#41CE68" />
             </View>
           </View>
-        </LinearGradient>
 
-        <View style={{marginHorizontal: wp('5')}}>
           <View
             style={{
-              marginTop: hp('2.5'),
               flexDirection: 'row',
+              marginHorizontal: wp('6'),
+              marginTop: hp('5'),
             }}>
             <View
               style={{
@@ -174,16 +166,19 @@ const ViewMessageDetail = ({route}) => {
               <Image
                 source={{uri: route?.params?.messagedata?.EMP_PHOTO}}
                 style={{
-                  height: hp('5'),
-                  width: wp('10'),
+                  height: hp('6'),
+                  width: wp('12'),
                   borderRadius: wp('50'),
                 }}
                 resizeMode={'contain'}
               />
             </View>
+
             <View
               style={{
-                flex: 0.85,
+                flex: 0.7,
+                justifyContent: 'center',
+                marginLeft: wp('2'),
               }}>
               <Text
                 numberOfLines={1}
@@ -192,77 +187,44 @@ const ViewMessageDetail = ({route}) => {
                 {route?.params?.messagedata?.EMP_NAME}
               </Text>
               <Text style={styles.messageCardDate}>
-                {route?.params?.messagedata?.HIRE_DATE}
+                {route?.params?.messagedata?.ENTRY_DATE}
               </Text>
             </View>
+
+            <TouchableOpacity
+              activeOpacity={msgLike != 'Y' ? 0.8 : 1}
+              onPress={msgLike != 'Y' ? onPressThumbUpIcon : onPressInElse}
+              style={{
+                flex: 0.15,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Icon
+                type={msgLike == 'Y' ? 'solid' : 'light'}
+                name="thumbs-up"
+                color="#1C37A4"
+                size={hp(3.5)}
+              />
+            </TouchableOpacity>
           </View>
 
-          {messageDetailHere.isLoading && <Loader></Loader>}
+          <View style={{marginHorizontal: wp('6')}}>
+            {messageDetailHere.isLoading && <Loader></Loader>}
 
-          <ScrollView
-            contentContainerStyle={{
-              flexGrow: 1,
-            }}>
-            <View
-              style={{
-                marginHorizontal: wp('2'),
-                marginTop: hp('3'),
-              }}>
-              <Text
-                style={{
-                  fontSize: hp('2'),
-                  fontFamily: fontFamily.ceraMedium,
-                  fontWeight: '500',
-                  color: '#1C37A4',
-                  paddingBottom: hp('1'),
-                }}>
-                {route?.params?.messagedata?.MSG_SUBJECT}
-              </Text>
-
-              <View
-                style={{
-                  marginTop: hp('0'),
-                  marginHorizontal: wp('0.5'),
-                  marginBottom: hp('25'),
-                }}>
-                <RenderHtml
-                  contentWidth={width}
-                  source={{
-                    html: messageDetailHere?.userData?.MSG_DETAIL_SUBSTRING,
-                  }}
-                  tagsStyles={tagsStyles}
-                  ignoredDomTags={["wb'<", 'customTag']}
-                />
-              </View>
+            <View style={{paddingBottom: hp('2')}}>
+              <RenderHtml
+                contentWidth={width}
+                source={{
+                  html:
+                    messageDetailHere?.userData?.MSG_DETAIL_SUBSTRING ||
+                    '<p></p>',
+                }}
+                tagsStyles={tagsStyles}
+                ignoredDomTags={["wb'<", 'customTag', 'center']}
+              />
             </View>
-          </ScrollView>
-        </View>
-      </View>
-      <View
-        style={{
-          backgroundColor: 'white',
-          justifyContent: 'center',
-          alignItems: 'flex-end',
-          flexDirection: 'row',
-        }}>
-        <View style={{flex: 0.75}}></View>
-
-        <TouchableOpacity
-          activeOpacity={msgLike != 'Y' ? 0.8 : 1}
-          onPress={msgLike != 'Y' ? onPressThumbUpIcon : onPressInElse}
-          style={{
-            flex: 0.25,
-            paddingVertical: hp('1.25'),
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Icon
-            type={msgLike == 'Y' ? 'solid' : 'light'}
-            name="thumbs-up"
-            color="#1C37A4"
-            size={hp(4)}
-          />
-        </TouchableOpacity>
+          </View>
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
@@ -281,10 +243,12 @@ const styles = EStyleSheet.create({
     letterSpacing: 1,
   },
   messageCardEmpName: {
-    color: '#6A6A6A',
-    fontFamily: fontFamily.ceraBold,
-    fontWeight: '700',
-    fontSize: '0.67rem',
+    color: '#201F24',
+    fontFamily: fontFamily.ceraMedium,
+    fontWeight: '500',
+    fontSize: '0.69rem',
+    letterSpacing: 0.25,
+    lineHeight: hp('2.5'),
   },
   messageCardDate: {
     color: '#979797',
@@ -295,12 +259,16 @@ const styles = EStyleSheet.create({
 });
 
 const tagsStyles = {
-  p: {
+  // html,
+  body: {
     fontSize: hp('1.65'),
-    color: '#353535',
-    letterSpacing: 0.65,
     color: '#343434',
+    letterSpacing: 0.65,
     fontFamily: fontFamily.ceraLight,
+    whiteSpace: 'normal',
+
+    padding: 0,
+    margin: 0,
   },
 };
 

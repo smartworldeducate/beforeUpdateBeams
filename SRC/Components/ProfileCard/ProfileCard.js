@@ -14,6 +14,7 @@ import {
 } from 'accordion-collapse-react-native';
 import ProfileCardHeader from './ProfileCardHeader';
 import ProfileCardBody from './ProfileCardBody';
+import {useDispatch, useSelector} from 'react-redux';
 
 const ProfileCard = ({
   empId,
@@ -50,6 +51,9 @@ const ProfileCard = ({
   const onPress = ({item}) => {
     console.log('itemExp', item);
   };
+
+  const profileHere = useSelector(state => state.profileStore);
+
   return (
     <View style={{}}>
       <View style={{marginTop: hp(1.5)}}>
@@ -245,6 +249,7 @@ const ProfileCard = ({
         </TouchableOpacity>
       </View>
 
+      {/* {profileHere?.userData?.emp_result?.MARITAL_STATUS == 'M' && ( */}
       <View style={{marginTop: hp(1.5)}}>
         <TouchableOpacity
           onPress={onPressChildInBSS}
@@ -260,6 +265,7 @@ const ProfileCard = ({
           />
         </TouchableOpacity>
       </View>
+      {/* )} */}
     </View>
   );
 };

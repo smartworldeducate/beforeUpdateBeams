@@ -41,84 +41,108 @@ import {LeaveBalanceAction} from '../features/LeaveBalanceSlice/LeaveBalanceSlic
 import LineSeprator from '../Components/LineSeprator/LineSeprator';
 import {FinYearAction} from '../features/FinYearSlice/FinYearSlice';
 import {WorkFromHomeAction} from '../features/WorkFromHomeSlice/WorkFromHomeGet';
+import {messagesActionHomePage} from '../features/MessagesSlice/MessageSliceHomePage';
+import {SalaryYearsAction} from '../features/SalaryYearsSlice/SalaryYearsSlice';
 const HomeScreen = props => {
   const dispatch = useDispatch();
 
   const profileHere = useSelector(state => state.profileStore);
   // console.log('profileHere', profileHere?.userData);
 
-  const messagesHere = useSelector(state => state.messagesStore);
-  console.log('messagesHere', messagesHere);
-
-  const slicedMessages = messagesHere?.userData?.slice(0, 5);
-  // console.log('slicedMessages', slicedMessages);
+  const messagesHere = useSelector(state => state.MessageSliceHomePageStore);
+  // console.log('messagesHere', messagesHere);
 
   const leaveBalanceHere = useSelector(state => state.leaveBalanceStore);
-  const leaveBalanceHereResult = useSelector(
-    state => state.leaveBalanceStore?.userData,
-  );
 
-  // console.log('leaveBalanceHereData', leaveBalanceHere?.userData);
-  // console.log('leaveBalanceHere', leaveBalanceHere?.success);
+  // const leaveHistoryHere = useSelector(state => state.salaryYearsStore);
 
-  const FinYearHere = useSelector(state => state.finYearStore);
-  // console.log('FinYearHere', FinYearHere?.userData?.FRM_DATE);
+  // console.log('leaveHistoryHere', leaveHistoryHere);
+
+  // const getIndex = leaveHistoryHere?.userData?.total_years_count - 1;
+  // console.log('getIndex', getIndex);
+
+  // const lastYear =
+  //   leaveHistoryHere?.userData?.total_years &&
+  //   leaveHistoryHere?.userData?.total_years[getIndex];
+
+  // console.log('lastYear', lastYear);
+  // console.log('lastYearType', typeof lastYear);
 
   const navigation = useNavigation();
+  const [refreshing, setRefreshing] = useState(false);
 
-  const [parsedLoginData, setParsedLoginData] = useState(null);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const loginData = await AsyncStorage.getItem('loginData');
+        const parsedLoginDataId = JSON.parse(loginData);
 
-  const fetchData = async () => {
+        if (parsedLoginDataId) {
+          dispatch(
+            profileAction({
+              employee_id: parsedLoginDataId,
+            }),
+          );
+
+          dispatch(
+            messagesActionHomePage({
+              employeeId: parsedLoginDataId,
+              ofset: 1,
+              limit: 10,
+            }),
+          );
+
+          dispatch(
+            LeaveBalanceAction({
+              employee_id: parsedLoginDataId,
+            }),
+          );
+
+          dispatch(
+            SalaryYearsAction({
+              employee_id: parsedLoginDataId,
+            }),
+          );
+        }
+      } catch (error) {
+        console.error('Error retrieving values from AsyncStorage:', error);
+      }
+    }
+    fetchData();
+  }, [dispatch]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
     try {
       const loginData = await AsyncStorage.getItem('loginData');
-      const parsedLoginData = JSON.parse(loginData);
-      setParsedLoginData(parsedLoginData);
+      const parsedLoginDataId = JSON.parse(loginData);
 
-      if (parsedLoginData) {
-        const branchId = await AsyncStorage.getItem('branchId');
-        const parsedBranchId = JSON.parse(branchId);
-
-        const deptId = await AsyncStorage.getItem('deptId');
-        const parsedDeptId = JSON.parse(deptId);
-
+      if (parsedLoginDataId) {
         dispatch(
           profileAction({
-            employee_id: parsedLoginData,
-            branch_id: parsedBranchId,
-            dept_id: parsedDeptId,
+            employee_id: parsedLoginDataId,
           }),
         );
 
         dispatch(
-          messagesAction({
-            employeeId: parsedLoginData,
+          messagesActionHomePage({
+            employeeId: parsedLoginDataId,
             ofset: 1,
+            limit: 10,
           }),
         );
 
-        dispatch(FinYearAction());
+        dispatch(
+          LeaveBalanceAction({
+            employee_id: parsedLoginDataId,
+          }),
+        );
       }
     } catch (error) {
       console.error('Error retrieving values from AsyncStorage:', error);
     }
+    setRefreshing(false);
   };
-
-  useEffect(() => {
-    fetchData();
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (FinYearHere && FinYearHere.userData) {
-      dispatch(
-        LeaveBalanceAction({
-          employee_id: parsedLoginData,
-          from_date: FinYearHere?.userData?.FRM_DATE,
-          to_date: FinYearHere?.userData?.TO_DATE,
-          fin_year_desc: FinYearHere?.userData?.FIN_YEAR_DESC,
-        }),
-      );
-    }
-  }, [FinYearHere, parsedLoginData, dispatch]);
 
   const annual = leaveBalanceHere?.userData?.anual_percentage;
   const casual = leaveBalanceHere?.userData?.casual_percentage;
@@ -187,7 +211,7 @@ const HomeScreen = props => {
               style={styles.messageCardEmpName}>
               {item?.EMP_NAME}
             </Text>
-            <Text style={styles.messageCardDate}>{item?.HIRE_DATE}</Text>
+            <Text style={styles.messageCardDate}>{item?.ENTRY_DATE}</Text>
           </View>
         </View>
         <View
@@ -298,9 +322,7 @@ const HomeScreen = props => {
         />
       </LinearGradient>
 
-      {profileHere.isLoading ||
-      messagesHere.isLoading ||
-      leaveBalanceHere?.isLoading ? (
+      {profileHere.isLoading ? (
         <Loader></Loader>
       ) : (
         <>
@@ -314,7 +336,17 @@ const HomeScreen = props => {
               iconName={'arrowleft'}
             />
           </View>
-          <ScrollView contentContainerStyle={{flexGrow: 1}}>
+          <ScrollView
+            contentContainerStyle={{flexGrow: 1}}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                colors={['#2A72B6', '#203B88']}
+                progressBackgroundColor={colors.silverGrey}
+                tintColor={colors.appColor}
+              />
+            }>
             <View style={styles.botContainer}>
               <View
                 style={{
@@ -363,7 +395,9 @@ const HomeScreen = props => {
                   color="#4D69DC"
                 />
 
-                <Text style={styles.serviceSection}>08:59:05</Text>
+                <Text style={styles.serviceSection}>
+                  {profileHere?.empTimeIn}
+                </Text>
                 <Text style={[styles.bootContText2]}>Attendance</Text>
               </View>
             </View>
@@ -399,7 +433,7 @@ const HomeScreen = props => {
 
               <View style={{marginHorizontal: wp('-2'), marginTop: hp('-1')}}>
                 <FlatList
-                  data={slicedMessages}
+                  data={messagesHere?.userData}
                   renderItem={renderItem}
                   keyExtractor={(item, index) => index.toString()}
                   horizontal={true}
@@ -408,9 +442,6 @@ const HomeScreen = props => {
               </View>
             </View>
 
-            {/* <Card /> */}
-
-            {/* <Calinder /> */}
             <View style={{marginHorizontal: wp('5.5'), marginTop: hp('1')}}>
               <Text style={styles.messageText}>Leaves</Text>
             </View>
@@ -512,6 +543,11 @@ const HomeScreen = props => {
                 <View style={styles.LBBtnMainView}>
                   <TouchableOpacity
                     activeOpacity={0.5}
+                    // onPress={() =>
+                    //   navigation.navigate('LeaveHistory', {
+                    //     lastYearParam: lastYear,
+                    //   })
+                    // }
                     onPress={() => navigation.navigate('ApplyLeave')}
                     style={styles.LBBtnView}>
                     <Text style={[styles.btnText, {color: '#1C37A4'}]}>
@@ -683,13 +719,6 @@ const styles = EStyleSheet.create({
     fontFamily: fontFamily.ceraLight,
   },
 
-  ztitle: {
-    color: '#fff',
-    fontSize: hp(1.5),
-    fontWeight: '600',
-    marginTop: hp(1),
-    fontFamily: fontFamily.ceraLight,
-  },
   textInputCustomStyle: {
     fontSize: hp('1.65'),
     height: hp('6'),
@@ -701,42 +730,7 @@ const styles = EStyleSheet.create({
     fontSize: '1.5625rem',
     fontWeight: 300,
   },
-  clText1: {
-    fontSize: '0.7rem',
-    fontWeight: '700',
-    fontFamily: fontFamily.ceraBold,
-    paddingBottom: hp(0.5),
-    color: '#646464',
-    marginHorizontal: hp(2),
-    fontStyle: 'normal',
-  },
-  clbtnText: {
-    color: '#fff',
-    marginHorizontal: hp(3),
-    marginVertical: hp(1),
-  },
-  clbtnStyle: {
-    fontSize: '0.7rem',
-    color: '#1C37A4',
-    fontWeight: '500',
-    fontFamily: fontFamily.ceraMedium,
-    fontStyle: 'normal',
-  },
-  leaveSectionText: {
-    fontSize: '0.7rem',
-    color: '#353535',
-    marginTop: hp(1),
-    fontWeight: '700',
-    fontFamily: fontFamily.ceraBold,
-    fontStyle: 'normal',
-  },
-  viewClinderText: {
-    color: '#fff',
-    fontFamily: fontFamily.ceraMedium,
-    fontWeight: '500',
-    fontStyle: 'normal',
-    fontSize: '0.6rem',
-  },
+
   tost: {
     backgroundColor: '#F1948A',
     width: wp(90),
@@ -760,44 +754,7 @@ const styles = EStyleSheet.create({
     shadowRadius: 4,
     elevation: 4,
   },
-  inwfh: {
-    height: hp(10),
-    marginHorizontal: hp(2),
-    // flexDirection: 'row',
-    marginVertical: hp(3.7),
-    justifyContent: 'space-between',
-  },
-  rfh: {
-    borderRadius: hp(50),
-    // width: wp(38),
-    height: hp(4.5),
-    borderWidth: 1,
-    borderColor: '#1C37A4',
-    backgroundColor: '#1C37A4',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  mrf: {
-    // width: wp(38),
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: hp(6),
-    borderRadius: hp(50),
-    borderWidth: 1,
-    borderColor: '#1C37A4',
-    backgroundColor: '#fff',
-    marginTop: hp(3),
-    marginHorizontal: hp(2),
-  },
-  actiindicator: {
-    width: wp(30),
-    height: hp(15),
-    backgroundColor: '#EAFAF1',
-    borderRadius: hp(2),
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: hp(15),
-  },
+
   messageText: {
     fontSize: hp('2.1'),
     fontFamily: fontFamily.ceraMedium,

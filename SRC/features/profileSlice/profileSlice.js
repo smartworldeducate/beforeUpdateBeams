@@ -7,10 +7,11 @@ const initialState = {
   message: '',
   userData: [],
   isLoading: true,
+  empTimeIn: null,
 };
 
 export const profileAction = createAsyncThunk('Profile', async values => {
-  console.log('valuesprofile', values);
+  console.log('valuesempProfile', values);
   return axios
     .post(`${APIS.ProfileAPI}`, values, {
       headers: {
@@ -48,6 +49,7 @@ const ProfileSlice = createSlice({
       state.success = action.payload.success;
       state.message = action.payload.message;
       state.userData = action.payload.data;
+      state.empTimeIn = action.payload.emp_in_time;
     });
   },
 });

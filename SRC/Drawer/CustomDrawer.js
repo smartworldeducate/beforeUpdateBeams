@@ -21,12 +21,18 @@ import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {logoutSuccess} from '../features/loginSlice/loginSlice';
 import {clearUserProfileState} from '../features/profileSlice/profileSlice';
+
+import RNExitApp from 'react-native-exit-app';
+
 const CustomDrawer = ({navigation}) => {
   const profileHere = useSelector(state => state.profileStore);
-  console.log(
-    'profileHere',
-    profileHere?.userData?.reporting_result?.reportee_length,
-  );
+
+  const exitNow = () => {
+    const delay = 100;
+    setTimeout(() => {
+      RNExitApp.exitApp();
+    }, delay);
+  };
 
   const dispatch = useDispatch();
   async function saveData() {
@@ -34,14 +40,27 @@ const CustomDrawer = ({navigation}) => {
     await AsyncStorage.removeItem('loginData');
     await AsyncStorage.removeItem('branchId');
     await AsyncStorage.removeItem('deptId');
-    dispatch(clearUserProfileState());
-    dispatch(logoutSuccess());
+    //  dispatch({ type: 'RESET_APP_STATE' });
+    // dispatch(clearUserProfileState());
+    // dispatch(logoutSuccess());
+    exitNow();
 
-    navigation.dispatch(StackActions.replace('Login'));
+    // navigation.dispatch(StackActions.replace('Login'));
   }
 
-  const ourValHere = useSelector(state => state.loginStore);
-  // console.log('ourValHere', ourValHere);
+  const leaveHistoryHere = useSelector(state => state.salaryYearsStore);
+
+  console.log('leaveHistoryHere', leaveHistoryHere);
+
+  const getIndex = leaveHistoryHere?.userData?.total_years_count - 1;
+  console.log('getIndex', getIndex);
+
+  const lastYear =
+    leaveHistoryHere?.userData?.total_years &&
+    leaveHistoryHere?.userData?.total_years[getIndex];
+
+  console.log('lastYear', lastYear);
+  console.log('lastYearType', typeof lastYear);
 
   return (
     <>
@@ -146,7 +165,11 @@ const CustomDrawer = ({navigation}) => {
           </View>
           <View style={styles.listnameStyle}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('AttendanceDrawer')}>
+              onPress={() =>
+                navigation.navigate('AttendanceDrawer', {
+                  lastYearParam: lastYear,
+                })
+              }>
               <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
                 <View style={styles.homeleft}>
                   <Text style={styles.textlistStyle}>Attendance</Text>
@@ -198,16 +221,20 @@ const CustomDrawer = ({navigation}) => {
               </View>
             </TouchableOpacity>
           </View>
-          <View style={styles.listnameStyle}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('ChildBSSDrawer')}>
-              <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
-                <View style={styles.homeleft}>
-                  <Text style={styles.textlistStyle}>Children in BSS</Text>
+
+          {profileHere?.userData?.emp_result?.MARITAL_STATUS == 'M' && (
+            <View style={styles.listnameStyle}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('ChildBSSDrawer')}>
+                <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
+                  <View style={styles.homeleft}>
+                    <Text style={styles.textlistStyle}>Children in BSS</Text>
+                  </View>
                 </View>
-              </View>
-            </TouchableOpacity>
-          </View>
+              </TouchableOpacity>
+            </View>
+          )}
+
           <View style={styles.listnameStyle}>
             <TouchableOpacity
               onPress={() => Linking.openURL('https://index.beaconhouse.net/')}

@@ -32,7 +32,7 @@ const Objectives = ({}) => {
     objectiveYearsHere?.userData?.apprasal_years &&
     objectiveYearsHere?.userData?.apprasal_years[lastYearIndex];
 
-  // console.log('lastYear', lastYear);
+  console.log('lastYear', lastYear);
 
   useEffect(() => {
     AsyncStorage.getItem('loginData')

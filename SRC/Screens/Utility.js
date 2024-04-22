@@ -37,14 +37,14 @@ const Utility = props => {
   // console.log('utilityHere', utilityHere?.isLoading);
 
   const utilityHere = useSelector(state => state.utilityStore?.userData);
-  // console.log('utilityHere', utilityHere);
+  console.log('utilityHere>>>>>', utilityHere);
 
   const utilityMiscLogHere = useSelector(state => state.utilityMiscLogStore);
   // console.log('utilityMiscLogHere', utilityMiscLogHere);
 
   useEffect(() => {
     dispatch(UtilityAction());
-  }, [dispatch]);
+  }, []);
 
   const items = [
     {id: 1, name: 'Item 1'},

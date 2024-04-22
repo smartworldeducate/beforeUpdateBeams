@@ -9,7 +9,7 @@ const initialState = {
   isLoading: false,
 };
 
-export const messageLikeAction = createAsyncThunk(
+export const messageReadAction = createAsyncThunk(
   'MessageLike',
   async values => {
     console.log('valuesRead', values);
@@ -35,13 +35,13 @@ const MessageLikeSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(messageLikeAction.pending, state => {
+    builder.addCase(messageReadAction.pending, state => {
       state.isLoading = true;
     });
-    builder.addCase(messageLikeAction.rejected, state => {
+    builder.addCase(messageReadAction.rejected, state => {
       state.isLoading = false;
     });
-    builder.addCase(messageLikeAction.fulfilled, (state, action) => {
+    builder.addCase(messageReadAction.fulfilled, (state, action) => {
       state.isLoading = false;
       state.success = action.payload.success;
       state.message = action.payload.message;

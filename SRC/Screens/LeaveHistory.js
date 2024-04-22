@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
+  SafeAreaView,
   View,
   Text,
   Button,
@@ -8,6 +9,7 @@ import {
   ScrollView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -17,365 +19,343 @@ import fontFamily from '../Styles/fontFamily';
 import MainHeader from '../Components/Headers/MainHeader';
 import CmpHistory from '../Components/CmpHistory';
 import colors from '../Styles/colors';
+
+import {useSelector, useDispatch} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {SalaryHistoryWithYearsAction} from '../features/SalaryYearsSlice/SalaryHistoryWithYearsSlice';
+import {SalaryYearsAction} from '../features/SalaryYearsSlice/SalaryYearsSlice';
+import {LeaveHistoryAction} from '../features/LeaveBalanceSlice/LeaveHistorySlice';
+
+import {
+  Collapse,
+  CollapseHeader,
+  CollapseBody,
+} from 'accordion-collapse-react-native';
+import Loader from '../Components/Loader/Loader';
+
 const LeaveHistory = props => {
-  const [clinder, setClinder] = useState(null);
-  const [defalut, setDefalut] = useState(true);
-  const clinderHandler = item => {
-    setClinder(item);
-    setDefalut(false);
-    console.log('my item  time out', item);
+  const dispatch = useDispatch();
+  // console.log('lastyear', route.params.lastYearParam);
+  const navigation = useNavigation();
+
+  const yourRef = useRef(null);
+  const leaveHistoryHere = useSelector(state => state.salaryYearsStore);
+
+  const leaveHistoryYearsHere = useSelector(state => state.leaveHistoryStore);
+
+  const myFinalArray = leaveHistoryYearsHere?.userData?.data;
+
+  // console.log('>>>>', leaveHistoryYearsHere?.userData?.data);
+
+  // const uniqueMonths = Array.from(
+  //   new Map(myFinalArray.map(month => [month.month_name, month])),
+  // ).map(([key, value]) => value);
+
+  // console.log('uniqueMonths', uniqueMonths);
+
+  const [getIndex, setGetIndex] = useState(
+    leaveHistoryHere?.userData?.total_years?.length - 1,
+  );
+
+  console.log('getIndex', getIndex);
+
+  console.log('leaveHistoryHere', leaveHistoryHere);
+
+  // const getIndex = leaveHistoryHere?.userData?.total_years_count - 1;
+  // console.log('getIndex', getIndex);
+
+  const lastYear =
+    leaveHistoryHere?.userData?.total_years &&
+    leaveHistoryHere?.userData?.total_years[getIndex];
+
+  console.log('lastYear', lastYear);
+  console.log('lastYearType', typeof lastYear);
+
+  const [expandedHeader, setExpandedHeader] = useState(null);
+
+  const toggleCollapse = month => {
+    if (expandedHeader === month) {
+      // If the same header is clicked again, collapse it
+      setExpandedHeader(null);
+    } else {
+      // Expand the clicked header
+      setExpandedHeader(month);
+    }
   };
 
-  // const data = [
-  //   {text: 'Late Arrival (Approved)', number: '23,June',title:'June 23',
-  //   text: 'Sick Leave (Approved)', number: '5,June',title:'June 22',
-  //   text: 'Casual Leave (Approved)', number: '5,June',title:'June 21',
-  //   text: 'Attendance Not Marked', number: '5,June',title:'June 20',
-  //   text: 'Annual (Leave(Approved))', number: '5,June',title:'June 19',
-  //   text: 'Hajj Leave (Approved)', number: '5,June',title:'June 18',}
-  // ];
-  const data = [
-    {
-      id: 283831,
-      text1: 'Late Arrival (Approved)',
-      number1: '23,June',
-      title1: 'June 23',
-      text2: 'Sick Leave (Approved)',
-      number2: '5,June',
-      title2: 'June 22',
-      text3: 'Casual Leave (Approved)',
-      number3: '5,June',
-      title3: 'June 21',
-      text4: 'Attendance Not Marked',
-      number4: '5,June',
-      title4: 'June 20',
-      text5: 'Annual (Leave(Approved))',
-      number5: '5,June',
-      title5: 'June 19',
-      text6: 'Hajj Leave (Approved)',
-      number6: '5,June',
-      title6: 'June 18',
-    },
-    {
-      id: 283831,
-      text1: 'Late Arrival (Approved)',
-      number1: '23,June',
-      title1: 'June 22',
-      text2: 'Sick Leave (Approved)',
-      number2: '5,June',
-      title2: 'June 22',
-      text3: 'Casual Leave (Approved)',
-      number3: '5,June',
-      title3: 'June 21',
-      text4: 'Attendance Not Marked',
-      number4: '5,June',
-      title4: 'June 20',
-      text5: 'Annual (Leave(Approved))',
-      number5: '5,June',
-      title5: 'June 19',
-      text6: 'Hajj Leave (Approved)',
-      number6: '5,June',
-      title6: 'June 18',
-    },
-    {
-      id: 283831,
-      text1: 'Late Arrival (Approved)',
-      number1: '23,June',
-      title1: 'June 21',
-      text2: 'Sick Leave (Approved)',
-      number2: '5,June',
-      title2: 'June 22',
-      text3: 'Casual Leave (Approved)',
-      number3: '5,June',
-      title3: 'June 21',
-      text4: 'Attendance Not Marked',
-      number4: '5,June',
-      title4: 'June 20',
-      text5: 'Annual (Leave(Approved))',
-      number5: '5,June',
-      title5: 'June 19',
-      text6: 'Hajj Leave (Approved)',
-      number6: '5,June',
-      title6: 'June 18',
-    },
-    {
-      id: 283831,
-      text1: 'Late Arrival (Approved)',
-      number1: '23,June',
-      title1: 'June 20',
-      text2: 'Sick Leave (Approved)',
-      number2: '5,June',
-      title2: 'June 22',
-      text3: 'Casual Leave (Approved)',
-      number3: '5,June',
-      title3: 'June 21',
-      text4: 'Attendance Not Marked',
-      number4: '5,June',
-      title4: 'June 20',
-      text5: 'Annual (Leave(Approved))',
-      number5: '5,June',
-      title5: 'June 19',
-      text6: 'Hajj Leave (Approved)',
-      number6: '5,June',
-      title6: 'June 18',
-    },
-    {
-      id: 283831,
-      text1: 'Late Arrival (Approved)',
-      number1: '23,June',
-      title1: 'June 19',
-      text2: 'Sick Leave (Approved)',
-      number2: '5,June',
-      title2: 'June 22',
-      text3: 'Casual Leave (Approved)',
-      number3: '5,June',
-      title3: 'June 21',
-      text4: 'Attendance Not Marked',
-      number4: '5,June',
-      title4: 'June 20',
-      text5: 'Annual (Leave(Approved))',
-      number5: '5,June',
-      title5: 'June 19',
-      text6: 'Hajj Leave (Approved)',
-      number6: '5,June',
-      title6: 'June 18',
-    },
-  ];
+  const [myYear, setMyYear] = useState(lastYear);
 
-  const years = [
-    {id: 1, month: 'Jan'},
-    {id: 2, month: 'Fab'},
-    {id: 3, month: 'Mar'},
-    {id: 4, month: 'Apr'},
-    {id: 5, month: 'May'},
-    {id: 6, month: 'Jun'},
-    {id: 7, month: 'Jul'},
-    {id: 8, month: 'Aug'},
-    {id: 9, month: 'Sep'},
-    {id: 10, month: 'Oct'},
-    {id: 11, month: 'Nov'},
-    {id: 12, month: 'Dec'},
-  ];
+  useEffect(() => {
+    setMyYear(lastYear);
+  }, [myYear]);
+
+  console.log('myYear', myYear);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const loginData = await AsyncStorage.getItem('loginData');
+        const parsedLoginData = JSON.parse(loginData);
+
+        dispatch(
+          LeaveHistoryAction({
+            employee_id: parsedLoginData,
+            year: myYear,
+          }),
+        );
+      } catch (error) {
+        console.error('Error retrieving values from AsyncStorage:', error);
+      }
+    };
+
+    fetchData();
+  }, [dispatch]);
 
   const renderItem = ({item, index}) => {
-    console.log('index', index);
     return (
-      <TouchableOpacity
-        activeOpacity={0.8}
-        onPress={() => clinderHandler(item.id)}
-        // key={i}
-        style={{}}>
-        <View
+      <LinearGradient
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 0}}
+        colors={
+          index == getIndex
+            ? ['#1C37A5', '#4D69DC']
+            : ['grey', colors.appBackGroundColor]
+        }
+        style={{
+          borderRadius: wp('8'),
+          height: hp('4.25'),
+          width: wp('20'),
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginHorizontal: wp('0.5'),
+        }}>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() => onPressYear({item, index})}
           style={{
-            height: hp(4),
-            paddingHorizontal: hp(3),
-            borderRadius: hp(20),
+            height: hp('4.25'),
+            width: wp('20'),
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: index == 2 ? '#4D69DC' : ' ',
-            marginHorizontal: hp(0.5),
+            borderRadius: wp('8'),
           }}>
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+          <View>
             <Text
               style={{
-                color: index == 2 ? '#FFF' : 'gray',
-                fontSize: hp(1.5),
+                fontSize: hp('1.75'),
+                fontFamily: fontFamily.ceraMedium,
+                color: index == getIndex ? 'white' : '#1C37A4',
+                fontWeight: '500',
               }}>
-              {item.month}
+              {item}
             </Text>
           </View>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </LinearGradient>
     );
   };
 
-  const renderItemGradient = ({item, index}) => {
-    console.log('index', index);
+  const onPressYear = ({item, index}) => {
+    console.log('onPressYearIndex', index);
+    console.log('item', item);
+
+    setGetIndex(index);
+    setMyYear(item);
+
+    setExpandedHeader(null);
+
+    AsyncStorage.getItem('loginData').then(loginData => {
+      const parsedLoginData = JSON.parse(loginData);
+      dispatch(
+        LeaveHistoryAction({
+          employee_id: parsedLoginData,
+          year: item,
+        }),
+      );
+    });
+  };
+
+  const renderItemHistory = ({item, index}) => {
+    // const matchedItems = myFinalArray.filter(
+    //   month => month.month_name === item,
+    // );
+
+    const matchedItems = myFinalArray.filter(
+      entry => entry.month_name === item,
+    );
+
     return (
-      <View>
-        {clinder == item.id && (
-          <TouchableOpacity activeOpacity={0.8}>
-            <LinearGradient
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 0}}
-              colors={['#1C37A5', '#4D69DC']}
-              style={{
-                height: hp(3.7),
-                paddingHorizontal: hp(3),
-                borderRadius: hp(20),
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: '#4D69DC',
-                marginHorizontal: hp(2),
-              }}>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text
-                  style={{
-                    color: '#FFF',
-                    fontSize: hp(1.5),
-                    paddingHorizontal: hp(0.5),
-                  }}>
-                  {item.month}
-                </Text>
-              </View>
-            </LinearGradient>
-          </TouchableOpacity>
-        )}
-        {clinder !== item.id && (
-          <TouchableOpacity onPress={() => clinderHandler(item.id)}>
-            <View
-              style={{
-                height: hp(3.7),
-                paddingHorizontal: hp(2.7),
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text
-                  style={{
-                    color: 'gray',
-                    fontSize: hp(1.5),
-                  }}>
-                  {item.month}
-                </Text>
-              </View>
+      <>
+        <View style={{}}>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() => toggleCollapse(item)}
+            style={styles.touchableStyle}>
+            <View style={styles.monthHeader}>
+              <Text style={styles.monthHeaderText}>
+                {item} {` `}
+                {myYear}
+              </Text>
             </View>
           </TouchableOpacity>
-        )}
-      </View>
+          {expandedHeader === item && (
+            <CollapseBody>
+              {matchedItems.length > 0 ? (
+                <View style={{marginHorizontal: wp('5')}}>
+                  {matchedItems.map((matchedItem, index) => (
+                    <View style={{flexDirection: 'row'}}>
+                      <View style={{flex: 0.7}}>
+                        <Text
+                          key={index}
+                          style={{
+                            color: 'black',
+                            fontFamily: fontFamily.ceraMedium,
+                            fontSize: hp('1.9'),
+                          }}>
+                          {matchedItem?.leave_type_desc}
+                          <Text
+                            style={{
+                              fontFamily: fontFamily.ceraLight,
+                              fontSize: hp('1.75'),
+                            }}>
+                            {' '}
+                            {`(${matchedItem?.status.trim()})`}
+                          </Text>
+                        </Text>
+                      </View>
+
+                      <View
+                        style={{
+                          flex: 0.3,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <Text
+                          numberOfLines={1}
+                          style={{
+                            fontFamily: fontFamily.ceraLight,
+                            fontSize: hp('1.85'),
+                            color: 'black',
+                          }}>
+                          {matchedItem?.from_date}
+                        </Text>
+                      </View>
+                    </View>
+                  ))}
+                </View>
+              ) : (
+                <View style={{marginHorizontal: wp('5')}}>
+                  <Text style={{color: 'black'}}>There is no data</Text>
+                </View>
+              )}
+            </CollapseBody>
+          )}
+        </View>
+      </>
     );
   };
 
-  return (
-    <View style={{flex: 1, backgroundColor: colors.appBackGroundColor}}>
-      <View>
-        <MainHeader
-          text={'Leave History'}
-          iconName={'arrow-left'}
-          onpressBtn={() => props.navigation.goBack()}
-        />
-      </View>
-      {defalut == true && (
-        <View
-          style={{height: hp(7), marginTop: hp(2), marginHorizontal: hp(2.5)}}>
-          <FlatList
-            data={years}
-            renderItem={renderItem}
-            horizontal={true}
-            // inverted={true}
-            keyExtractor={item => item.id}
-          />
-        </View>
-      )}
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
 
-      {defalut !== true && (
-        <View
-          style={{height: hp(7), marginTop: hp(2), marginHorizontal: hp(2.5)}}>
-          <FlatList
-            data={years}
-            renderItem={renderItemGradient}
-            horizontal={true}
-            // inverted={true}
-            keyExtractor={item => item.id}
+  return (
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: colors.appBackGroundColor,
+      }}>
+      <>
+        <View>
+          <MainHeader
+            text={'Leave History'}
+            iconName={'arrow-left'}
+            onpressBtn={() => props.navigation.goBack()}
           />
         </View>
-      )}
-      <View style={{flex: 1}}>
-        {data.map((item, i) => {
-          return <CmpHistory item={item} key={i} />;
-        })}
-      </View>
-    </View>
+
+        {leaveHistoryYearsHere?.isLoading && <Loader></Loader>}
+
+        <ScrollView
+          contentContainerStyle={{
+            flexGrow: 1,
+            backgroundColor: colors.appBackGroundColor,
+          }}>
+          <View style={{marginVertical: hp('3')}}>
+            <View style={{marginHorizontal: wp('5')}}>
+              <View style={{marginVertical: hp('2')}}>
+                <FlatList
+                  data={leaveHistoryHere?.userData?.total_years}
+                  renderItem={renderItem}
+                  keyExtractor={(item, index) => index.toString()}
+                  horizontal={true}
+                  ref={yourRef}
+                  onContentSizeChange={() => yourRef.current.scrollToEnd()}
+                  onLayout={() => yourRef.current.scrollToEnd()}
+                />
+              </View>
+
+              <View
+                style={{marginVertical: hp('2'), marginHorizontal: wp('-3')}}>
+                {/* <FlatList
+                  data={myData}
+                  renderItem={renderItemHistory}
+                  keyExtractor={(item, index) => index.toString()}
+                /> */}
+                {myFinalArray !== undefined && (
+                  <FlatList
+                    data={months}
+                    renderItem={renderItemHistory}
+                    keyExtractor={(item, index) => index.toString()}
+                    // inverted={true}
+                  />
+                )}
+              </View>
+            </View>
+          </View>
+        </ScrollView>
+      </>
+    </SafeAreaView>
   );
 };
 
 export default LeaveHistory;
 
 const styles = EStyleSheet.create({
-  numbertext: {
-    color: '#353535',
-    fontSize: '0.7rem',
-    fontWeight: '700',
-    fontFamily: fontFamily.ceraBold,
-    fontStyle: 'normal',
-    textTransform: 'uppercase',
+  touchableStyle: {
+    backgroundColor: 'white',
+    borderRadius: wp('3'),
+    shadowColor: '#000',
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 1,
+    marginVertical: hp('1'),
+    marginHorizontal: wp('3'),
   },
-  basictext: {
-    color: '#979797',
-    fontSize: '0.5rem',
-    fontWeight: '500',
-    fontFamily: fontFamily.ceraMedium,
-    fontStyle: 'normal',
-    textTransform: 'uppercase',
+  monthHeader: {
+    padding: hp('2'),
   },
-  btc: {
-    paddingLeft: hp(0.5),
-    fontSize: hp(2),
-    fontWeight: '700',
-    fontFamily: fontFamily.ceraBlack,
+  monthHeaderText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'black',
   },
-  ftbotom: {
-    color: '#FFF',
-    fontSize: '0.55rem',
-    fontFamily: fontFamily.ceraBold,
-    fontStyle: 'normal',
-    fontWeight: '700',
+  monthContent: {
+    paddingVertical: 10,
   },
-  mainHeader: {
-    height: hp(8),
-    backgroundColor: '#1C37A4',
-    borderBottomRightRadius: hp(0),
-    borderBottomLeftRadius: hp(0),
-  },
-  container: {
-    flex: 1,
-    marginTop: hp(0),
-  },
-
-  number: {
-    color: '#2D8E00',
-    backgroundColor: '#D4FFCC',
-    borderRadius: hp(50),
-    paddingHorizontal: hp(0.8),
-    fontFamily: fontFamily.ceraBold,
-    fontSize: '0.5rem',
-    fontWeight: '700',
-    fontStyle: 'normal',
-  },
-  dob: {
-    color: '#363636',
-    fontFamily: fontFamily.ceraMedium,
-    fontSize: '0.6rem',
-    fontWeight: '300',
-    fontStyle: 'normal',
-  },
-  dobdata: {
-    color: '#353535',
-    borderRadius: hp(50),
-    paddingHorizontal: hp(0.8),
-    fontFamily: fontFamily.ceraMedium,
-    fontSize: '0.55rem',
-    fontWeight: '300',
-    fontStyle: 'normal',
-  },
-
-  salaryMainView: {
-    height: hp(7),
-    marginHorizontal: hp(2.5),
-    borderRadius: hp(1),
-    backgroundColor: '#E7E7E7',
-    marginTop: hp(2),
+  noData: {
+    paddingVertical: 10,
+    // alignItems: 'center',
   },
 });

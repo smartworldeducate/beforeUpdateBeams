@@ -60,6 +60,7 @@ import BottomTab from './SRC/Components/CustomTab/BottomTab';
 import MessagesTab from './SRC/Components/CustomTab/MessagesTab';
 
 import Utility from './SRC/Screens/Utility';
+import AttendenceAndLeaveTab from './SRC/Components/CustomTab/AttendenceAndLeaveTab';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -78,7 +79,10 @@ function DrawerStack() {
       drawerContent={props => <CustomDrawer {...props} />}>
       <Drawer.Screen name="HomeDrawer" component={TabNavigator} />
       <Drawer.Screen name="HomeScreenDrawer" component={HomeScreen} />
-      <Drawer.Screen name="AttendanceDrawer" component={Attendance} />
+      <Drawer.Screen
+        name="AttendanceDrawer"
+        component={AttendenceAndLeaveTabNavigator}
+      />
       <Drawer.Screen name="FinancialDrawer" component={Financial} />
       <Drawer.Screen name="TimeLineDrawer" component={TimeLine} />
       <Drawer.Screen name="ReporteeDrawer" component={Reportee} />
@@ -87,30 +91,9 @@ function DrawerStack() {
       <Drawer.Screen name="FeedBackDrawer" component={FeedBack} />
       <Drawer.Screen name="UtilityDrawer" component={Utility} />
       <Drawer.Screen name="ProfileDrawer" component={Profile} />
-      {/* <Drawer.Screen name="Approcial" component={Approcial} />
-      <Drawer.Screen name="Attendance" component={Attendance} />
-      <Drawer.Screen name="Reportee" component={Reportee} />
-      <Drawer.Screen name="Scanner" component={Scanner} />
-      <Drawer.Screen name="Utility" component={Utility} /> */}
-
-      {/* <Drawer.Screen name="FinancialDrawer" component={Financial} />
-      <Drawer.Screen name="TimeLineDrawer" component={TimeLine} />
-      <Drawer.Screen name="ChildBssDrawer" component={ChildBss} /> */}
     </Drawer.Navigator>
   );
 }
-
-// const BottomTabFun = () => {
-
-//   return (
-//     <Tab.Navigator>
-//       <Tab.Screen name="HomeScreenTab" component={BottomTab} />
-//       <Tab.Screen name="ProfileTab" component={Profile} />
-//       <Tab.Screen name="LeaveBalanceTab" component={LeaveBalance} />
-//       <Tab.Screen name="Scanner" component={Scanner} />
-//     </Tab.Navigator>
-//   );
-// };
 
 function TabNavigator() {
   return (
@@ -138,6 +121,7 @@ function MessagesNavigator() {
       tabBar={props => <MessagesTab {...props} />}
       screenOptions={{
         headerShown: false,
+        unmountOnBlur: true,
       }}>
       <Tab.Screen name="ViewAllMessagesTab" component={ViewAllMessages} />
       <Tab.Screen name="FavouriteMessagesTab" component={FavouriteMessages} />
@@ -146,68 +130,23 @@ function MessagesNavigator() {
   );
 }
 
-const BottomTabApplication = () => {
+function AttendenceAndLeaveTabNavigator() {
   return (
     <Tab.Navigator
+      // headerMode={"none"}
+      initialRouteName={'CalanderAttendanceTab'}
+      tabBar={props => <AttendenceAndLeaveTab {...props} />}
       screenOptions={{
         headerShown: false,
-        tabBarStyle: {
-          display: 'flex',
-          position: 'absolute',
-          backgroundColor: '#fff',
-          height: 60,
-
-          shadowColor: '#000',
-          shadowOpacity: 1,
-          shadowRadius: wp('15'),
-          elevation: 10,
-        },
-      }}
-      tabBarOptions={{
-        showLabel: false,
-        activeTintColor: 'blue',
-        inactiveTintColor: 'gray',
+        unmountOnBlur: true,
       }}>
-      <Tab.Screen
-        name="AttendanceTab"
-        component={Attendance}
-        options={{
-          tabBarIcon: ({color, size}) => (
-            <Menu name="calendar" size={hp(2.5)} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="ApplicationTypeTab"
-        component={ApplicationType}
-        options={{
-          tabBarIcon: ({color, size}) => (
-            <Icon name="paper-plane" size={hp(2.5)} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="LeaveBalanceTab"
-        component={LeaveBalance}
-        options={{
-          tabBarIcon: ({color, size}) => (
-            <Icon name="chart-simple" size={hp(2.5)} color={color} />
-          ),
-        }}
-      />
-
-      <Tab.Screen
-        name="LeaveHistoryTab"
-        component={LeaveHistory}
-        options={{
-          tabBarIcon: ({color, size}) => (
-            <Icon name="rectangle-history" size={hp(2.5)} color={color} />
-          ),
-        }}
-      />
+      <Tab.Screen name="CalanderAttendanceTab" component={Attendance} />
+      <Tab.Screen name="ApplyLeaveTab" component={ApplyLeave} />
+      <Tab.Screen name="LeaveBalanceTab" component={LeaveBalance} />
+      <Tab.Screen name="LeaveHistoryTab" component={LeaveHistory} />
     </Tab.Navigator>
   );
-};
+}
 
 const Routes = () => {
   return (
@@ -229,6 +168,9 @@ const Routes = () => {
         <Stack.Screen name="ApplyLeave" component={ApplyLeave} />
         <Stack.Screen name="WorkFromHome" component={WorkFromHome} />
         <Stack.Screen name="WFHScreen" component={WFHScreen} />
+        <Stack.Screen name="LeaveHistory" component={LeaveHistory} />
+
+        <Stack.Screen name="TestScreen" component={TestScreen} />
         {/* <Stack.Screen name="ApplicationType" component={BottomTabApplication} />
         <Stack.Screen name="ApplyLeave" component={ApplyLeave} />
         <Stack.Screen name="Outstation" component={Outstation} />

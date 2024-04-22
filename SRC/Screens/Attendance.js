@@ -11,7 +11,11 @@ import fontFamily from '../Styles/fontFamily';
 import Icon from 'react-native-fontawesome-pro';
 import {height} from 'deprecated-react-native-prop-types/DeprecatedImagePropType';
 
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+
 const Attendance = props => {
+  const navigation = useNavigation();
+
   const data = [
     {
       id: 22,
@@ -210,7 +214,6 @@ const Attendance = props => {
 
   const [clinder, setClinder] = useState(null);
   const [defalut, setDefalut] = useState(true);
-
 
   const clinderHandler = item => {
     setClinder(item);
@@ -423,7 +426,6 @@ const Attendance = props => {
                       height: hp('0.1'),
                       marginHorizontal: wp('5'),
                       marginTop: hp('1'),
-                     
                     }}></View>
                 </>
               ) : (

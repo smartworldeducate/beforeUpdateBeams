@@ -6,15 +6,15 @@ const initialState = {
   success: null,
   message: '',
   userData: [],
-  isLoading: false,
+  isLoading: true,
 };
 
-export const messageDetailAction = createAsyncThunk(
-  'MessageDetail',
+export const LeaveHistoryAction = createAsyncThunk(
+  'LeaveHistory',
   async values => {
-    console.log('valuesMessageDetail', values);
+    console.log('valuesEmpLeavesHistory', values);
     return axios
-      .post(`${APIS.MessagesDetailAPI}`, values, {
+      .post(`${APIS.LeaveHistoryAPI}`, values, {
         headers: {
           api_key: 'X5Ne0km78x2Q1ykny9FfcIK',
           api_secret: 'Q1X5NeknkyV5v6VkT78y9F',
@@ -25,8 +25,8 @@ export const messageDetailAction = createAsyncThunk(
   },
 );
 
-const MessageDetailSlice = createSlice({
-  name: 'MessageDetail',
+const LeaveHistorySlice = createSlice({
+  name: 'LeaveHistory',
   initialState,
   reducers: {
     clearAllState: (state, action) => {
@@ -35,13 +35,13 @@ const MessageDetailSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(messageDetailAction.pending, state => {
+    builder.addCase(LeaveHistoryAction.pending, state => {
       state.isLoading = true;
     });
-    builder.addCase(messageDetailAction.rejected, state => {
+    builder.addCase(LeaveHistoryAction.rejected, state => {
       state.isLoading = false;
     });
-    builder.addCase(messageDetailAction.fulfilled, (state, action) => {
+    builder.addCase(LeaveHistoryAction.fulfilled, (state, action) => {
       state.isLoading = false;
       state.success = action.payload.success;
       state.message = action.payload.message;
@@ -50,6 +50,6 @@ const MessageDetailSlice = createSlice({
   },
 });
 
-export const {clearAllState} = MessageDetailSlice.actions;
+export const {clearAllState} = LeaveHistorySlice.actions;
 
-export default MessageDetailSlice.reducer;
+export default LeaveHistorySlice.reducer;

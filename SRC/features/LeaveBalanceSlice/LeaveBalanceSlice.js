@@ -12,7 +12,7 @@ const initialState = {
 export const LeaveBalanceAction = createAsyncThunk(
   'LeaveBalance',
   async values => {
-    console.log('values', values);
+    console.log('valuesEmpLeavesBalance', values);
     return axios
       .post(`${APIS.LeaveBalanceAPI}`, values, {
         headers: {

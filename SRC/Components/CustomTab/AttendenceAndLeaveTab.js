@@ -17,7 +17,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {useSelector, useDispatch} from 'react-redux';
 import fontFamily from '../../Styles/fontFamily';
 
-const MessagesTab = ({state, descriptors, navigation, props}) => {
+const AttendenceAndLeaveTab = ({state, descriptors, navigation, props}) => {
   const messagesHere = useSelector(state => state.messagesStore?.unReadLength);
   console.log('messagesHereBTab', messagesHere);
 
@@ -93,7 +93,7 @@ const MessagesTab = ({state, descriptors, navigation, props}) => {
                       <View style={{}}>
                         <Ficon
                           type={isFocused ? 'solid' : 'light'}
-                          name="envelope"
+                          name="calendar-days"
                           size={hp(2.5)}
                           color={isFocused ? '#1C37A4' : '#8a8a8a'}
                         />
@@ -105,7 +105,7 @@ const MessagesTab = ({state, descriptors, navigation, props}) => {
                             numberOfLines={1}
                             ellipsizeMode={'tail'}
                             style={styles.tabText}>
-                            Mail
+                            Calendar
                           </Text>
                         </View>
                       )}
@@ -125,7 +125,7 @@ const MessagesTab = ({state, descriptors, navigation, props}) => {
                     <View style={{}}>
                       <Ficon
                         type={isFocused ? 'solid' : 'light'}
-                        name="star"
+                        name="paper-plane"
                         size={hp(2.6)}
                         color={isFocused ? '#1C37A4' : '#8a8a8a'}
                       />
@@ -133,7 +133,7 @@ const MessagesTab = ({state, descriptors, navigation, props}) => {
 
                     {isFocused && (
                       <View style={{}}>
-                        <Text style={styles.tabText}>Favourites</Text>
+                        <Text style={styles.tabText}>Apply</Text>
                       </View>
                     )}
                   </TouchableOpacity>
@@ -151,7 +151,7 @@ const MessagesTab = ({state, descriptors, navigation, props}) => {
                     <View style={{}}>
                       <Ficon
                         type={isFocused ? 'solid' : 'light'}
-                        name="box-archive"
+                        name="chart-simple"
                         size={hp(2.35)}
                         color={isFocused ? '#1C37A4' : '#8a8a8a'}
                       />
@@ -159,7 +159,33 @@ const MessagesTab = ({state, descriptors, navigation, props}) => {
 
                     {isFocused && (
                       <View style={{}}>
-                        <Text style={styles.tabText}>Archive</Text>
+                        <Text style={styles.tabText}>Balance</Text>
+                      </View>
+                    )}
+                  </TouchableOpacity>
+                ) : index === 3 ? (
+                  <TouchableOpacity
+                    activeOpacity={0.2}
+                    onPress={onPress}
+                    style={{
+                      height: hp('7'),
+                      flex: 1,
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <View style={{}}>
+                      <Ficon
+                        type={isFocused ? 'solid' : 'light'}
+                        name="rectangle-history"
+                        size={hp(2.35)}
+                        color={isFocused ? '#1C37A4' : '#8a8a8a'}
+                      />
+                    </View>
+
+                    {isFocused && (
+                      <View style={{}}>
+                        <Text style={styles.tabText}>History</Text>
                       </View>
                     )}
                   </TouchableOpacity>
@@ -229,4 +255,4 @@ const styles = EStyleSheet.create({
   },
 });
 
-export default MessagesTab;
+export default AttendenceAndLeaveTab;

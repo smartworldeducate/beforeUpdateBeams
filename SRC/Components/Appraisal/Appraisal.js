@@ -98,20 +98,21 @@ const Appraisal = ({dataList, renderItem, keyExtractor}) => {
               <View
                 style={{
                   backgroundColor: '#1C37A4',
-                  borderRadius: hp('0.75'),
-                  marginTop: hp('-6'),
+                  borderRadius: hp('0.65'),
+                  marginTop: hp('-4.75'),
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
                 <Text
                   style={{
                     color: 'white',
-                    padding: wp('1'),
+                    padding: wp('1.5'),
                     fontSize: hp('1.25'),
                     // fontWeight: 'bold',
                     textAlign: 'center',
                   }}>
-                  {`${item?.rating} \n ${item.value}`}
+                  {`${item.value}`}
+                  {/* {`${item?.rating} \n ${item.value}`} */}
                 </Text>
               </View>
             );

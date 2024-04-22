@@ -1,4 +1,4 @@
-import {configureStore} from '@reduxjs/toolkit';
+import {configureStore, combineReducers} from '@reduxjs/toolkit';
 import authReducer from '../features/users/userSlice';
 import loginReducer from '../features/register/loginSlice';
 import tagReducer from '../features/tags/tagSlice';
@@ -54,11 +54,21 @@ import suggestionFeedbackSliceReducer from '../features/RatingAndFeedbackSlice/S
 
 import leaveBalanceSliceReducer from '../features/LeaveBalanceSlice/LeaveBalanceSlice';
 
+import leaveHistorySliceReducer from '../features/LeaveBalanceSlice/LeaveHistorySlice';
+
 import messagesSliceReducer from '../features/MessagesSlice/MessagesSlice';
+import MessageSliceHomePageReducer from '../features/MessagesSlice/MessageSliceHomePage';
+
 import messageDetailSliceReducer from '../features/MessagesSlice/MessageDetailSlice';
 import MessageLikeSliceReducer from '../features/MessagesSlice/MessageLikeSlice';
 
 import MessageStatusLikeSliceReducer from '../features/MessagesSlice/MessageStatusLike';
+
+import FavouriteMessageSliceReducer from '../features/MessagesSlice/FavouriteMessageSlice/FavouriteMessageSlice';
+
+import AddToFavouriteMessageSliceReducer from '../features/MessagesSlice/FavouriteMessageSlice/AddToFavouriteMessageSlice';
+
+import ArchiveMessageSliceReducer from '../features/MessagesSlice/ArchiveMessageSlice/ArchiveMessageSlice';
 
 import UtilitySliceReducer from '../features/UtilitySlice/UtilitySlice';
 
@@ -107,6 +117,8 @@ export const store = configureStore({
     movementState: movementReducer,
     leaveBalanceState: leaveBalanceReducer,
 
+    // mine
+
     loginStore: loginSliceReducer,
     profileStore: profileSliceReducer,
     financialStore: financialSliceReducer,
@@ -125,11 +137,23 @@ export const store = configureStore({
 
     suggestionFeedbackStore: suggestionFeedbackSliceReducer,
     leaveBalanceStore: leaveBalanceSliceReducer,
+
+    leaveHistoryStore: leaveHistorySliceReducer,
+
     messagesStore: messagesSliceReducer,
+
+    MessageSliceHomePageStore: MessageSliceHomePageReducer,
+
     messageDetailStore: messageDetailSliceReducer,
     messageLikeStore: MessageLikeSliceReducer,
 
     messageStatusLikeStore: MessageStatusLikeSliceReducer,
+
+    favouriteMessageStore: FavouriteMessageSliceReducer,
+
+    addToFavouriteMessageStore: AddToFavouriteMessageSliceReducer,
+
+    archiveMessageStore: ArchiveMessageSliceReducer,
 
     utilityStore: UtilitySliceReducer,
 
@@ -144,3 +168,104 @@ export const store = configureStore({
       serializableCheck: false,
     }),
 });
+
+// const rootReducer = combineReducers({
+//   register: authReducer,
+//   login: loginReducer,
+//   getAllTags: tagReducer,
+//   singleTag: singleTagReducer,
+//   getAllCats: catReducer,
+//   getCatFilter: filterReducer,
+//   scanar: scanReducer,
+//   userLogin: LoginUserReducer,
+//   userList: userReducer,
+//   googleUser: googleReducer,
+//   createtag: createReducer,
+//   searchEmp: searchReducer,
+//   reportee: reporteeReeducer,
+//   allEmployee: employeeRerducer,
+//   currntEmpAttanence: currentEmpDateReducer,
+//   getLineManger: lineMangerReducer,
+//   getSalMonth: salMonthReducer,
+//   getEmpSalary: empSalReducer,
+//   empMessageState: empMessageReducer,
+//   detailMessageState: detailMessageReducer,
+//   selectHistory: historyReducer,
+//   appraisalState: appraisalReducer,
+//   childState: bssChildReducer,
+//   feedBackState: feedbackReducer,
+//   ratingState: ratingReducer,
+//   getallRating: getRatingReducer,
+//   updateRatingState: updateRatingReducer,
+//   utilityState: utilityReducer,
+//   wfhState: wfhReducer,
+//   wfhInsertState: wfhInsertReducer,
+//   timeLineState: timeLineReducer,
+//   profileState: profileReducer,
+//   movementState: movementReducer,
+//   leaveBalanceState: leaveBalanceReducer,
+
+//   // mine
+
+//   loginStore: loginSliceReducer,
+//   profileStore: profileSliceReducer,
+//   financialStore: financialSliceReducer,
+//   salaryYearsStore: salaryYearsSliceReducer,
+//   salaryHistoryWithYearsStore: salaryHistoryWithYearsSliceReducer,
+//   appraisalYearsStore: appraisalYearsSliceReducer,
+//   objectiveYearsStore: objectiveYearsSliceReducer,
+//   objectivesStore: objectivesSliceReducer,
+
+//   timeLineStore: timelineSliceReducer,
+//   allReporteesStore: allReportessSliceReducer,
+//   reporteeProfileStore: reporteeProfileSliceReducer,
+//   searchEmployyeStore: searchEmployeeSliceReducer,
+//   ratingStore: ratingSliceReducer,
+//   updateRatingStore: updateRatingSliceReducer,
+
+//   suggestionFeedbackStore: suggestionFeedbackSliceReducer,
+//   leaveBalanceStore: leaveBalanceSliceReducer,
+//   messagesStore: messagesSliceReducer,
+
+//   MessageSliceHomePageStore: MessageSliceHomePageReducer,
+
+//   messageDetailStore: messageDetailSliceReducer,
+//   messageLikeStore: MessageLikeSliceReducer,
+
+//   messageStatusLikeStore: MessageStatusLikeSliceReducer,
+
+//   favouriteMessageStore: FavouriteMessageSliceReducer,
+
+//   addToFavouriteMessageStore: AddToFavouriteMessageSliceReducer,
+
+//   archiveMessageStore: ArchiveMessageSliceReducer,
+
+//   utilityStore: UtilitySliceReducer,
+
+//   utilityMiscLogStore: UtilityMiscLogSliceReducer,
+
+//   finYearStore: FinYearSliceReducer,
+//   WorkFromHomeGetStore: WorkFromHomeGetSliceReducer,
+//   WorkFromHomePostStore: WorkFromHomePostSliceReducer,
+// });
+
+// Root reducer with state reset logic
+// const rootReducerWithReset = (state, action) => {
+//   if (action.type === 'RESET_APP_STATE') {
+//     // Reset each slice state to its initial state
+//     const resetState = {};
+//     Object.keys(state).forEach(key => {
+//       resetState[key] = rootReducer(undefined, {type: ''});
+//     });
+//     state = resetState;
+//   }
+//   return rootReducer(state, action);
+// };
+
+// export const store = configureStore({
+//   reducer: rootReducerWithReset,
+//   middleware: getDefaultMiddleware =>
+//     getDefaultMiddleware({
+//       serializableCheck: false,
+//     }),
+// });

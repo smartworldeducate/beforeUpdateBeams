@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ScrollView,
   StatusBar,
@@ -21,25 +21,194 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {useSelector, useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import colors from '../Styles/colors';
+import MainHeader from '../Components/Headers/MainHeader';
+import {
+  archiveMessagesAction,
+  removeFromArchiveSlice,
+} from '../features/MessagesSlice/ArchiveMessageSlice/ArchiveMessageSlice';
+import Loader from '../Components/Loader/Loader';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {addToArchiveMessagesAction} from '../features/MessagesSlice/ArchiveMessageSlice/AddToArchiveMessageSlice';
 
 const ArchiveMessages = props => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const textInputRef = useRef(null);
-  const [searchText, setSearchText] = useState(null);
+  const profileHereEmpId = useSelector(
+    state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
+  );
 
-  const onPressSearchIcon = () => {
-    console.log('onPressSearchIcon');
+  const archiveMessagesHere = useSelector(state => state.archiveMessageStore);
+  // console.log('archiveMessagesHere', archiveMessagesHere);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const loginData = await AsyncStorage.getItem('loginData');
+        // const parsedLoginData = JSON.parse(loginData);
+
+        dispatch(
+          archiveMessagesAction({
+            employeeId: loginData,
+            ofset: 1,
+            limit: 50,
+          }),
+        );
+      } catch (error) {
+        console.error('Error retrieving values from AsyncStorage:', error);
+      }
+    };
+
+    fetchData();
+  }, [dispatch]);
+
+  const renderItem = ({item, index}) => {
+    return (
+      <View style={{}}>
+        <View
+          activeOpacity={0.8}
+          style={{
+            height: hp('8'),
+            flexDirection: 'row',
+            // backgroundColor: 'red',
+            marginBottom: hp('1'),
+          }}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            // onPress={() =>
+            //   navigation.navigate('ViewMessageDetail', {messagedata: item})
+            // }
+
+            style={{
+              flex: 0.15,
+              justifyContent: 'center',
+              alignItems: 'center',
+              // backgroundColor: 'orange',
+            }}>
+            <Image
+              source={{uri: item?.EMP_PHOTO}}
+              style={{
+                height: hp('5.75'),
+                width: wp('11.5'),
+                borderRadius: wp(50),
+              }}
+              resizeMode="cover"
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() =>
+              navigation.navigate('ViewMessageDetail', {messagedata: item})
+            }
+            style={{
+              flex: 0.6,
+              // paddingVertical: hp('0.35'),
+              paddingLeft: wp('2.5'),
+              justifyContent: 'center',
+            }}>
+            <Text
+              numberOfLines={1}
+              letterSpacing={'tail'}
+              style={styles.messageCardEmpName}>
+              {item?.EMP_NAME}
+            </Text>
+            <Text
+              numberOfLines={2}
+              ellipsizeMode={'tail'}
+              style={styles.msgSubject}>
+              {item?.MSG_SUBJECT}
+            </Text>
+          </TouchableOpacity>
+          <View
+            style={{
+              flex: 0.25,
+              justifyContent: 'center',
+              alignItems: 'center',
+              // backgroundColor: 'pink',
+            }}>
+            <View style={{}}>
+              <Text
+                numberOfLines={1}
+                letterSpacing={'tail'}
+                style={styles.messageCardDate}>
+                {item?.ENTRY_DATE}
+              </Text>
+            </View>
+
+            <TouchableOpacity
+              onPress={() => onPressUnarchive({item})}
+              style={{
+                // backgroundColor: 'red',
+                height: hp('3'),
+                justifyContent: 'center',
+              }}>
+              <Text
+                numberOfLines={1}
+                letterSpacing={'tail'}
+                style={[styles.messageCardDate, {paddingHorizontal: wp('3')}]}>
+                {'Unarchive'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    );
   };
 
-  const onChangeSearchText = val => {
-    setSearchText(val);
+  const onPressUnarchive = ({item}) => {
+    // console.log('onPressUnarchive', item);
+
+    dispatch(
+      addToArchiveMessagesAction({
+        employee_id: profileHereEmpId,
+        messageId: item?.MSG_ID,
+        archive_status: 'N',
+      }),
+    );
+    dispatch(removeFromArchiveSlice(item?.MSG_ID));
   };
 
   return (
     <>
+      {archiveMessagesHere?.isLoading && <Loader></Loader>}
       <View>
+        <MainHeader
+          text={'Archive'}
+          iconName={'arrow-left'}
+          onpressBtn={() => navigation.navigate('HomeScreen')}
+        />
+      </View>
+
+      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+        <FlatList
+          data={archiveMessagesHere?.userData}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
+          style={{
+            paddingTop: hp('3'),
+            paddingBottom: hp('2'),
+            marginHorizontal: wp('5'),
+          }}
+          ListEmptyComponent={
+            <Text
+              style={{
+                fontSize: hp('2'),
+                color: 'black',
+                fontFamily: fontFamily.ceraMedium,
+                textAlign: 'center',
+              }}>
+              You have no archive message.
+            </Text>
+          }
+          showsVerticalScrollIndicator={true}
+          // enableEmptySections={true}
+          // onEndReached={loadMoreData}
+          // onEndReachedThreshold={0.5}
+          // ListFooterComponent={renderFooter}
+        />
+      </ScrollView>
+
+      {/* <View>
         <>
           <LinearGradient
             start={{x: 0, y: 0}}
@@ -133,7 +302,7 @@ const ArchiveMessages = props => {
             </>
           </LinearGradient>
         </>
-      </View>
+      </View> */}
     </>
   );
 };

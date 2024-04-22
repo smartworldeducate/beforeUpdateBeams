@@ -10,7 +10,7 @@ const initialState = {
 };
 
 export const FinYearAction = createAsyncThunk('FinYear', async values => {
-  console.log('values', values);
+  console.log('valuesFinYears', values);
   return axios
     .post(`${APIS.FinYearAPI}`, values, {
       headers: {

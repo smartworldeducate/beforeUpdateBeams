@@ -25,6 +25,7 @@ export const APIS = {
   SuggestionFeedbackAPI: BASE_URL + 'feedback',
 
   LeaveBalanceAPI: BASE_URL + 'balance_leave',
+  LeaveHistoryAPI: BASE_URL + 'leave_history',
 
   SearchEmployeeAPI: BASE_URL + 'searchByName',
 
@@ -34,6 +35,10 @@ export const APIS = {
   MessagesReadAPI: BASE_URL + 'message_like',
 
   MessagesStatusLikeAPI: BASE_URL + 'status_like',
+  FavouriteMessagesAPI: BASE_URL + 'get_favroit_messages',
+  AddToFavouriteMessagesAPI: BASE_URL + 'add_to_favrit_message',
+  ArchiveMessagesAPI: BASE_URL + 'get_archive_messages',
+  AddToArchiveMessagesAPI: BASE_URL + 'add_to_archive_message',
 
   UtilityAPI: BASE_URL + 'utility',
 

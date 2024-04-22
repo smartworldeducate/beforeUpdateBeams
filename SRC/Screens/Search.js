@@ -54,6 +54,7 @@ const Search = ({}) => {
     dispatch(
       SearchEmployeeAction({
         searchEmp: searchText,
+        offset: 1,
       }),
     );
     // console.log('123');

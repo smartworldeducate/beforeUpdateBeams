@@ -5,16 +5,16 @@ import {APIS} from '../../API/Apis';
 const initialState = {
   success: null,
   message: '',
+  isLoading: true,
   userData: [],
-  isLoading: false,
 };
 
-export const messageDetailAction = createAsyncThunk(
-  'MessageDetail',
+export const messagesActionHomePage = createAsyncThunk(
+  'MessagesHomePage',
   async values => {
-    console.log('valuesMessageDetail', values);
+    console.log('valuesMessagesHomePage', values);
     return axios
-      .post(`${APIS.MessagesDetailAPI}`, values, {
+      .post(`${APIS.MessagesAPI}`, values, {
         headers: {
           api_key: 'X5Ne0km78x2Q1ykny9FfcIK',
           api_secret: 'Q1X5NeknkyV5v6VkT78y9F',
@@ -25,8 +25,8 @@ export const messageDetailAction = createAsyncThunk(
   },
 );
 
-const MessageDetailSlice = createSlice({
-  name: 'MessageDetail',
+const MessagesSliceHomePage = createSlice({
+  name: 'MessagesHomePage',
   initialState,
   reducers: {
     clearAllState: (state, action) => {
@@ -35,13 +35,13 @@ const MessageDetailSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(messageDetailAction.pending, state => {
+    builder.addCase(messagesActionHomePage.pending, state => {
       state.isLoading = true;
     });
-    builder.addCase(messageDetailAction.rejected, state => {
+    builder.addCase(messagesActionHomePage.rejected, state => {
       state.isLoading = false;
     });
-    builder.addCase(messageDetailAction.fulfilled, (state, action) => {
+    builder.addCase(messagesActionHomePage.fulfilled, (state, action) => {
       state.isLoading = false;
       state.success = action.payload.success;
       state.message = action.payload.message;
@@ -50,6 +50,6 @@ const MessageDetailSlice = createSlice({
   },
 });
 
-export const {clearAllState} = MessageDetailSlice.actions;
+export const {clearAllState} = MessagesSliceHomePage.actions;
 
-export default MessageDetailSlice.reducer;
+export default MessagesSliceHomePage.reducer;
