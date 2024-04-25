@@ -16,7 +16,14 @@ import {
 import EStyleSheet from 'react-native-extended-stylesheet';
 import fontFamily from '../../Styles/fontFamily';
 
-const MainHeader = ({text, iconName, onpressBtn, rightIcon, yearText}) => {
+const MainHeader = ({
+  text,
+  iconName,
+  onpressBtn,
+  rightIcon,
+  yearText,
+  onPressRightText,
+}) => {
   return (
     <>
       <LinearGradient
@@ -50,11 +57,23 @@ const MainHeader = ({text, iconName, onpressBtn, rightIcon, yearText}) => {
             }}>
             <Text style={styles.textstyle}>{text}</Text>
           </View>
-          <View style={{flex: 0.15}}>
+
+          <View
+            style={{
+              flex: 0.15,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
             {rightIcon && (
               <Icon type="light" name={rightIcon} size={hp(2.5)} color="#fff" />
             )}
-            {yearText && <Text style={styles.textstyle}>{yearText}</Text>}
+            {yearText && (
+              <Text
+                onPress={onPressRightText}
+                style={[styles.textstyle, {padding: wp('1')}]}>
+                {yearText}
+              </Text>
+            )}
           </View>
         </View>
       </LinearGradient>

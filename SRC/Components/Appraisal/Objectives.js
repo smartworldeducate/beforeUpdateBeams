@@ -17,8 +17,10 @@ const Objectives = ({}) => {
 
   const yourRef = useRef(null);
   const objectiveYearsHere = useSelector(state => state.objectiveYearsStore);
+
   const objectivesHere = useSelector(state => state.objectivesStore);
   console.log('objectivesHere', objectivesHere?.userData);
+
   const userBranchId = useSelector(
     state => state.profileStore?.userData?.profile_result?.BRANCH_ID,
   );
@@ -43,7 +45,8 @@ const Objectives = ({}) => {
           dispatch(
             ObjectivesAction({
               employee_id: parsedLoginData,
-              fin_year_id: lastYear?.FIN_YEAR_ID,
+              // fin_year_id: lastYear?.FIN_YEAR_ID,
+              fin_year_id: 38,
               branch_id: userBranchId,
             }),
           );
@@ -98,14 +101,14 @@ const Objectives = ({}) => {
   };
 
   const type1Data = objectivesHere?.userData.filter(
-    item => item.TYPE_ID === '1',
+    item => item.TARGET === '1',
   );
   const type2Data = objectivesHere?.userData.filter(
-    item => item.TYPE_ID === '2',
+    item => item.TARGET === '2',
   );
 
   const renderItemObjectives = ({item, index}) => {
-    // console.log('item', item);
+    console.log('item', item);
     return (
       <View style={{marginHorizontal: wp('3')}}>
         <View style={{}}>

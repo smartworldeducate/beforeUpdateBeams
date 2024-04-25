@@ -141,7 +141,7 @@ function AttendenceAndLeaveTabNavigator() {
         unmountOnBlur: true,
       }}>
       <Tab.Screen name="CalanderAttendanceTab" component={Attendance} />
-      <Tab.Screen name="ApplyLeaveTab" component={ApplyLeave} />
+      <Tab.Screen name="ApplicationTypeTab" component={ApplicationType} />
       <Tab.Screen name="LeaveBalanceTab" component={LeaveBalance} />
       <Tab.Screen name="LeaveHistoryTab" component={LeaveHistory} />
     </Tab.Navigator>
@@ -165,12 +165,21 @@ const Routes = () => {
         <Stack.Screen name="ViewMessageDetail" component={ViewMessageDetail} />
         <Stack.Screen name="MovementLine" component={MovementLine} />
         <Stack.Screen name="ChildBSS" component={ChildBss} />
-        <Stack.Screen name="ApplyLeave" component={ApplyLeave} />
+
         <Stack.Screen name="WorkFromHome" component={WorkFromHome} />
         <Stack.Screen name="WFHScreen" component={WFHScreen} />
         <Stack.Screen name="LeaveHistory" component={LeaveHistory} />
 
         <Stack.Screen name="TestScreen" component={TestScreen} />
+
+        <Stack.Screen name="ApplyLeave" component={ApplyLeave} />
+        <Stack.Screen name="Outstation" component={Outstation} />
+        <Stack.Screen name="AttendenceNotMarked" component={AttendenceMarked} />
+        <Stack.Screen name="LateArivel" component={LateArivel} />
+
+        <Stack.Screen name="EarliLeaving" component={EarliLeaving} />
+        <Stack.Screen name="ToilLeave" component={ToilLeave} />
+
         {/* <Stack.Screen name="ApplicationType" component={BottomTabApplication} />
         <Stack.Screen name="ApplyLeave" component={ApplyLeave} />
         <Stack.Screen name="Outstation" component={Outstation} />

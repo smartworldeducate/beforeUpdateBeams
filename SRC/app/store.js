@@ -80,6 +80,10 @@ import WorkFromHomeGetSliceReducer from '../features/WorkFromHomeSlice/WorkFromH
 
 import WorkFromHomePostSliceReducer from '../features/WorkFromHomeSlice/WorkFromHomePost';
 
+import AttendanceCalanderSliceReducer from '../features/AttendanceCalanderSlice/AttendanceCalanderSlice';
+
+import LeaveTypeSliceReducer from '../features/LeaveTypeSlice/LeaveTypeSlice';
+
 export const store = configureStore({
   reducer: {
     register: authReducer,
@@ -162,6 +166,10 @@ export const store = configureStore({
     finYearStore: FinYearSliceReducer,
     WorkFromHomeGetStore: WorkFromHomeGetSliceReducer,
     WorkFromHomePostStore: WorkFromHomePostSliceReducer,
+
+    AttendanceCalanderStore: AttendanceCalanderSliceReducer,
+
+    LeaveTypeStore: LeaveTypeSliceReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

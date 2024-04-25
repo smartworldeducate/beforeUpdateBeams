@@ -343,8 +343,8 @@ const HomeScreen = props => {
                 refreshing={refreshing}
                 onRefresh={onRefresh}
                 colors={['#2A72B6', '#203B88']}
-                progressBackgroundColor={colors.silverGrey}
-                tintColor={colors.appColor}
+                progressBackgroundColor={'#fcfcfc'}
+                tintColor={'#1C37A4'}
               />
             }>
             <View style={styles.botContainer}>

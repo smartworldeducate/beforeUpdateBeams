@@ -1,5 +1,5 @@
+import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
 import MainHeader from '../Components/Headers/MainHeader';
 import Icon from 'react-native-fontawesome-pro';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -10,7 +10,39 @@ import {
 } from 'react-native-responsive-screen';
 import fontFamily from '../Styles/fontFamily';
 import colors from '../Styles/colors';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch, useSelector} from 'react-redux';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {LeaveTypeAction} from '../features/LeaveTypeSlice/LeaveTypeSlice';
+
 const ApplicationType = props => {
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+
+  const leaveTypeHere = useSelector(state => state.LeaveTypeStore);
+
+  console.log('leaveTypeHere', leaveTypeHere?.userData?.leave_types);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const loginData = await AsyncStorage.getItem('loginData');
+        const parsedLoginData = JSON.parse(loginData);
+
+        dispatch(
+          LeaveTypeAction({
+            employee_id: parsedLoginData,
+          }),
+        );
+      } catch (error) {
+        console.error('Error retrieving values from AsyncStorage:', error);
+      }
+    };
+
+    fetchData();
+  }, [dispatch]);
+
   return (
     <View style={{flex: 1}}>
       <View style={{flex: hp(0.8)}}>
@@ -116,7 +148,7 @@ const ApplicationType = props => {
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.8}
-            onPress={() => props.navigation.navigate('AttendenceMarked')}
+            onPress={() => props.navigation.navigate('AttendenceNotMarked')}
             style={styles.typeContainer}>
             <View
               style={{
@@ -319,7 +351,7 @@ export default ApplicationType;
 
 const styles = EStyleSheet.create({
   typeContainer: {
-    height: hp(10.5),
+    height: hp('10.25'),
     shadowColor: '#000',
     shadowOpacity: 0.5,
     shadowRadius: 4,

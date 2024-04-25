@@ -1,5 +1,12 @@
-import {View, Text, ScrollView, TouchableOpacity, FlatList} from 'react-native';
-import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  FlatList,
+  RefreshControl,
+} from 'react-native';
+import React, {useState, useCallback, useEffect} from 'react';
 import MainHeader from '../Components/Headers/MainHeader';
 import LinearGradient from 'react-native-linear-gradient';
 import {
@@ -10,315 +17,326 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import fontFamily from '../Styles/fontFamily';
 import Icon from 'react-native-fontawesome-pro';
 import {height} from 'deprecated-react-native-prop-types/DeprecatedImagePropType';
-
+import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import YearSelectionModal from '../Components/Modal/YearSelectionModal';
+import LineSeprator from '../Components/LineSeprator/LineSeprator';
+import {AttendanceCalanderAction} from '../features/AttendanceCalanderSlice/AttendanceCalanderSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Loader from '../Components/Loader/Loader';
+import colors from '../Styles/colors';
 
 const Attendance = props => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const data = [
-    {
-      id: 22,
-      text: '17-06-2023',
-      number: '17-06-2023',
-      month: 'SUN',
-      backgroundColor: '#E5F7FF',
-      color: '#363636',
-      textInColor: '#363636',
-      isWorking: 'working',
-      workingHours: 'Full Toil',
-      textoutcolor: '#363636',
-      day: 'sun',
-    },
-    {
-      id: 21,
-      text: '08:40:33',
-      number: '08:44:47',
-      month: 'MON',
-      color: '#363636',
-      textInColor: '#363636',
-      workingHours: '09:00',
-      day: 'mon',
-      textoutcolor: '#363636',
-    },
-    {
-      id: 20,
-      text: '08:40:33',
-      number: '08:17:03',
-      month: 'TUE',
-      color: '#363636',
-      textInColor: '#363636',
-      workingHours: '09:00',
-      textoutcolor: '#363636',
-    },
-    {
-      id: 19,
-      text: '--:--:--',
-      number: '--:--:--',
-      month: 'WED',
-      color: '#363636',
-      textInColor: '#363636',
-      workingHours: '09:00',
-      textoutcolor: '#363636',
-    },
-    {
-      id: 18,
-      text: '--:--:--',
-      number: '--:--:--',
-      month: 'TUS',
-      weknd: 'Weekend',
-      backgroundColor: '#FEF7DC',
-      color: '#363636',
-      textInColor: '#363636',
-      workingHours: 'Weekend',
-      textoutcolor: '#363636',
-    },
-    {
-      id: 17,
-      text: '08:40:33',
-      number: '08:17:03',
-      month: 'FRI',
-      backgroundColor: '#FEF7DC',
-      color: '#363636',
-      workingHours: '09:00',
-      textInColor: '#363636',
-      textoutcolor: '#363636',
-    },
-    {
-      id: 16,
-      text: '08:40:33',
-      number: '06:40:33',
-      month: 'SAT',
-      color: '#FF0000',
-      textInColor: '#FF0000',
-      textoutcolor: 'red',
-      workingHours: '09:00',
-      textoutcolor: 'red',
-    },
-    {
-      id: 15,
-      text: '08:40:33',
-      number: '08:17:03',
-      month: 'Sun',
-      color: 'red',
-      textInColor: '#FF0000',
-      textoutcolor: 'red',
-      radiusColor: 'rgba(255, 0, 0, 0.09)',
-      workingHours: '09:00',
-    },
-    {
-      id: 14,
-      text: '08:40:33',
-      number: '05:40:33',
-      month: 'Mon',
-      color: 'red',
-      workingHours: '09:00',
-      textInColor: '#363636',
-      textoutcolor: '#363636',
-    },
-    {
-      id: 13,
-      text: '08:40:33',
-      number: 'Full Toil',
-      month: 'Tue',
-      color: '#363636',
-      radiusColor: 'rgba(255, 0, 0, 0.09)',
-      workingHours: '09:00',
-      textInColor: 'red',
-      textoutcolor: '#363636',
-    },
-    {
-      id: 12,
-      text: '--:--:--',
-      number: '--:--:--',
-      month: 'Tus',
-      color: 'red',
-      workingHours: '09:00',
-      textInColor: '#363636',
-      textoutcolor: '#363636',
-    },
-    {
-      id: 11,
-      text: '08:40:33',
-      number: 'Full Toil',
-      month: 'Oct',
-      color: '#363636',
-      workingHours: '09:00',
-      textoutcolor: '#363636',
-    },
-    {
-      id: 10,
-      text: '--:--:--',
-      number: '--:--:--',
-      month: 'Fri',
-      color: 'red',
-      workingHours: 'Annual',
-      textInColor: '#363636',
-      textoutcolor: '#363636',
-    },
-    {
-      id: 9,
-      text: '--:--:--',
-      number: '--:--:--',
-      month: 'Sat',
-      color: '#363636',
-      workingHours: 'Annual',
-      textInColor: '#363636',
-      textoutcolor: '#363636',
-    },
-    {
-      id: 8,
-      text: '--:--:--',
-      number: '--:--:--',
-      month: 'Sun',
-      color: 'red',
-      workingHours: 'Annual',
-      textInColor: '#363636',
-      textoutcolor: '#363636',
-    },
-    {
-      id: 7,
-      text: '--:--:--',
-      number: '--:--:--',
-      month: 'Mon',
-      color: 'red',
-      workingHours: 'Annual',
-      textInColor: '#363636',
-      textoutcolor: '#363636',
-    },
-    {
-      id: 6,
-      text: '--:--:--',
-      number: '--:--:--',
-      month: 'Tue',
-      color: 'red',
-      workingHours: 'Annual',
-      textInColor: '#363636',
-      textoutcolor: '#363636',
-    },
-  ];
+  const profileHereEmpId = useSelector(
+    state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
+  );
+
+  const leaveHistoryHere = useSelector(state => state.salaryYearsStore);
+
+  const totalYears = leaveHistoryHere?.userData?.total_years;
+
+  const [yearSelectionModal, setyearSelectionModal] = useState(false);
+
+  const lastElement = totalYears[totalYears.length - 1];
+  console.log('lastElement', lastElement);
+
+  const [selectedYear, setSelectedYear] = useState(lastElement);
+
+  const attendanceCalanderHere = useSelector(
+    state => state.AttendanceCalanderStore,
+  );
+
+  const onPressSelectYearModal = () => {
+    console.log('onPressSelectYearModal');
+    setyearSelectionModal(!yearSelectionModal);
+  };
+
   const years = [
-    {id: 1, month: 'Jan'},
-    {id: 2, month: 'Fab'},
-    {id: 3, month: 'Mar'},
-    {id: 4, month: 'Apr'},
-    {id: 5, month: 'May'},
-    {id: 6, month: 'Jun'},
-    {id: 7, month: 'Jul'},
-    {id: 8, month: 'Aug'},
-    {id: 9, month: 'Sep'},
-    {id: 10, month: 'Oct'},
-    {id: 11, month: 'Nov'},
-    {id: 12, month: 'Dec'},
+    {id: '01', month: 'January'},
+    {id: '02', month: 'Fabruary'},
+    {id: '03', month: 'March'},
+    {id: '04', month: 'April'},
+    {id: '05', month: 'May'},
+    {id: '06', month: 'June'},
+    {id: '07', month: 'July'},
+    {id: '08', month: 'August'},
+    {id: '09', month: 'September'},
+    {id: '10', month: 'October'},
+    {id: '11', month: 'November'},
+    {id: '12', month: 'December'},
   ];
 
-  const [clinder, setClinder] = useState(null);
-  const [defalut, setDefalut] = useState(true);
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth() + 1;
+  console.log('currentMonth', currentMonth);
 
-  const clinderHandler = item => {
-    setClinder(item);
-    setDefalut(false);
-    console.log('my item  time out', item);
+  const [initialMonth, setInitialMonth] = useState(currentMonth);
+  console.log('initialMonth', initialMonth);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const loginData = await AsyncStorage.getItem('loginData');
+        const parsedLoginData = JSON.parse(loginData);
+
+        dispatch(
+          AttendanceCalanderAction({
+            employee_id: parsedLoginData,
+            month_year: `${
+              initialMonth != null ? initialMonth : currentMonth
+            }/${selectedYear != null ? selectedYear : lastElement}`,
+          }),
+        );
+      } catch (error) {
+        console.error('Error retrieving values from AsyncStorage:', error);
+      }
+    };
+
+    fetchData();
+  }, [dispatch]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setSelectedYear(null);
+      setInitialMonth(null);
+      return () => {
+        console.log('Attendance Page is unfocused');
+      };
+    }, []),
+  );
+
+  const renderItemYears = ({item, index}) => {
+    return (
+      <>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => onPressYear({item, index})}
+          style={{
+            height: hp('4.25'),
+            width: wp('20'),
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: wp('8'),
+          }}>
+          <View>
+            <Text
+              style={{
+                fontSize: hp('2.75'),
+                fontFamily: fontFamily.ceraMedium,
+                color: 'grey',
+                fontWeight: '500',
+              }}>
+              {item}
+            </Text>
+          </View>
+        </TouchableOpacity>
+        <LineSeprator height={hp('0.1')} backgroundColor={'grey'} />
+      </>
+    );
   };
 
   const renderItem = ({item, index}) => {
-    console.log('index', index);
+    console.log('item', item);
     return (
-      <TouchableOpacity
-        activeOpacity={0.8}
-        onPress={() => clinderHandler(item.id)}
-        // key={i}
-        style={{}}>
+      <LinearGradient
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 0}}
+        colors={
+          initialMonth != null
+            ? initialMonth == item?.id
+              ? ['#1C37A5', '#4D69DC']
+              : [colors.appBackGroundColor, colors.appBackGroundColor]
+            : currentMonth == item?.id
+            ? ['#1C37A5', '#4D69DC']
+            : [colors.appBackGroundColor, colors.appBackGroundColor]
+        }
+        style={{
+          borderRadius: wp('8'),
+          height: hp('4'),
+          width: wp('20'),
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginRight: wp('2'),
+        }}>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => onPressMonth({item})}
+          style={{}}>
+          <Text
+            style={{
+              color: 'gray',
+              fontSize: hp(1.5),
+              color:
+                initialMonth != null
+                  ? initialMonth == item?.id
+                    ? 'white'
+                    : '#1C37A4'
+                  : currentMonth == item?.id
+                  ? 'white'
+                  : '#1C37A4',
+
+              // (item?.id == currentMonth && 'white') ||
+              // (item?.id > currentMonth && 'grey') ||
+              // (item?.id < currentMonth && '#1C37A4'),
+            }}>
+            {item.month}
+          </Text>
+        </TouchableOpacity>
+      </LinearGradient>
+    );
+  };
+
+  const onPressMonth = item => {
+    console.log('item', item?.item?.id);
+    setInitialMonth(item?.item?.id);
+
+    dispatch(
+      AttendanceCalanderAction({
+        employee_id: profileHereEmpId,
+        month_year: `${item?.item?.id}/${
+          selectedYear != null ? selectedYear : lastElement
+        }`,
+      }),
+    );
+  };
+
+  const onPressYear = ({item}) => {
+    setSelectedYear(item);
+    console.log('onPressYear');
+
+    dispatch(
+      AttendanceCalanderAction({
+        employee_id: profileHereEmpId,
+        month_year: `${
+          initialMonth != null ? initialMonth : currentMonth
+        }/${item}`,
+      }),
+    );
+    setyearSelectionModal(!yearSelectionModal);
+  };
+
+  const renderItemAttendance = ({item, index}) => {
+    const today = item?.att_date;
+
+    const [year, month, day] = today.split('-');
+
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          // backgroundColor: index == 0 && '#E5F7FF',
+          backgroundColor:
+            (item?.fin_year_day == 'Sun' ? '#FEF7DC' : null) ||
+            (item?.fin_year_day == 'Sat' ? '#FEF7DC' : null),
+          borderBottomWidth: wp('0.1'),
+          borderBottomColor: 'black',
+        }}>
         <View
           style={{
-            height: hp(4),
-            paddingHorizontal: hp(3),
-            borderRadius: hp(20),
+            flex: 0.1,
+            flexDirection: 'column',
             justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: index == 2 ? '#4D69DC' : ' ',
-            marginHorizontal: hp(0.5),
           }}>
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+          <View style={{flexDirection: 'column', backgroundColor: '#cfcfcf'}}>
             <Text
               style={{
-                color: index == 2 ? '#FFF' : 'gray',
-                fontSize: hp(1.5),
+                color: 'black',
+                textAlign: 'center',
+                fontSize: hp('2'),
+                fontFamily: fontFamily.ceraBold,
               }}>
-              {item.month}
+              {day}
+            </Text>
+            <Text
+              style={{
+                color: 'black',
+                textAlign: 'center',
+                fontSize: hp('1.75'),
+                fontFamily: fontFamily.ceraLight,
+              }}>
+              {item?.fin_year_day}
             </Text>
           </View>
         </View>
-      </TouchableOpacity>
-    );
-  };
-  const renderItemGradient = ({item, index}) => {
-    console.log('index', index);
-    return (
-      <View>
-        {clinder == item.id && (
-          <TouchableOpacity activeOpacity={0.8}>
-            <LinearGradient
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 0}}
-              colors={['#1C37A5', '#4D69DC']}
+        <View
+          style={{
+            flex: 0.3,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text
+            numberOfLines={2}
+            ellipsizeMode={'tail'}
+            style={{
+              color: item?.is_late == 'Y' ? 'red' : 'black',
+              textAlign: 'center',
+              fontSize: item?.holiday_desc == null ? hp('1.75') : hp('1.5'),
+              fontFamily: fontFamily.ceraMedium,
+            }}>
+            {item?.holiday_desc != null
+              ? item?.holiday_desc
+              : item?.emp_in_time != null
+              ? item?.emp_in_time
+              : '--:--:--'}
+          </Text>
+        </View>
+        <View
+          style={{flex: 0.3, justifyContent: 'center', alignItems: 'center'}}>
+          {item?.holiday_desc == null ? (
+            <Text
               style={{
-                height: hp(3.7),
-                paddingHorizontal: hp(3),
-                borderRadius: hp(20),
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: '#4D69DC',
-                marginHorizontal: hp(2),
+                color: 'black',
+                textAlign: 'center',
+                fontSize: hp('1.75'),
+                fontFamily: fontFamily.ceraMedium,
               }}>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text
-                  style={{
-                    color: '#FFF',
-                    fontSize: hp(1.5),
-                    paddingHorizontal: hp(0.5),
-                  }}>
-                  {item.month}
-                </Text>
-              </View>
-            </LinearGradient>
-          </TouchableOpacity>
-        )}
-        {clinder !== item.id && (
-          <TouchableOpacity onPress={() => clinderHandler(item.id)}>
-            <View
-              style={{
-                height: hp(3.7),
-                paddingHorizontal: hp(2.7),
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text
-                  style={{
-                    color: 'gray',
-                    fontSize: hp(1.5),
-                  }}>
-                  {item.month}
-                </Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        )}
+              {item?.emp_out_time != null ? item?.emp_out_time : '--:--:--'}
+            </Text>
+          ) : (
+            <Text></Text>
+          )}
+        </View>
+        <View
+          style={{flex: 0.3, justifyContent: 'center', alignItems: 'center'}}>
+          <Text
+            style={{
+              color: 'black',
+              textAlign: 'center',
+              fontSize: hp('1.75'),
+              fontFamily: fontFamily.ceraMedium,
+            }}>
+            {item?.total_working_hours}
+          </Text>
+        </View>
       </View>
     );
+  };
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+
+    try {
+      const loginData = await AsyncStorage.getItem('loginData');
+      const parsedLoginData = JSON.parse(loginData);
+
+      dispatch(
+        AttendanceCalanderAction({
+          employee_id: parsedLoginData,
+          month_year: `${initialMonth != null ? initialMonth : currentMonth}/${
+            selectedYear != null ? selectedYear : lastElement
+          }`,
+        }),
+      );
+    } catch (error) {
+      console.error('Error retrieving values from AsyncStorage:', error);
+    }
+
+    setRefreshing(false);
   };
 
   return (
@@ -328,34 +346,20 @@ const Attendance = props => {
           text={'Attendance'}
           iconName={'arrow-left'}
           onpressBtn={() => props.navigation.goBack()}
-          yearText={'2023'}
+          yearText={selectedYear != null ? selectedYear : lastElement}
+          onPressRightText={onPressSelectYearModal}
         />
       </View>
-      {defalut == true && (
-        <View
-          style={{height: hp(7), marginTop: hp(2), marginHorizontal: hp(2.5)}}>
-          <FlatList
-            data={years}
-            renderItem={renderItem}
-            horizontal={true}
-            // inverted={true}
-            keyExtractor={item => item.id}
-          />
-        </View>
-      )}
 
-      {defalut !== true && (
-        <View
-          style={{height: hp(7), marginTop: hp(2), marginHorizontal: hp(2.5)}}>
-          <FlatList
-            data={years}
-            renderItem={renderItemGradient}
-            horizontal={true}
-            // inverted={true}
-            keyExtractor={item => item.id}
-          />
-        </View>
-      )}
+      <View
+        style={{height: hp(7), marginTop: hp(2), marginHorizontal: hp(2.5)}}>
+        <FlatList
+          data={years}
+          renderItem={renderItem}
+          horizontal={true}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      </View>
 
       <View
         style={{
@@ -364,7 +368,9 @@ const Attendance = props => {
           alignItems: 'flex-end',
           marginHorizontal: wp('5'),
         }}>
-        <Text style={styles.lateminut}>Late Minutes: 65</Text>
+        <Text style={styles.lateminut}>
+          Late Minutes: {attendanceCalanderHere?.userData?.late_minutes}
+        </Text>
       </View>
       <View
         style={{
@@ -374,7 +380,7 @@ const Attendance = props => {
           marginHorizontal: hp(2.5),
         }}>
         <View
-          style={{justifyContent: 'center', alignItems: 'center', flex: 0.2}}>
+          style={{justifyContent: 'center', alignItems: 'center', flex: 0.1}}>
           <Text style={styles.lateminut}>Date</Text>
         </View>
         <View
@@ -382,7 +388,7 @@ const Attendance = props => {
             justifyContent: 'center',
             alignItems: 'center',
             // backgroundColor: "green",
-            flex: 0.266,
+            flex: 0.3,
           }}>
           <Text style={styles.lateminut}>Time in</Text>
         </View>
@@ -391,252 +397,51 @@ const Attendance = props => {
             justifyContent: 'center',
             alignItems: 'center',
             // backgroundColor: "grey",
-            flex: 0.266,
+            flex: 0.3,
           }}>
           <Text style={styles.lateminut}>Time out</Text>
         </View>
         <View
-          style={{justifyContent: 'center', flex: 0.267, alignItems: 'center'}}>
+          style={{justifyContent: 'center', flex: 0.3, alignItems: 'center'}}>
           <Text style={styles.lateminut}>Working Hr’s</Text>
         </View>
       </View>
 
-      <ScrollView>
-        {data.map((item, i) => {
-          return (
-            <View key={i}>
-              {item.id == 11 ? (
-                <>
-                  <View
-                    style={{
-                      backgroundColor: '#FEF7DC',
-                      marginTop: hp('1'),
-                      height: hp('6'),
-                      marginHorizontal: hp(2.5),
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Text style={{color: '#363636'}}>
-                      Weekend: 10 Saturday & 11 Sunday
-                    </Text>
-                  </View>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={['#2A72B6', '#203B88']}
+            progressBackgroundColor={'#fcfcfc'}
+            tintColor={'#1C37A4'}
+          />
+        }>
+        {attendanceCalanderHere?.isLoading && <Loader></Loader>}
 
-                  <View
-                    style={{
-                      height: hp('0.1'),
-                      marginHorizontal: wp('5'),
-                      marginTop: hp('1'),
-                    }}></View>
-                </>
-              ) : (
-                <View
-                  style={{
-                    height: hp(6.5),
-                    flexDirection: 'row',
-                    backgroundColor: item.backgroundColor,
-                    marginHorizontal: hp(2.5),
-                    borderBottomColor: 'grey',
-                    borderBottomWidth: wp('0.1'),
-                  }}>
-                  <View
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      flex: 0.2,
-                      justifyContent: 'center',
-                    }}>
-                    <View
-                      style={{
-                        height: hp('4'),
-                        width: wp('8'),
-                        backgroundColor: '#EBEBEB',
-                        borderRadius: hp(0.5),
-                      }}>
-                      <Text
-                        style={[
-                          styles.duction,
-                          {
-                            textAlign: 'center',
-                            fontWeight: 'bold',
-                            fontSize: hp('2'),
-                            color: '#363636',
-                          },
-                        ]}>
-                        {item.id}
-                      </Text>
-                      <Text
-                        style={[
-                          styles.duction,
-                          {
-                            textAlign: 'center',
-                            marginTop: hp('-0.25'),
-                            fontSize: hp(1.2),
-                          },
-                        ]}>
-                        {item.month}
-                      </Text>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      // backgroundColor: "green",
+        <FlatList
+          data={attendanceCalanderHere?.userData?.attendance}
+          renderItem={renderItemAttendance}
+          keyExtractor={(item, index) => index.toString()}
+          style={{marginHorizontal: wp('5'), marginVertical: hp('1')}}
+          ListEmptyComponent={
+            <Text
+              style={{
+                color: 'black',
+                fontSize: hp('2'),
+                fontFamily: fontFamily.ceraBold,
+              }}></Text>
+          }
+        />
 
-                      flex: 0.266,
-                    }}>
-                    <Text
-                      style={[
-                        styles.duction,
-                        {
-                          color: item.textInColor,
-                          backgroundColor: item.radiusColor,
-                          paddingVertical: hp('0.75'),
-                          paddingHorizontal: wp('2'),
-                          borderRadius: wp('5'),
-                          borderWidth: item.radiusColor ? wp('0.15') : null,
-                          borderColor: 'red',
-                          marginTop:
-                            item.isWorking == 'working' ? hp('0') : hp('1.25'),
-                        },
-                      ]}>
-                      {item?.text}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.duction,
-                        {
-                          textAlign: 'center',
-                          marginTop: hp('-0.8'),
-                          fontSize: hp('1.5'),
-                        },
-                      ]}>
-                      {item.isWorking}
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      // backgroundColor: item.textoutcolor,
-                      flex: 0.266,
-                    }}>
-                    <Text
-                      style={[
-                        styles.duction,
-                        {
-                          color: item.textoutcolor,
-                        },
-                      ]}>
-                      {item.number}
-                    </Text>
-                  </View>
-
-                  {/* {
-  
-                    item.text == "--:--:--" && item.number == "--:--:--" ? */}
-                  <View
-                    style={{
-                      justifyContent: 'center',
-                      flex: 0.267,
-                      alignItems: 'center',
-                      // backgroundColor:"red"
-                    }}>
-                    {(item.id == 19 && (
-                      <TouchableOpacity
-                        activeOpacity={0.8}
-                        onPress={() =>
-                          props.navigation.navigate('ApplicationType')
-                        }
-                        style={{
-                          backgroundColor: '#1C37A4',
-                          borderRadius: wp('5'),
-                          paddingHorizontal: wp('5'),
-                          paddingVertical: hp('0.75'),
-                        }}>
-                        <Text style={[styles.duction, {color: 'white'}]}>
-                          Apply
-                        </Text>
-                      </TouchableOpacity>
-                    )) ||
-                      (item.id == 12 && (
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}>
-                          <View
-                            style={{
-                              flex: 0.35,
-                              justifyContent: 'center',
-                              alignItems: 'flex-end',
-                            }}>
-                            <Icon
-                              type="light"
-                              name="masks-theater"
-                              // size={hp(10)}
-                              color="#BB8FCE"
-                              iconStyle={{
-                                height: 1.5,
-                                width: 3,
-                              }}
-                            />
-                          </View>
-                          <View style={{flex: 0.65}}>
-                            <Text style={[styles.duction, {textAlign: 'left'}]}>
-                              {' '}
-                              Casual
-                            </Text>
-                          </View>
-                        </View>
-                      )) ||
-                      ((item.id == 10 ||
-                        item.id == 9 ||
-                        item.id == 8 ||
-                        item.id == 7 ||
-                        item.id == 6) && (
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}>
-                          <View
-                            style={{
-                              flex: 0.35,
-                              justifyContent: 'center',
-                              alignItems: 'flex-end',
-                            }}>
-                            <Icon
-                              type="light"
-                              name="island-tropical"
-                              // size={hp(10)}
-                              color="#58D68D"
-                              iconStyle={{
-                                height: 1.5,
-                                width: 3,
-                              }}
-                            />
-                          </View>
-                          <View style={{flex: 0.65}}>
-                            <Text style={[styles.duction, {textAlign: 'left'}]}>
-                              {' '}
-                              Annual
-                            </Text>
-                          </View>
-                        </View>
-                      )) || (
-                        <Text style={styles.duction}>{item.workingHours}</Text>
-                      )}
-                  </View>
-                </View>
-              )}
-            </View>
-          );
-        })}
+        {yearSelectionModal && (
+          <YearSelectionModal
+            onPressOpacity={onPressSelectYearModal}
+            yaersListData={leaveHistoryHere?.userData?.total_years}
+            renderItem={renderItemYears}
+          />
+        )}
       </ScrollView>
-      {/* </View> */}
     </>
   );
 };

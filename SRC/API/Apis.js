@@ -48,4 +48,8 @@ export const APIS = {
 
   WorkFromHomeGetAPI: BASE_URL + 'wfh',
   WorkFromHomePostAPI: BASE_URL + 'wfhinsert',
+
+  AttendaceCalanderAPI: BASE_URL + 'attendance_calendar',
+
+  LeaveTypeAPI: BASE_URL + 'leave_type',
 };

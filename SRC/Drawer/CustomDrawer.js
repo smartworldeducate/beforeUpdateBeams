@@ -155,7 +155,8 @@ const CustomDrawer = ({navigation}) => {
           </TouchableOpacity>
           <View style={[styles.listnameStyle, {marginTop: hp(3)}]}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('HomeScreenDrawer')}>
+              // onPress={() => navigation.navigate('HomeScreenDrawer')}
+              onPress={() => navigation.navigate('HomeScreenTab')}>
               <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
                 <View style={styles.homeleft}>
                   <Text style={styles.textlistStyle}>Home</Text>
