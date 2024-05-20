@@ -13,6 +13,7 @@ import {
   Dimensions,
   ActivityIndicator,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -50,6 +51,14 @@ import ViewMessageDetailModal from '../Components/Modal/ViewMessageDetailModal';
 import {messageDetailAction} from '../features/MessagesSlice/MessageDetailSlice';
 import {messageStatusLikeAction} from '../features/MessagesSlice/MessageStatusLike';
 import {addToArchiveMessagesAction} from '../features/MessagesSlice/ArchiveMessageSlice/AddToArchiveMessageSlice';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {
+  addToFavouriteSearchData,
+  clearViewAllSearchMessagesState,
+  removeFromFavouriteSearchData,
+  searchMessageAction,
+  textColrSearchData,
+} from '../features/MessagesSlice/MessageSearchSlice';
 
 const ViewAllMessages = props => {
   const {height} = Dimensions.get('window');
@@ -57,18 +66,23 @@ const ViewAllMessages = props => {
   const [valuePageOffset, setValuePageOffset] = useState(1);
   console.log('valuePageOffset', valuePageOffset);
 
+  const [searchValuePageOffset, setSearchValuePageOffset] = useState(1);
+  console.log('searchValuePageOffset', searchValuePageOffset);
+
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const profileHereEmpId = useSelector(
     state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
   );
 
-  console.log('profileHereEmpId', typeof profileHereEmpId);
+  // console.log('profileHereEmpId', typeof profileHereEmpId);
 
   const messagesAllStateHere = useSelector(state => state.messagesStore);
   const messagesHere = useSelector(
     state => state.messagesStore?.userDataViewAll,
   );
+
+  // console.log('messagesHere', messagesHere);
 
   const isMessagesDataEmptyOnLoad = useSelector(
     state => state.messagesStore?.isEmptyData,
@@ -78,14 +92,24 @@ const ViewAllMessages = props => {
     state => state.messagesStore?.dataLength,
   );
 
-  console.log('messagesDataLengthHere', messagesDataLengthHere);
+  // console.log('messagesDataLengthHere', messagesDataLengthHere);
 
   // console.log('isMessagesDataEmptyOnLoad', isMessagesDataEmptyOnLoad);
 
   const messageDetailHere = useSelector(state => state.messageDetailStore);
   // console.log('messageDetailHere', messageDetailHere);
 
-  const [loading, setLoading] = useState(false);
+  const searchMessagelHere = useSelector(
+    state => state.searchMessagesStore?.userDataViewAll,
+  );
+  // console.log('searchMessagelHere', searchMessagelHere);
+
+  const searchMessagesDataLengthHere = useSelector(
+    state => state.searchMessagesStore?.dataLength,
+  );
+
+  console.log('searchMessagesDataLengthHere', searchMessagesDataLengthHere);
+
   const [modalVisible, setModalVisible] = useState(false);
   const [messageId, setMessageId] = useState(null);
   const [messageSubject, setMessageSubject] = useState(null);
@@ -95,13 +119,12 @@ const ViewAllMessages = props => {
   const [msgLike, setMsgLike] = useState(null);
 
   useEffect(() => {
-    // console.log('run>>>');
     const fetchData = async () => {
       try {
         const loginData = await AsyncStorage.getItem('loginData');
         const parsedLoginData = JSON.parse(loginData);
-        // console.log('run useEffect');
         dispatch(clearViewAllMessagesState());
+        dispatch(clearViewAllSearchMessagesState());
 
         dispatch(
           messagesAction({
@@ -292,7 +315,15 @@ const ViewAllMessages = props => {
     return (
       <View
         onPress={() => console.log('Item touched')}
-        style={styless.itemContainer}>
+        style={[
+          styless.itemContainer,
+          {
+            backgroundColor:
+              item?.IS_READ_STATUS === 'Y'
+                ? colors.appBackGroundColor
+                : '#e6e6e6',
+          },
+        ]}>
         <View
           style={{
             flex: 0.15,
@@ -394,12 +425,20 @@ const ViewAllMessages = props => {
               }
             }}
             style={[styless.hiddenButton, styless.closeButton]}>
-            <Icon
-              type={item?.IS_FAVROIT != 'Y' ? 'regular' : 'solid'}
-              name={'star'}
-              size={hp(2.5)}
-              color={item?.IS_FAVROIT != 'Y' ? '#86868a' : '#1C37A4'}
-            />
+            {item?.IS_FAVROIT != 'Y' ? (
+              <FontAwesomeIcon
+                icon="fat fa-star"
+                size={hp(2.5)}
+                style={{color: '#86868a'}}
+              />
+            ) : (
+              <Icon
+                type={'solid'}
+                name={'star'}
+                size={hp(2.5)}
+                color={'#f4b543'}
+              />
+            )}
           </TouchableOpacity>
         </View>
       </View>
@@ -408,34 +447,17 @@ const ViewAllMessages = props => {
 
   const renderHiddenItem = ({item, index}, rowMap, rowKey) => (
     <View style={styless.hiddenContainer}>
-      {/* <TouchableOpacity
-        onPress={() => {
-          if (item?.IS_FAVROIT != 'Y') {
-            dispatch(addToFavourite(item?.MSG_ID));
-            onPressStar({item});
-          } else {
-            dispatch(removeFromFavourite(item?.MSG_ID));
-            onPressStarRemove({item});
-            closeRow(rowMap, rowKey);
-          }
-        }}
-        style={[styless.hiddenButton, styless.closeButton]}>
-        <Icon
-          type={item?.IS_FAVROIT != 'Y' ? 'regular' : 'solid'}
-          name={'star'}
-          size={hp(2.5)}
-          color={item?.IS_FAVROIT != 'Y' ? '#86868a' : '#1C37A4'}
-        />
-      </TouchableOpacity> */}
       <TouchableOpacity
         onPress={() => onPressArchive({item})}
-        style={{paddingRight: wp('3'), paddingBottom: hp('3')}}>
-        <Icon
-          type={'light'}
-          name={'box-check'}
-          size={hp(3)}
-          color={'#1C37A4'}
-          // style={{paddingBottom: hp('3')}}
+        style={{
+          paddingRight: wp('6'),
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <FontAwesomeIcon
+          icon="fat fa-box-check"
+          size={hp(3.25)}
+          style={{color: 'white'}}
         />
       </TouchableOpacity>
     </View>
@@ -453,10 +475,7 @@ const ViewAllMessages = props => {
     // console.log('123');
   };
 
-  // console.log('messageId', messageId);
-
   const onPressStar = ({item}) => {
-    // console.log('onPressStar', item);
     dispatch(
       addToFavouriteMessagesAction({
         employee_id: JSON.parse(profileHereEmpId),
@@ -467,7 +486,6 @@ const ViewAllMessages = props => {
   };
 
   const onPressStarRemove = ({item}) => {
-    // console.log('onPressStarRemove', item);
     dispatch(
       addToFavouriteMessagesAction({
         employee_id: JSON.parse(profileHereEmpId),
@@ -478,7 +496,6 @@ const ViewAllMessages = props => {
   };
 
   const onPressArchive = ({item}) => {
-    // console.log('onPressArchive', item);
     dispatch(
       addToArchiveMessagesAction({
         employee_id: JSON.parse(profileHereEmpId),
@@ -492,25 +509,17 @@ const ViewAllMessages = props => {
 
   const textInputRef = useRef(null);
   const [searchText, setSearchText] = useState(null);
-
-  const onPressSearchIcon = () => {
-    // console.log('onPressSearchIcon');
-  };
+  const [isCross, setIsCross] = useState(false);
 
   const onChangeSearchText = val => {
     setSearchText(val);
+    setIsCross(false);
   };
 
-  const onPressPush = id => {
-    dispatch(pushObject(id));
-  };
+  console.log('isCross', isCross);
 
   const loadMoreData = () => {
-    // console.log('loadMoreData');
-    // alert('onEndReach');
     setValuePageOffset(valuePageOffset + 1);
-    // if (!isMessagesDataEmptyOnLoad) {
-    dispatch(increaseOffset());
     dispatch(
       messagesAction({
         employeeId: JSON.parse(profileHereEmpId),
@@ -518,19 +527,24 @@ const ViewAllMessages = props => {
         limit: 25,
       }),
     );
-    // }
   };
 
-  const handleItemPress = item => {
-    // Dispatch updateTextColor action with item details and new color
-    dispatch(updateTextColor({id: item.MSG_ID, color: 'red'}));
+  const loadMoreSearchData = () => {
+    setSearchValuePageOffset(searchValuePageOffset + 1);
+
+    dispatch(
+      searchMessageAction({
+        employeeId: JSON.parse(profileHereEmpId),
+        searchTerm: searchText,
+        ofset: searchValuePageOffset + 1,
+        limit: 25,
+      }),
+    );
   };
 
   const renderFooter = useCallback(() => {
-    console.log('renderFooter');
     return (
       <>
-        {/* {messagesAllStateHere?.isLoading && ( */}
         <View
           style={{
             justifyContent: 'center',
@@ -553,7 +567,6 @@ const ViewAllMessages = props => {
             </View>
           </View>
         </View>
-        {/* )} */}
       </>
     );
   }, []);
@@ -567,22 +580,11 @@ const ViewAllMessages = props => {
     setMessageSubject(null);
   };
 
-  // useEffect(() => {
-  //   dispatch(
-  //     messageDetailAction({
-  //       employee_id: profileHereEmpId,
-  //       messageId: messageId,
-  //     }),
-  //   );
-  // }, [dispatch]);
-
   const onPressMessage = item => {
-    console.log('item', item);
     setModalVisible(true);
-
     dispatch(
       messageDetailAction({
-        employee_id: profileHereEmpId,
+        employee_id: JSON.parse(profileHereEmpId),
         messageId: item,
       }),
     );
@@ -595,10 +597,9 @@ const ViewAllMessages = props => {
   }, [messageDetailHere]);
 
   const onPressThumbUpIcon = () => {
-    // console.log('onPressThumbUpIcon');
     dispatch(
       messageStatusLikeAction({
-        employee_id: profileHereEmpId,
+        employee_id: JSON.parse(profileHereEmpId),
         messageId: messageId,
         ack_status: 'Y',
       }),
@@ -610,10 +611,47 @@ const ViewAllMessages = props => {
     console.log('onPressInElse');
   };
 
+  const onPressSearchIcon = () => {
+    if (
+      searchText?.length == 0 ||
+      searchText?.length == null ||
+      searchText?.length == undefined
+    ) {
+      Alert.alert('Enter value');
+    } else {
+      setIsCross(true);
+
+      dispatch(
+        searchMessageAction({
+          employeeId: JSON.parse(profileHereEmpId),
+          searchTerm: searchText,
+          ofset: searchValuePageOffset,
+          limit: 25,
+        }),
+      );
+      setValuePageOffset(1);
+      dispatch(clearViewAllMessagesState());
+    }
+  };
+
+  const onPressCrossIcon = () => {
+    dispatch(clearViewAllSearchMessagesState());
+    setSearchText(null);
+    setIsCross(false);
+    dispatch(
+      messagesAction({
+        employeeId: JSON.parse(profileHereEmpId),
+        ofset: valuePageOffset,
+        limit: 25,
+      }),
+    );
+    setSearchValuePageOffset(1);
+  };
+
   useFocusEffect(
     React.useCallback(() => {
+      setSearchText(null);
       setValuePageOffset(1);
-      setModalVisible(false);
 
       setModalVisible(false);
       setMessageId(null);
@@ -621,6 +659,9 @@ const ViewAllMessages = props => {
       setMsgDate(null);
       setEmpPhoto(null);
       setMessageSubject(null);
+
+      setIsCross(false);
+      setSearchText(null);
 
       return () => {
         console.log('Page is unfocused');
@@ -633,8 +674,178 @@ const ViewAllMessages = props => {
     console.log('Opened row with key:', rowKey);
   };
 
+  const dataEnd = () => {
+    console.log('dataEnd');
+  };
+
+  const dataEndForFooter = () => {
+    console.log('dataEndForFooter');
+  };
+
+  const renderItemSearchMessages = useCallback(({item, index}) => {
+    return (
+      <View
+        onPress={() => console.log('Item touched')}
+        style={[
+          styless.itemContainer,
+          {
+            backgroundColor:
+              item?.IS_READ_STATUS === 'Y'
+                ? colors.appBackGroundColor
+                : '#e6e6e6',
+          },
+        ]}>
+        <View
+          style={{
+            flex: 0.15,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Image
+            source={{uri: item?.EMP_PHOTO}}
+            style={{
+              height: hp('5.25'),
+              width: wp('10.5'),
+              borderRadius: wp(50),
+            }}
+            resizeMode="cover"
+          />
+        </View>
+
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={() => {
+            if (item?.IS_READ_STATUS != 'Y') {
+              dispatch(
+                messageReadAction({
+                  employee_id: JSON.parse(profileHereEmpId),
+                  messageId: item?.MSG_ID,
+                  read_status: 'Y',
+                }),
+              );
+              dispatch(textColrSearchData(item?.MSG_ID));
+            }
+            setMessageId(item?.MSG_ID);
+            setMessageSubject(item?.MSG_SUBJECT);
+            setEmpPhoto(item?.EMP_PHOTO);
+            setEmpName(item?.EMP_NAME);
+            setMsgDate(item?.ENTRY_DATE);
+            onPressMessage(item?.MSG_ID);
+          }}
+          style={{
+            flex: 0.65,
+            paddingLeft: wp('2.5'),
+            justifyContent: 'center',
+          }}>
+          <Text
+            numberOfLines={1}
+            letterSpacing={'tail'}
+            style={[
+              styles.messageCardEmpName,
+              {color: item?.IS_READ_STATUS === 'Y' ? '#66656A' : '#201F24'},
+            ]}>
+            {`${item?.EMP_NAME}`}
+          </Text>
+          <Text
+            numberOfLines={2}
+            ellipsizeMode={'tail'}
+            style={[
+              styles.msgSubject,
+              {
+                color: item?.IS_READ_STATUS === 'Y' ? '#66656A' : '#201F24',
+                fontFamily:
+                  item?.IS_READ_STATUS === 'Y'
+                    ? fontFamily.ceraMedium
+                    : fontFamily.ceraBold,
+                fontWeight: item?.IS_READ_STATUS === 'Y' ? '500' : 'bold',
+              },
+            ]}>
+            {item?.MSG_SUBJECT}
+          </Text>
+        </TouchableOpacity>
+
+        <View style={{flex: 0.2}}>
+          <View>
+            <Text
+              numberOfLines={1}
+              letterSpacing={'tail'}
+              style={[
+                styles.messageCardDate,
+                {
+                  fontFamily:
+                    item?.IS_READ_STATUS === 'Y'
+                      ? fontFamily.ceraMedium
+                      : fontFamily.ceraBold,
+
+                  fontWeight: item?.IS_READ_STATUS === 'Y' ? '500' : 'bold',
+                },
+              ]}>
+              {item?.ENTRY_DATE}
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            onPress={() => {
+              if (item?.IS_FAVROIT != 'Y') {
+                dispatch(addToFavouriteSearchData(item?.MSG_ID));
+                onPressStar({item});
+              } else {
+                dispatch(removeFromFavouriteSearchData(item?.MSG_ID));
+                onPressStarRemove({item});
+                // closeRow(rowMap, rowKey);
+              }
+            }}
+            style={[styless.hiddenButton, styless.closeButton]}>
+            {item?.IS_FAVROIT != 'Y' ? (
+              <FontAwesomeIcon
+                icon="fat fa-star"
+                size={hp(2.5)}
+                style={{color: '#86868a'}}
+              />
+            ) : (
+              <Icon
+                type={'solid'}
+                name={'star'}
+                size={hp(2.5)}
+                color={'#f4b543'}
+              />
+            )}
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }, []);
+
+  const renderHiddenSearchItem = ({item, index}, rowMap, rowKey) => (
+    <View style={styless.hiddenContainer}>
+      <TouchableOpacity
+        onPress={() => onPressArchive({item})}
+        style={{
+          paddingRight: wp('6'),
+          paddingBottom: hp('3'),
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <FontAwesomeIcon
+          icon="fat fa-box-check"
+          size={hp(3.25)}
+          style={{color: 'white'}}
+        />
+      </TouchableOpacity>
+    </View>
+  );
+
+  const onRowOpenSearchData = rowKey => {
+    console.log('Opened row with key:', rowKey);
+  };
+
   return (
-    <>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: colors.appBackGroundColor,
+        // paddingBottom: hp('19'),
+      }}>
       {/* {messagesAllStateHere?.isLoading && <Loader></Loader>} */}
       <View>
         <>
@@ -699,7 +910,7 @@ const ViewAllMessages = props => {
                   }}>
                   <TextInput
                     ref={textInputRef}
-                    value={searchText}
+                    value={searchText !== null ? searchText : ''}
                     onChangeText={onChangeSearchText}
                     returnKeyType={'done'}
                     iconName={'user'}
@@ -713,23 +924,41 @@ const ViewAllMessages = props => {
                     // autoFocus
                   />
                 </View>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  style={[
-                    styles.searchicon,
-                    {
+                {!isCross ? (
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={{
+                      flex: 0.2,
+                      justifyContent: 'center',
+                      alignItems: 'center',
                       borderTopRightRadius: wp('2'),
                       borderBottomRightRadius: wp('2'),
-                    },
-                  ]}
-                  onPress={onPressSearchIcon}>
-                  <Icon
-                    type="light"
-                    name="magnifying-glass"
-                    size={hp(2.5)}
-                    color="#292D32"
-                  />
-                </TouchableOpacity>
+                    }}
+                    onPress={onPressSearchIcon}>
+                    <FontAwesomeIcon
+                      icon={'fat fa-magnifying-glass'}
+                      size={hp(3)}
+                      style={{color: '#292D32'}}
+                    />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={{
+                      flex: 0.2,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      borderTopRightRadius: wp('2'),
+                      borderBottomRightRadius: wp('2'),
+                    }}
+                    onPress={onPressCrossIcon}>
+                    <FontAwesomeIcon
+                      icon="fat fa-xmark-large"
+                      size={hp(2.2)}
+                      style={{color: '#292D32'}}
+                    />
+                  </TouchableOpacity>
+                )}
               </View>
             </>
           </LinearGradient>
@@ -769,27 +998,66 @@ const ViewAllMessages = props => {
         ListFooterComponent={renderFooter}
       /> */}
 
+      {/* <View style={{marginTop: hp('2')}}></View> */}
+
       <View
         style={{
           paddingHorizontal: wp('5'),
           backgroundColor: colors.appBackGroundColor,
+          marginBottom: hp('11.85'),
         }}>
-        <SwipeListView
-          data={messagesHere}
-          renderItem={renderItem}
-          renderHiddenItem={renderHiddenItem}
-          // leftOpenValue={75}
-          rightOpenValue={-50}
-          previewRowKey={'0'}
-          previewOpenValue={-40}
-          previewOpenDelay={3000}
-          onRowDidOpen={onRowOpen}
-          disableRightSwipe
-          // enableEmptySections={true}
-          onEndReached={loadMoreData}
-          // onEndReachedThreshold={0.5}
-          ListFooterComponent={renderFooter}
-        />
+        {!isCross ? (
+          <SwipeListView
+            data={messagesHere}
+            renderItem={renderItem}
+            renderHiddenItem={renderHiddenItem}
+            // leftOpenValue={75}
+            rightOpenValue={-70}
+            previewRowKey={'0'}
+            previewOpenValue={-40}
+            previewOpenDelay={3000}
+            onRowDidOpen={onRowOpen}
+            disableRightSwipe
+            // enableEmptySections={true}
+            onEndReached={messagesDataLengthHere >= 25 ? loadMoreData : dataEnd}
+            // onEndReachedThreshold={0.5}
+            ListFooterComponent={
+              messagesDataLengthHere >= 25 ? renderFooter : dataEndForFooter
+            }
+            ListEmptyComponent={
+              <Text
+                style={{
+                  fontSize: hp('2'),
+                  color: 'black',
+                  fontFamily: fontFamily.ceraMedium,
+                  textAlign: 'center',
+                }}>
+                You have no message.
+              </Text>
+            }
+            style={{paddingTop: hp('1.5')}}
+          />
+        ) : (
+          <SwipeListView
+            data={searchMessagelHere}
+            renderItem={renderItemSearchMessages}
+            renderHiddenItem={renderHiddenSearchItem}
+            rightOpenValue={-70}
+            previewRowKey={'0'}
+            previewOpenValue={-40}
+            previewOpenDelay={3000}
+            onRowDidOpen={onRowOpenSearchData}
+            disableRightSwipe
+            onEndReached={
+              searchMessagesDataLengthHere >= 25 ? loadMoreSearchData : dataEnd
+            }
+            ListFooterComponent={
+              searchMessagesDataLengthHere >= 25
+                ? renderFooter
+                : dataEndForFooter
+            }
+          />
+        )}
       </View>
 
       {modalVisible && (
@@ -807,7 +1075,7 @@ const ViewAllMessages = props => {
         />
       )}
       {/* </ScrollView> */}
-    </>
+    </View>
   );
 };
 
@@ -905,9 +1173,11 @@ const styless = StyleSheet.create({
   itemContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.appBackGroundColor,
+    // backgroundColor: colors.appBackGroundColor,
     height: hp('8'),
     flexDirection: 'row',
+    borderRadius: wp('1'),
+    marginBottom: hp('0.15'),
   },
   itemText: {
     color: '#333',
@@ -915,11 +1185,11 @@ const styless = StyleSheet.create({
     fontWeight: 'bold',
   },
   hiddenContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    backgroundColor: '#FFF',
-    height: 80,
+    alignItems: 'flex-end',
+    backgroundColor: '#1C37A4',
+    borderRadius: wp('1.5'),
+    height: hp('7.9'),
+    paddingTop: hp('2'),
   },
   hiddenButton: {
     justifyContent: 'center',

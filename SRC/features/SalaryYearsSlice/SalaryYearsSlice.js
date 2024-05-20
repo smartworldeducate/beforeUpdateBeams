@@ -12,7 +12,7 @@ const initialState = {
 export const SalaryYearsAction = createAsyncThunk(
   'SalaryYears',
   async values => {
-    console.log('values', values);
+    console.log('valuesSalaryYears', values);
     return axios
       .post(`${APIS.SalaryYearsAPI}`, values, {
         headers: {

@@ -25,6 +25,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SalaryHistoryWithYearsAction} from '../features/SalaryYearsSlice/SalaryHistoryWithYearsSlice';
 import {SalaryYearsAction} from '../features/SalaryYearsSlice/SalaryYearsSlice';
 import {LeaveHistoryAction} from '../features/LeaveBalanceSlice/LeaveHistorySlice';
+import moment from 'moment';
+import Icon from 'react-native-fontawesome-pro';
 
 import {
   Collapse,
@@ -32,6 +34,7 @@ import {
   CollapseBody,
 } from 'accordion-collapse-react-native';
 import Loader from '../Components/Loader/Loader';
+import LineSeprator from '../Components/LineSeprator/LineSeprator';
 
 const LeaveHistory = props => {
   const dispatch = useDispatch();
@@ -119,7 +122,7 @@ const LeaveHistory = props => {
         colors={
           index == getIndex
             ? ['#1C37A5', '#4D69DC']
-            : ['grey', colors.appBackGroundColor]
+            : [colors.appBackGroundColor, colors.appBackGroundColor]
         }
         style={{
           borderRadius: wp('8'),
@@ -188,64 +191,143 @@ const LeaveHistory = props => {
       <>
         <View style={{}}>
           <TouchableOpacity
-            activeOpacity={0.5}
+            activeOpacity={1}
             onPress={() => toggleCollapse(item)}
-            style={styles.touchableStyle}>
-            <View style={styles.monthHeader}>
+            style={{
+              backgroundColor: 'white',
+              borderRadius: wp('3'),
+              borderBottomLeftRadius:
+                expandedHeader === item ? wp('0') : wp('3'),
+              borderBottomRightRadius:
+                expandedHeader === item ? wp('0') : wp('3'),
+
+              shadowColor: '#000',
+              shadowOpacity: 0.5,
+              shadowRadius: 4,
+              elevation: 1,
+              marginVertical: hp('1'),
+              marginHorizontal: wp('3'),
+              flexDirection: 'row',
+            }}>
+            <View style={{padding: hp('2'), flex: 0.85}}>
               <Text style={styles.monthHeaderText}>
                 {item} {` `}
                 {myYear}
               </Text>
             </View>
+
+            <View
+              style={{
+                flex: 0.15,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Icon
+                type="light"
+                name="arrow-right"
+                size={hp(2.5)}
+                color="#979797"
+              />
+            </View>
           </TouchableOpacity>
           {expandedHeader === item && (
-            <CollapseBody>
+            <CollapseBody style={{marginTop: hp('-2.25')}}>
               {matchedItems.length > 0 ? (
-                <View style={{marginHorizontal: wp('5')}}>
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    borderBottomLeftRadius: wp('3'),
+                    borderBottomRightRadius: wp('3'),
+                    shadowColor: '#000',
+                    shadowOpacity: 0.5,
+                    shadowRadius: 4,
+                    elevation: 1,
+                    marginVertical: hp('1'),
+                    marginHorizontal: wp('3'),
+                  }}>
                   {matchedItems.map((matchedItem, index) => (
-                    <View style={{flexDirection: 'row'}}>
-                      <View style={{flex: 0.7}}>
-                        <Text
-                          key={index}
-                          style={{
-                            color: 'black',
-                            fontFamily: fontFamily.ceraMedium,
-                            fontSize: hp('1.9'),
-                          }}>
-                          {matchedItem?.leave_type_desc}
-                          <Text
-                            style={{
-                              fontFamily: fontFamily.ceraLight,
-                              fontSize: hp('1.75'),
-                            }}>
-                            {' '}
-                            {`(${matchedItem?.status.trim()})`}
-                          </Text>
-                        </Text>
-                      </View>
-
+                    <View>
                       <View
                         style={{
-                          flex: 0.3,
-                          justifyContent: 'center',
-                          alignItems: 'center',
+                          flexDirection: 'row',
+                          marginLeft: wp('3'),
+                          paddingVertical: hp('1.25'),
                         }}>
-                        <Text
-                          numberOfLines={1}
+                        <View style={{flex: 0.7}}>
+                          <Text
+                            key={index}
+                            style={{
+                              color: 'black',
+                              fontFamily: fontFamily.ceraMedium,
+                              fontSize: hp('1.9'),
+                            }}>
+                            {matchedItem?.leave_type_desc}
+                            <Text
+                              style={{
+                                fontFamily: fontFamily.ceraLight,
+                                fontSize: hp('1.75'),
+                              }}>
+                              {' '}
+                              {`(${matchedItem?.status.trim()})`}
+                            </Text>
+                          </Text>
+                        </View>
+
+                        <View
                           style={{
-                            fontFamily: fontFamily.ceraLight,
-                            fontSize: hp('1.85'),
-                            color: 'black',
+                            flex: 0.3,
+                            justifyContent: 'center',
+                            alignItems: 'center',
                           }}>
-                          {matchedItem?.from_date}
-                        </Text>
+                          <Text
+                            numberOfLines={1}
+                            style={{
+                              fontFamily: fontFamily.ceraLight,
+                              fontSize: hp('1.85'),
+                              color: 'black',
+                              paddingBottom:
+                                index == matchedItems.length - 1
+                                  ? hp('0.5')
+                                  : hp('0'),
+                            }}>
+                            {matchedItem?.from_date}
+                          </Text>
+                        </View>
                       </View>
+
+                      {index !== matchedItems.length - 1 && (
+                        <LineSeprator
+                          height={hp('0.15')}
+                          backgroundColor={'#DBDBDB'}
+                        />
+                      )}
                     </View>
                   ))}
                 </View>
               ) : (
-                <View style={{marginHorizontal: wp('5')}}>
-                  <Text style={{color: 'black'}}>There is no data</Text>
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    borderBottomLeftRadius: wp('3'),
+                    borderBottomRightRadius: wp('3'),
+                    shadowColor: '#000',
+                    shadowOpacity: 0.5,
+                    shadowRadius: 4,
+                    elevation: 1,
+                    marginVertical: hp('1'),
+                    marginHorizontal: wp('3'),
+                  }}>
+                  <Text
+                    style={{
+                      color: 'black',
+                      paddingLeft: wp('3'),
+                      fontSize: hp('1.75'),
+                      fontFamily: fontFamily.ceraLight,
+                      textAlign: 'center',
+                      paddingBottom: hp('1.5'),
+                    }}>
+                    No leave record found for this month.
+                  </Text>
                 </View>
               )}
             </CollapseBody>
@@ -306,8 +388,7 @@ const LeaveHistory = props => {
                 />
               </View>
 
-              <View
-                style={{marginVertical: hp('2'), marginHorizontal: wp('-3')}}>
+              <View style={{marginBottom: hp('2'), marginHorizontal: wp('-3')}}>
                 {/* <FlatList
                   data={myData}
                   renderItem={renderItemHistory}
@@ -347,7 +428,7 @@ const styles = EStyleSheet.create({
     padding: hp('2'),
   },
   monthHeaderText: {
-    fontSize: 16,
+    fontSize: hp('2.25'),
     fontWeight: 'bold',
     color: 'black',
   },

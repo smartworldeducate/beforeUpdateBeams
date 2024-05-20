@@ -1,101 +1,65 @@
 import {
   View,
   Text,
-  StyleSheet,
   TextInput,
   TouchableOpacity,
   ScrollView,
   Image,
 } from 'react-native';
+import Ficon from 'react-native-fontawesome-pro';
+
 import React, {useEffect, useState} from 'react';
 import MainHeader from '../Components/Headers/MainHeader';
-import Icon from 'react-native-fontawesome-pro';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import colors from '../Styles/colors';
-import {Div, ThemeProvider, Radio} from 'react-native-magnus';
+
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import SelectDropdown from 'react-native-select-dropdown';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import ViewInput from '../Components/ViewInput';
-import Button from '../Components/Button/Button';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import fontFamily from '../Styles/fontFamily';
-import ViewInputTwo from '../Components/ViewInputTwo';
-import {reporteeHandleFun} from '../features/reportee/createSlice';
-import {getLineMangerHandller} from '../features/lineManager/createSlice';
 import {useDispatch, useSelector} from 'react-redux';
-import Ficon from 'react-native-fontawesome-pro';
+import LineSeprator from '../Components/LineSeprator/LineSeprator';
+import LeaveForwardToModal from '../Components/Modal/LeaveForwardToModal';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import moment from 'moment';
+import ViewInputAnother from '../Components/ViewInputAnother';
+import {OutstationAction} from '../features/LeaveTypeSlice/OutstationSlice';
+import {useFocusEffect} from '@react-navigation/native';
 
 const Outstation = props => {
   const dispatch = useDispatch();
-  const [fullDay, setFullDay] = useState(false);
-  const [halfDay, setHalfDay] = useState(false);
-  const [shortLeave, setShortLeave] = useState(false);
-  const [withPay, setWithPay] = useState(false);
-  const [withOutPay, setWithOutPay] = useState(false);
+  const profileHereEmpId = useSelector(
+    state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
+  );
+
+  const leaveTypeHere = useSelector(state => state.LeaveTypeStore);
+
+  const outstationHere = useSelector(state => state.OutstationStore);
+  console.log('outstationHere', outstationHere);
+
+  // all states hooks starts
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isDatePickerVisibleTwo, setDatePickerVisibilityTwo] = useState(false);
-  const [isDatePickerVisibleThree, setDatePickerVisibilityThree] =
-    useState(false);
-  const [myDate, setMyDate] = useState('');
-  const [dateTwo, setDateTwo] = useState('');
-  const [dateThree, setDateThree] = useState('');
-  const leaveType = ['Anuall Leave', 'Casual Leave', 'Sick Leave'];
-  const [selectValue, setSelectValue] = useState(0);
-  const [selectLeave, setSelectLeave] = useState('');
-  const [reporteeData, setReporteeData] = useState([]);
-  const [empLength, setEmpLength] = useState('');
-  const [mangerData, setMangerData] = useState([]);
-  const reportee = ['Muhammad Qasim Ali Khan', 'Asad Numan Shahid'];
-  const userData = useSelector(state => state.reportee);
+  const [forwardToModal, setForwardToModal] = useState(false);
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
+  const [totalDays, setTotalDays] = useState(null);
+  const [forFromDate, setForFromDate] = useState(null);
+  const [forToDate, setForToDate] = useState(null);
+  const [empLeaveForwardToId, setEmpLeaveForwardToId] = useState(null);
+  const [empLeaveForwardTo, setEmpLeaveForwardTo] = useState(null);
 
-  const lineMangerHandler = async () => {
-    try {
-      const lineMdata = await dispatch(getLineMangerHandller());
-      console.log('line manager data', lineMdata?.payload?.data);
-      if (lineMdata && lineMdata.payload && lineMdata.payload.data) {
-        console.log(
-          'line manager data inside dispatch',
-          lineMdata?.payload?.data,
-        );
-        setMangerData(lineMdata?.payload?.data);
-      }
-      return lineMdata;
-    } catch (error) {
-      console.error('Error in reporteeHandler:', error);
-      throw error;
-    }
-  };
-  const reporteeHandler = async val => {
-    try {
-      // console.log('selected value', val);
-      const reportee = await dispatch(reporteeHandleFun(val));
-      if (reportee && reportee.payload && reportee.payload.data) {
-        console.log('reprtee dada inside dispatch', reportee.payload?.data);
-        setReporteeData(reportee.payload?.data);
-        setEmpLength(reportee.payload?.data?.length);
-      }
-      return reportee;
-    } catch (error) {
-      console.error('Error in reporteeHandler:', error);
-      throw error;
-    }
-  };
+  const [fullDay, setFullDay] = useState(true);
+  const [firstDayValue, setFirstDayValue] = useState('F');
+  const [halfDay, setHalfDay] = useState(false);
+  const [shortLeave, setShortLeave] = useState(false);
+  const [reasonText, setReasonText] = useState('');
 
-  useEffect(() => {
-    setReporteeData(userData);
-    const rd = reporteeHandler({
-      reportingToId: selectValue ? selectValue : '18776',
-    });
-    setReporteeData(rd.payload?.data);
-    const lmd = lineMangerHandler();
-    console.log('linemanger data', lmd.payload?.data);
-    // setMangerData(lmd);
-  }, [selectValue]);
-
-  //one
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
@@ -105,13 +69,21 @@ const Outstation = props => {
   };
 
   const handleDateConfirm = date => {
+    const formattedFromDate = date.toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: '2-digit',
+      year: 'numeric',
+    });
+
     var day = date.getDate();
     var month = date.getMonth() + 1;
     var year = date.getFullYear();
 
-    const dt = day + '-' + month + '-' + year;
+    const fromDateForTotalDays = day + '-' + month + '-' + year;
+    setForFromDate(fromDateForTotalDays);
 
-    setMyDate(dt);
+    setFromDate(formattedFromDate);
     hideDatePicker();
   };
 
@@ -125,55 +97,112 @@ const Outstation = props => {
   };
 
   const handleDateConfirmTwo = date => {
+    const formattedToDate = date.toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: '2-digit',
+      year: 'numeric',
+    });
+
     var day = date.getDate();
     var month = date.getMonth() + 1;
     var year = date.getFullYear();
 
-    const dt = day + '-' + month + '-' + year;
+    const toDateForTotalDays = day + '-' + month + '-' + year;
+    setForToDate(toDateForTotalDays);
 
-    setDateTwo(dt);
+    setToDate(formattedToDate);
     hideDatePickerTwo();
   };
 
-  //third date time picker
-  const showDatePickerThree = () => {
-    setDatePickerVisibilityThree(true);
-  };
-
-  const hideDatePickerThree = () => {
-    setDatePickerVisibilityThree(false);
-  };
-
-  const handleDateConfirmThree = date => {
-    var day = date.getDate();
-    var month = date.getMonth() + 1;
-    var year = date.getFullYear();
-
-    const dt = day + '-' + month + '-' + year;
-
-    setDateThree(dt);
-    hideDatePickerThree();
-  };
-
   useEffect(() => {
-    console.log('myDateInUseEffect', myDate);
-  }, [myDate]);
+    if (forFromDate != null && forToDate != null) {
+      const startMoment = moment(forFromDate, 'DD-MM-YYYY');
+      const endMoment = moment(forToDate, 'DD-MM-YYYY');
 
-  const fulDayHandle = () => {
-    setFullDay(!fullDay);
+      const diffInDays = endMoment.diff(startMoment, 'days') + 1;
+      setTotalDays(diffInDays);
+    }
+  }, [fromDate, toDate]);
+
+  const onPressForwardToModal = () => {
+    setForwardToModal(!forwardToModal);
   };
-  const halfDayHandle = () => {
-    setHalfDay(!halfDay);
+
+  const renderItemForwardTo = ({item, index}) => {
+    return (
+      <>
+        <TouchableOpacity
+          onPress={() => onPressSelectForwardTo({item})}
+          style={{
+            height: hp('5.5'),
+            justifyContent: 'center',
+            marginVertical: hp('0.1'),
+          }}>
+          <Text style={styles.leaveTypesText}>{item?.emp_name}</Text>
+        </TouchableOpacity>
+
+        <LineSeprator height={hp('0.1')} backgroundColor={'black'} />
+      </>
+    );
   };
-  const shortLeaveHandle = () => {
-    setShortLeave(!shortLeave);
+
+  const onPressSelectForwardTo = ({item}) => {
+    setEmpLeaveForwardToId(item?.employee_id);
+    setEmpLeaveForwardTo(item?.emp_name);
+    setForwardToModal(false);
   };
-  const withPayHandle = () => {
-    setWithPay(!withPay);
+
+  const onPressFullDay = () => {
+    setFullDay(true);
+    setHalfDay(false);
+    setShortLeave(false);
+    setFirstDayValue('F');
   };
-  const withOutPayHandle = () => {
-    setWithOutPay(!withOutPay);
+  const onPressHalfDay = () => {
+    setFullDay(false);
+    setHalfDay(true);
+    setShortLeave(false);
+    setFirstDayValue('H');
   };
+  const onPressShortLeave = () => {
+    setFullDay(false);
+    setHalfDay(false);
+    setShortLeave(true);
+    setFirstDayValue('Q');
+  };
+
+  const onChangeReason = val => {
+    setReasonText(val);
+  };
+
+  const onPressSubmitRequest = () => {
+    dispatch(
+      OutstationAction({
+        employee_id: JSON.parse(profileHereEmpId),
+        from_date: moment(fromDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
+        to_date: moment(toDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
+        total_days: totalDays,
+        leave_type: 17,
+
+        op_leave_type: firstDayValue,
+        reason: reasonText,
+        forward_to: empLeaveForwardToId,
+      }),
+    );
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // setIsFocused(true);
+      // Additional logic when screen gains focus
+      return () => {
+        // setIsFocused(false);
+        // Additional logic when screen loses focus
+      };
+    }, []),
+  );
+
   return (
     <ScrollView style={{flex: 1, backgroundColor: '#F5F8FC'}}>
       <DateTimePickerModal
@@ -188,13 +217,6 @@ const Outstation = props => {
         onConfirm={handleDateConfirmTwo}
         onCancel={hideDatePickerTwo}
       />
-      <DateTimePickerModal
-        isVisible={isDatePickerVisibleThree}
-        onConfirm={handleDateConfirmThree}
-        onCancel={hideDatePickerThree}
-        mode="date"
-      />
-
       <MainHeader
         text={'Outstation'}
         iconName={'arrow-left'}
@@ -212,14 +234,13 @@ const Outstation = props => {
           shadowRadius: wp('15'),
           elevation: 10,
         }}>
-        <ViewInput
-          dateText={myDate}
+        <ViewInputAnother
+          dateText={fromDate == null ? 'From Date' : fromDate}
           dateFun={showDatePicker}
-          iconName={'arrow-right'}
+          imgName={'leftarrowdot'}
           rIcon={'angles-up-down'}
           placeholder={'Tue, Jun 27, 2023'}
           placeholderColor={colors.loginTextColor}
-          iconColor={colors.loginIconColor}
           style={styles.textInputCustomStyle}
         />
       </View>
@@ -235,13 +256,12 @@ const Outstation = props => {
           shadowRadius: wp('15'),
           elevation: 10,
         }}>
-        <ViewInput
-          dateText={dateTwo}
+        <ViewInputAnother
+          dateText={toDate == null ? 'To Date' : toDate}
           dateFun={showDatePickerTwo}
-          iconName={'arrow-right'}
+          imgName={'rightarrowdot'}
           placeholder={'Tue, Jun 27, 2023'}
           placeholderColor={colors.loginTextColor}
-          iconColor={colors.loginIconColor}
           style={styles.textInputCustomStyle}
         />
       </View>
@@ -249,7 +269,8 @@ const Outstation = props => {
         style={{
           marginTop: hp(1.5),
           marginHorizontal: wp('5'),
-          backgroundColor: '#FFF2CC',
+          backgroundColor:
+            totalDays == null || totalDays == 0 ? 'white' : '#FFF2CC',
           borderRadius: wp(10),
           shadowColor: '#000',
           shadowOpacity: 1,
@@ -257,133 +278,26 @@ const Outstation = props => {
           elevation: 10,
         }}>
         <ViewInput
-          dateText={dateThree}
-          dateFun={showDatePickerThree}
-          iconName={'calendar-days'}
-          placeholder={'8 Days'}
+          dateText={totalDays}
+          iconName={'fat fa-calendar-days'}
+          placeholder={'Total Days'}
           placeholderColor={colors.loginTextColor}
           iconColor={colors.loginIconColor}
           style={styles.textInputCustomStyle}
         />
       </View>
-      <TouchableOpacity
-        activeOpacity={0.8}
-        style={{
-          flexDirection: 'row',
-          marginTop: hp(1.5),
-          marginHorizontal: wp('5'),
-          backgroundColor: '#FFF2CC',
-          borderRadius: wp(10),
-          shadowColor: '#000',
-          shadowOpacity: 1,
-          shadowRadius: wp('15'),
-          elevation: 10,
-          height: hp('7'),
-          backgroundColor: 'white',
-        }}>
-        <View
-          style={{
-            flex: 0.16,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#FDEB13',
-            borderRadius: wp('10'),
-          }}>
-          <Ficon
-            type="light"
-            name={'calendar-exclamation'}
-            color={'#000'}
-            size={25}
-          />
-        </View>
-        <View
-          style={{
-            flex: 0.7,
-            justifyContent: 'center',
-            paddingLeft: wp(3),
-          }}>
-          <Text style={styles.dropdown1BtnTxt}>Leave Type</Text>
-        </View>
-        <View
-          activeOpacity={0.8}
-          style={{
-            flex: 0.14,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Ficon type="light" name="angles-up-down" color="#cdcdcd" size={16} />
-        </View>
-      </TouchableOpacity>
-      {/* <View
-        style={{
-          marginHorizontal: hp(2.5),
-          marginTop: hp(2),
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={fulDayHandle}
-          style={{flexDirection: 'row'}}>
-          <View>
-            <Radio
-              checked={fullDay}
-              activeColor={'#0EAA24'}
-              inactiveColor={'#CDCDCD'}
-              fontSize={30}
-              onChange={fulDayHandle}
-            />
-          </View>
-          <View style={{marginVertical: hp(0.8), paddingHorizontal: hp(0.5)}}>
-            <Text style={styles.radiotext}>Full Day</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={halfDayHandle}
-          style={{flexDirection: 'row'}}>
-          <View>
-            <Radio
-              checked={halfDay}
-              activeColor={'#0EAA24'}
-              inactiveColor={'#CDCDCD'}
-              fontSize={30}
-              onChange={halfDayHandle}
-            />
-          </View>
-          <View style={{marginVertical: hp(0.8), paddingHorizontal: hp(0.5)}}>
-            <Text style={styles.radiotext}>Half Day</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={shortLeaveHandle}
-          style={{flexDirection: 'row'}}>
-          <View>
-            <Radio
-              checked={shortLeave}
-              activeColor={'#0EAA24'}
-              inactiveColor={'#CDCDCD'}
-              fontSize={30}
-              onChange={shortLeaveHandle}
-            />
-          </View>
-          <View style={{marginVertical: hp(0.8), paddingHorizontal: hp(0.7)}}>
-            <Text style={styles.radiotext}>Short Leave</Text>
-          </View>
-        </TouchableOpacity>
-      </View> */}
 
       <View
         style={{
           flexDirection: 'row',
           marginHorizontal: wp('4'),
           height: hp('4'),
-          marginTop: hp('2.5'),
+          marginTop: hp('3'),
           marginBottom: hp('2'),
         }}>
         <TouchableOpacity
           activeOpacity={0.8}
+          onPress={onPressFullDay}
           style={{flex: 0.333, flexDirection: 'row'}}>
           <View
             style={{
@@ -396,7 +310,7 @@ const Outstation = props => {
                 width: wp(6),
                 height: hp(3),
               }}
-              source={{uri: 'radiogreen'}}
+              source={{uri: fullDay ? 'radiogreen' : 'circelgrey'}}
               resizeMode="cover"
             />
           </View>
@@ -411,6 +325,7 @@ const Outstation = props => {
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.8}
+          onPress={onPressHalfDay}
           style={{
             flex: 0.33,
             flexDirection: 'row',
@@ -426,7 +341,7 @@ const Outstation = props => {
                 width: wp(6),
                 height: hp(3),
               }}
-              source={{uri: 'circelgrey'}}
+              source={{uri: halfDay ? 'radiogreen' : 'circelgrey'}}
               resizeMode="cover"
             />
           </View>
@@ -441,6 +356,7 @@ const Outstation = props => {
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.8}
+          onPress={onPressShortLeave}
           style={{
             flex: 0.334,
             flexDirection: 'row',
@@ -456,7 +372,7 @@ const Outstation = props => {
                 width: wp(6),
                 height: hp(3),
               }}
-              source={{uri: 'circelgrey'}}
+              source={{uri: shortLeave ? 'radiogreen' : 'circelgrey'}}
               resizeMode="cover"
             />
           </View>
@@ -485,6 +401,8 @@ const Outstation = props => {
         <TextInput
           placeholder={'Reason'}
           placeholderTextColor="#363636"
+          multiline={true}
+          onChangeText={onChangeReason}
           style={{
             height: hp(17),
             textAlignVertical: 'top',
@@ -497,76 +415,12 @@ const Outstation = props => {
         />
       </View>
 
-      {/* <View
-        style={{
-          height: hp('7'),
-          marginVertical: hp('2'),
-          marginHorizontal: hp('2.5'),
-          elevation: 8,
-          backgroundColor: 'white',
-          borderRadius: hp(50),
-          flexDirection: 'row',
-        }}>
-        <View
-          style={{
-            flex: 0.19,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#FDEB13',
-            borderRadius: wp('10'),
-          }}>
-          <Ficon type="light" name="user" color="#000" size={25} />
-        </View>
-
-        <View style={{flex: 0.8}}>
-          <SelectDropdown
-            data={mangerData}
-            onSelect={(selectedItem, index) => {
-              setSelectValue(selectedItem?.EMPLOYEE_ID);
-            }}
-            defaultButtonText={'Muhammad Qasim Ali Khan'}
-            renderCustomizedButtonChild={(selectedItem, index) => {
-              return (
-                <Text style={styles.dropdown1BtnTxt}>
-                  {selectedItem ? selectedItem.EMP_NAME : ' Qasim Ali Khan'}
-                </Text>
-              );
-            }}
-            renderCustomizedRowChild={(item, index) => {
-              return (
-                <View style={styles.dropdown1RowChildStyle}>
-                  <Image source={item.image} style={styles.dropdownRowImage} />
-                  <Text style={styles.dropdown1RowTxtStyle}>
-                    {item.EMP_NAME}
-                  </Text>
-                </View>
-              );
-            }}
-            buttonStyle={styles.dropdown1BtnStyle}
-            buttonTextStyle={styles.dropdown1BtnTxtStyle}
-            dropdownStyle={styles.dropdown1DropdownStyle}
-            rowStyle={styles.dropdown1RowStyle}
-            rowTextStyle={styles.dropdown1RowTxtStyle}
-            dropdownIconPosition={'left'}
-          />
-        </View>
-
-        <View
-          style={{
-            flex: 0.23,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginRight: hp(-1),
-          }}>
-          <Ficon type="light" name="angles-up-down" color="#cdcdcd" size={20} />
-        </View>
-      </View> */}
-
       <TouchableOpacity
         activeOpacity={0.8}
+        onPress={onPressForwardToModal}
         style={{
           flexDirection: 'row',
-          marginTop: hp(1.5),
+          marginTop: hp(2),
           marginHorizontal: wp('5'),
           backgroundColor: '#FFF2CC',
           borderRadius: wp(10),
@@ -585,7 +439,11 @@ const Outstation = props => {
             backgroundColor: '#FDEB13',
             borderRadius: wp('10'),
           }}>
-          <Ficon type="light" name={'user-tie'} color={'#000'} size={25} />
+          <FontAwesomeIcon
+            icon={'fat fa-user-tie'}
+            size={hp(3)}
+            style={{color: colors.loginIconColor}}
+          />
         </View>
         <View
           style={{
@@ -597,7 +455,7 @@ const Outstation = props => {
             numberOfLines={1}
             ellipsizeMode={'tail'}
             style={styles.dropdown1BtnTxt}>
-            Muhammad Qasim Ali Khan
+            {empLeaveForwardTo == null ? 'Forward To' : empLeaveForwardTo}
           </Text>
         </View>
         <View
@@ -613,8 +471,9 @@ const Outstation = props => {
 
       <TouchableOpacity
         activeOpacity={0.8}
+        onPress={onPressSubmitRequest}
         style={{
-          marginTop: hp(10),
+          marginTop: hp('15'),
           marginHorizontal: hp(2.75),
           height: hp(6.5),
           justifyContent: 'center',
@@ -624,6 +483,15 @@ const Outstation = props => {
         }}>
         <Text style={styles.submittext}>SUBMIT REQUEST</Text>
       </TouchableOpacity>
+
+      {forwardToModal && (
+        <LeaveForwardToModal
+          topText={'Forward To'}
+          onPressOpacity={onPressForwardToModal}
+          leaveTypesData={leaveTypeHere?.userData?.forward_to}
+          renderItem={renderItemForwardTo}
+        />
+      )}
     </ScrollView>
   );
 };
@@ -672,14 +540,15 @@ const styles = EStyleSheet.create({
     shadowRadius: wp('10'),
     elevation: 10,
   },
+
   textInputCustomStyle: {
-    // fontSize: '0.7rem',
-    // height: hp('6'),
-    // letterSpacing: -0.05,
-    // paddingLeft: wp('3'),
-    // color: '#363636',
-    // fontWait: '500',
-    // fontFamily: fontFamily.ceraMedium,
+    fontSize: '0.7rem',
+    height: hp('6'),
+    letterSpacing: -0.05,
+    paddingLeft: wp('2'),
+    color: '#363636',
+    fontWait: '500',
+    fontFamily: fontFamily.ceraMedium,
   },
   radiotext: {
     fontSize: '0.62rem',
@@ -694,6 +563,7 @@ const styles = EStyleSheet.create({
     // color:'#363636',
     fontWait: '500',
   },
+
   dropdown1BtnStyle: {
     width: wp('50'),
     height: hp(7),
@@ -726,5 +596,12 @@ const styles = EStyleSheet.create({
     fontSize: '0.6rem',
     fontWaight: 500,
     fontFamily: fontFamily.ceraMedium,
+  },
+  leaveTypesText: {
+    color: '#343434',
+    fontSize: '0.65rem',
+    fontFamily: fontFamily.ceraMedium,
+    fontStyle: 'normal',
+    fontWeight: '500',
   },
 });

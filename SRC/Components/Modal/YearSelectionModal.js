@@ -38,45 +38,37 @@ const YearSelectionModal = ({
         <TouchableOpacity
           onPress={onPressOpacity}
           style={{
-            flex: 0.35,
+            flex: 0.6,
           }}></TouchableOpacity>
         <View
           style={{
-            flex: 0.3,
-            marginHorizontal: wp('8'),
-            borderRadius: wp('1'),
+            flex: 0.4,
+            borderTopLeftRadius: wp('7'),
+            borderTopRightRadius: wp('7'),
             paddingHorizontal: wp('4'),
             backgroundColor: colors.whiteColor,
-            justifyContent: 'center',
-            alignItems: 'center',
           }}>
-          <Text
-            style={{
-              fontSize: hp('2.75'),
-              fontFamily: fontFamily.ceraMedium,
-              color: 'black',
-              fontWeight: '500',
-              paddingVertical: hp(1),
-            }}>
-            Select Year
-          </Text>
-
-          <View
-            style={{
-              flex: 1,
-            }}>
+          <View style={{margin: hp(2)}}>
+            <Text
+              style={{
+                fontSize: hp('2.85'),
+                fontFamily: fontFamily.ceraMedium,
+                color: 'black',
+                fontWeight: '500',
+                paddingVertical: hp(1),
+              }}>
+              Select Year
+            </Text>
+          </View>
+          <View style={{}}>
             <FlatList
               data={yaersListData}
               renderItem={renderItem}
               keyExtractor={keyExtractor}
+              style={{marginHorizontal: hp('2')}}
             />
           </View>
         </View>
-        <TouchableOpacity
-          onPress={onPressOpacity}
-          style={{
-            flex: 0.35,
-          }}></TouchableOpacity>
       </View>
     </Modal>
   );

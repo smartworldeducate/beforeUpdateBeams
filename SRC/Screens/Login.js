@@ -7,7 +7,9 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import {loginUserHandle} from '../features/register/googleLoginSlice';
-import Toast from 'react-native-toast-message';
+
+import Toast from 'react-native-simple-toast';
+
 import {
   SafeAreaView,
   StatusBar,
@@ -16,19 +18,14 @@ import {
   View,
   Image,
   Text,
-  Switch,
   TouchableOpacity,
   Platform,
   KeyboardAvoidingView,
-  ActivityIndicator,
-  ToastAndroid,
-  Alert,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import Button from '../Components/Button/Button';
 import TextInputCustom from '../Components/TextInput/TextInput';
 import colors from '../Styles/colors';
 import {
@@ -38,6 +35,7 @@ import {
 } from '@react-navigation/native';
 import {StackActions} from '@react-navigation/native';
 import {LoginAction} from '../features/loginSlice/loginSlice';
+import fontFamily from '../Styles/fontFamily';
 const Login = props => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -47,54 +45,8 @@ const Login = props => {
       console.log('Clear');
     }
   };
-  const [employeeId, setEmployeeId] = useState();
-  const [employeePassword, setEmployeePassword] = useState();
-  const [loaduiung, setLoding] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const [animodal, setAnimodal] = useState(false);
-  const [animation, setAnimation] = useState(true);
-  const [data, setData] = useState(null);
-
-  //set data in local storage///
-
-  async function saveData(value) {
-    const jsonString = JSON.stringify(value);
-    try {
-      await AsyncStorage.setItem('loginData', jsonString);
-      console.log('Data saved successfully.');
-    } catch (error) {
-      console.error('Error saving data:', error);
-    }
-  }
-  const handleLogin = async () => {
-    if (employeeId && employeePassword !== '') {
-      var login_data = await dispatch(
-        loginUserHandle({employeeId: employeeId, password: employeePassword}),
-      );
-      const loginObj = Object.assign({}, ...login_data.payload);
-      saveData(loginObj);
-      console.log('login data on login screen', loginObj);
-      setData(loginObj);
-      setLoding(true);
-      if (login_data !== '') {
-        // console.log("login page data",login_data)
-        props.navigation.dispatch(StackActions.replace('HomeScreen'));
-        // setLoding(false);
-      } else {
-        ToastAndroid.showWithGravity(
-          'something went wrong',
-          ToastAndroid.LONG,
-          ToastAndroid.CENTER,
-        );
-      }
-    } else {
-      ToastAndroid.showWithGravity(
-        'enter valid username and password',
-        ToastAndroid.LONG,
-        ToastAndroid.CENTER,
-      );
-    }
-  };
+  const [employeeId, setEmployeeId] = useState(null);
+  const [employeePassword, setEmployeePassword] = useState(null);
 
   //249159142983-3r1307q40tb9de7qctsm4ckk244etg9h.apps.googleusercontent.com
   useEffect(() => {
@@ -139,13 +91,6 @@ const Login = props => {
     setEmployeePassword(val);
   };
 
-  const [isEnabled, setIsEnabled] = useState(true);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-
-  const onPressLogin = () => {
-    handleNavigate('HomeScreen');
-  };
-
   const [showPassword, setShowPassword] = useState(true);
   const [eyeType, setEyeType] = useState(false);
   const onPressShowPassword = () => {
@@ -154,12 +99,10 @@ const Login = props => {
   };
 
   const loginHere = useSelector(state => state.loginStore);
+  console.log('loginHere', loginHere);
   const successHere = useSelector(state => state.loginStore.success);
 
-  console.log('successHere', successHere);
-
   const onPressLoginBtn = () => {
-    console.log('onPressLoginBtn');
     dispatch(LoginAction({employeeId: employeeId, password: employeePassword}));
   };
 
@@ -187,26 +130,6 @@ const Login = props => {
     fetchData();
   }, [successHere]);
 
-  // useEffect(() => {
-  //   console.log('HomeScreen');
-  //   AsyncStorage.getItem('loginData')
-  //     .then(loginData => {
-  //       // console.log('loginData', loginData);
-  //       const parsedLoginData = JSON.parse(loginData);
-  //       console.log('parsedLoginData', parsedLoginData);
-
-  //       dispatch(
-  //         LoginAction({employeeId: employeeId, password: employeePassword}),
-  //       );
-  //       if (successHere) {
-  //         props.navigation.dispatch(StackActions.replace('HomeScreen'));
-  //       }
-  //     })
-  //     .catch(error => {
-  //       console.error('Error retrieving loginData from AsyncStorage:', error);
-  //     });
-  // }, [dispatch]);
-
   return (
     <SafeAreaView
       style={{
@@ -216,20 +139,6 @@ const Login = props => {
       }}>
       <StatusBar barStyle={'default'} backgroundColor={colors.loginIconColor} />
 
-      {/* {animation && (
-        <View>
-          <Modal isVisible={animodal}>
-            <View style={styles.modalView}>
-              <View style={{}}>
-                <ActivityIndicator animating={animation} size={'large'} />
-              </View>
-              <View style={{}}>
-                <Text>please wait</Text>
-              </View>
-            </View>
-          </Modal>
-        </View>
-      )} */}
       <ImageBackground
         source={{uri: 'appbg'}}
         style={{flex: 1}}
@@ -291,46 +200,6 @@ const Login = props => {
                   style={styles.textInputCustomStyle}
                 />
               </View>
-
-              {/* <View style={{flexDirection: 'row', marginVertical: hp('1')}}>
-                <View
-                  style={{
-                    flex: 0.2,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    alignItems: 'flex-start',
-                  }}>
-                  <Switch
-                    trackColor={{false: '#767577', true: '#061D7A'}}
-                    thumbColor={isEnabled ? '#FFFFFF' : '#f4f3f4'}
-                    ios_backgroundColor="#3e3e3e"
-                    onValueChange={toggleSwitch}
-                    value={isEnabled}
-                  />
-                </View>
-                <View
-                  style={{
-                    flex: 0.4,
-
-                    justifyContent: 'center',
-                  }}>
-                  <Text style={{fontSize: hp('1.75'), color: '#120D26'}}>
-                    Remember Me
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  activeOpacity={0.6}
-                  onPress={() => navigation.navigate('ForgotPassword')}
-                  style={{
-                    flex: 0.4,
-                    justifyContent: 'center',
-                    alignItems: 'flex-end',
-                  }}>
-                  <Text style={{fontSize: hp('1.75'), color: '#120D26'}}>
-                    Forgot Password?
-                  </Text>
-                </TouchableOpacity>
-              </View> */}
             </View>
             <View
               style={{
@@ -340,7 +209,6 @@ const Login = props => {
               }}>
               <TouchableOpacity
                 activeOpacity={0.8}
-                // onPress={handleLogin}
                 onPress={onPressLoginBtn}
                 style={styles.loginbtn}>
                 <Text style={{color: '#061D7A'}}>LOGIN</Text>

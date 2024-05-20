@@ -45,8 +45,7 @@ const Objectives = ({}) => {
           dispatch(
             ObjectivesAction({
               employee_id: parsedLoginData,
-              // fin_year_id: lastYear?.FIN_YEAR_ID,
-              fin_year_id: 38,
+              fin_year_id: parseInt(lastYear?.FIN_YEAR_ID),
               branch_id: userBranchId,
             }),
           );
@@ -100,11 +99,11 @@ const Objectives = ({}) => {
     });
   };
 
-  const type1Data = objectivesHere?.userData.filter(
-    item => item.TARGET === '1',
+  const type1Data = objectivesHere?.userData?.filter(
+    item => item?.TARGET === '1',
   );
-  const type2Data = objectivesHere?.userData.filter(
-    item => item.TARGET === '2',
+  const type2Data = objectivesHere?.userData?.filter(
+    item => item?.TARGET === '2',
   );
 
   const renderItemObjectives = ({item, index}) => {

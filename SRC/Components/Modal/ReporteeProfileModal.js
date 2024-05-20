@@ -50,7 +50,7 @@ const ReporteeProfileModal = ({
   const [reporteeChilBSSModal, setReporteeChildBSSModal] = useState(false);
 
   const onPressReporteeMovement = () => {
-    console.log('onPressReporteeMovement');
+    // console.log('onPressReporteeMovement');
     setReporteeMovementModal(true);
   };
 
@@ -94,7 +94,7 @@ const ReporteeProfileModal = ({
                 <Icon
                   type="light"
                   name={'arrow-left'}
-                  size={hp(2.5)}
+                  size={hp(3)}
                   color="#fff"
                 />
               </TouchableOpacity>
@@ -130,6 +130,26 @@ const ReporteeProfileModal = ({
                 }}
                 resizeMode={'contain'}
               />
+            </View>
+
+            <View
+              style={{
+                position: 'absolute',
+                zIndex: 1,
+                marginTop: hp('15'),
+                left: wp('60'),
+                height: hp('1.5'),
+                width: wp('3'),
+                borderRadius: wp('50'),
+                backgroundColor:
+                  reporteeProfileHere?.userData?.profile_result
+                    ?.CONFIRMATION_DATE == null ||
+                  reporteeProfileHere?.userData?.profile_result
+                    ?.CONFIRMATION_DATE == ''
+                    ? 'orange'
+                    : '#10B727',
+              }}>
+              <Text></Text>
             </View>
 
             <View

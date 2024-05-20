@@ -26,7 +26,12 @@ const EmpCardPart = ({
             justifyContent: 'center',
             alignItems: 'flex-start',
           }}>
-          <Icon type="light" name="circle-check" size={hp(3)} color="green" />
+          <Image
+            source={{uri: 'present'}}
+            style={{height: hp('3'), width: wp('6')}}
+            resizeMode={'contain'}
+          />
+          {/* <Icon type="light" name="circle-check" size={hp(3)} color="green" /> */}
         </View>
         <View style={{flex: 0.7, paddingLeft: wp('1')}}>
           <Text
@@ -47,7 +52,12 @@ const EmpCardPart = ({
             justifyContent: 'center',
             alignItems: 'flex-start',
           }}>
-          <Icon type="light" name="wrench" size={hp(3)} color="green" />
+          <Image
+            source={{uri: 'service'}}
+            style={{height: hp('3'), width: wp('6')}}
+            resizeMode={'contain'}
+          />
+          {/* <Icon type="light" name="wrench" size={hp(3)} color="green" /> */}
         </View>
         <View style={{flex: 0.7, paddingLeft: wp('1')}}>
           <Text
@@ -67,7 +77,12 @@ const EmpCardPart = ({
             justifyContent: 'center',
             alignItems: 'flex-start',
           }}>
-          <Check name="checkcircleo" size={hp(3)} color="#CD6155" />
+          <Image
+            source={{uri: 'age'}}
+            style={{height: hp('3'), width: wp('6')}}
+            resizeMode={'contain'}
+          />
+          {/* <Check name="checkcircleo" size={hp(3)} color="#CD6155" /> */}
         </View>
         <View style={{flex: 0.7, paddingLeft: wp('1')}}>
           <Text

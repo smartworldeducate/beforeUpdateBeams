@@ -17,6 +17,8 @@ export const APIS = {
   ObjectivesYearsAPI: BASE_URL + 'apprasal_years',
   ObjectivesAPI: BASE_URL + 'objective',
 
+  DevelopmentAreaAPI: BASE_URL + 'development_area',
+
   TimeLineAPI: BASE_URL + 'gettimeline',
   ReporteesAPI: BASE_URL + 'getReportee',
 
@@ -29,6 +31,7 @@ export const APIS = {
 
   SearchEmployeeAPI: BASE_URL + 'searchByName',
 
+  SearchMessagesAPI: BASE_URL + 'search_message',
   MessagesAPI: BASE_URL + 'selectMesage',
   MessagesDetailAPI: BASE_URL + 'selectMesageDetail',
 
@@ -51,5 +54,19 @@ export const APIS = {
 
   AttendaceCalanderAPI: BASE_URL + 'attendance_calendar',
 
-  LeaveTypeAPI: BASE_URL + 'leave_type',
+  LeaveTypeAPI: BASE_URL + 'leave_type_new',
+  ApplyLeaveAPI: BASE_URL + 'apply_leave',
+
+  OutstationAPI: BASE_URL + 'apply_outstation_send',
+
+  AttendenceNotMarkedAPI: BASE_URL + 'apply_attendance_not_marked',
+
+  LateArrivalAPI: BASE_URL + 'apply_late_arrival',
+
+  EarlyLeavingAPI: BASE_URL + 'apply_early_leaving',
+
+  ToilAPI: BASE_URL + 'apply_toil_application',
+
+  QRScanAPI: BASE_URL + 'qr_scan',
+  QRScannerListAPI: BASE_URL + 'qr_scanner_list',
 };

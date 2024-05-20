@@ -13,7 +13,6 @@ const ChildsInBss = ({leftText, rightText}) => {
     <View
       style={{
         flexDirection: 'row',
-        // paddingVertical: wp('0.5'),
       }}>
       <View style={{flex: 0.35}}>
         <Text numberOfLines={1} ellipsizeMode={'tail'} style={styles.leftText}>

@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import LottieView from 'lottie-react-native';
 import {
@@ -24,6 +24,7 @@ import {
 import {StackActions} from '@react-navigation/native';
 import fontFamily from '../Styles/fontFamily';
 import Ficon from 'react-native-fontawesome-pro';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Skip1 = () => {
   const swiperRef = useRef(null);
@@ -36,7 +37,10 @@ const Skip1 = () => {
     }
   };
 
+  const [isSkip, setIsSkip] = useState('skipped');
+
   const onPressLogin = () => {
+    AsyncStorage.setItem('skipStartupScreen', isSkip);
     navigation.dispatch(StackActions.replace('Login'));
   };
 
@@ -75,8 +79,14 @@ const Skip1 = () => {
                   style={{
                     flexDirection: 'row',
                     paddingVertical: hp('1'),
+                    marginTop: hp('2'),
+                    marginRight: wp('2'),
                   }}>
-                  <View style={{flex: 0.5, alignItems: 'flex-end'}}>
+                  <View
+                    style={{
+                      flex: 0.5,
+                      alignItems: 'flex-end',
+                    }}>
                     <Text
                       style={{
                         fontSize: hp(2),
@@ -157,6 +167,8 @@ const Skip1 = () => {
                   style={{
                     flexDirection: 'row',
                     paddingVertical: hp('1'),
+                    marginTop: hp('2'),
+                    marginRight: wp('2'),
                   }}>
                   <View style={{flex: 0.5, alignItems: 'flex-end'}}>
                     <Text
@@ -241,6 +253,8 @@ const Skip1 = () => {
                   style={{
                     flexDirection: 'row',
                     paddingVertical: hp('1'),
+                    marginTop: hp('2'),
+                    marginRight: wp('2'),
                   }}>
                   <View style={{flex: 0.5, alignItems: 'flex-end'}}>
                     <Text

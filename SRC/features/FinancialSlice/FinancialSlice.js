@@ -10,7 +10,7 @@ const initialState = {
 };
 
 export const FinancialAction = createAsyncThunk('Financial', async values => {
-  console.log('values', values);
+  console.log('valuesFinancial', values);
   return axios
     .post(`${APIS.FinancialAPI}`, values, {
       headers: {

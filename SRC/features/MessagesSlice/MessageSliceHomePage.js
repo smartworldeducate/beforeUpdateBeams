@@ -33,6 +33,18 @@ const MessagesSliceHomePage = createSlice({
       //   state.policiesListAll = null;
       //   state.message = '';
     },
+
+    textColr: (state, action) => {
+      console.log('payLoadMsgId', action.payload);
+      const list = state.userData;
+      // console.log('list', list);
+      const indx = list?.findIndex(item => item?.MSG_ID == action?.payload);
+
+      if (indx !== -1) {
+        console.log('payLoadValue', action.payload);
+        state.userData[indx].IS_READ_STATUS = 'Y';
+      }
+    },
   },
   extraReducers: builder => {
     builder.addCase(messagesActionHomePage.pending, state => {
@@ -50,6 +62,6 @@ const MessagesSliceHomePage = createSlice({
   },
 });
 
-export const {clearAllState} = MessagesSliceHomePage.actions;
+export const {clearAllState, textColr} = MessagesSliceHomePage.actions;
 
 export default MessagesSliceHomePage.reducer;

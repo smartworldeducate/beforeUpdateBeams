@@ -21,16 +21,16 @@ import {
   CommonActions,
   useFocusEffect,
 } from '@react-navigation/native';
-import colors from '../../Styles/colors';
-import Card from '../Card';
+
 import fontFamily from '../../Styles/fontFamily';
 import fontSize from '../../Styles/fontSize';
 import LinearGradient from 'react-native-linear-gradient';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import Swiper from 'react-native-swiper';
+
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
 const HeaderTop = ({
-  onPressAllReportiess,
-  onPressReporteesProfile,
   onPressUserImg,
   userImg,
   welcomeText,
@@ -38,55 +38,12 @@ const HeaderTop = ({
   onPressIcon,
 }) => {
   const navigation = useNavigation();
-
   const profileHere = useSelector(state => state.profileStore);
-  // console.log('logInHTop>', profileHere?.userData);
 
-  const slicedData = profileHere?.userData?.reporting_result?.data.slice(0, 7);
-
-  // console.log('slicedData', profileHere?.userData?.reporting_result);
-  const renderItem = ({item, index}) => {
-    return (
-      <TouchableOpacity
-        onPress={index === 6 ? onPressAllReportiess : onPressReporteesProfile}
-        activeOpacity={0.6}
-        style={{
-          paddingLeft: index == 0 ? wp('2') : wp('0'),
-          justifyContent: 'center',
-        }}>
-        <Image
-          source={{uri: item?.EMP_PHOTO}}
-          style={{
-            height: hp('4.5'),
-            width: wp('9'),
-            borderRadius: wp('10'),
-            marginLeft: wp('-1.5'),
-            backgroundColor: index === 3 && 'rgba(0,0,0,0.5)',
-          }}
-          resizeMode={'cover'}
-        />
-
-        {index === 6 && (
-          <View
-            style={{
-              position: 'absolute',
-              // top: '0%',
-              left: '-20%',
-              // transform: [{translateX: wp('-2.8')}, {translateY: hp('-1.4')}],
-              backgroundColor: 'rgba(0,0,0,0.5)',
-              // backgroundColor: 'red',
-              borderRadius: wp('10'),
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: hp('4.5'),
-              width: wp('9'),
-            }}>
-            <Icon type="regular" name="plus" size={hp('2')} color="#fff" />
-          </View>
-        )}
-      </TouchableOpacity>
-    );
-  };
+  // console.log(
+  //   'lengthEvents',
+  //   profileHere?.userData?.reporting_result?.events?.length,
+  // );
 
   return (
     <>
@@ -98,9 +55,12 @@ const HeaderTop = ({
           styles.mainHeader,
           {
             height:
-              profileHere?.userData?.reporting_result?.reportee_length > 0
-                ? hp('23')
-                : hp('20'),
+              // profileHere?.userData?.reporting_result?.reportee_length > 0
+              //   ? hp('24')
+              // :
+              profileHere?.userData?.reporting_result?.events?.length > 0
+                ? hp('21.7')
+                : hp('19'),
           },
         ]}>
         <View style={styles.headerChild}>
@@ -113,15 +73,38 @@ const HeaderTop = ({
               alignItems: 'center',
             }}>
             <Image
-              style={{width: wp(12), height: hp(6), borderRadius: hp(5)}}
+              style={{width: wp(13), height: hp(6.5), borderRadius: hp(5)}}
               source={{uri: userImg}}
               resizeMode="cover"
             />
           </TouchableOpacity>
           <View
             style={{
-              flex: 0.55,
+              flex: 0.02,
+              flexDirection: 'column',
+              marginLeft: wp('-2.25'),
+            }}>
+            <View style={{flex: 0.7}}></View>
+            <View
+              style={{
+                backgroundColor:
+                  profileHere?.userData?.profile_result?.CONFIRMATION_DATE ==
+                    null ||
+                  profileHere?.userData?.profile_result?.CONFIRMATION_DATE == ''
+                    ? 'orange'
+                    : '#10B727',
+                flex: 0.2,
+                borderRadius: wp('50'),
+                height: hp('2'),
+                width: wp('2.5'),
+              }}></View>
+            <View style={{flex: 0.1}}></View>
+          </View>
+          <View
+            style={{
+              flex: 0.48,
               justifyContent: 'center',
+              paddingLeft: wp('2.5'),
             }}>
             <Text style={styles.welCome}>{welcomeText}</Text>
             <Text
@@ -131,26 +114,34 @@ const HeaderTop = ({
               {userName}
             </Text>
           </View>
+
+          <View style={{flex: 0.07}}></View>
+
           <TouchableOpacity
-            onPress={() => handleNavigate('Notification')}
+            activeOpacity={0.8}
             style={{
-              flex: 0.15,
+              flex: 0.14,
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Icon type="light" name="bell" size={hp(3)} color="#fff" />
+            <FontAwesomeIcon
+              icon="fat fa-bell"
+              size={hp(3.3)}
+              style={{color: 'white'}}
+            />
           </TouchableOpacity>
           <TouchableOpacity
+            activeOpacity={0.7}
             onPress={onPressIcon}
             style={{
-              flex: 0.15,
+              flex: 0.14,
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Image
-              style={styles.menustyle}
-              source={{uri: 'menuicon'}}
-              resizeMode="cover"
+            <FontAwesomeIcon
+              icon="fat fa-bars-staggered"
+              size={hp(3)}
+              style={{color: 'white'}}
             />
           </TouchableOpacity>
         </View>
@@ -168,7 +159,7 @@ const HeaderTop = ({
             shadowRadius: 4,
             elevation: 4,
             flexDirection: 'row',
-            height: hp('5'),
+            height: hp('5.5'),
           }}>
           <View
             style={{
@@ -196,28 +187,77 @@ const HeaderTop = ({
               borderTopRightRadius: hp(1.5),
               borderBottomRightRadius: hp(1.5),
             }}>
-            <Icon
-              type="light"
-              name="magnifying-glass"
+            <FontAwesomeIcon
+              icon="fat fa-magnifying-glass"
               size={hp(3)}
-              color="#292D32"
+              style={{color: '#292D32'}}
             />
           </View>
         </TouchableOpacity>
 
         <View
           style={{
-            marginHorizontal: wp('10'),
+            marginHorizontal: wp('5'),
             marginTop: hp('2'),
             justifyContent: 'center',
             alignItems: 'center',
+            height: hp('4'),
           }}>
-          <FlatList
-            data={slicedData}
-            renderItem={renderItem}
-            keyExtractor={(item, index) => index.toString()}
-            horizontal={true}
-          />
+          <Swiper
+            style={{}}
+            autoplay={
+              profileHere?.userData?.reporting_result?.events?.length > 1
+                ? true
+                : false
+            }
+            autoplayTimeout={3}
+            showsButtons={false}
+            showsPagination={false}
+            horizontal={false}>
+            {profileHere?.userData?.reporting_result?.events?.map(
+              (item, index) => (
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                  }}>
+                  <FontAwesomeIcon
+                    icon={item?.first_icon}
+                    size={hp(2)}
+                    style={{color: item?.first_icon_color}}
+                  />
+                  <Text>{` `}</Text>
+                  <Text key={index} style={styles.slideText}>
+                    {item?.message}
+                  </Text>
+                  <Text>{` `}</Text>
+                  <FontAwesomeIcon
+                    icon={item?.last_icon}
+                    size={hp(2)}
+                    style={{color: item?.last_icon_color}}
+                  />
+                </View>
+              ),
+            )}
+
+            {/* <> */}
+            {/* <Text style={styles.slideText}>
+              🧁 Happy Birthday Muhammad Ayaz
+            </Text>
+            <Text style={styles.slideText}>
+              🍰 Happy Birthday Muhammad Zeeshan
+            </Text>
+            <Text style={styles.slideText}>🎁 Happy Birthday Umair Rehan</Text>
+            <Text style={styles.slideText}>🎉 Happy Birthday Salman Ali</Text>
+            <Text style={styles.slideText}>
+              💃 Happy Birthday Qasim Ali Khan
+            </Text>
+            <Text style={styles.slideText}>
+              💃 Happy Birthday Faisal Chaudhary
+            </Text> */}
+            {/* </> */}
+          </Swiper>
         </View>
       </LinearGradient>
     </>
@@ -229,8 +269,8 @@ export default HeaderTop;
 const styles = EStyleSheet.create({
   mainHeader: {
     height: hp(27),
-    borderBottomRightRadius: hp(5),
-    borderBottomLeftRadius: hp(5),
+    borderBottomRightRadius: hp(3),
+    borderBottomLeftRadius: hp(3),
   },
   headerChild: {
     flexDirection: 'row',
@@ -278,19 +318,19 @@ const styles = EStyleSheet.create({
     color: '#353535',
   },
   userName: {
-    color: '#fff',
-    fontSize: '0.75rem',
+    color: '#FFFFFF',
+    fontSize: '0.77rem',
     fontWeight: '500',
     fontFamily: fontFamily.ceraMedium,
     fontStyle: 'normal',
-    lineHeight: hp('2.15'),
+    lineHeight: hp('2.5'),
+    letterSpacing: 0.15,
   },
 
   welCome: {
-    color: '#fff',
-    fontSize: '0.575rem',
+    color: '#FFFFFF',
+    fontSize: '0.56rem',
     fontWeight: '300',
-    marginTop: hp(0.5),
     fontFamily: fontFamily.ceraLight,
     fontStyle: 'normal',
     paddingBottom: hp(0.2),
@@ -376,5 +416,13 @@ const styles = EStyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: hp(1),
+  },
+  slideText: {
+    color: '#FFFFFF',
+    fontSize: '0.56rem',
+    fontWeight: '300',
+    fontFamily: fontFamily.ceraMedium,
+    fontStyle: 'normal',
+    textAlign: 'center',
   },
 });

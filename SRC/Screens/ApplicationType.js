@@ -15,6 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {LeaveTypeAction} from '../features/LeaveTypeSlice/LeaveTypeSlice';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
 const ApplicationType = props => {
   const dispatch = useDispatch();
@@ -67,11 +68,10 @@ const ApplicationType = props => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Icon
-                  type="light"
-                  name="calendar-days"
+                <FontAwesomeIcon
+                  icon="fat fa-calendar-days"
                   size={hp(3.25)}
-                  color="#979797"
+                  style={{color: '#1C37A4'}}
                 />
               </View>
               <View
@@ -89,11 +89,10 @@ const ApplicationType = props => {
                   paddingRight: wp('3'),
                   paddingBottom: wp('2'),
                 }}>
-                <Icon
-                  type="light"
-                  name="arrow-right"
-                  size={hp(2.2)}
-                  color="#979797"
+                <FontAwesomeIcon
+                  icon="fat fa-arrow-down-right"
+                  size={hp(2.85)}
+                  style={{color: '#1C37A4'}}
                 />
               </View>
             </View>
@@ -106,7 +105,6 @@ const ApplicationType = props => {
               style={{
                 height: hp(10.5),
                 flexDirection: 'row',
-                // marginVertical: hp(1),
                 marginHorizontal: hp(1),
               }}>
               <View
@@ -115,11 +113,10 @@ const ApplicationType = props => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Icon
-                  type="light"
-                  name="business-time"
+                <FontAwesomeIcon
+                  icon="fat fa-business-time"
                   size={hp(3.25)}
-                  color="#979797"
+                  style={{color: '#1C37A4'}}
                 />
               </View>
               <View
@@ -137,11 +134,10 @@ const ApplicationType = props => {
                   paddingRight: wp('3'),
                   paddingBottom: wp('2'),
                 }}>
-                <Icon
-                  type="light"
-                  name="arrow-right"
-                  size={hp(2.2)}
-                  color="#979797"
+                <FontAwesomeIcon
+                  icon="fat fa-arrow-down-right"
+                  size={hp(2.85)}
+                  style={{color: '#1C37A4'}}
                 />
               </View>
             </View>
@@ -154,7 +150,6 @@ const ApplicationType = props => {
               style={{
                 height: hp(10.5),
                 flexDirection: 'row',
-                // marginVertical: hp(1),
                 marginHorizontal: hp(1),
               }}>
               <View
@@ -163,11 +158,10 @@ const ApplicationType = props => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Icon
-                  type="light"
-                  name="calendar-circle-exclamation"
+                <FontAwesomeIcon
+                  icon="fat fa-calendar-circle-exclamation"
                   size={hp(3.25)}
-                  color="#979797"
+                  style={{color: '#1C37A4'}}
                 />
               </View>
               <View
@@ -185,11 +179,10 @@ const ApplicationType = props => {
                   paddingRight: wp('3'),
                   paddingBottom: wp('2'),
                 }}>
-                <Icon
-                  type="light"
-                  name="arrow-right"
-                  size={hp(2.2)}
-                  color="#979797"
+                <FontAwesomeIcon
+                  icon="fat fa-arrow-down-right"
+                  size={hp(2.85)}
+                  style={{color: '#1C37A4'}}
                 />
               </View>
             </View>
@@ -202,7 +195,6 @@ const ApplicationType = props => {
               style={{
                 height: hp(10.5),
                 flexDirection: 'row',
-                // marginVertical: hp(1),
                 marginHorizontal: hp(1),
               }}>
               <View
@@ -211,11 +203,10 @@ const ApplicationType = props => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Icon
-                  type="light"
-                  name="calendar-circle-exclamation"
+                <FontAwesomeIcon
+                  icon="fat fa-clock-nine-thirty"
                   size={hp(3.25)}
-                  color="#979797"
+                  style={{color: '#1C37A4'}}
                 />
               </View>
               <View
@@ -233,11 +224,10 @@ const ApplicationType = props => {
                   paddingRight: wp('3'),
                   paddingBottom: wp('2'),
                 }}>
-                <Icon
-                  type="light"
-                  name="arrow-right"
-                  size={hp(2.2)}
-                  color="#979797"
+                <FontAwesomeIcon
+                  icon="fat fa-arrow-down-right"
+                  size={hp(2.85)}
+                  style={{color: '#1C37A4'}}
                 />
               </View>
             </View>
@@ -245,13 +235,12 @@ const ApplicationType = props => {
 
           <TouchableOpacity
             activeOpacity={0.8}
-            onPress={() => props.navigation.navigate('EarliLeaving')}
+            onPress={() => props.navigation.navigate('EarlyLeaving')}
             style={styles.typeContainer}>
             <View
               style={{
                 height: hp(10.5),
                 flexDirection: 'row',
-                // marginVertical: hp(1),
                 marginHorizontal: hp(1),
               }}>
               <View
@@ -260,11 +249,10 @@ const ApplicationType = props => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Icon
-                  type="light"
-                  name="calendar-circle-exclamation"
+                <FontAwesomeIcon
+                  icon="fat fa-clock-three-thirty"
                   size={hp(3.25)}
-                  color="#979797"
+                  style={{color: '#1C37A4'}}
                 />
               </View>
               <View
@@ -283,11 +271,10 @@ const ApplicationType = props => {
                   paddingRight: wp('3'),
                   paddingBottom: wp('2'),
                 }}>
-                <Icon
-                  type="light"
-                  name="arrow-right"
-                  size={hp(2.2)}
-                  color="#979797"
+                <FontAwesomeIcon
+                  icon="fat fa-arrow-down-right"
+                  size={hp(2.85)}
+                  style={{color: '#1C37A4'}}
                 />
               </View>
             </View>
@@ -300,7 +287,6 @@ const ApplicationType = props => {
               style={{
                 height: hp(10.5),
                 flexDirection: 'row',
-                // marginVertical: hp(1),
                 marginHorizontal: hp(1),
               }}>
               <View
@@ -309,11 +295,10 @@ const ApplicationType = props => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Icon
-                  type="light"
-                  name="calendar-circle-exclamation"
+                <FontAwesomeIcon
+                  icon="fat fa-calendar-clock"
                   size={hp(3.25)}
-                  color="#979797"
+                  style={{color: '#1C37A4'}}
                 />
               </View>
               <View
@@ -332,11 +317,10 @@ const ApplicationType = props => {
                   paddingRight: wp('3'),
                   paddingBottom: wp('2'),
                 }}>
-                <Icon
-                  type="light"
-                  name="arrow-right"
-                  size={hp(2.2)}
-                  color="#979797"
+                <FontAwesomeIcon
+                  icon="fat fa-arrow-down-right"
+                  size={hp(2.85)}
+                  style={{color: '#1C37A4'}}
                 />
               </View>
             </View>
@@ -366,7 +350,7 @@ const styles = EStyleSheet.create({
     marginTop: hp(3.5),
   },
   zetext1: {
-    fontSize: '0.73rem',
+    fontSize: '0.67rem',
     fontWeight: '700',
     fontFamily: fontFamily.ceraBold,
     color: '#343434',

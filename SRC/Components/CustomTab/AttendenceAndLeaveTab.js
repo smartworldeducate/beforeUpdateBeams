@@ -16,6 +16,7 @@ import Menu from 'react-native-vector-icons/Entypo';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {useSelector, useDispatch} from 'react-redux';
 import fontFamily from '../../Styles/fontFamily';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
 const AttendenceAndLeaveTab = ({state, descriptors, navigation, props}) => {
   const messagesHere = useSelector(state => state.messagesStore?.unReadLength);
@@ -91,12 +92,20 @@ const AttendenceAndLeaveTab = ({state, descriptors, navigation, props}) => {
                         alignItems: 'center',
                       }}>
                       <View style={{}}>
-                        <Ficon
-                          type={isFocused ? 'solid' : 'light'}
-                          name="calendar-days"
-                          size={hp(2.5)}
-                          color={isFocused ? '#1C37A4' : '#8a8a8a'}
-                        />
+                        {isFocused ? (
+                          <Ficon
+                            type={'solid'}
+                            name="calendar-days"
+                            size={hp(2.5)}
+                            color={'#1C37A4'}
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            icon="fat fa-calendar-days"
+                            size={hp(2.5)}
+                            style={{color: 'grey'}}
+                          />
+                        )}
                       </View>
 
                       {isFocused && (
@@ -123,12 +132,20 @@ const AttendenceAndLeaveTab = ({state, descriptors, navigation, props}) => {
                       alignItems: 'center',
                     }}>
                     <View style={{}}>
-                      <Ficon
-                        type={isFocused ? 'solid' : 'light'}
-                        name="paper-plane"
-                        size={hp(2.6)}
-                        color={isFocused ? '#1C37A4' : '#8a8a8a'}
-                      />
+                      {isFocused ? (
+                        <Ficon
+                          type={'solid'}
+                          name="paper-plane"
+                          size={hp(2.6)}
+                          color={'#1C37A4'}
+                        />
+                      ) : (
+                        <FontAwesomeIcon
+                          icon="fat fa-paper-plane"
+                          size={hp(2.5)}
+                          style={{color: 'grey'}}
+                        />
+                      )}
                     </View>
 
                     {isFocused && (
@@ -149,12 +166,20 @@ const AttendenceAndLeaveTab = ({state, descriptors, navigation, props}) => {
                       alignItems: 'center',
                     }}>
                     <View style={{}}>
-                      <Ficon
-                        type={isFocused ? 'solid' : 'light'}
-                        name="chart-simple"
-                        size={hp(2.35)}
-                        color={isFocused ? '#1C37A4' : '#8a8a8a'}
-                      />
+                      {isFocused ? (
+                        <Ficon
+                          type={'solid'}
+                          name="chart-simple"
+                          size={hp(2.35)}
+                          color={'#1C37A4'}
+                        />
+                      ) : (
+                        <FontAwesomeIcon
+                          icon="fat fa-chart-simple"
+                          size={hp(2.5)}
+                          style={{color: 'grey'}}
+                        />
+                      )}
                     </View>
 
                     {isFocused && (
@@ -175,12 +200,20 @@ const AttendenceAndLeaveTab = ({state, descriptors, navigation, props}) => {
                       alignItems: 'center',
                     }}>
                     <View style={{}}>
-                      <Ficon
-                        type={isFocused ? 'solid' : 'light'}
-                        name="rectangle-history"
-                        size={hp(2.35)}
-                        color={isFocused ? '#1C37A4' : '#8a8a8a'}
-                      />
+                      {isFocused ? (
+                        <Ficon
+                          type={'solid'}
+                          name="rectangle-history"
+                          size={hp(2.35)}
+                          color={'#1C37A4'}
+                        />
+                      ) : (
+                        <FontAwesomeIcon
+                          icon="fat fa-rectangle-history"
+                          size={hp(2.5)}
+                          style={{color: 'grey'}}
+                        />
+                      )}
                     </View>
 
                     {isFocused && (

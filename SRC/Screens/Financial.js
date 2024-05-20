@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
+  RefreshControl,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import MainHeader from '../Components/Headers/MainHeader';
@@ -29,10 +30,7 @@ const Financial = props => {
   const financialHere = useSelector(state => state.financialStore);
   const salaryHistoryHere = useSelector(state => state.salaryYearsStore);
 
-  // console.log('salaryHistoryHere>', salaryHistoryHere?.userData);
-
   const lastMonthIndex = salaryHistoryHere?.userData?.total_years_count - 1;
-  // console.log('lastMonthIndex>', lastMonthIndex);
 
   const [salarySlip, setSalarySlip] = useState(true);
   const [salaryHistory, setSalaryHistory] = useState(false);
@@ -95,6 +93,32 @@ const Financial = props => {
     }, []),
   );
 
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      const loginData = await AsyncStorage.getItem('loginData');
+      const parsedLoginDataId = JSON.parse(loginData);
+
+      if (parsedLoginDataId) {
+        dispatch(
+          FinancialAction({
+            employee_id: parsedLoginDataId,
+          }),
+        );
+        dispatch(
+          SalaryYearsAction({
+            employee_id: parsedLoginDataId,
+          }),
+        );
+      }
+    } catch (error) {
+      console.error('Error retrieving values from AsyncStorage:', error);
+    }
+    setRefreshing(false);
+  };
+
   return (
     <SafeAreaView
       style={{
@@ -113,7 +137,16 @@ const Financial = props => {
           contentContainerStyle={{
             flexGrow: 1,
             backgroundColor: colors.appBackGroundColor,
-          }}>
+          }}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={['#2A72B6', '#203B88']}
+              progressBackgroundColor={'#fcfcfc'}
+              tintColor={'#1C37A4'}
+            />
+          }>
           <View style={{marginVertical: hp('3')}}>
             <View style={{marginHorizontal: wp('5')}}>
               <View

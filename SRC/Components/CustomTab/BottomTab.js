@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   Platform,
+  Linking,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -16,6 +17,7 @@ import Menu from 'react-native-vector-icons/Entypo';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 import fontFamily from '../../Styles/fontFamily';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
 const BottomTab = ({state, descriptors, navigation, props}) => {
   return (
@@ -58,12 +60,20 @@ const BottomTab = ({state, descriptors, navigation, props}) => {
                         justifyContent: 'center',
                         paddingTop: hp('0.5'),
                       }}>
-                      <Menu
-                        name="home"
-                        size={hp(3)}
-                        color={isFocused ? '#1C37A4' : '#8a8a8a'}
-                        style={{}}
-                      />
+                      {isFocused ? (
+                        <Menu
+                          name="home"
+                          size={hp(3)}
+                          color={'#1C37A4'}
+                          style={{}}
+                        />
+                      ) : (
+                        <FontAwesomeIcon
+                          icon="fat fa-home"
+                          size={hp(3)}
+                          style={{color: 'grey'}}
+                        />
+                      )}
                     </View>
 
                     {isFocused && (
@@ -80,7 +90,10 @@ const BottomTab = ({state, descriptors, navigation, props}) => {
                 ) : index === 1 ? (
                   <TouchableOpacity
                     activeOpacity={0.2}
-                    onPress={onPress}
+                    // onPress={onPress}
+                    onPress={() =>
+                      Linking.openURL('https://index.beaconhouse.net/')
+                    }
                     style={styles.touchableIcon}>
                     <View
                       style={{
@@ -88,12 +101,20 @@ const BottomTab = ({state, descriptors, navigation, props}) => {
                         justifyContent: 'center',
                         paddingTop: hp('0.5'),
                       }}>
-                      <Ficon
-                        type="light"
-                        name="book-bookmark"
-                        size={hp(3)}
-                        color={isFocused ? '#1C37A4' : '#8a8a8a'}
-                      />
+                      {isFocused ? (
+                        <Ficon
+                          type="light"
+                          name="book-bookmark"
+                          size={hp(3)}
+                          color={'#1C37A4'}
+                        />
+                      ) : (
+                        <FontAwesomeIcon
+                          icon="fat fa-book-bookmark"
+                          size={hp(3)}
+                          style={{color: 'grey'}}
+                        />
+                      )}
                     </View>
                     {isFocused && (
                       <View style={{height: hp('1.5')}}>
@@ -116,12 +137,14 @@ const BottomTab = ({state, descriptors, navigation, props}) => {
                         backgroundColor: isFocused ? '#1C37A4' : 'black',
                         borderRadius: wp('8'),
                         paddingHorizontal: wp('3'),
+                        borderColor: '#A1B1BA',
+                        borderWidth: wp('1'),
                       },
                     ]}>
                     <Ficon
                       type="light"
                       name="qrcode"
-                      size={hp(2.25)}
+                      size={hp(3.25)}
                       color={isFocused ? 'white' : 'white'}
                     />
                     {/* {isFocused && (
@@ -144,12 +167,20 @@ const BottomTab = ({state, descriptors, navigation, props}) => {
                         justifyContent: 'center',
                         paddingTop: hp('0.5'),
                       }}>
-                      <Ficon
-                        type="light"
-                        name="calendar-days"
-                        size={hp(3)}
-                        color={isFocused ? '#1C37A4' : '#8a8a8a'}
-                      />
+                      {isFocused ? (
+                        <Ficon
+                          type="light"
+                          name="calendar-days"
+                          size={hp(3)}
+                          color={'#1C37A4'}
+                        />
+                      ) : (
+                        <FontAwesomeIcon
+                          icon="fat fa-calendar-days"
+                          size={hp(3)}
+                          style={{color: 'grey'}}
+                        />
+                      )}
                     </View>
                     {isFocused && (
                       <View style={{height: hp('1.5')}}>
@@ -173,12 +204,20 @@ const BottomTab = ({state, descriptors, navigation, props}) => {
                         justifyContent: 'center',
                         paddingTop: hp('0.5'),
                       }}>
-                      <Ficon
-                        type="light"
-                        name="user-tie"
-                        size={hp(3)}
-                        color={isFocused ? '#1C37A4' : '#8a8a8a'}
-                      />
+                      {isFocused ? (
+                        <Ficon
+                          type="light"
+                          name="user-tie"
+                          size={hp(3)}
+                          color={'#1C37A4'}
+                        />
+                      ) : (
+                        <FontAwesomeIcon
+                          icon="fat fa-user-tie"
+                          size={hp(3)}
+                          style={{color: 'grey'}}
+                        />
+                      )}
                     </View>
                     {isFocused && (
                       <View style={{height: hp('1.5')}}>
@@ -202,7 +241,7 @@ const BottomTab = ({state, descriptors, navigation, props}) => {
 };
 const styles = EStyleSheet.create({
   container: {
-    height: Platform.OS === 'android' ? hp('7') : hp('7'),
+    height: Platform.OS === 'android' ? hp('8.3') : hp('8.3'),
     justifyContent: 'center',
     flexDirection: 'row',
     backgroundColor: 'white',

@@ -28,6 +28,7 @@ import LineSeprator from '../Components/LineSeprator/LineSeprator';
 import TeamModal from '../Components/Modal/TeamModal';
 import ReporteeProfileModal from '../Components/Modal/ReporteeProfileModal';
 import Loader from '../Components/Loader/Loader';
+import ReporteesCardPart from '../Components/EmpCardPart/ReporteesCardPart';
 
 const options = {day: 'numeric', month: 'short', year: 'numeric'};
 
@@ -453,7 +454,7 @@ const Reportee = props => {
               </View>
 
               <View style={{marginVertical: hp('2')}}>
-                <EmpCardPart
+                <ReporteesCardPart
                   firstText={'TOTAL'}
                   statusValue={allReporteesHere?.userData?.reportee_length}
                   secondText={'PRESENT'}
@@ -504,7 +505,7 @@ const Reportee = props => {
             <></>
           )}
 
-          {reporteeModal ? (
+          {/* {reporteeModal ? (
             <ReporteeProfileModal
               onPressBackIcon={onRequestClose}
               modalVisible={reporteeModal}
@@ -515,7 +516,7 @@ const Reportee = props => {
             />
           ) : (
             <></>
-          )}
+          )} */}
         </ScrollView>
       </>
     </SafeAreaView>

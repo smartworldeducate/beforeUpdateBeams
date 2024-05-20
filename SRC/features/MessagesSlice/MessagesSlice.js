@@ -9,12 +9,13 @@ const initialState = {
   message: '',
   userData: [],
   userDataViewAll: [],
-  unReadLength: null,
 
   isLoading: true,
   pageOffset: 1,
   isEmptyData: false,
   dataLength: null,
+
+  unReadLength: null,
 };
 
 export const messagesAction = createAsyncThunk('Messages', async values => {

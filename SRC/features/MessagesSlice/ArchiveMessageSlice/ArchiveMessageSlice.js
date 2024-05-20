@@ -7,8 +7,13 @@ const initialState = {
   message: '',
   userData: [],
   userDataViewAll: [],
+
   isLoading: true,
   pageOffset: 1,
+  isEmptyData: false,
+  dataLength: null,
+
+  unReadLength: null,
 };
 
 export const archiveMessagesAction = createAsyncThunk(
@@ -38,6 +43,24 @@ const ArchiveMessagesSlice = createSlice({
     increaseOffset: (state, action) => {
       state.pageOffset += 1;
     },
+
+    clearViewAllArchiveMessagesState: (state, action) => {
+      console.log('clearViewAllArchiveMessagesState');
+      state.userDataViewAll = [];
+    },
+
+    textColr: (state, action) => {
+      console.log('payLoadMsgId', action.payload);
+      const list = state.userDataViewAll;
+      // console.log('list', list);
+      const indx = list?.findIndex(item => item?.MSG_ID == action?.payload);
+
+      if (indx !== -1) {
+        console.log('payLoadValue', action.payload);
+        state.userDataViewAll[indx].IS_READ = 'Y';
+      }
+    },
+
     pushObject: (state, action) => {
       // state.userData.push(...action.payload);
       // console.log('Received data:', action.payload);
@@ -55,14 +78,14 @@ const ArchiveMessagesSlice = createSlice({
 
     removeFromArchiveSlice: (state, action) => {
       // console.log('payLoadMsgId', action.payload);
-      const listAll = state.userData;
+      const listAll = state.userDataViewAll;
       const indexToRemove = listAll?.findIndex(
         item => item?.MSG_ID == action?.payload,
       );
 
       if (indexToRemove !== -1) {
         // console.log('payLoadValue', action.payload);
-        state.userData.splice(indexToRemove, 1);
+        state.userDataViewAll.splice(indexToRemove, 1);
       }
     },
   },
@@ -78,7 +101,17 @@ const ArchiveMessagesSlice = createSlice({
       state.success = action.payload.success;
       state.message = action.payload.message;
       state.userData = action.payload.data;
-      state.userDataViewAll = action.payload.data;
+      // state.userDataViewAll = action.payload.data;
+
+      // state.unReadLength = action.payload.unread_message_length;
+
+      state.dataLength = action.payload.data.length;
+
+      state.userDataViewAll = [
+        ...state.userDataViewAll,
+        ...action.payload.data,
+      ];
+
       // if (state.userDataViewAll.length === 0) {
       //   console.log('length0');
       //   state.userDataViewAll = action.payload.data;
@@ -95,6 +128,8 @@ const ArchiveMessagesSlice = createSlice({
 export const {
   clearAllState,
   increaseOffset,
+  clearViewAllArchiveMessagesState,
+  textColr,
   pushObject,
   removeFromArchiveSlice,
 } = ArchiveMessagesSlice.actions;

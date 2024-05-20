@@ -165,7 +165,7 @@ const ReporteeChildrenInBSSModal = ({
                       height: hp('3.5'),
                     }}>
                     <View style={{flex: 0.65}}></View>
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                       style={{
                         flex: 0.3,
                         backgroundColor: '#1C37A4',
@@ -182,7 +182,7 @@ const ReporteeChildrenInBSSModal = ({
                         }}>
                         PAY NOW
                       </Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     <View style={{flex: 0.05}}></View>
                   </View>
                 </View>

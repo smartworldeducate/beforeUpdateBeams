@@ -5,6 +5,7 @@ import {
   Animated,
   TouchableOpacity,
   FlatList,
+  Linking,
 } from 'react-native';
 import React, {useState} from 'react';
 import MainHeader from '../Components/Headers/MainHeader';
@@ -168,6 +169,7 @@ const ChildBss = props => {
                     }}>
                     <View style={{flex: 0.65}}></View>
                     <TouchableOpacity
+                      onPress={() => Linking.openURL(item?.INVOICE_NUM)}
                       style={{
                         flex: 0.3,
                         backgroundColor: '#1C37A4',

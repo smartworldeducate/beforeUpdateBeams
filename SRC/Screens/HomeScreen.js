@@ -3,12 +3,20 @@ import Ficon from 'react-native-fontawesome-pro';
 import Menu from 'react-native-vector-icons/Entypo';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import LinearGradient from 'react-native-linear-gradient';
-import Icon from 'react-native-fontawesome-pro';
 
-import QRCodeScanner from 'react-native-qrcode-scanner';
-import Modal from 'react-native-modal';
-import {Toast} from 'galio-framework';
-import {BottomSheet} from '@rneui/themed';
+import LottieView from 'lottie-react-native';
+
+import Icon from 'react-native-fontawesome-pro';
+import Swiper from 'react-native-swiper';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {library} from '@fortawesome/fontawesome-svg-core';
+import {fat} from '@fortawesome/pro-thin-svg-icons';
+import {fal} from '@fortawesome/pro-light-svg-icons';
+import {far} from '@fortawesome/pro-regular-svg-icons';
+import {fas} from '@fortawesome/pro-solid-svg-icons';
+import {fad} from '@fortawesome/pro-duotone-svg-icons';
+
+library.add(fat, fal, far, fas, fad);
 
 import {
   ScrollView,
@@ -20,6 +28,7 @@ import {
   RefreshControl,
   FlatList,
   Image,
+  Dimensions,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -41,22 +50,41 @@ import {LeaveBalanceAction} from '../features/LeaveBalanceSlice/LeaveBalanceSlic
 import LineSeprator from '../Components/LineSeprator/LineSeprator';
 import {FinYearAction} from '../features/FinYearSlice/FinYearSlice';
 import {WorkFromHomeAction} from '../features/WorkFromHomeSlice/WorkFromHomeGet';
-import {messagesActionHomePage} from '../features/MessagesSlice/MessageSliceHomePage';
+import {
+  messagesActionHomePage,
+  textColr,
+} from '../features/MessagesSlice/MessageSliceHomePage';
 import {SalaryYearsAction} from '../features/SalaryYearsSlice/SalaryYearsSlice';
+import {messageReadAction} from '../features/MessagesSlice/MessageLikeSlice';
+import ViewMessageDetailModal from '../Components/Modal/ViewMessageDetailModal';
+import {messageDetailAction} from '../features/MessagesSlice/MessageDetailSlice';
+import {messageStatusLikeAction} from '../features/MessagesSlice/MessageStatusLike';
+import ReporteeProfileModal from '../Components/Modal/ReporteeProfileModal';
 const HomeScreen = props => {
+  const width = Dimensions.get('window').width;
+
   const dispatch = useDispatch();
 
   const profileHere = useSelector(state => state.profileStore);
-  // console.log('profileHere', profileHere?.userData);
+
+  const profileHereEmpId = useSelector(
+    state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
+  );
+  const slicedData = profileHere?.userData?.reporting_result?.data.slice(0, 7);
 
   const messagesHere = useSelector(state => state.MessageSliceHomePageStore);
-  // console.log('messagesHere', messagesHere);
 
   const leaveBalanceHere = useSelector(state => state.leaveBalanceStore);
 
-  // const leaveHistoryHere = useSelector(state => state.salaryYearsStore);
+  const messageDetailHere = useSelector(state => state.messageDetailStore);
 
-  // console.log('leaveHistoryHere', leaveHistoryHere);
+  const profileHereEmpBirthday = useSelector(
+    state => state.profileStore?.empBirthday,
+  );
+
+  console.log('profileHereEmpBirthday', profileHereEmpBirthday);
+
+  // const leaveHistoryHere = useSelector(state => state.salaryYearsStore);
 
   // const getIndex = leaveHistoryHere?.userData?.total_years_count - 1;
   // console.log('getIndex', getIndex);
@@ -71,6 +99,14 @@ const HomeScreen = props => {
   const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(false);
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [messageId, setMessageId] = useState(null);
+  const [messageSubject, setMessageSubject] = useState(null);
+  const [empPhoto, setEmpPhoto] = useState(null);
+  const [empName, setEmpName] = useState(null);
+  const [msgDate, setMsgDate] = useState(null);
+  const [msgLike, setMsgLike] = useState(null);
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -78,6 +114,7 @@ const HomeScreen = props => {
         const parsedLoginDataId = JSON.parse(loginData);
 
         if (parsedLoginDataId) {
+          console.log('parsedLoginDataId', parsedLoginDataId);
           dispatch(
             profileAction({
               employee_id: parsedLoginDataId,
@@ -153,22 +190,34 @@ const HomeScreen = props => {
   const pending = leaveBalanceHere?.userData?.pandding_balance_percentage;
   const long = leaveBalanceHere?.userData?.long_percentage;
 
-  // console.log('maternity', maternity);
-
   const renderItem = ({item, index}) => {
     return (
       <TouchableOpacity
         activeOpacity={0.8}
-        onPress={() =>
-          navigation.navigate('ViewMessageDetail', {messagedata: item})
-        }
+        onPress={() => {
+          if (item?.IS_READ_STATUS != 'Y') {
+            dispatch(
+              messageReadAction({
+                employee_id: JSON.parse(profileHereEmpId),
+                messageId: item?.MSG_ID,
+                read_status: 'Y',
+              }),
+            );
+            dispatch(textColr(item?.MSG_ID));
+          }
+          setMessageId(item?.MSG_ID);
+          setMessageSubject(item?.MSG_SUBJECT);
+          setEmpPhoto(item?.EMP_PHOTO);
+          setEmpName(item?.EMP_NAME);
+          setMsgDate(item?.ENTRY_DATE);
+          onPressMessage(item?.MSG_ID);
+        }}
         style={{
-          height: hp('14'),
-          width: wp('74'),
-
+          height: hp('16.5'),
+          width: wp('70'),
           marginRight: wp('3'),
           marginLeft: wp('2'),
-          borderRadius: wp('3'),
+          borderRadius: wp('1.5'),
           flexDirection: 'column',
           paddingHorizontal: wp('2'),
 
@@ -181,61 +230,198 @@ const HomeScreen = props => {
         }}>
         <View
           style={{
-            height: hp('7'),
-
-            justifyContent: 'center',
-            flexDirection: 'row',
+            height: hp('3'),
+            justifyContent: 'flex-end',
+            alignItems: 'flex-end',
           }}>
-          <View
-            style={{
-              flex: 0.17,
-
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Image
-              source={{uri: item?.EMP_PHOTO}}
-              style={{height: hp('4.5'), width: wp('9'), borderRadius: wp(50)}}
-              resizeMode="cover"
-            />
-          </View>
-          <View
-            style={{
-              flex: 0.83,
-              paddingHorizontal: wp('1'),
-              justifyContent: 'center',
-            }}>
-            <Text
-              numberOfLines={2}
-              letterSpacing={'tail'}
-              style={styles.messageCardEmpName}>
-              {item?.EMP_NAME}
-            </Text>
-            <Text style={styles.messageCardDate}>{item?.ENTRY_DATE}</Text>
-          </View>
+          <FontAwesomeIcon
+            icon={
+              item?.IS_READ_STATUS === 'Y'
+                ? 'far fa-check-double'
+                : 'fat fa-check-double'
+            }
+            size={hp(2.25)}
+            style={{color: item?.IS_READ_STATUS === 'Y' ? '#1C37A4' : 'grey'}}
+          />
         </View>
+
         <View
           style={{
-            height: hp('10'),
-            marginVertical: hp('0.5'),
-            paddingHorizontal: wp('2'),
+            height: hp('10.5'),
+            marginTop: hp('-1'),
           }}>
           <Text
-            numberOfLines={2}
+            numberOfLines={4}
             ellipsizeMode={'tail'}
             style={{
               color: '#343434',
               fontFamily: fontFamily.ceraLight,
               fontWeight: '300',
-              fontSize: hp('1.75'),
+              fontSize: hp('1.8'),
               letterSpacing: 0.5,
               lineHeight: hp('2.5'),
+              paddingHorizontal: wp('1.25'),
             }}>
             {item?.MSG_SUBJECT}
+            {` ${item?.LONG_DESC}`}
+          </Text>
+        </View>
+
+        <View
+          style={{
+            height: hp('3'),
+            justifyContent: 'flex-start',
+          }}>
+          <Text
+            numberOfLines={1}
+            ellipsizeMode={'tail'}
+            style={{
+              color: 'black',
+              fontFamily: fontFamily.ceraLight,
+              fontWeight: '300',
+              fontSize: hp('1.7'),
+              letterSpacing: 0.5,
+              lineHeight: hp('2.5'),
+              paddingHorizontal: wp('1'),
+              paddingTop: hp('0.25'),
+            }}>
+            <Text style={styles.messageCardDate}>
+              <Text
+                style={{
+                  fontFamily: fontFamily.ceraMedium,
+                  color: 'black',
+                  fontSize: hp('1.5'),
+                }}>
+                {item?.FROM_NAME == null || undefined
+                  ? 'Coorporate Office:'
+                  : item?.FROM_NAME}
+              </Text>{' '}
+              {item?.ENTRY_DATE}
+            </Text>
           </Text>
         </View>
       </TouchableOpacity>
     );
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setMessageId(null);
+    setEmpName(null);
+    setMsgDate(null);
+    setEmpPhoto(null);
+    setMessageSubject(null);
+  };
+
+  const onPressMessage = item => {
+    setModalVisible(true);
+    dispatch(
+      messageDetailAction({
+        employee_id: JSON.parse(profileHereEmpId),
+        messageId: item,
+      }),
+    );
+  };
+
+  useEffect(() => {
+    if (messageDetailHere?.success == 1) {
+      setMsgLike(messageDetailHere?.userData?.ACK_STATUS);
+    }
+  }, [messageDetailHere]);
+
+  const onPressThumbUpIcon = () => {
+    dispatch(
+      messageStatusLikeAction({
+        employee_id: JSON.parse(profileHereEmpId),
+        messageId: messageId,
+        ack_status: 'Y',
+      }),
+    );
+    setMsgLike('Y');
+  };
+
+  const onPressInElse = () => {
+    console.log('onPressInElse');
+  };
+
+  const renderItemReportees = ({item, index}) => {
+    console.log('item', item);
+    return (
+      <TouchableOpacity
+        activeOpacity={0.5}
+        onPress={
+          index === 5
+            ? onPressPlusReportee
+            : () =>
+                onPressReporteeItem({
+                  item: item?.EMPLOYEE_ID,
+                  itemBranchId: item?.BRANCH_ID,
+                  itemDeptId: item?.DEPARTMENT_ID,
+                })
+        }
+        style={{justifyContent: 'center'}}>
+        <Image
+          source={{uri: item?.EMP_PHOTO}}
+          style={{
+            height: hp('6'),
+            width: wp('12'),
+            borderRadius: wp('10'),
+            marginLeft: wp('2'),
+          }}
+          resizeMode={'cover'}
+        />
+
+        {index === 5 && (
+          <View
+            style={{
+              position: 'absolute',
+              left: '12.5%',
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              borderRadius: wp('10'),
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: hp('6'),
+              width: wp('12'),
+            }}>
+            <Icon type="regular" name="plus" size={hp('2')} color="#fff" />
+          </View>
+        )}
+      </TouchableOpacity>
+    );
+  };
+
+  const [reporteeModal, setReporteeModal] = useState(false);
+  const [idHere, setIdHere] = useState(null);
+  const [branchIdHere, setBranchIdHere] = useState(null);
+  const [deptIdHere, setDeptIdHere] = useState(null);
+
+  const onPressReporteeItem = item => {
+    // console.log('onPressReporteeId', item?.item);
+    // console.log('onPressReporteeBranchId', item?.itemBranchId);
+    // console.log('onPressReporteeDeptId', item?.itemDeptId);
+
+    setReporteeModal(!reporteeModal);
+    setIdHere(item?.item);
+    setBranchIdHere(item?.itemBranchId);
+    setDeptIdHere(item?.itemDeptId);
+  };
+
+  const onPressPlusReportee = () => {
+    // console.log('onPressPlusReportee');
+    navigation.navigate('ReporteeDrawer');
+  };
+
+  const onPressReportee = item => {
+    setReporteeModal(!reporteeModal);
+    setIdHere(item?.item);
+    setBranchIdHere(item?.itemBranchId);
+    setDeptIdHere(item?.itemDeptId);
+  };
+  const onRequestClose = () => {
+    setReporteeModal(false);
+    setIdHere(null);
+    setBranchIdHere(null);
+    setDeptIdHere(null);
   };
 
   const renderItemLeaves = ({item, index}) => {
@@ -244,11 +430,10 @@ const HomeScreen = props => {
         {item?.LEAVE_TYPE == 'Casual Leave' && (
           <View style={styles.leaveBalRightView}>
             <View style={styles.LBNestedLeftView}>
-              <Icon
-                type="light"
-                name="masks-theater"
-                size={hp(4)}
-                color="#BB8FCE"
+              <FontAwesomeIcon
+                icon="fat fa-masks-theater"
+                size={hp(3.75)}
+                style={{color: '#BB8FCE'}}
               />
             </View>
             <View style={styles.LBNestedRightView}>
@@ -263,11 +448,10 @@ const HomeScreen = props => {
         {item?.LEAVE_TYPE == 'Sick Leave' && (
           <View style={styles.leaveBalRightView}>
             <View style={styles.LBNestedLeftView}>
-              <Icon
-                type="light"
-                name="temperature-half"
-                size={hp(4)}
-                color="#DC7633"
+              <FontAwesomeIcon
+                icon="fat fa-temperature-half"
+                size={hp(3.75)}
+                style={{color: '#DC7633'}}
               />
             </View>
             <View style={styles.LBNestedRightView}>
@@ -282,11 +466,10 @@ const HomeScreen = props => {
         {item?.LEAVE_TYPE == 'Annual Leave' && (
           <View style={styles.leaveBalRightView}>
             <View style={styles.LBNestedLeftView}>
-              <Icon
-                type="light"
-                name="island-tropical"
-                size={hp(4)}
-                color="#58D68D"
+              <FontAwesomeIcon
+                icon="fat fa-island-tropical"
+                size={hp(3.75)}
+                style={{color: '#58D68D'}}
               />
             </View>
             <View style={styles.LBNestedRightView}>
@@ -299,6 +482,39 @@ const HomeScreen = props => {
         )}
       </>
     );
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setModalVisible(false);
+      setMessageId(null);
+      setEmpName(null);
+      setMsgDate(null);
+      setEmpPhoto(null);
+      setMessageSubject(null);
+
+      return () => {
+        console.log('Home page is unfocused');
+        // dispatch(clearViewAllMessagesState());
+      };
+    }, []),
+  );
+
+  const [playAnimation, setPlayAnimation] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setPlayAnimation(false);
+    }, 12000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  console.log('playAnimation', playAnimation);
+
+  const onPressCrossBirthday = () => {
+    console.log('onPressCrossBirthday');
+    setPlayAnimation(false);
   };
 
   return (
@@ -354,11 +570,10 @@ const HomeScreen = props => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Ficon
-                  type="light"
-                  name="bars-progress"
-                  size={hp(3.5)}
-                  color="#4D69DC"
+                <Image
+                  source={{uri: 'servicelength'}}
+                  style={{height: hp('3.5'), width: wp('7')}}
+                  resizeMode={'contain'}
                 />
 
                 <Text style={[styles.serviceSection]}>
@@ -368,11 +583,10 @@ const HomeScreen = props => {
                 <Text style={[styles.bootContText2]}>Service Length</Text>
               </View>
               <View style={styles.monial}>
-                <Ficon
-                  type="light"
-                  name="chart-area"
-                  size={hp(3.5)}
-                  color="#4D69DC"
+                <Image
+                  source={{uri: 'empstatus'}}
+                  style={{height: hp('3.5'), width: wp('7')}}
+                  resizeMode={'contain'}
                 />
 
                 <Text style={[styles.serviceSection]}>
@@ -387,16 +601,17 @@ const HomeScreen = props => {
                   alignItems: 'center',
                   flex: 0.33,
                 }}>
-                <Ficon
-                  type="light"
-                  containerStyle={styles.iconStyle}
-                  name="calendar-days"
-                  size={hp(3.5)}
-                  color="#4D69DC"
+                <Image
+                  source={{uri: 'empcalendar'}}
+                  style={{height: hp('3.5'), width: wp('7')}}
+                  resizeMode={'contain'}
                 />
 
                 <Text style={styles.serviceSection}>
-                  {profileHere?.empTimeIn}
+                  {profileHere?.empTimeIn == null ||
+                  profileHere?.empTimeIn == undefined
+                    ? '--:--:--'
+                    : profileHere?.empTimeIn}
                 </Text>
                 <Text style={[styles.bootContText2]}>Attendance</Text>
               </View>
@@ -441,6 +656,31 @@ const HomeScreen = props => {
                 />
               </View>
             </View>
+            {profileHere?.userData?.reporting_result?.reportee_length > 0 && (
+              <>
+                <View style={{marginHorizontal: wp('5.5'), marginTop: hp('1')}}>
+                  <Text style={styles.messageText}>Reportees</Text>
+                </View>
+                <View
+                  style={{
+                    marginHorizontal: wp('5.5'),
+                    marginTop: hp('1'),
+                    height: hp('10'),
+                    backgroundColor: 'white',
+                    borderRadius: wp('2'),
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <FlatList
+                    data={slicedData}
+                    renderItem={renderItemReportees}
+                    keyExtractor={(item, index) => index.toString()}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                  />
+                </View>
+              </>
+            )}
 
             <View style={{marginHorizontal: wp('5.5'), marginTop: hp('1')}}>
               <Text style={styles.messageText}>Leaves</Text>
@@ -459,6 +699,7 @@ const HomeScreen = props => {
                   shadowOpacity: 0.5,
                   shadowRadius: 4,
                   elevation: 4,
+                  marginBottom: hp('1'),
                 }}>
                 <View style={styles.LBMainView}>
                   <TouchableOpacity
@@ -503,8 +744,8 @@ const HomeScreen = props => {
                       donut
                       // showGradient
                       sectionAutoFocus
-                      radius={60}
-                      innerRadius={55}
+                      radius={57}
+                      innerRadius={52}
                       centerLabelComponent={() => {
                         return (
                           <View
@@ -533,21 +774,9 @@ const HomeScreen = props => {
                   </View>
                 </View>
 
-                <LineSeprator
-                  height={hp('0.15')}
-                  backgroundColor={'#D9D9D9'}
-                  marginHorizontal={wp('4')}
-                  marginVertical={hp('1.25')}
-                />
-
                 <View style={styles.LBBtnMainView}>
                   <TouchableOpacity
                     activeOpacity={0.5}
-                    // onPress={() =>
-                    //   navigation.navigate('LeaveHistory', {
-                    //     lastYearParam: lastYear,
-                    //   })
-                    // }
                     onPress={() => navigation.navigate('ApplyLeave')}
                     style={styles.LBBtnView}>
                     <Text style={[styles.btnText, {color: '#1C37A4'}]}>
@@ -557,6 +786,7 @@ const HomeScreen = props => {
                   <View style={{flex: 0.1}}></View>
                   <TouchableOpacity
                     activeOpacity={0.8}
+                    onPress={() => navigation.navigate('AttendanceTab')}
                     style={[styles.LBBtnView, {backgroundColor: '#1C37A4'}]}>
                     <Text style={[styles.btnText, {color: '#FFFFFF'}]}>
                       View Calendar
@@ -568,7 +798,12 @@ const HomeScreen = props => {
 
             {profileHere?.userData?.wfh_result == 1 && (
               <>
-                <View style={{marginHorizontal: wp('5.5'), marginTop: hp('1')}}>
+                <View
+                  style={{
+                    marginHorizontal: wp('5.5'),
+                    marginTop: hp('1'),
+                    marginBottom: hp('1'),
+                  }}>
                   <Text style={styles.messageText}>W.F.H</Text>
                 </View>
 
@@ -594,7 +829,91 @@ const HomeScreen = props => {
                 </TouchableOpacity>
               </>
             )}
+
+            {profileHereEmpBirthday == 0 ? (
+              <>
+                {playAnimation ? (
+                  <View style={styles.animationContainer}>
+                    <View style={{flexDirection: 'row'}}>
+                      <View style={{flex: 0.8}}></View>
+                      <View
+                        style={{
+                          flex: 0.2,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <TouchableOpacity
+                          activeOpacity={0.5}
+                          onPress={onPressCrossBirthday}
+                          style={{
+                            height: hp('5'),
+                            width: wp('10'),
+                            backgroundColor: '#1C37A4',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: wp('50'),
+                          }}>
+                          <FontAwesomeIcon
+                            icon="fa fa-xmark"
+                            size={hp(2.75)}
+                            style={{color: 'white'}}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+
+                    <View style={{}}>
+                      <LottieView
+                        style={styles.animation}
+                        source={
+                          profileHere?.userData?.emp_result?.EMP_GENDER ==
+                          'Male'
+                            ? require('../assets/birthdaymale.json')
+                            : require('../assets/birthdayfemale.json')
+                        }
+                        autoPlay
+                        loop={false}
+                      />
+                    </View>
+                  </View>
+                ) : (
+                  <></>
+                )}
+              </>
+            ) : (
+              <></>
+            )}
           </ScrollView>
+
+          {modalVisible && (
+            <ViewMessageDetailModal
+              activeOpacityLikeIcon={msgLike != 'Y' ? 0.8 : 1}
+              closeModal={closeModal}
+              headTitleText={'Message'}
+              msgSubject={messageSubject}
+              empPhoto={empPhoto}
+              empName={empName}
+              msgDate={msgDate}
+              htmlSource={messageDetailHere?.userData?.MSG_DETAIL_SUBSTRING}
+              onPressLikeIcon={
+                msgLike != 'Y' ? onPressThumbUpIcon : onPressInElse
+              }
+              inconType={msgLike == 'Y' ? 'solid' : 'light'}
+            />
+          )}
+
+          {reporteeModal ? (
+            <ReporteeProfileModal
+              onPressBackIcon={onRequestClose}
+              modalVisible={reporteeModal}
+              onRequestClose={onRequestClose}
+              reporteeId={idHere}
+              my_branch_id={branchIdHere}
+              my_DEPARTMENT_ID={deptIdHere}
+            />
+          ) : (
+            <></>
+          )}
         </>
       )}
     </SafeAreaView>
@@ -702,6 +1021,7 @@ const styles = EStyleSheet.create({
     color: '#979797',
     textTransform: 'uppercase',
     paddingTop: hp(0.2),
+    letterSpacing: 0.35,
   },
   serviceSection: {
     fontSize: '0.7rem',
@@ -782,11 +1102,11 @@ const styles = EStyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: hp('2'),
-    marginBottom: hp('1'),
+    marginBottom: hp('0'),
   },
   leaveBalRightView: {
     flexDirection: 'row',
-    marginTop: hp('2'),
+    marginTop: hp('1'),
   },
   LBCountText: {
     fontSize: '1.15rem',
@@ -825,9 +1145,9 @@ const styles = EStyleSheet.create({
     letterSpacing: 0.25,
   },
   LBBtnMainView: {
-    marginHorizontal: wp('3'),
+    marginHorizontal: wp('5'),
     flexDirection: 'row',
-    marginVertical: hp('1.25'),
+    marginVertical: hp('1.5'),
   },
   LBBtnView: {
     flex: 0.45,
@@ -844,6 +1164,23 @@ const styles = EStyleSheet.create({
     fontSize: '0.5rem',
     fontWeight: '500',
     letterSpacing: 0.2,
+  },
+
+  animationContainer: {
+    position: 'absolute',
+    top: 55,
+    left: 0,
+    right: 5,
+    // bottom: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    marginHorizontal: wp('15'),
+  },
+  animation: {
+    width: wp('70'),
+    height: hp('35'),
+    marginTop: hp('-2'),
   },
 });
 

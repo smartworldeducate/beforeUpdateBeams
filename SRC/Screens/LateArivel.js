@@ -6,96 +6,74 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  ImageBackground,
 } from 'react-native';
+import Ficon from 'react-native-fontawesome-pro';
+
 import React, {useEffect, useState} from 'react';
 import MainHeader from '../Components/Headers/MainHeader';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import colors from '../Styles/colors';
 import {Div, ThemeProvider, Radio} from 'react-native-magnus';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import Ficon from 'react-native-fontawesome-pro';
-
+import SelectDropdown from 'react-native-select-dropdown';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import ViewInput from '../Components/ViewInput';
 import Button from '../Components/Button/Button';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import fontFamily from '../Styles/fontFamily';
 import ViewInputTwo from '../Components/ViewInputTwo';
+import InputBackground from '../Components/InputBackground';
 import Icon from 'react-native-fontawesome-pro';
-import SelectDropdown from 'react-native-select-dropdown';
-import {reporteeHandleFun} from '../features/reportee/createSlice';
-import {getLineMangerHandller} from '../features/lineManager/createSlice';
 import {useDispatch, useSelector} from 'react-redux';
+import {getLineMangerHandller} from '../features/lineManager/createSlice';
+import {reporteeHandleFun} from '../features/reportee/createSlice';
+import LeaveTypeModal from '../Components/Modal/LeaveTypeModal';
+import {LeaveTypeAction} from '../features/LeaveTypeSlice/LeaveTypeSlice';
+import LineSeprator from '../Components/LineSeprator/LineSeprator';
+import LeaveForwardToModal from '../Components/Modal/LeaveForwardToModal';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import moment from 'moment';
+import {ApplyLeaveAction} from '../features/LeaveTypeSlice/ApplyLeaveSlice';
+import ViewInputAnother from '../Components/ViewInputAnother';
+import {useFocusEffect} from '@react-navigation/native';
+import {LateArrivalAction} from '../features/LeaveTypeSlice/LateArrivalSlice';
+
 const LateArivel = props => {
   const dispatch = useDispatch();
-  const [fullDay, setFullDay] = useState(false);
-  const [halfDay, setHalfDay] = useState(false);
-  const [shortLeave, setShortLeave] = useState(false);
-  const [withPay, setWithPay] = useState(false);
-  const [withOutPay, setWithOutPay] = useState(false);
-  const [stime, setStime] = useState('');
-  const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
+  const profileHereEmpId = useSelector(
+    state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
+  );
+
+  const leaveTypeHere = useSelector(state => state.LeaveTypeStore);
+
+  const lateArrivalHere = useSelector(state => state.LateArrivalStore);
+  console.log('lateArrivalHere', lateArrivalHere);
+
+  // all states hooks starts
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isDatePickerVisibleTwo, setDatePickerVisibilityTwo] = useState(false);
-  const [isDatePickerVisibleThree, setDatePickerVisibilityThree] =
-    useState(false);
-  const [myDate, setMyDate] = useState('');
-  const [dateTwo, setDateTwo] = useState('');
-  const [dateThree, setDateThree] = useState('');
-  const [selectValue, setSelectValue] = useState(0);
-  const [selectLeave, setSelectLeave] = useState('');
-  const [reporteeData, setReporteeData] = useState([]);
-  const [empLength, setEmpLength] = useState('');
-  const [mangerData, setMangerData] = useState([]);
-  const reportee = ['Muhammad Qasim Ali Khan', 'Asad Numan Shahid'];
-  const userData = useSelector(state => state.reportee);
+  const [timePickerVisible, setTimePickerVisibility] = useState(false);
 
-  const lineMangerHandler = async () => {
-    try {
-      const lineMdata = await dispatch(getLineMangerHandller());
-      console.log('line manager data', lineMdata?.payload?.data);
-      if (lineMdata && lineMdata.payload && lineMdata.payload.data) {
-        console.log(
-          'line manager data inside dispatch',
-          lineMdata?.payload?.data,
-        );
-        setMangerData(lineMdata?.payload?.data);
-      }
-      return lineMdata;
-    } catch (error) {
-      console.error('Error in reporteeHandler:', error);
-      throw error;
-    }
-  };
-  const reporteeHandler = async val => {
-    try {
-      // console.log('selected value', val);
-      const reportee = await dispatch(reporteeHandleFun(val));
-      if (reportee && reportee.payload && reportee.payload.data) {
-        console.log('reprtee dada inside dispatch', reportee.payload?.data);
-        setReporteeData(reportee.payload?.data);
-        setEmpLength(reportee.payload?.data?.length);
-      }
-      return reportee;
-    } catch (error) {
-      console.error('Error in reporteeHandler:', error);
-      throw error;
-    }
-  };
+  const [leaveTypeModal, setLeaveTypeModal] = useState(false);
+  const [forwardToModal, setForwardToModal] = useState(false);
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
+  const [totalDays, setTotalDays] = useState(null);
+  const [lateArrivalTime, setLateArrivalTime] = useState(null);
 
-  useEffect(() => {
-    setReporteeData(userData);
-    const rd = reporteeHandler({
-      reportingToId: selectValue ? selectValue : '18776',
-    });
-    setReporteeData(rd.payload?.data);
-    const lmd = lineMangerHandler();
-    console.log('linemanger data', lmd.payload?.data);
-    // setMangerData(lmd);
-  }, [selectValue]);
-  //one
+  const [forFromDate, setForFromDate] = useState(null);
+  const [forToDate, setForToDate] = useState(null);
+  const [empLeaveTypeId, setEmpLeaveTypeId] = useState(null);
+  const [empLeaveForwardToId, setEmpLeaveForwardToId] = useState(null);
+  const [empLeaveForwardTo, setEmpLeaveForwardTo] = useState(null);
+
+  const [reasonText, setReasonText] = useState('');
+
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
@@ -105,13 +83,21 @@ const LateArivel = props => {
   };
 
   const handleDateConfirm = date => {
+    const formattedFromDate = date.toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: '2-digit',
+      year: 'numeric',
+    });
+
     var day = date.getDate();
     var month = date.getMonth() + 1;
     var year = date.getFullYear();
 
-    const dt = day + '-' + month + '-' + year;
+    const fromDateForTotalDays = day + '-' + month + '-' + year;
+    setForFromDate(fromDateForTotalDays);
 
-    setMyDate(dt);
+    setFromDate(formattedFromDate);
     hideDatePicker();
   };
 
@@ -125,73 +111,113 @@ const LateArivel = props => {
   };
 
   const handleDateConfirmTwo = date => {
+    const formattedToDate = date.toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: '2-digit',
+      year: 'numeric',
+    });
+
     var day = date.getDate();
     var month = date.getMonth() + 1;
     var year = date.getFullYear();
 
-    const dt = day + '-' + month + '-' + year;
+    const toDateForTotalDays = day + '-' + month + '-' + year;
+    console.log('toDateForTotalDays', toDateForTotalDays);
+    setForToDate(toDateForTotalDays);
 
-    setDateTwo(dt);
+    setToDate(formattedToDate);
     hideDatePickerTwo();
   };
 
-  //third date time picker
-  const showDatePickerThree = () => {
-    setDatePickerVisibilityThree(true);
-  };
-
-  const hideDatePickerThree = () => {
-    setDatePickerVisibilityThree(false);
-  };
-
-  const handleDateConfirmThree = date => {
-    var day = date.getDate();
-    var month = date.getMonth() + 1;
-    var year = date.getFullYear();
-
-    const dt = day + '-' + month + '-' + year;
-
-    setDateThree(dt);
-    hideDatePickerThree();
-  };
-
-  //timepicker
-  const showTimePicker = () => {
+  const showLateArrivalTimePicker = () => {
     setTimePickerVisibility(true);
   };
-  const hideTimePicker = () => {
+
+  const hideLateArrivalTimePicker = () => {
     setTimePickerVisibility(false);
   };
 
-  const handleSconfirm = time => {
-    const x = time.toLocaleTimeString();
-    setStime(x);
-    hideTimePicker();
+  const handleLateArrivalTimeConfirm = time => {
+    const pakTime = new Date(time);
+    setLateArrivalTime(
+      pakTime.toLocaleTimeString('en-PK', {hour: '2-digit', minute: '2-digit'}),
+    );
+    hideLateArrivalTimePicker();
   };
 
-  const fulDayHandle = () => {
-    setFullDay(!fullDay);
+  useEffect(() => {
+    if (forFromDate != null && forToDate != null) {
+      const startMoment = moment(forFromDate, 'DD-MM-YYYY');
+      const endMoment = moment(forToDate, 'DD-MM-YYYY');
+
+      const diffInDays = endMoment.diff(startMoment, 'days') + 1;
+      setTotalDays(diffInDays);
+    }
+  }, [fromDate, toDate]);
+
+  const onPressForwardToModal = () => {
+    setForwardToModal(!forwardToModal);
   };
-  const halfDayHandle = () => {
-    setHalfDay(!halfDay);
+
+  const renderItemForwardTo = ({item, index}) => {
+    return (
+      <>
+        <TouchableOpacity
+          onPress={() => onPressSelectForwardTo({item})}
+          style={{
+            height: hp('5.5'),
+            justifyContent: 'center',
+            marginVertical: hp('0.1'),
+          }}>
+          <Text style={styles.leaveTypesText}>{item?.emp_name}</Text>
+        </TouchableOpacity>
+
+        <LineSeprator height={hp('0.1')} backgroundColor={'black'} />
+      </>
+    );
   };
-  const shortLeaveHandle = () => {
-    setShortLeave(!shortLeave);
+
+  const onPressSelectForwardTo = ({item}) => {
+    setEmpLeaveForwardToId(item?.employee_id);
+    setEmpLeaveForwardTo(item?.emp_name);
+    setForwardToModal(false);
   };
-  const withPayHandle = () => {
-    setWithPay(!withPay);
+
+  const onChangeReason = val => {
+    setReasonText(val);
   };
-  const withOutPayHandle = () => {
-    setWithOutPay(!withOutPay);
+
+  const onPressSubmitRequest = () => {
+    dispatch(
+      LateArrivalAction({
+        employee_id: JSON.parse(profileHereEmpId),
+        leave_type: 18,
+
+        from_date: moment(fromDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
+        to_date: moment(toDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
+        total_days: totalDays,
+
+        txt_exp_tm: lateArrivalTime,
+        reason: reasonText,
+        forward_to: empLeaveForwardToId,
+      }),
+    );
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // setIsFocused(true);
+      // Additional logic when screen gains focus
+      return () => {
+        // setIsFocused(false);
+        // Additional logic when screen loses focus
+      };
+    }, []),
+  );
+
   return (
     <ScrollView style={{flex: 1, backgroundColor: '#F5F8FC'}}>
-      <DateTimePickerModal
-        isVisible={isTimePickerVisible}
-        mode="time"
-        onConfirm={handleSconfirm}
-        onCancel={hideTimePicker}
-      />
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
         mode="date"
@@ -205,10 +231,10 @@ const LateArivel = props => {
         onCancel={hideDatePickerTwo}
       />
       <DateTimePickerModal
-        isVisible={isDatePickerVisibleThree}
-        onConfirm={handleDateConfirmThree}
-        onCancel={hideDatePickerThree}
-        mode="date"
+        mode="time"
+        isVisible={timePickerVisible}
+        onConfirm={handleLateArrivalTimeConfirm}
+        onCancel={hideLateArrivalTimePicker}
       />
       <MainHeader
         text={'Late Arrival'}
@@ -227,20 +253,20 @@ const LateArivel = props => {
           shadowRadius: wp('15'),
           elevation: 10,
         }}>
-        <ViewInput
-          dateText={myDate}
+        <ViewInputAnother
+          dateText={fromDate == null ? 'From Date' : fromDate}
           dateFun={showDatePicker}
-          iconName={'arrow-right'}
+          imgName={'leftarrowdot'}
           rIcon={'angles-up-down'}
           placeholder={'Tue, Jun 27, 2023'}
           placeholderColor={colors.loginTextColor}
-          iconColor={colors.loginIconColor}
+          style={styles.textInputCustomStyle}
         />
       </View>
 
       <View
         style={{
-          marginTop: hp(2),
+          marginTop: hp(1.5),
           marginHorizontal: wp('5'),
           backgroundColor: '#fff',
           borderRadius: wp(10),
@@ -249,21 +275,21 @@ const LateArivel = props => {
           shadowRadius: wp('15'),
           elevation: 10,
         }}>
-        <ViewInput
-          dateText={dateTwo}
+        <ViewInputAnother
+          dateText={toDate == null ? 'To Date' : toDate}
           dateFun={showDatePickerTwo}
-          iconName={'arrow-right'}
+          imgName={'rightarrowdot'}
           placeholder={'Tue, Jun 27, 2023'}
           placeholderColor={colors.loginTextColor}
-          iconColor={colors.loginIconColor}
-          // style={styles.textInputCustomStyle}
+          style={styles.textInputCustomStyle}
         />
       </View>
       <View
         style={{
-          marginTop: hp(2),
+          marginTop: hp(1.5),
           marginHorizontal: wp('5'),
-          backgroundColor: '#FFF2CC',
+          backgroundColor:
+            totalDays == null || totalDays == 0 ? 'white' : '#FFF2CC',
           borderRadius: wp(10),
           shadowColor: '#000',
           shadowOpacity: 1,
@@ -271,17 +297,18 @@ const LateArivel = props => {
           elevation: 10,
         }}>
         <ViewInput
-          dateText={dateThree}
-          dateFun={showDatePickerThree}
-          iconName={'calendar-days'}
-          placeholder={'8 Days'}
+          dateText={totalDays}
+          iconName={'fat fa-calendar-days'}
+          placeholder={'Total Days'}
           placeholderColor={colors.loginTextColor}
           iconColor={colors.loginIconColor}
+          style={styles.textInputCustomStyle}
         />
       </View>
+
       <View
         style={{
-          marginTop: hp(2),
+          marginTop: hp(1.5),
           marginHorizontal: wp('5'),
           backgroundColor: '#fff',
           borderRadius: wp(10),
@@ -291,12 +318,13 @@ const LateArivel = props => {
           elevation: 10,
         }}>
         <ViewInput
-          dateText={stime}
-          dateFun={showTimePicker}
-          iconName={'clock-eleven'}
+          dateText={lateArrivalTime == null ? 'Late Arrival' : lateArrivalTime}
+          dateFun={showLateArrivalTimePicker}
+          iconName={'fat fa-clock-eleven'}
           placeholder={'Late Arrival'}
           placeholderColor={colors.loginTextColor}
           iconColor={colors.loginIconColor}
+          style={styles.textInputCustomStyle}
         />
       </View>
 
@@ -309,11 +337,13 @@ const LateArivel = props => {
           shadowRadius: 4,
           elevation: 8,
           marginHorizontal: wp(5.5),
-          marginTop: hp('2'),
+          marginTop: hp('3'),
         }}>
         <TextInput
           placeholder={'Reason'}
           placeholderTextColor="#363636"
+          multiline={true}
+          onChangeText={onChangeReason}
           style={{
             height: hp(17),
             textAlignVertical: 'top',
@@ -328,9 +358,10 @@ const LateArivel = props => {
 
       <TouchableOpacity
         activeOpacity={0.8}
+        onPress={onPressForwardToModal}
         style={{
           flexDirection: 'row',
-          marginTop: hp(1.5),
+          marginTop: hp(2),
           marginHorizontal: wp('5'),
           backgroundColor: '#FFF2CC',
           borderRadius: wp(10),
@@ -349,7 +380,11 @@ const LateArivel = props => {
             backgroundColor: '#FDEB13',
             borderRadius: wp('10'),
           }}>
-          <Ficon type="light" name={'user-tie'} color={'#000'} size={25} />
+          <FontAwesomeIcon
+            icon={'fat fa-user-tie'}
+            size={hp(3)}
+            style={{color: colors.loginIconColor}}
+          />
         </View>
         <View
           style={{
@@ -361,7 +396,7 @@ const LateArivel = props => {
             numberOfLines={1}
             ellipsizeMode={'tail'}
             style={styles.dropdown1BtnTxt}>
-            Muhammad Qasim Ali Khan
+            {empLeaveForwardTo == null ? 'Forward To' : empLeaveForwardTo}
           </Text>
         </View>
         <View
@@ -377,8 +412,9 @@ const LateArivel = props => {
 
       <TouchableOpacity
         activeOpacity={0.8}
+        onPress={onPressSubmitRequest}
         style={{
-          marginTop: hp(15),
+          marginTop: hp(6),
           marginHorizontal: hp(2.75),
           height: hp(6.5),
           justifyContent: 'center',
@@ -388,6 +424,15 @@ const LateArivel = props => {
         }}>
         <Text style={styles.submittext}>SUBMIT REQUEST</Text>
       </TouchableOpacity>
+
+      {forwardToModal && (
+        <LeaveForwardToModal
+          topText={'Forward To'}
+          onPressOpacity={onPressForwardToModal}
+          leaveTypesData={leaveTypeHere?.userData?.forward_to}
+          renderItem={renderItemForwardTo}
+        />
+      )}
     </ScrollView>
   );
 };
@@ -436,14 +481,15 @@ const styles = EStyleSheet.create({
     shadowRadius: wp('10'),
     elevation: 10,
   },
+
   textInputCustomStyle: {
-    // fontSize: '0.7rem',
-    // height: hp('6'),
-    // letterSpacing: -0.05,
-    // paddingLeft: wp('3'),
-    // color: '#363636',
-    // fontWait: '500',
-    // fontFamily: fontFamily.ceraMedium,
+    fontSize: '0.7rem',
+    height: hp('6'),
+    letterSpacing: -0.05,
+    paddingLeft: wp('2'),
+    color: '#363636',
+    fontWait: '500',
+    fontFamily: fontFamily.ceraMedium,
   },
   radiotext: {
     fontSize: '0.62rem',
@@ -458,6 +504,7 @@ const styles = EStyleSheet.create({
     // color:'#363636',
     fontWait: '500',
   },
+
   dropdown1BtnStyle: {
     width: wp('50'),
     height: hp(7),
@@ -486,10 +533,16 @@ const styles = EStyleSheet.create({
   },
   dropdown1RowTxtStyle: {
     textAlign: 'left',
-    color: 'gray',
-    fontSize: '0.7rem',
+    color: '#363636',
+    fontSize: '0.6rem',
     fontWaight: 500,
-    marginLeft: hp(1.5),
     fontFamily: fontFamily.ceraMedium,
+  },
+  leaveTypesText: {
+    color: '#343434',
+    fontSize: '0.65rem',
+    fontFamily: fontFamily.ceraMedium,
+    fontStyle: 'normal',
+    fontWeight: '500',
   },
 });

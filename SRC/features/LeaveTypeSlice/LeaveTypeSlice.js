@@ -10,7 +10,7 @@ const initialState = {
 };
 
 export const LeaveTypeAction = createAsyncThunk('LeaveType', async values => {
-  console.log('values', values);
+  console.log('valuesLeaveTypes', values);
   return axios
     .post(`${APIS.LeaveTypeAPI}`, values, {
       headers: {

@@ -16,6 +16,7 @@ import Menu from 'react-native-vector-icons/Entypo';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {useSelector, useDispatch} from 'react-redux';
 import fontFamily from '../../Styles/fontFamily';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
 const MessagesTab = ({state, descriptors, navigation, props}) => {
   const messagesHere = useSelector(state => state.messagesStore?.unReadLength);
@@ -91,12 +92,20 @@ const MessagesTab = ({state, descriptors, navigation, props}) => {
                         alignItems: 'center',
                       }}>
                       <View style={{}}>
-                        <Ficon
-                          type={isFocused ? 'solid' : 'light'}
-                          name="envelope"
-                          size={hp(2.5)}
-                          color={isFocused ? '#1C37A4' : '#8a8a8a'}
-                        />
+                        {isFocused ? (
+                          <Ficon
+                            type={'solid'}
+                            name="envelope"
+                            size={hp(2.5)}
+                            color={'#1C37A4'}
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            icon="fat fa-envelope"
+                            size={hp(2.5)}
+                            style={{color: 'grey'}}
+                          />
+                        )}
                       </View>
 
                       {isFocused && (
@@ -123,12 +132,20 @@ const MessagesTab = ({state, descriptors, navigation, props}) => {
                       alignItems: 'center',
                     }}>
                     <View style={{}}>
-                      <Ficon
-                        type={isFocused ? 'solid' : 'light'}
-                        name="star"
-                        size={hp(2.6)}
-                        color={isFocused ? '#1C37A4' : '#8a8a8a'}
-                      />
+                      {isFocused ? (
+                        <Ficon
+                          type={'solid'}
+                          name="star"
+                          size={hp(2.6)}
+                          color={'#1C37A4'}
+                        />
+                      ) : (
+                        <FontAwesomeIcon
+                          icon="fat fa-star"
+                          size={hp(2.6)}
+                          style={{color: 'grey'}}
+                        />
+                      )}
                     </View>
 
                     {isFocused && (
@@ -149,12 +166,20 @@ const MessagesTab = ({state, descriptors, navigation, props}) => {
                       alignItems: 'center',
                     }}>
                     <View style={{}}>
-                      <Ficon
-                        type={isFocused ? 'solid' : 'light'}
-                        name="box-archive"
-                        size={hp(2.35)}
-                        color={isFocused ? '#1C37A4' : '#8a8a8a'}
-                      />
+                      {isFocused ? (
+                        <Ficon
+                          type={'solid'}
+                          name="box-archive"
+                          size={hp(2.35)}
+                          color={'#1C37A4'}
+                        />
+                      ) : (
+                        <FontAwesomeIcon
+                          icon="fat fa-box-archive"
+                          size={hp(2.35)}
+                          style={{color: 'grey'}}
+                        />
+                      )}
                     </View>
 
                     {isFocused && (
@@ -178,7 +203,6 @@ const styles = EStyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     backgroundColor: 'white',
-    // paddingBottom: hp('1'),
   },
   innerMainView: {
     flex: 1,
@@ -186,7 +210,6 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     paddingHorizontal: wp('4'),
-    // backgroundColor: 'green',
   },
   touchableIcon: {
     justifyContent: 'center',

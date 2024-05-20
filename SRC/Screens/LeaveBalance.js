@@ -39,47 +39,23 @@ const LeaveBalance = props => {
   const pending = leaveBalanceHere?.userData?.pandding_balance_percentage;
   const long = leaveBalanceHere?.userData?.long_percentage;
 
-  console.log('annualLeaves', annual, casual, sick);
-
-  // useEffect(() => {
-  //   AsyncStorage.getItem('loginData')
-  //     .then(loginData => {
-  //       const parsedLoginData = JSON.parse(loginData);
-  //       dispatch(
-  //         LeaveBalanceAction({
-  //           employee_id: parsedLoginData,
-  //         }),
-  //       );
-  //     })
-  //     .catch(error => {
-  //       console.error('Error retrieving loginData from AsyncStorage:', error);
-  //     });
-  // }, [dispatch]);
-
   const renderItem = ({item, index}) => {
-    // ${item?.PENDING}
     return (
       <>
-        {item?.LEAVE_TYPE == 'Maternity Leave' ? (
-          <></>
-        ) : (
-          <>
-            <LeaveBalanceComponent
-              iconName={item?.ICONNAME}
-              iconColor={item?.CLOR}
-              upperText={item?.LEAVE_TYPE}
-              LowerText={`${item?.leave_text}`}
-              availLeaves={item?.APPRV_LVS == null ? '0' : item?.APPRV_LVS}
-              totalLeaves={item?.total}
-            />
-            <LineSeprator
-              height={hp('0.1')}
-              backgroundColor={'silver'}
-              marginHorizontal={wp('1')}
-              maginVertical={hp('1')}
-            />
-          </>
-        )}
+        <LeaveBalanceComponent
+          iconName={item?.ICONNAME}
+          iconColor={item?.CLOR}
+          upperText={item?.Leave_Name}
+          LowerText={`${item?.leave_text}`}
+          availLeaves={item?.APPRV_LVS == null ? '0' : item?.APPRV_LVS}
+          totalLeaves={item?.total}
+        />
+        <LineSeprator
+          height={hp('0.1')}
+          backgroundColor={'silver'}
+          marginHorizontal={wp('1')}
+          maginVertical={hp('1')}
+        />
       </>
     );
   };

@@ -8,6 +8,7 @@ const initialState = {
   userData: [],
   isLoading: true,
   empTimeIn: null,
+  empBirthday: null,
 };
 
 export const profileAction = createAsyncThunk('Profile', async values => {
@@ -50,6 +51,7 @@ const ProfileSlice = createSlice({
       state.message = action.payload.message;
       state.userData = action.payload.data;
       state.empTimeIn = action.payload.emp_in_time;
+      state.empBirthday = action.payload.birth_mark;
     });
   },
 });

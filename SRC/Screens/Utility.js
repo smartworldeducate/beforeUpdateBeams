@@ -7,6 +7,7 @@ import {
   FlatList,
   ActivityIndicator,
   Linking,
+  RefreshControl,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import MainHeader from '../Components/Headers/MainHeader';
@@ -23,6 +24,7 @@ import {UtilityAction} from '../features/UtilitySlice/UtilitySlice';
 import Ficon from 'react-native-fontawesome-pro';
 import {UtilityMiscLogAction} from '../features/UtilitySlice/UtilityMiscLog';
 import Loader from '../Components/Loader/Loader';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
 const Utility = props => {
   const dispatch = useDispatch();
@@ -31,26 +33,30 @@ const Utility = props => {
     state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
   );
 
-  console.log('profileHereEmpId', profileHereEmpId);
-
   const utilityLoadingHere = useSelector(state => state.utilityStore);
-  // console.log('utilityHere', utilityHere?.isLoading);
 
   const utilityHere = useSelector(state => state.utilityStore?.userData);
-  console.log('utilityHere>>>>>', utilityHere);
+  // console.log('utilityHere>>>>>', utilityHere);
 
-  const utilityMiscLogHere = useSelector(state => state.utilityMiscLogStore);
-  // console.log('utilityMiscLogHere', utilityMiscLogHere);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    dispatch(UtilityAction());
+    try {
+      dispatch(UtilityAction());
+    } catch (error) {
+      console.error('Error during useEffect run:', error);
+    }
   }, []);
 
-  const items = [
-    {id: 1, name: 'Item 1'},
-    {id: 2, name: 'Item 2'},
-    {id: 3, name: 'Item 3'},
-  ];
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      dispatch(UtilityAction());
+    } catch (error) {
+      console.error('Error in catch refresh control:', error);
+    }
+    setRefreshing(false);
+  };
 
   const renderItem = ({item, index}) => {
     return (
@@ -59,7 +65,7 @@ const Utility = props => {
         onPress={() => {
           dispatch(
             UtilityMiscLogAction({
-              employee_id: profileHereEmpId,
+              employee_id: JSON.parse(profileHereEmpId),
               utility_id: item?.utility_id,
             }),
           );
@@ -98,35 +104,15 @@ const Utility = props => {
             justifyContent: 'flex-end',
             alignItems: 'center',
           }}>
-          <Ficon
-            type="light"
-            name="arrow-down-right"
-            size={hp(3.5)}
-            color="#4D69DC"
+          <FontAwesomeIcon
+            icon="fat fa-arrow-down-right"
+            size={hp(3.3)}
+            style={{color: '#1C37A4'}}
           />
         </View>
       </TouchableOpacity>
     );
   };
-
-  // const [expandedItemId, setExpandedItemId] = useState(null);
-
-  // const renderItemList = ({item, index}) => (
-  //   <TouchableOpacity onPress={() => handleItemPress(item.id)}>
-  //     <View style={styles.itemContainer}>
-  //       <Text style={styles.itemId}>ID: {item.id}</Text>
-  //       {expandedItemId === item.id && (
-  //         <Text style={styles.itemName}>Name: {item.name}</Text>
-  //       )}
-  //     </View>
-  //   </TouchableOpacity>
-  // );
-
-  // const handleItemPress = id => {
-  //   setExpandedItemId(id === expandedItemId ? null : id);
-  // };
-
-  // console.log('expandedItemId', expandedItemId);
 
   return (
     <View>
@@ -142,7 +128,16 @@ const Utility = props => {
         contentContainerStyle={{
           flexGrow: 1,
           backfaceVisibility: colors.appBackGroundColor,
-        }}>
+        }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={['#2A72B6', '#203B88']}
+            progressBackgroundColor={'#fcfcfc'}
+            tintColor={'#1C37A4'}
+          />
+        }>
         <View
           style={{
             marginHorizontal: wp('5.5'),
@@ -155,19 +150,6 @@ const Utility = props => {
             keyExtractor={(item, index) => index.toString()}
           />
         </View>
-
-        {/* <View
-          style={{
-            marginHorizontal: wp('5.5'),
-            marginTop: hp('1'),
-            marginBottom: hp('20'),
-          }}>
-          <FlatList
-            data={items}
-            renderItem={renderItemList}
-            keyExtractor={(item, index) => index.toString()}
-          />
-        </View> */}
       </ScrollView>
     </View>
   );

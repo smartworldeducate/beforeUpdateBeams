@@ -36,7 +36,7 @@ const MainHeader = ({
         <View
           style={{
             flexDirection: 'row',
-            marginTop: hp(6),
+            marginTop: hp(4),
             height: hp('5'),
             marginHorizontal: wp('2'),
           }}>
@@ -51,7 +51,7 @@ const MainHeader = ({
           </TouchableOpacity>
           <View
             style={{
-              flex: 0.7,
+              flex: 0.65,
               justifyContent: 'center',
               alignItems: 'center',
             }}>
@@ -60,9 +60,10 @@ const MainHeader = ({
 
           <View
             style={{
-              flex: 0.15,
+              flex: 0.2,
               justifyContent: 'center',
               alignItems: 'center',
+              // backgroundColor: 'red',
             }}>
             {rightIcon && (
               <Icon type="light" name={rightIcon} size={hp(2.5)} color="#fff" />
@@ -85,10 +86,11 @@ export default MainHeader;
 
 const styles = EStyleSheet.create({
   mainHeader: {
-    height: hp(12),
+    height: hp(13),
     backgroundColor: '#1C37A4',
     borderBottomRightRadius: hp(3),
     borderBottomLeftRadius: hp(3),
+    justifyContent: 'center',
   },
   headerChild: {
     marginTop: hp(6),
@@ -100,7 +102,7 @@ const styles = EStyleSheet.create({
   textstyle: {
     color: '#fff',
     marginTop: hp(0),
-    fontSize: '0.9rem',
+    fontSize: '0.8rem',
     fontWeight: '500',
     fontFamily: fontFamily.ceraMedium,
     fontStyle: 'normal',

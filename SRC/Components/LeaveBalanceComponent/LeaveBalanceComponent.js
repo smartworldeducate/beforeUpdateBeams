@@ -8,6 +8,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import colors from '../../Styles/colors';
 import fontFamily from '../../Styles/fontFamily';
 import Icon from 'react-native-fontawesome-pro';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
 const LeaveBalanceComponent = ({
   iconName,
@@ -28,7 +29,12 @@ const LeaveBalanceComponent = ({
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <Icon type="light" name={iconName} size={hp(3.5)} color={iconColor} />
+        <FontAwesomeIcon
+          icon={`fat fa-${iconName}`}
+          size={hp(3.5)}
+          style={{color: iconColor}}
+        />
+        {/* <Icon type="light" name={iconName} size={hp(3.5)} color={iconColor} /> */}
       </View>
       <View
         style={{

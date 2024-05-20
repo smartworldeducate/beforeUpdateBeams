@@ -7,10 +7,13 @@ const initialState = {
   message: '',
   userData: [],
   userDataViewAll: [],
+
   isLoading: true,
   pageOffset: 1,
-
+  isEmptyData: false,
   dataLength: null,
+
+  unReadLength: null,
 };
 
 export const favouriteMessagesAction = createAsyncThunk(
@@ -42,13 +45,25 @@ const FavouriteMessagesSlice = createSlice({
     },
 
     clearViewAllFavouriteMessagesState: (state, action) => {
-      console.log('clearViewAllMessagesState');
-      state.userData = [];
+      console.log('clearViewAllFavouriteMessagesState');
+      state.userDataViewAll = [];
+    },
+
+    textColr: (state, action) => {
+      console.log('payLoadMsgId', action.payload);
+      const list = state.userDataViewAll;
+      // console.log('list', list);
+      const indx = list?.findIndex(item => item?.MSG_ID == action?.payload);
+
+      if (indx !== -1) {
+        console.log('payLoadValue', action.payload);
+        state.userDataViewAll[indx].IS_READ = 'Y';
+      }
     },
 
     removeFromFavouriteSlice: (state, action) => {
       console.log('payLoadMsgId', action.payload);
-      const listAll = state.userData;
+      const listAll = state.userDataViewAll;
       // console.log('listAll', listAll);
       const indexToRemove = listAll?.findIndex(
         item => item?.MSG_ID == action?.payload,
@@ -56,7 +71,7 @@ const FavouriteMessagesSlice = createSlice({
 
       if (indexToRemove !== -1) {
         console.log('payLoadValue', action.payload);
-        state.userData.splice(indexToRemove, 1);
+        state.userDataViewAll.splice(indexToRemove, 1);
       }
     },
   },
@@ -72,11 +87,18 @@ const FavouriteMessagesSlice = createSlice({
       state.success = action.payload.success;
       state.message = action.payload.message;
       state.userData = action.payload.data;
-      state.userDataViewAll = action.payload.data;
+      // state.userDataViewAll = action.payload.data;
+
+      state.unReadLength = action.payload.unread_message_length;
 
       state.dataLength = action.payload.data.length;
 
-      state.userData = [...state.userData, ...action.payload.data];
+      state.userDataViewAll = [
+        ...state.userDataViewAll,
+        ...action.payload.data,
+      ];
+
+      // state.userData = [...state.userData, ...action.payload.data];
 
       // if (state.userDataViewAll.length === 0) {
       //   console.log('length0');
@@ -95,6 +117,7 @@ export const {
   clearAllState,
   increaseOffset,
   clearViewAllFavouriteMessagesState,
+  textColr,
   removeFromFavouriteSlice,
 } = FavouriteMessagesSlice.actions;
 

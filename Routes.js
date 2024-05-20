@@ -22,9 +22,9 @@ import Profile from './SRC/Screens/Profile';
 import ApplicationType from './SRC/Screens/ApplicationType';
 import ApplyLeave from './SRC/Screens/ApplyLeave';
 import Outstation from './SRC/Screens/Outstation';
-import AttendenceMarked from './SRC/Screens/AttendenceMarked';
+import AttendenceNotMarked from './SRC/Screens/AttendenceNotMarked';
 import LateArivel from './SRC/Screens/LateArivel';
-import EarliLeaving from './SRC/Screens/Earlileving';
+import EarlyLeaving from './SRC/Screens/EarlyLeaving';
 import ToilLeave from './SRC/Screens/ToilLeave';
 import Notification from './SRC/Screens/Notification';
 import Wfh from './SRC/Screens/Wfh';
@@ -60,6 +60,9 @@ import BottomTab from './SRC/Components/CustomTab/BottomTab';
 import MessagesTab from './SRC/Components/CustomTab/MessagesTab';
 
 import Utility from './SRC/Screens/Utility';
+import QRCodeScreen from './SRC/Screens/QRCodeScreen';
+
+import QRScannerList from './SRC/Screens/QRScannerList';
 import AttendenceAndLeaveTab from './SRC/Components/CustomTab/AttendenceAndLeaveTab';
 
 const Stack = createNativeStackNavigator();
@@ -73,8 +76,8 @@ function DrawerStack() {
       screenOptions={{
         headerShown: false,
         drawerPosition: 'right',
-        drawerType: 'slide',
-        drawerStyle: {width: wp('85'), backgroundColor: '#E6E6E6'},
+        drawerType: 'back',
+        drawerStyle: {width: wp('100'), backgroundColor: '#E6E6E6'},
       }}
       drawerContent={props => <CustomDrawer {...props} />}>
       <Drawer.Screen name="HomeDrawer" component={TabNavigator} />
@@ -91,6 +94,7 @@ function DrawerStack() {
       <Drawer.Screen name="FeedBackDrawer" component={FeedBack} />
       <Drawer.Screen name="UtilityDrawer" component={Utility} />
       <Drawer.Screen name="ProfileDrawer" component={Profile} />
+      <Drawer.Screen name="QRScannerListDrawer" component={QRScannerList} />
     </Drawer.Navigator>
   );
 }
@@ -103,10 +107,12 @@ function TabNavigator() {
       tabBar={props => <BottomTab {...props} />}
       screenOptions={{
         headerShown: false,
+        unmountOnBlur: true,
       }}>
       <Tab.Screen name="HomeScreenTab" component={HomeScreen} />
       <Tab.Screen name="LeaveBalanceTab" component={LeaveBalance} />
-      <Tab.Screen name="ViewAllMessagesTab" component={ViewAllMessages} />
+      <Tab.Screen name="QRCodeScreenTab" component={QRCodeScreen} />
+      {/* <Tab.Screen name="ViewAllMessagesTab" component={ViewAllMessages} /> */}
       <Tab.Screen name="AttendanceTab" component={Attendance} />
       <Tab.Screen name="ProfileTab" component={Profile} />
     </Tab.Navigator>
@@ -174,10 +180,13 @@ const Routes = () => {
 
         <Stack.Screen name="ApplyLeave" component={ApplyLeave} />
         <Stack.Screen name="Outstation" component={Outstation} />
-        <Stack.Screen name="AttendenceNotMarked" component={AttendenceMarked} />
+        <Stack.Screen
+          name="AttendenceNotMarked"
+          component={AttendenceNotMarked}
+        />
         <Stack.Screen name="LateArivel" component={LateArivel} />
 
-        <Stack.Screen name="EarliLeaving" component={EarliLeaving} />
+        <Stack.Screen name="EarlyLeaving" component={EarlyLeaving} />
         <Stack.Screen name="ToilLeave" component={ToilLeave} />
 
         {/* <Stack.Screen name="ApplicationType" component={BottomTabApplication} />

@@ -26,16 +26,20 @@ import {
   clearViewAllFavouriteMessagesState,
   favouriteMessagesAction,
   removeFromFavouriteSlice,
+  textColr,
 } from '../features/MessagesSlice/FavouriteMessageSlice/FavouriteMessageSlice';
 import MainHeader from '../Components/Headers/MainHeader';
 import Loader from '../Components/Loader/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {removeFromFavourite} from '../features/MessagesSlice/MessagesSlice';
 import {addToFavouriteMessagesAction} from '../features/MessagesSlice/FavouriteMessageSlice/AddToFavouriteMessageSlice';
+import ViewMessageDetailModal from '../Components/Modal/ViewMessageDetailModal';
+import {messageReadAction} from '../features/MessagesSlice/MessageLikeSlice';
+import {messageDetailAction} from '../features/MessagesSlice/MessageDetailSlice';
+import {messageStatusLikeAction} from '../features/MessagesSlice/MessageStatusLike';
 
 const FavouriteMessages = props => {
   const [valuePageOffset, setValuePageOffset] = useState(1);
-  console.log('valuePageOffset', valuePageOffset);
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -49,26 +53,34 @@ const FavouriteMessages = props => {
   );
 
   const favouriteAllMessagesHere = useSelector(
-    state => state.favouriteMessageStore.userData,
+    state => state.favouriteMessageStore.userDataViewAll,
   );
 
   const favMessagesDataLengthHere = useSelector(
     state => state.favouriteMessageStore?.dataLength,
   );
 
-  console.log('favMessagesDataLengthHere', favMessagesDataLengthHere);
+  const messageDetailHere = useSelector(state => state.messageDetailStore);
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [messageId, setMessageId] = useState(null);
+  const [messageSubject, setMessageSubject] = useState(null);
+  const [empPhoto, setEmpPhoto] = useState(null);
+  const [empName, setEmpName] = useState(null);
+  const [msgDate, setMsgDate] = useState(null);
+  const [msgLike, setMsgLike] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const loginData = await AsyncStorage.getItem('loginData');
-        // const parsedLoginData = JSON.parse(loginData);
+        const parsedLoginData = JSON.parse(loginData);
         dispatch(clearViewAllFavouriteMessagesState());
         dispatch(
           favouriteMessagesAction({
-            employeeId: loginData,
+            employeeId: parsedLoginData,
             ofset: valuePageOffset,
-            limit: 50,
+            limit: 12,
           }),
         );
       } catch (error) {
@@ -79,109 +91,161 @@ const FavouriteMessages = props => {
     fetchData();
   }, [dispatch]);
 
-  const renderItem = useCallback(
-    ({item, index}) => {
-      return (
-        <View style={{}}>
-          <View
-            activeOpacity={0.8}
-            style={{
-              height: hp('8'),
-              flexDirection: 'row',
-              // backgroundColor: 'red',
-              marginBottom: hp('1'),
-            }}>
-            <TouchableOpacity
-              activeOpacity={0.9}
-              // onPress={() =>
-              //   navigation.navigate('ViewMessageDetail', {messagedata: item})
-              // }
+  const renderItem = useCallback(({item}) => {
+    return (
+      <View style={{}}>
+        <View
+          activeOpacity={0.8}
+          style={{
+            // height: hp('8'),
+            // flexDirection: 'row',
+            // marginBottom: hp('1'),
 
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: hp('8'),
+            flexDirection: 'row',
+            borderRadius: wp('1'),
+            marginBottom: hp('0.15'),
+
+            backgroundColor:
+              item?.IS_READ === 'Y' ? colors.appBackGroundColor : '#e6e6e6',
+          }}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            style={{
+              flex: 0.15,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Image
+              source={{uri: item?.EMP_PHOTO}}
               style={{
-                flex: 0.15,
-                justifyContent: 'center',
-                alignItems: 'center',
-                // backgroundColor: 'orange',
-              }}>
-              <Image
-                source={{uri: item?.EMP_PHOTO}}
-                style={{
-                  height: hp('5.75'),
-                  width: wp('11.5'),
-                  borderRadius: wp(50),
-                }}
-                resizeMode="cover"
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() =>
-                navigation.navigate('ViewMessageDetail', {messagedata: item})
+                height: hp('5.75'),
+                width: wp('11.5'),
+                borderRadius: wp(50),
+              }}
+              resizeMode="cover"
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            // onPress={() =>
+            //   navigation.navigate('ViewMessageDetail', {messagedata: item})
+            // }
+
+            onPress={() => {
+              if (item?.IS_READ != 'Y') {
+                dispatch(
+                  messageReadAction({
+                    employee_id: JSON.parse(profileHereEmpId),
+                    messageId: item?.MSG_ID,
+                    read_status: 'Y',
+                  }),
+                );
+                dispatch(textColr(item?.MSG_ID));
               }
-              style={{
-                flex: 0.6,
-                // paddingVertical: hp('0.35'),
-                paddingLeft: wp('2.5'),
-                justifyContent: 'center',
-              }}>
+              setMessageId(item?.MSG_ID);
+              setMessageSubject(item?.MSG_SUBJECT);
+              setEmpPhoto(item?.EMP_PHOTO);
+              setEmpName(item?.EMP_NAME);
+              setMsgDate(item?.ENTRY_DATE);
+              onPressMessage(item?.MSG_ID);
+            }}
+            style={{
+              flex: 0.6,
+              paddingLeft: wp('2.5'),
+              justifyContent: 'center',
+            }}>
+            <Text
+              numberOfLines={1}
+              letterSpacing={'tail'}
+              style={styles.messageCardEmpName}>
+              {item?.EMP_NAME}
+            </Text>
+            <Text
+              numberOfLines={2}
+              ellipsizeMode={'tail'}
+              style={styles.msgSubject}>
+              {item?.MSG_SUBJECT}
+            </Text>
+          </TouchableOpacity>
+          <View
+            style={{
+              flex: 0.25,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <View style={{}}>
               <Text
                 numberOfLines={1}
                 letterSpacing={'tail'}
-                style={styles.messageCardEmpName}>
-                {item?.EMP_NAME}
+                style={styles.messageCardDate}>
+                {item?.ENTRY_DATE}
               </Text>
-              <Text
-                numberOfLines={2}
-                ellipsizeMode={'tail'}
-                style={styles.msgSubject}>
-                {item?.MSG_SUBJECT}
-              </Text>
-            </TouchableOpacity>
-            <View
-              style={{
-                flex: 0.25,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <View style={{}}>
-                <Text
-                  numberOfLines={1}
-                  letterSpacing={'tail'}
-                  style={styles.messageCardDate}>
-                  {item?.ENTRY_DATE}
-                </Text>
-              </View>
-              <TouchableOpacity
-                onPress={() => onPressStar({item})}
-                style={{
-                  alignItems: 'flex-end',
-                  justifyContent: 'center',
-                  width: wp('15'),
-                  height: hp('4.5'),
-                }}>
-                <Icon
-                  type="solid"
-                  name={'star'}
-                  size={hp(2.5)}
-                  color="#1C37A4"
-                />
-              </TouchableOpacity>
             </View>
+            <TouchableOpacity
+              onPress={() => onPressStar({item})}
+              style={{
+                alignItems: 'flex-end',
+                justifyContent: 'center',
+                width: wp('15'),
+                height: hp('4.5'),
+              }}>
+              <Icon type="solid" name={'star'} size={hp(2.5)} color="#f4b543" />
+            </TouchableOpacity>
           </View>
         </View>
-      );
-    },
-    [favouriteMessagesHere],
-  );
+      </View>
+    );
+  }, []);
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setMessageId(null);
+    setEmpName(null);
+    setMsgDate(null);
+    setEmpPhoto(null);
+    setMessageSubject(null);
+  };
+
+  const onPressMessage = item => {
+    setModalVisible(true);
+    dispatch(
+      messageDetailAction({
+        employee_id: JSON.parse(profileHereEmpId),
+        messageId: item,
+      }),
+    );
+  };
+
+  useEffect(() => {
+    if (messageDetailHere?.success == 1) {
+      setMsgLike(messageDetailHere?.userData?.ACK_STATUS);
+    }
+  }, [messageDetailHere]);
+
+  const onPressThumbUpIcon = () => {
+    dispatch(
+      messageStatusLikeAction({
+        employee_id: JSON.parse(profileHereEmpId),
+        messageId: messageId,
+        ack_status: 'Y',
+      }),
+    );
+    setMsgLike('Y');
+  };
+
+  const onPressInElse = () => {
+    console.log('onPressInElse');
+  };
 
   const keyExtractor = useCallback((item, index) => index.toString());
 
   const onPressStar = ({item}) => {
-    console.log('onPressStar', item);
-
     dispatch(
       addToFavouriteMessagesAction({
-        employee_id: profileHereEmpId,
+        employee_id: JSON.parse(profileHereEmpId),
         messageId: item?.MSG_ID,
         star_status: 'N',
       }),
@@ -193,9 +257,9 @@ const FavouriteMessages = props => {
     setValuePageOffset(valuePageOffset + 1);
     dispatch(
       favouriteMessagesAction({
-        employeeId: profileHereEmpId,
-        ofset: valuePageOffset,
-        limit: 15,
+        employeeId: JSON.parse(profileHereEmpId),
+        ofset: valuePageOffset + 1,
+        limit: 12,
       }),
     );
   };
@@ -206,7 +270,6 @@ const FavouriteMessages = props => {
     console.log('renderFooter');
     return (
       <>
-        {/* {messagesAllStateHere?.isLoading && ( */}
         <View
           style={{
             justifyContent: 'center',
@@ -229,14 +292,28 @@ const FavouriteMessages = props => {
             </View>
           </View>
         </View>
-        {/* )} */}
       </>
     );
   }, []);
 
+  const dataEnd = () => {
+    console.log('dataEnd');
+  };
+
+  const dataEndForFooter = () => {
+    console.log('dataEndForFooter');
+  };
+
   useFocusEffect(
     React.useCallback(() => {
       setValuePageOffset(1);
+
+      setModalVisible(false);
+      setMessageId(null);
+      setEmpName(null);
+      setMsgDate(null);
+      setEmpPhoto(null);
+      setMessageSubject(null);
 
       return () => {
         console.log('Page is unfocused');
@@ -246,48 +323,68 @@ const FavouriteMessages = props => {
   );
 
   return (
-    <>
-      {/* {favouriteMessagesHere?.isLoading && <Loader></Loader>} */}
-      <View>
-        <MainHeader
-          text={'Favourite'}
-          iconName={'arrow-left'}
-          onpressBtn={() => navigation.navigate('HomeScreen')}
-        />
-      </View>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: colors.appBackGroundColor,
+        // paddingBottom: hp('19'),
+      }}>
+      <>
+        {/* {favouriteMessagesHere?.isLoading && <Loader></Loader>} */}
+        <View>
+          <MainHeader
+            text={'Favourite'}
+            iconName={'arrow-left'}
+            onpressBtn={() => navigation.navigate('HomeScreen')}
+          />
+        </View>
 
-      {/* <ScrollView contentContainerStyle={{flexGrow: 1}}> */}
-      <FlatList
-        data={favouriteAllMessagesHere}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        style={{
-          paddingTop: hp('3'),
-          marginHorizontal: wp('5'),
-        }}
-        ListEmptyComponent={
-          <Text
-            style={{
-              fontSize: hp('2'),
-              color: 'black',
-              fontFamily: fontFamily.ceraMedium,
-              textAlign: 'center',
-            }}>
-            You have no favourite message.
-          </Text>
-        }
-        showsVerticalScrollIndicator={true}
-        // onEndReached={favMessagesDataLengthHere >= 15 ? loadMoreData : null}
-        // ListFooterComponent={
-        //   favMessagesDataLengthHere >= 15 ? renderFooter : null
-        // }
-        // enableEmptySections={true}
-        // onEndReached={loadMoreData}
-        // onEndReachedThreshold={0.5}
-        // ListFooterComponent={renderFooter}
-      />
-      {/* </ScrollView> */}
-    </>
+        <FlatList
+          data={favouriteAllMessagesHere}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          style={{
+            paddingTop: hp('3'),
+            marginHorizontal: wp('5'),
+          }}
+          ListEmptyComponent={
+            <Text
+              style={{
+                fontSize: hp('2'),
+                color: 'black',
+                fontFamily: fontFamily.ceraMedium,
+                textAlign: 'center',
+              }}>
+              You have no favourite message.
+            </Text>
+          }
+          showsVerticalScrollIndicator={true}
+          onEndReached={
+            favMessagesDataLengthHere >= 12 ? loadMoreData : dataEnd
+          }
+          ListFooterComponent={
+            favMessagesDataLengthHere >= 12 ? renderFooter : dataEndForFooter
+          }
+        />
+
+        {modalVisible && (
+          <ViewMessageDetailModal
+            activeOpacityLikeIcon={msgLike != 'Y' ? 0.8 : 1}
+            closeModal={closeModal}
+            headTitleText={'Message'}
+            msgSubject={messageSubject}
+            empPhoto={empPhoto}
+            empName={empName}
+            msgDate={msgDate}
+            htmlSource={messageDetailHere?.userData?.MSG_DETAIL_SUBSTRING}
+            onPressLikeIcon={
+              msgLike != 'Y' ? onPressThumbUpIcon : onPressInElse
+            }
+            inconType={msgLike == 'Y' ? 'solid' : 'light'}
+          />
+        )}
+      </>
+    </View>
   );
 };
 

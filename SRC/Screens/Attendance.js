@@ -6,7 +6,7 @@ import {
   FlatList,
   RefreshControl,
 } from 'react-native';
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import MainHeader from '../Components/Headers/MainHeader';
 import LinearGradient from 'react-native-linear-gradient';
 import {
@@ -15,8 +15,7 @@ import {
 } from 'react-native-responsive-screen';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import fontFamily from '../Styles/fontFamily';
-import Icon from 'react-native-fontawesome-pro';
-import {height} from 'deprecated-react-native-prop-types/DeprecatedImagePropType';
+
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import YearSelectionModal from '../Components/Modal/YearSelectionModal';
@@ -40,7 +39,7 @@ const Attendance = props => {
 
   const [yearSelectionModal, setyearSelectionModal] = useState(false);
 
-  const lastElement = totalYears[totalYears.length - 1];
+  const lastElement = totalYears[totalYears?.length - 1];
   console.log('lastElement', lastElement);
 
   const [selectedYear, setSelectedYear] = useState(lastElement);
@@ -73,6 +72,9 @@ const Attendance = props => {
   const currentMonth = currentDate.getMonth() + 1;
   console.log('currentMonth', currentMonth);
 
+  const selectedMonth = currentMonth - 1;
+  console.log('selectedMonth', selectedMonth);
+
   const [initialMonth, setInitialMonth] = useState(currentMonth);
   console.log('initialMonth', initialMonth);
 
@@ -104,6 +106,14 @@ const Attendance = props => {
       setInitialMonth(null);
       return () => {
         console.log('Attendance Page is unfocused');
+        dispatch(
+          AttendanceCalanderAction({
+            employee_id: profileHereEmpId,
+            month_year: `${
+              initialMonth != null ? initialMonth : currentMonth
+            }/${selectedYear != null ? selectedYear : lastElement}`,
+          }),
+        );
       };
     }, []),
   );
@@ -115,7 +125,7 @@ const Attendance = props => {
           activeOpacity={0.8}
           onPress={() => onPressYear({item, index})}
           style={{
-            height: hp('4.25'),
+            height: hp('5.5'),
             width: wp('20'),
             justifyContent: 'center',
             alignItems: 'center',
@@ -124,9 +134,9 @@ const Attendance = props => {
           <View>
             <Text
               style={{
-                fontSize: hp('2.75'),
+                fontSize: hp('2.5'),
                 fontFamily: fontFamily.ceraMedium,
-                color: 'grey',
+                color: 'black',
                 fontWeight: '500',
               }}>
               {item}
@@ -177,10 +187,6 @@ const Attendance = props => {
                   : currentMonth == item?.id
                   ? 'white'
                   : '#1C37A4',
-
-              // (item?.id == currentMonth && 'white') ||
-              // (item?.id > currentMonth && 'grey') ||
-              // (item?.id < currentMonth && '#1C37A4'),
             }}>
             {item.month}
           </Text>
@@ -227,11 +233,12 @@ const Attendance = props => {
       <View
         style={{
           flexDirection: 'row',
-          // backgroundColor: index == 0 && '#E5F7FF',
-          backgroundColor:
-            (item?.fin_year_day == 'Sun' ? '#FEF7DC' : null) ||
-            (item?.fin_year_day == 'Sat' ? '#FEF7DC' : null),
-          borderBottomWidth: wp('0.1'),
+
+          // backgroundColor:
+          //   (item?.fin_year_day == 'Sun' ? '#FEF7DC' : null) ||
+          //   (item?.fin_year_day == 'Sat' ? '#FEF7DC' : null),
+          backgroundColor: item?.holiday_desc != null ? '#FEF7DC' : null,
+          borderBottomWidth: wp('0.08'),
           borderBottomColor: 'black',
         }}>
         <View
@@ -240,7 +247,12 @@ const Attendance = props => {
             flexDirection: 'column',
             justifyContent: 'center',
           }}>
-          <View style={{flexDirection: 'column', backgroundColor: '#cfcfcf'}}>
+          <View
+            style={{
+              flexDirection: 'column',
+              backgroundColor: '#cfcfcf',
+              paddingVertical: hp('0.5'),
+            }}>
             <Text
               style={{
                 color: 'black',
@@ -261,7 +273,13 @@ const Attendance = props => {
             </Text>
           </View>
         </View>
-        <View
+        <TouchableOpacity
+          activeOpacity={item?.late_minutes > 15 ? 0.4 : 1}
+          onPress={
+            item?.late_minutes > 15
+              ? () => navigation.navigate('ApplicationTypeTab')
+              : null
+          }
           style={{
             flex: 0.3,
             justifyContent: 'center',
@@ -271,10 +289,44 @@ const Attendance = props => {
             numberOfLines={2}
             ellipsizeMode={'tail'}
             style={{
-              color: item?.is_late == 'Y' ? 'red' : 'black',
               textAlign: 'center',
               fontSize: item?.holiday_desc == null ? hp('1.75') : hp('1.5'),
               fontFamily: fontFamily.ceraMedium,
+
+              paddingVertical: hp('0.5'),
+              paddingHorizontal: wp('2'),
+              // color: item?.is_late == 'Y' ? 'red' : 'black',
+              color:
+                item?.late_exempt == 'Y'
+                  ? 'black'
+                  : item?.is_late == 'Y'
+                  ? 'red'
+                  : 'black',
+
+              backgroundColor:
+                item?.late_exempt == 'Y'
+                  ? null
+                  : item?.is_late == 'Y'
+                  ? '#ffe6e6'
+                  : null,
+              borderRadius:
+                item?.late_exempt == 'Y'
+                  ? null
+                  : item?.is_late == 'Y'
+                  ? wp('5')
+                  : null,
+              borderWidth:
+                item?.late_exempt == 'Y'
+                  ? null
+                  : item?.is_late == 'Y'
+                  ? wp('0.15')
+                  : null,
+              borderColor:
+                item?.late_exempt == 'Y'
+                  ? null
+                  : item?.is_late == 'Y'
+                  ? 'red'
+                  : null,
             }}>
             {item?.holiday_desc != null
               ? item?.holiday_desc
@@ -282,23 +334,66 @@ const Attendance = props => {
               ? item?.emp_in_time
               : '--:--:--'}
           </Text>
-        </View>
-        <View
+          {item?.late_exempt == 'Y' && (
+            <Text
+              style={{
+                color: '#1C37A4',
+                fontSize: hp('1.15'),
+                fontFamily: fontFamily.ceraMedium,
+              }}>
+              {item?.late_exempt == 'Y' ? item?.status : ''}
+            </Text>
+          )}
+          {item?.hd_pending == 'Y' && (
+            <Text
+              style={{
+                color: '#1C37A4',
+                fontSize: hp('1.15'),
+                fontFamily: fontFamily.ceraMedium,
+              }}>
+              {item?.hd_pending == 'Y' ? item?.link : ''}
+            </Text>
+          )}
+        </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={item?.early_minutes > 15 ? 0.4 : 1}
+          onPress={
+            item?.early_minutes > 15
+              ? () => navigation.navigate('ApplicationTypeTab')
+              : null
+          }
           style={{flex: 0.3, justifyContent: 'center', alignItems: 'center'}}>
           {item?.holiday_desc == null ? (
             <Text
               style={{
-                color: 'black',
                 textAlign: 'center',
                 fontSize: hp('1.75'),
                 fontFamily: fontFamily.ceraMedium,
+
+                paddingVertical: hp('0.5'),
+                paddingHorizontal: wp('2'),
+                color: item?.is_early == 'Y' ? 'red' : 'black',
+                backgroundColor: item?.is_early == 'Y' ? '#ffe6e6' : null,
+                borderRadius: item?.is_early == 'Y' ? wp('5') : null,
+                borderWidth: item?.is_early == 'Y' ? wp('0.15') : null,
+                borderColor: item?.is_early == 'Y' ? 'red' : null,
               }}>
               {item?.emp_out_time != null ? item?.emp_out_time : '--:--:--'}
             </Text>
           ) : (
             <Text></Text>
           )}
-        </View>
+          {item?.early_exempt == 'Y' && (
+            <Text
+              style={{
+                color: '#1C37A4',
+                fontSize: hp('1'),
+                fontFamily: fontFamily.ceraMedium,
+              }}>
+              {item?.early_exempt == 'Y' ? item?.status : ''}
+            </Text>
+          )}
+        </TouchableOpacity>
         <View
           style={{flex: 0.3, justifyContent: 'center', alignItems: 'center'}}>
           <Text
@@ -308,7 +403,11 @@ const Attendance = props => {
               fontSize: hp('1.75'),
               fontFamily: fontFamily.ceraMedium,
             }}>
-            {item?.total_working_hours}
+            {item?.holiday_desc == null
+              ? item?.emp_in_time != null && item?.emp_out_time != null
+                ? item?.total_working_hours
+                : item?.leavetype_desc
+              : ''}
           </Text>
         </View>
       </View>
@@ -339,8 +438,10 @@ const Attendance = props => {
     setRefreshing(false);
   };
 
+  const yourRef = useRef(null);
+
   return (
-    <>
+    <View style={{backgroundColor: colors.appBackGroundColor}}>
       <View>
         <MainHeader
           text={'Attendance'}
@@ -356,8 +457,22 @@ const Attendance = props => {
         <FlatList
           data={years}
           renderItem={renderItem}
-          horizontal={true}
           keyExtractor={(item, index) => index.toString()}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          ref={yourRef}
+          onContentSizeChange={() =>
+            yourRef.current.scrollToIndex({
+              animated: true,
+              index: selectedMonth,
+            })
+          }
+          onLayout={() =>
+            yourRef.current.scrollToIndex({
+              animated: true,
+              index: selectedMonth,
+            })
+          }
         />
       </View>
 
@@ -387,7 +502,6 @@ const Attendance = props => {
           style={{
             justifyContent: 'center',
             alignItems: 'center',
-            // backgroundColor: "green",
             flex: 0.3,
           }}>
           <Text style={styles.lateminut}>Time in</Text>
@@ -396,7 +510,6 @@ const Attendance = props => {
           style={{
             justifyContent: 'center',
             alignItems: 'center',
-            // backgroundColor: "grey",
             flex: 0.3,
           }}>
           <Text style={styles.lateminut}>Time out</Text>
@@ -423,7 +536,11 @@ const Attendance = props => {
           data={attendanceCalanderHere?.userData?.attendance}
           renderItem={renderItemAttendance}
           keyExtractor={(item, index) => index.toString()}
-          style={{marginHorizontal: wp('5'), marginVertical: hp('1')}}
+          style={{
+            marginHorizontal: wp('5'),
+            marginVertical: hp('1'),
+            marginBottom: hp('32'),
+          }}
           ListEmptyComponent={
             <Text
               style={{
@@ -442,7 +559,7 @@ const Attendance = props => {
           />
         )}
       </ScrollView>
-    </>
+    </View>
   );
 };
 

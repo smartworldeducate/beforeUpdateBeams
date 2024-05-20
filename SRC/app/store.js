@@ -43,6 +43,8 @@ import appraisalYearsSliceReducer from '../features/AppraisalYearsSlice/Appraisa
 import objectiveYearsSliceReducer from '../features/AppraisalYearsSlice/ObjectivesYearsSlice';
 import objectivesSliceReducer from '../features/ObjectivesSlice/ObjectivesSlice';
 
+import DevelopmentAreaSliceReducer from '../features/AppraisalYearsSlice/DevelopmentAreaSlice';
+
 import timelineSliceReducer from '../features/TimeLineSlice/TimeLineSlice';
 import allReportessSliceReducer from '../features/ReporteeSectionSlice/AllReportessSlice';
 import reporteeProfileSliceReducer from '../features/ReporteeSectionSlice/ReporteeProfileSlice';
@@ -55,6 +57,8 @@ import suggestionFeedbackSliceReducer from '../features/RatingAndFeedbackSlice/S
 import leaveBalanceSliceReducer from '../features/LeaveBalanceSlice/LeaveBalanceSlice';
 
 import leaveHistorySliceReducer from '../features/LeaveBalanceSlice/LeaveHistorySlice';
+
+import searchMessageSliceReducer from '../features/MessagesSlice/MessageSearchSlice';
 
 import messagesSliceReducer from '../features/MessagesSlice/MessagesSlice';
 import MessageSliceHomePageReducer from '../features/MessagesSlice/MessageSliceHomePage';
@@ -83,6 +87,22 @@ import WorkFromHomePostSliceReducer from '../features/WorkFromHomeSlice/WorkFrom
 import AttendanceCalanderSliceReducer from '../features/AttendanceCalanderSlice/AttendanceCalanderSlice';
 
 import LeaveTypeSliceReducer from '../features/LeaveTypeSlice/LeaveTypeSlice';
+
+import ApplyLeaveSliceReducer from '../features/LeaveTypeSlice/ApplyLeaveSlice';
+
+import OutstationSliceReducer from '../features/LeaveTypeSlice/OutstationSlice';
+
+import AttendenceNotMarkedSliceReducer from '../features/LeaveTypeSlice/AttendenceNotMarkedSlice';
+
+import LateArrivalSliceReducer from '../features/LeaveTypeSlice/LateArrivalSlice';
+
+import EarlyLeavingSliceReducer from '../features/LeaveTypeSlice/EarlyLeavingSlice';
+
+import ToilSliceReducer from '../features/LeaveTypeSlice/ToilSlice';
+
+import QRScannerListSliceReducer from '../features/QRScannerListSlice/QRScannerListSlice';
+
+import QRScanSliceReducer from '../features/QRScan/QRScan';
 
 export const store = configureStore({
   reducer: {
@@ -132,6 +152,8 @@ export const store = configureStore({
     objectiveYearsStore: objectiveYearsSliceReducer,
     objectivesStore: objectivesSliceReducer,
 
+    developmentAreaStore: DevelopmentAreaSliceReducer,
+
     timeLineStore: timelineSliceReducer,
     allReporteesStore: allReportessSliceReducer,
     reporteeProfileStore: reporteeProfileSliceReducer,
@@ -143,6 +165,8 @@ export const store = configureStore({
     leaveBalanceStore: leaveBalanceSliceReducer,
 
     leaveHistoryStore: leaveHistorySliceReducer,
+
+    searchMessagesStore: searchMessageSliceReducer,
 
     messagesStore: messagesSliceReducer,
 
@@ -170,6 +194,20 @@ export const store = configureStore({
     AttendanceCalanderStore: AttendanceCalanderSliceReducer,
 
     LeaveTypeStore: LeaveTypeSliceReducer,
+    ApplyLeaveStore: ApplyLeaveSliceReducer,
+
+    OutstationStore: OutstationSliceReducer,
+
+    AttendenceNotMarkedStore: AttendenceNotMarkedSliceReducer,
+
+    LateArrivalStore: LateArrivalSliceReducer,
+
+    EarlyLeavingStore: EarlyLeavingSliceReducer,
+
+    ToilStore: ToilSliceReducer,
+
+    QRScanStore: QRScanSliceReducer,
+    QRScannerListStore: QRScannerListSliceReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

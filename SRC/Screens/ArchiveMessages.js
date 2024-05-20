@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   ScrollView,
   StatusBar,
@@ -9,6 +9,8 @@ import {
   TextInput,
   Image,
   RefreshControl,
+  ActivityIndicator,
+  StyleSheet,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -19,18 +21,29 @@ import Icon from 'react-native-fontawesome-pro';
 import fontFamily from '../Styles/fontFamily';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {useSelector, useDispatch} from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import colors from '../Styles/colors';
 import MainHeader from '../Components/Headers/MainHeader';
 import {
   archiveMessagesAction,
+  clearViewAllArchiveMessagesState,
   removeFromArchiveSlice,
+  textColr,
 } from '../features/MessagesSlice/ArchiveMessageSlice/ArchiveMessageSlice';
 import Loader from '../Components/Loader/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {addToArchiveMessagesAction} from '../features/MessagesSlice/ArchiveMessageSlice/AddToArchiveMessageSlice';
+import {messageReadAction} from '../features/MessagesSlice/MessageLikeSlice';
+import {messageDetailAction} from '../features/MessagesSlice/MessageDetailSlice';
+import {messageStatusLikeAction} from '../features/MessagesSlice/MessageStatusLike';
+import ViewMessageDetailModal from '../Components/Modal/ViewMessageDetailModal';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {SwipeListView} from 'react-native-swipe-list-view';
 
 const ArchiveMessages = props => {
+  const [valuePageOffset, setValuePageOffset] = useState(1);
+  console.log('valuePageOffset', valuePageOffset);
+
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
@@ -39,19 +52,38 @@ const ArchiveMessages = props => {
   );
 
   const archiveMessagesHere = useSelector(state => state.archiveMessageStore);
-  // console.log('archiveMessagesHere', archiveMessagesHere);
+
+  const archiveAllMessagesHere = useSelector(
+    state => state.archiveMessageStore.userDataViewAll,
+  );
+
+  const archiveMessagesDataLengthHere = useSelector(
+    state => state.archiveMessageStore?.dataLength,
+  );
+
+  // console.log('archiveMessagesDataLengthHere', archiveMessagesDataLengthHere);
+
+  const messageDetailHere = useSelector(state => state.messageDetailStore);
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [messageId, setMessageId] = useState(null);
+  const [messageSubject, setMessageSubject] = useState(null);
+  const [empPhoto, setEmpPhoto] = useState(null);
+  const [empName, setEmpName] = useState(null);
+  const [msgDate, setMsgDate] = useState(null);
+  const [msgLike, setMsgLike] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const loginData = await AsyncStorage.getItem('loginData');
-        // const parsedLoginData = JSON.parse(loginData);
-
+        const parsedLoginData = JSON.parse(loginData);
+        dispatch(clearViewAllArchiveMessagesState());
         dispatch(
           archiveMessagesAction({
-            employeeId: loginData,
-            ofset: 1,
-            limit: 50,
+            employeeId: parsedLoginData,
+            ofset: valuePageOffset,
+            limit: 25,
           }),
         );
       } catch (error) {
@@ -62,28 +94,28 @@ const ArchiveMessages = props => {
     fetchData();
   }, [dispatch]);
 
-  const renderItem = ({item, index}) => {
+  const renderItem = useCallback(({item}) => {
     return (
       <View style={{}}>
         <View
           activeOpacity={0.8}
           style={{
+            alignItems: 'center',
+            justifyContent: 'center',
             height: hp('8'),
             flexDirection: 'row',
-            // backgroundColor: 'red',
-            marginBottom: hp('1'),
+            borderRadius: wp('1'),
+            marginBottom: hp('0.15'),
+
+            backgroundColor:
+              item?.IS_READ === 'Y' ? colors.appBackGroundColor : '#e6e6e6',
           }}>
           <TouchableOpacity
             activeOpacity={0.9}
-            // onPress={() =>
-            //   navigation.navigate('ViewMessageDetail', {messagedata: item})
-            // }
-
             style={{
               flex: 0.15,
               justifyContent: 'center',
               alignItems: 'center',
-              // backgroundColor: 'orange',
             }}>
             <Image
               source={{uri: item?.EMP_PHOTO}}
@@ -97,12 +129,26 @@ const ArchiveMessages = props => {
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.8}
-            onPress={() =>
-              navigation.navigate('ViewMessageDetail', {messagedata: item})
-            }
+            onPress={() => {
+              if (item?.IS_READ != 'Y') {
+                dispatch(
+                  messageReadAction({
+                    employee_id: JSON.parse(profileHereEmpId),
+                    messageId: item?.MSG_ID,
+                    read_status: 'Y',
+                  }),
+                );
+                dispatch(textColr(item?.MSG_ID));
+              }
+              setMessageId(item?.MSG_ID);
+              setMessageSubject(item?.MSG_SUBJECT);
+              setEmpPhoto(item?.EMP_PHOTO);
+              setEmpName(item?.EMP_NAME);
+              setMsgDate(item?.ENTRY_DATE);
+              onPressMessage(item?.MSG_ID);
+            }}
             style={{
               flex: 0.6,
-              // paddingVertical: hp('0.35'),
               paddingLeft: wp('2.5'),
               justifyContent: 'center',
             }}>
@@ -124,7 +170,6 @@ const ArchiveMessages = props => {
               flex: 0.25,
               justifyContent: 'center',
               alignItems: 'center',
-              // backgroundColor: 'pink',
             }}>
             <View style={{}}>
               <Text
@@ -134,33 +179,58 @@ const ArchiveMessages = props => {
                 {item?.ENTRY_DATE}
               </Text>
             </View>
-
-            <TouchableOpacity
-              onPress={() => onPressUnarchive({item})}
-              style={{
-                // backgroundColor: 'red',
-                height: hp('3'),
-                justifyContent: 'center',
-              }}>
-              <Text
-                numberOfLines={1}
-                letterSpacing={'tail'}
-                style={[styles.messageCardDate, {paddingHorizontal: wp('3')}]}>
-                {'Unarchive'}
-              </Text>
-            </TouchableOpacity>
           </View>
         </View>
       </View>
     );
+  }, []);
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setMessageId(null);
+    setEmpName(null);
+    setMsgDate(null);
+    setEmpPhoto(null);
+    setMessageSubject(null);
   };
 
-  const onPressUnarchive = ({item}) => {
-    // console.log('onPressUnarchive', item);
+  const onPressMessage = item => {
+    setModalVisible(true);
+    dispatch(
+      messageDetailAction({
+        employee_id: JSON.parse(profileHereEmpId),
+        messageId: item,
+      }),
+    );
+  };
 
+  useEffect(() => {
+    if (messageDetailHere?.success == 1) {
+      setMsgLike(messageDetailHere?.userData?.ACK_STATUS);
+    }
+  }, [messageDetailHere]);
+
+  const onPressThumbUpIcon = () => {
+    dispatch(
+      messageStatusLikeAction({
+        employee_id: JSON.parse(profileHereEmpId),
+        messageId: messageId,
+        ack_status: 'Y',
+      }),
+    );
+    setMsgLike('Y');
+  };
+
+  const onPressInElse = () => {
+    console.log('onPressInElse');
+  };
+
+  const keyExtractor = useCallback((item, index) => index.toString());
+
+  const onPressUnarchive = ({item}) => {
     dispatch(
       addToArchiveMessagesAction({
-        employee_id: profileHereEmpId,
+        employee_id: JSON.parse(profileHereEmpId),
         messageId: item?.MSG_ID,
         archive_status: 'N',
       }),
@@ -168,25 +238,118 @@ const ArchiveMessages = props => {
     dispatch(removeFromArchiveSlice(item?.MSG_ID));
   };
 
-  return (
-    <>
-      {archiveMessagesHere?.isLoading && <Loader></Loader>}
-      <View>
-        <MainHeader
-          text={'Archive'}
-          iconName={'arrow-left'}
-          onpressBtn={() => navigation.navigate('HomeScreen')}
-        />
-      </View>
+  const loadMoreData = () => {
+    setValuePageOffset(valuePageOffset + 1);
+    dispatch(
+      archiveMessagesAction({
+        employeeId: JSON.parse(profileHereEmpId),
+        ofset: valuePageOffset + 1,
+        limit: 25,
+      }),
+    );
+  };
 
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
-        <FlatList
-          data={archiveMessagesHere?.userData}
+  const renderFooter = useCallback(() => {
+    console.log('renderFooter');
+    return (
+      <>
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginBottom: hp('7'),
+          }}>
+          <View
+            style={{
+              width: wp(15),
+              height: hp(7.5),
+              backgroundColor: '#e4e8ed',
+              borderRadius: hp(50),
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginHorizontal: hp(15),
+              marginBottom: hp('6'),
+            }}>
+            <View style={{}}>
+              <ActivityIndicator size={'small'} color={'#1C37A4'} />
+            </View>
+          </View>
+        </View>
+      </>
+    );
+  }, []);
+
+  const dataEnd = () => {
+    console.log('dataEnd');
+  };
+
+  const dataEndForFooter = () => {
+    console.log('dataEndForFooter');
+  };
+
+  const renderHiddenSearchItem = ({item, index}, rowMap, rowKey) => (
+    <View style={styless.hiddenContainer}>
+      <TouchableOpacity
+        onPress={() => onPressUnarchive({item})}
+        style={{
+          paddingRight: wp('6'),
+          paddingBottom: hp('3'),
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <FontAwesomeIcon
+          icon="fat fa-box-check"
+          size={hp(3.25)}
+          style={{color: 'white'}}
+        />
+      </TouchableOpacity>
+    </View>
+  );
+
+  const onRowOpenSearchData = rowKey => {
+    console.log('Opened row with key:', rowKey);
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setValuePageOffset(1);
+
+      setModalVisible(false);
+      setMessageId(null);
+      setEmpName(null);
+      setMsgDate(null);
+      setEmpPhoto(null);
+      setMessageSubject(null);
+
+      return () => {
+        console.log('Archive page is unfocused');
+        // dispatch(clearViewAllMessagesState());
+      };
+    }, []),
+  );
+
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: colors.appBackGroundColor,
+      }}>
+      <>
+        {/* {archiveMessagesHere?.isLoading && <Loader></Loader>} */}
+        <View>
+          <MainHeader
+            text={'Archive'}
+            iconName={'arrow-left'}
+            onpressBtn={() => navigation.navigate('HomeScreen')}
+          />
+        </View>
+
+        {/* <FlatList
+          data={archiveAllMessagesHere}
           renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={keyExtractor}
           style={{
             paddingTop: hp('3'),
-            paddingBottom: hp('2'),
             marginHorizontal: wp('5'),
           }}
           ListEmptyComponent={
@@ -201,109 +364,73 @@ const ArchiveMessages = props => {
             </Text>
           }
           showsVerticalScrollIndicator={true}
-          // enableEmptySections={true}
-          // onEndReached={loadMoreData}
-          // onEndReachedThreshold={0.5}
-          // ListFooterComponent={renderFooter}
-        />
-      </ScrollView>
+          onEndReached={
+            archiveMessagesDataLengthHere >= 25 ? loadMoreData : dataEnd
+          }
+          ListFooterComponent={
+            archiveMessagesDataLengthHere >= 25
+              ? renderFooter
+              : dataEndForFooter
+          }
+        /> */}
+        <View
+          style={{
+            paddingHorizontal: wp('5'),
+            paddingTop: hp('3'),
+            backgroundColor: colors.appBackGroundColor,
+            marginBottom: hp('11.85'),
+          }}>
+          <SwipeListView
+            data={archiveAllMessagesHere}
+            renderItem={renderItem}
+            renderHiddenItem={renderHiddenSearchItem}
+            rightOpenValue={-70}
+            previewRowKey={'0'}
+            previewOpenValue={-40}
+            previewOpenDelay={3000}
+            onRowDidOpen={onRowOpenSearchData}
+            disableRightSwipe
+            onEndReached={
+              archiveMessagesDataLengthHere >= 25 ? loadMoreData : dataEnd
+            }
+            ListFooterComponent={
+              archiveMessagesDataLengthHere >= 25
+                ? renderFooter
+                : dataEndForFooter
+            }
+            ListEmptyComponent={
+              <Text
+                style={{
+                  fontSize: hp('2'),
+                  color: 'black',
+                  fontFamily: fontFamily.ceraMedium,
+                  textAlign: 'center',
+                }}>
+                You have no message.
+              </Text>
+            }
+            style={{paddingTop: hp('1.5')}}
+          />
+        </View>
 
-      {/* <View>
-        <>
-          <LinearGradient
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}
-            colors={['#1C37A5', '#4D69DC']}
-            style={styles.mainHeader}>
-            <StatusBar translucent backgroundColor="transparent" />
-            <>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  marginTop: hp('6'),
-                  marginHorizontal: wp('2'),
-                }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.goBack();
-                  }}
-                  style={{
-                    flex: 0.15,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Icon
-                    type="light"
-                    name="arrow-left"
-                    size={hp(2.5)}
-                    color="#FFF"
-                  />
-                </TouchableOpacity>
-                <View
-                  style={{
-                    flex: 0.7,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Text style={styles.headerText}>Archive</Text>
-                </View>
-                <View style={{flex: 0.15}}></View>
-              </View>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  borderColor: 'grey',
-                  borderRadius: wp('2'),
-                  borderWidth: wp('0.15'),
-                  backgroundColor: 'white',
-                  flexDirection: 'row',
-                  marginHorizontal: wp('5'),
-                  marginTop: hp('2'),
-                }}>
-                <View
-                  style={{
-                    justifyContent: 'center',
-                    flex: 0.8,
-                  }}>
-                  <TextInput
-                    ref={textInputRef}
-                    value={searchText}
-                    onChangeText={onChangeSearchText}
-                    returnKeyType={'done'}
-                    iconName={'user'}
-                    placeholder={'Search Message'}
-                    placeholderColor={'gray'}
-                    iconColor={colors.loginIconColor}
-                    placeholderTextColor="gray"
-                    placeholderStyle={styles.plaseholderStyle}
-                    underlineColorAndroid="transparent"
-                    style={styles.textInputCustomStyle}
-                    // autoFocus
-                  />
-                </View>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  style={[
-                    styles.searchicon,
-                    {
-                      borderTopRightRadius: wp('2'),
-                      borderBottomRightRadius: wp('2'),
-                    },
-                  ]}
-                  onPress={onPressSearchIcon}>
-                  <Icon
-                    type="light"
-                    name="magnifying-glass"
-                    size={hp(2.5)}
-                    color="#292D32"
-                  />
-                </TouchableOpacity>
-              </View>
-            </>
-          </LinearGradient>
-        </>
-      </View> */}
-    </>
+        {modalVisible && (
+          <ViewMessageDetailModal
+            activeOpacityLikeIcon={msgLike != 'Y' ? 0.8 : 1}
+            closeModal={closeModal}
+            headTitleText={'Message'}
+            msgSubject={messageSubject}
+            empPhoto={empPhoto}
+            empName={empName}
+            msgDate={msgDate}
+            htmlSource={messageDetailHere?.userData?.MSG_DETAIL_SUBSTRING}
+            onPressLikeIcon={
+              msgLike != 'Y' ? onPressThumbUpIcon : onPressInElse
+            }
+            inconType={msgLike == 'Y' ? 'solid' : 'light'}
+          />
+        )}
+      </>
+    </View>
   );
 };
 
@@ -367,5 +494,58 @@ const styles = EStyleSheet.create({
     fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
     fontSize: '0.52rem',
+  },
+});
+
+const styless = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#eee',
+    paddingVertical: 20,
+    paddingHorizontal: 15,
+  },
+  heading: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: 'green',
+    margin: 20,
+    textAlign: 'center',
+  },
+  subheading: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: '#333',
+    margin: 10,
+    textAlign: 'center',
+  },
+  itemContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    // backgroundColor: colors.appBackGroundColor,
+    height: hp('8'),
+    flexDirection: 'row',
+    borderRadius: wp('1'),
+    marginBottom: hp('0.15'),
+  },
+  itemText: {
+    color: '#333',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  hiddenContainer: {
+    alignItems: 'flex-end',
+    backgroundColor: '#1C37A4',
+    borderRadius: wp('1.5'),
+    height: hp('7.9'),
+    paddingTop: hp('2'),
+  },
+  hiddenButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: hp('8'),
+    height: hp('4'),
+    paddingBottom: hp('0'),
   },
 });

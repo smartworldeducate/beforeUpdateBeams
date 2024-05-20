@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   ScrollView,
   RefreshControl,
+  Image,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import MainHeader from '../Components/Headers/MainHeader';
@@ -24,6 +25,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import Objectives from '../Components/Appraisal/Objectives';
 import {ObjectiveYearsAction} from '../features/AppraisalYearsSlice/ObjectivesYearsSlice';
 import Loader from '../Components/Loader/Loader';
+import DevelopmentArea from '../Components/Appraisal/DevelopmentArea';
 
 const Approcial = props => {
   const navigation = useNavigation();
@@ -73,15 +75,24 @@ const Approcial = props => {
 
   const [appraisal, setAppraisal] = useState(true);
   const [objective, setObjective] = useState(false);
+  const [development, setDevelopment] = useState(false);
 
   const onPressAppraisal = () => {
     setAppraisal(true);
     setObjective(false);
+    setDevelopment(false);
   };
 
   const onPressObjective = () => {
     setAppraisal(false);
     setObjective(true);
+    setDevelopment(false);
+  };
+
+  const onPressDevelopment = () => {
+    setAppraisal(false);
+    setObjective(false);
+    setDevelopment(true);
   };
 
   const renderItem = ({item, index}) => {
@@ -92,7 +103,7 @@ const Approcial = props => {
 
     return (
       <TouchableOpacity
-        activeOpacity={0.8}
+        activeOpacity={1}
         style={{
           marginBottom: hp('1.75'),
           height: hp('14'),
@@ -102,11 +113,12 @@ const Approcial = props => {
           shadowOpacity: 0.5,
           shadowRadius: 4,
           elevation: 4,
-          borderRadius: wp('5'),
+          borderRadius: wp('4'),
         }}>
         <View
           style={{
             flexDirection: 'row',
+            // backgroundColor: 'red',
           }}>
           <View
             style={{
@@ -153,8 +165,9 @@ const Approcial = props => {
             <View
               style={{
                 flexDirection: 'row',
-                height: hp('11'),
-                paddingTop: hp('2'),
+                height: hp('9.5'),
+                paddingTop: hp('4'),
+                // backgroundColor: 'red',
               }}>
               <View
                 style={{
@@ -249,12 +262,39 @@ const Approcial = props => {
                 </View>
               </View>
             </View>
+
             <View
               style={{
-                height: hp('3'),
+                height: hp('4.5'),
                 alignItems: 'flex-end',
-                paddingRight: wp('3'),
-              }}></View>
+                flexDirection: 'row',
+              }}>
+              <View
+                style={{
+                  flex: 0.5,
+                  height: hp('4.5'),
+                }}></View>
+
+              {item?.RATING_DESC == 'Star' && (
+                <View
+                  style={{
+                    flex: 0.5,
+                    height: hp('4.5'),
+                    alignItems: 'flex-end',
+                    marginBottom: hp('2'),
+                  }}>
+                  <Image
+                    source={{uri: 'developmentstar'}}
+                    style={{
+                      height: hp('7'),
+                      width: wp('14'),
+                      borderRadius: wp('6'),
+                    }}
+                    resizeMode="contain"
+                  />
+                </View>
+              )}
+            </View>
           </View>
         </View>
       </TouchableOpacity>
@@ -265,6 +305,7 @@ const Approcial = props => {
     React.useCallback(() => {
       setAppraisal(true);
       setObjective(false);
+      setDevelopment(false);
 
       return () => {
         console.log('Page1 is unfocused');
@@ -337,7 +378,7 @@ const Approcial = props => {
                   </TouchableOpacity>
                   <View
                     style={{
-                      flex: 0.08,
+                      flex: 0.05,
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}></View>
@@ -355,16 +396,46 @@ const Approcial = props => {
                     }}>
                     <Text style={styles.upperText}>Objective</Text>
                   </TouchableOpacity>
+                  <View
+                    style={{
+                      flex: 0.05,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}></View>
+                  <TouchableOpacity
+                    onPress={onPressDevelopment}
+                    activeOpacity={0.5}
+                    style={{
+                      flex: 0.46,
+                      backgroundColor: development
+                        ? colors.whiteColor
+                        : '#E7E7E7',
+                      borderRadius: wp('2'),
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text style={styles.upperText}>Development</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
               {appraisal && (
-                <Appraisal
-                  dataList={appraisalYearsHere?.userData}
-                  renderItem={renderItem}
-                  keyExtractor={(item, index) => index.toString()}
-                />
+                <>
+                  {/* {appraisalYearsHere?.userData?.length > 0 ? ( */}
+                  <Appraisal
+                    dataList={appraisalYearsHere?.userData}
+                    renderItem={renderItem}
+                    keyExtractor={(item, index) => index.toString()}
+                  />
+                  {/* ) */}
+
+                  {/* // : */}
+                  {/* // <Text style={{}}>You have no appraisal list here.</Text> */}
+                  {/* } */}
+                </>
               )}
               {objective && <Objectives />}
+
+              {development && <DevelopmentArea />}
             </View>
           </View>
         </ScrollView>

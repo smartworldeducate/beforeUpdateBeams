@@ -29,6 +29,8 @@ import LineSeprator from '../LineSeprator/LineSeprator';
 import LeftRightText from '../LeftRightText/LeftRightText';
 import colors from '../../Styles/colors';
 
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+
 const FinancialHistory = ({}) => {
   const dispatch = useDispatch();
   const salaryHistoryHere = useSelector(state => state.salaryYearsStore);
@@ -146,7 +148,7 @@ const FinancialHistory = ({}) => {
     return (
       <TouchableOpacity
         onPress={() => onPressMonthSalary(item)}
-        activeOpacity={0.8}
+        activeOpacity={0.6}
         style={{
           marginBottom: hp('1.75'),
           height: hp('14'),
@@ -156,7 +158,7 @@ const FinancialHistory = ({}) => {
           shadowOpacity: 0.5,
           shadowRadius: 4,
           elevation: 4,
-          borderRadius: wp('5'),
+          borderRadius: wp('3'),
         }}>
         <View
           style={{
@@ -209,7 +211,7 @@ const FinancialHistory = ({}) => {
             <View
               style={{
                 flexDirection: 'row',
-                height: hp('11'),
+                height: hp('10.5'),
                 paddingTop: hp('2'),
               }}>
               <View
@@ -303,15 +305,16 @@ const FinancialHistory = ({}) => {
             </View>
             <View
               style={{
-                height: hp('3'),
+                height: hp('3.5'),
                 alignItems: 'flex-end',
+                justifyContent: 'flex-start',
                 paddingRight: wp('3'),
+                marginBottom: hp('0.5'),
               }}>
-              <Icon
-                type="light"
-                name={'arrow-right'}
-                size={hp(2.5)}
-                color="silver"
+              <FontAwesomeIcon
+                icon="fat fa-arrow-down-right"
+                size={hp(3.25)}
+                style={{color: '#1C37A4'}}
               />
             </View>
           </View>
@@ -386,7 +389,7 @@ const FinancialHistory = ({}) => {
             <View
               style={{
                 flexDirection: 'row',
-                height: hp('7'),
+                height: hp('8'),
                 marginHorizontal: wp('2'),
               }}>
               <TouchableOpacity
@@ -665,7 +668,7 @@ const styles = EStyleSheet.create({
     fontWeight: '500',
   },
   mainHeader: {
-    height: hp('7'),
+    height: hp('8'),
     backgroundColor: '#1C37A4',
     borderBottomRightRadius: hp(3),
     borderBottomLeftRadius: hp(3),

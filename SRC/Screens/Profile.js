@@ -49,21 +49,13 @@ const Profile = props => {
             marginHorizontal: wp('2'),
             height: hp('5'),
           }}>
-          <TouchableOpacity style={styles.topLeftRightView}>
-            <Icon type="light" name={'bell'} size={hp(3.5)} color="#fff" />
+          <TouchableOpacity
+            style={styles.topLeftRightView}
+            onPress={() => props.navigation.goBack()}>
+            <Icon type="light" name={'arrow-left'} size={hp(3)} color="#fff" />
           </TouchableOpacity>
           <View style={{flex: 0.7}}></View>
-          <TouchableOpacity
-            // onPress={() => navigation.openDrawer()}
-            // onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-            // onPress={() => props.navigation.openDrawer()}
-            style={styles.topLeftRightView}>
-            {/* <Image
-              style={styles.menustyle}
-              source={{uri: 'menuicon'}}
-              resizeMode="cover"
-            /> */}
-          </TouchableOpacity>
+          <TouchableOpacity style={styles.topLeftRightView}></TouchableOpacity>
         </View>
 
         <View
@@ -84,6 +76,25 @@ const Profile = props => {
             }}
             resizeMode={'contain'}
           />
+        </View>
+
+        <View
+          style={{
+            position: 'absolute',
+            zIndex: 1,
+            marginTop: hp('20.5'),
+            left: wp('59'),
+            height: hp('1.5'),
+            width: wp('3'),
+            borderRadius: wp('50'),
+            backgroundColor:
+              profileHere?.userData?.profile_result?.CONFIRMATION_DATE ==
+                null ||
+              profileHere?.userData?.profile_result?.CONFIRMATION_DATE == ''
+                ? 'orange'
+                : '#10B727',
+          }}>
+          <Text></Text>
         </View>
 
         <View
