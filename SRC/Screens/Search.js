@@ -95,7 +95,7 @@ const Search = ({}) => {
               alignItems: 'center',
             }}>
             <Image
-              source={{uri: 'salman'}}
+              source={{uri: item?.EMP_PHOTO}}
               style={{
                 height: hp('7'),
                 width: wp('14'),

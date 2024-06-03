@@ -10,7 +10,7 @@ const initialState = {
 };
 
 export const TimelineAction = createAsyncThunk('Timeline', async values => {
-  console.log('values', values);
+  console.log('valuesTimeLine', values);
   return axios
     .post(`${APIS.TimeLineAPI}`, values, {
       headers: {

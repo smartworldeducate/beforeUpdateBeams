@@ -128,7 +128,9 @@ const Appraisal = ({dataList, renderItem, keyExtractor}) => {
           )}
         </View>
       ) : (
-        <Text style={styles.noDataText}>You have no appraisal list here.</Text>
+        <Text style={styles.noDataText}>
+          No appraisal records are available at this moment.
+        </Text>
       )}
     </>
   );
@@ -137,11 +139,9 @@ const Appraisal = ({dataList, renderItem, keyExtractor}) => {
 const styles = EStyleSheet.create({
   noDataText: {
     paddingTop: hp('3'),
-    fontSize: '0.55rem',
-    fontFamily: fontFamily.ceraMedium,
-    color: 'grey',
-    fontWeight: '300',
-    letterSpacing: 1,
+    fontSize: hp('1.75'),
+    color: 'black',
+    fontStyle: 'italic',
     textAlign: 'center',
     paddingHorizontal: wp('2.5'),
     paddingVertical: hp('0.5'),

@@ -22,6 +22,7 @@ import {useNavigation, DrawerActions} from '@react-navigation/native';
 import EmpCardPart from '../Components/EmpCardPart/EmpCardPart';
 import ProfileCard from '../Components/ProfileCard/ProfileCard';
 import {useDispatch, useSelector} from 'react-redux';
+import moment from 'moment';
 
 const Profile = props => {
   const navigation = useNavigation();
@@ -62,8 +63,12 @@ const Profile = props => {
           style={{
             position: 'absolute',
             marginTop: hp('11.65'),
-            left: wp('37.5'),
+            left: wp('37.25'),
             zIndex: 1,
+
+            borderRadius: wp('50'),
+            borderWidth: wp('0.25'),
+            borderColor: '#cfdbfa',
           }}>
           <Image
             source={{uri: profileHere?.userData?.emp_result?.EMP_PHOTO}}
@@ -71,7 +76,7 @@ const Profile = props => {
               height: hp('12.5'),
               width: wp('25'),
               borderRadius: wp('50'),
-              borderWidth: wp('0.5'),
+              borderWidth: wp('0.25'),
               borderColor: '#cfdbfa',
             }}
             resizeMode={'contain'}
@@ -125,6 +130,8 @@ const Profile = props => {
                   flex: 0.8,
                   flexDirection: 'column',
                   marginHorizontal: wp('2'),
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}>
                 <View style={{}}>
                   <Text
@@ -186,86 +193,6 @@ const Profile = props => {
           </View>
         </View>
 
-        {/* <View
-          style={{
-            height: hp('22'),
-            backgroundColor: 'white',
-            marginHorizontal: wp('4'),
-            marginTop: hp('3'),
-            borderRadius: wp('5'),
-          }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: hp('5'),
-            }}>
-            <View style={{flex: 0.15}}></View>
-            <View
-              style={{
-                flex: 0.7,
-                flexDirection: 'column',
-                marginHorizontal: wp('2'),
-              }}>
-              <View style={{flexDirection: 'row'}}>
-                <View style={{flex: 0.75}}>
-                  <Text
-                    numberOfLines={1}
-                    ellipsizeMode={'tail'}
-                    style={styles.empName}>
-                    {profileHere?.userData?.emp_result?.EMP_NAME}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    flex: 0.25,
-                    backgroundColor: '#D4FFCC',
-                    borderRadius: wp('3'),
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Text style={styles.empId}>
-                    {profileHere?.userData?.emp_result?.EMPLOYEE_ID}
-                  </Text>
-                </View>
-              </View>
-              <View>
-                <Text
-                  numberOfLines={1}
-                  ellipsizeMode={'tail'}
-                  style={styles.empDesignation}>
-                  {profileHere?.userData?.emp_result?.DESIGNATION}
-                </Text>
-              </View>
-            </View>
-            <View
-              style={{
-                flex: 0.15,
-              }}></View>
-          </View>
-          <View
-            style={{
-              height: 1,
-              backgroundColor: '#DBDBDB',
-              marginTop: hp(3),
-              marginBottom: hp(2),
-            }}></View>
-
-          <View style={{marginHorizontal: wp('3')}}>
-            <EmpCardPart
-              firstText={'STATUS'}
-              statusValue={
-                profileHere?.userData?.emp_result?.EMP_STATUS_DESCRIPTION
-              }
-              secondText={'SERVICE'}
-              serviceLengthValue={
-                profileHere?.userData?.emp_result?.SERVICE_LENGTH
-              }
-              thirdText={'AGE'}
-              ageValue={profileHere?.userData?.emp_result?.TOTAL_AGE}
-            />
-          </View>
-        </View> */}
-
         <View
           style={{
             marginHorizontal: wp('4'),
@@ -290,19 +217,33 @@ const Profile = props => {
               profileHere?.userData?.emp_result?.EMP_STATUS_DESCRIPTION
             }
             empReportingTo={profileHere?.userData?.profile_result?.REPORTING_TO}
-            empHireDate={profileHere?.userData?.emp_result?.HIRE_DATE}
+            empHireDate={moment(
+              profileHere?.userData?.emp_result?.HIRE_DATE,
+              'DD-MMM-YY',
+            ).format('DD MMM, YYYY')}
             empRegularDate={profileHere?.userData?.profile_result?.REGULAR_DATE}
-            empConfirmationDate={
-              profileHere?.userData?.profile_result?.CONFIRMATION_DATE
-            }
+            empConfirmationDate={moment(
+              profileHere?.userData?.profile_result?.CONFIRMATION_DATE,
+              'DD-MMM-YY',
+            ).format('DD MMM, YYYY')}
             empServiceLength={
               profileHere?.userData?.profile_result?.SERVICE_LENGTH
             }
-            empBasicSalary={profileHere?.userData?.profile_result?.BASIC_SAL}
-            empGrossSalary={profileHere?.userData?.profile_result?.GROSS_SAL}
-            empAllowance={profileHere?.userData?.profile_result?.ALLOWANCES}
-            empTakeHomeSalary={profileHere?.userData?.profile_result?.TAKE_HOME}
-            empCostToSchool={profileHere?.userData?.profile_result?.CTS}
+            empBasicSalary={Number(
+              profileHere?.userData?.profile_result?.BASIC_SAL,
+            ).toLocaleString()}
+            empGrossSalary={Number(
+              profileHere?.userData?.profile_result?.GROSS_SAL,
+            ).toLocaleString()}
+            empAllowance={Number(
+              profileHere?.userData?.profile_result?.ALLOWANCES,
+            ).toLocaleString()}
+            empTakeHomeSalary={Number(
+              profileHere?.userData?.profile_result?.TAKE_HOME,
+            ).toLocaleString()}
+            empCostToSchool={Number(
+              profileHere?.userData?.profile_result?.CTS,
+            ).toLocaleString()}
             empAccounTitle={profileHere?.userData?.profile_result?.AC_TITLE}
             empEOBI={profileHere?.userData?.profile_result?.EOBI_NUMBER}
             empMobilePrimary={profileHere?.userData?.profile_result?.MOB_PHONE}

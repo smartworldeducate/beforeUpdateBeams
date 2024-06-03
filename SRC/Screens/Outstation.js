@@ -28,8 +28,13 @@ import LeaveForwardToModal from '../Components/Modal/LeaveForwardToModal';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import moment from 'moment';
 import ViewInputAnother from '../Components/ViewInputAnother';
-import {OutstationAction} from '../features/LeaveTypeSlice/OutstationSlice';
+import {
+  clearAllStateOutstationLeave,
+  OutstationAction,
+} from '../features/LeaveTypeSlice/OutstationSlice';
 import {useFocusEffect} from '@react-navigation/native';
+import MessageSuccessModal from '../Components/Modal/MessageSuccessModal';
+import Loader from '../Components/Loader/Loader';
 
 const Outstation = props => {
   const dispatch = useDispatch();
@@ -40,7 +45,11 @@ const Outstation = props => {
   const leaveTypeHere = useSelector(state => state.LeaveTypeStore);
 
   const outstationHere = useSelector(state => state.OutstationStore);
-  console.log('outstationHere', outstationHere);
+  console.log('outstationHere>>>', outstationHere);
+
+  const outstationLeaveResponseHere = useSelector(
+    state => state.OutstationStore.success,
+  );
 
   // all states hooks starts
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -59,6 +68,9 @@ const Outstation = props => {
   const [halfDay, setHalfDay] = useState(false);
   const [shortLeave, setShortLeave] = useState(false);
   const [reasonText, setReasonText] = useState('');
+
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -180,31 +192,50 @@ const Outstation = props => {
     dispatch(
       OutstationAction({
         employee_id: JSON.parse(profileHereEmpId),
-        from_date: moment(fromDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
-        to_date: moment(toDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
-        total_days: totalDays,
+        from_date:
+          fromDate == null
+            ? null
+            : moment(fromDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
+        to_date:
+          toDate == null
+            ? null
+            : moment(toDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
+        total_days: JSON.parse(totalDays),
         leave_type: 17,
 
         op_leave_type: firstDayValue,
         reason: reasonText,
-        forward_to: empLeaveForwardToId,
+        forward_to: JSON.parse(empLeaveForwardToId),
       }),
     );
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      // setIsFocused(true);
-      // Additional logic when screen gains focus
-      return () => {
-        // setIsFocused(false);
-        // Additional logic when screen loses focus
-      };
-    }, []),
-  );
+  useEffect(() => {
+    if (outstationLeaveResponseHere == 0) {
+      setShowErrorModal(true);
+    } else if (outstationLeaveResponseHere == 1) {
+      setShowSuccessModal(true);
+    }
+  }, [outstationLeaveResponseHere]);
+
+  const closeModal = () => {
+    dispatch(clearAllStateOutstationLeave());
+    setShowSuccessModal(false);
+    setShowErrorModal(false);
+  };
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     // Additional logic when screen gains focus
+  //     return () => {
+  //       // Additional logic when screen loses focus
+  //     };
+  //   }, []),
+  // );
 
   return (
     <ScrollView style={{flex: 1, backgroundColor: '#F5F8FC'}}>
+      {outstationHere?.isLoading && <Loader></Loader>}
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
         mode="date"
@@ -490,6 +521,24 @@ const Outstation = props => {
           onPressOpacity={onPressForwardToModal}
           leaveTypesData={leaveTypeHere?.userData?.forward_to}
           renderItem={renderItemForwardTo}
+        />
+      )}
+
+      {showErrorModal && (
+        <MessageSuccessModal
+          textUpper={'Request Status'}
+          textLower={outstationHere?.message}
+          btnText={'OK'}
+          onPressOpacity={closeModal}
+        />
+      )}
+
+      {showSuccessModal && (
+        <MessageSuccessModal
+          textUpper={'Request Status'}
+          textLower={outstationHere?.message}
+          btnText={'OK'}
+          onPressOpacity={closeModal}
         />
       )}
     </ScrollView>

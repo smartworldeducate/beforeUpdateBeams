@@ -21,6 +21,7 @@ import {
   TouchableOpacity,
   Platform,
   KeyboardAvoidingView,
+  BackHandler,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -32,10 +33,16 @@ import {
   useLinkProps,
   useNavigation,
   CommonActions,
+  useFocusEffect,
 } from '@react-navigation/native';
 import {StackActions} from '@react-navigation/native';
-import {LoginAction} from '../features/loginSlice/loginSlice';
+import {
+  clearAllStateLogin,
+  LoginAction,
+} from '../features/loginSlice/loginSlice';
 import fontFamily from '../Styles/fontFamily';
+import MessageSuccessModal from '../Components/Modal/MessageSuccessModal';
+import Loader from '../Components/Loader/Loader';
 const Login = props => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -47,6 +54,7 @@ const Login = props => {
   };
   const [employeeId, setEmployeeId] = useState(null);
   const [employeePassword, setEmployeePassword] = useState(null);
+  const [showErrorModal, setShowErrorModal] = useState(false);
 
   //249159142983-3r1307q40tb9de7qctsm4ckk244etg9h.apps.googleusercontent.com
   useEffect(() => {
@@ -101,6 +109,7 @@ const Login = props => {
   const loginHere = useSelector(state => state.loginStore);
   console.log('loginHere', loginHere);
   const successHere = useSelector(state => state.loginStore.success);
+  console.log('successHere', successHere);
 
   const onPressLoginBtn = () => {
     dispatch(LoginAction({employeeId: employeeId, password: employeePassword}));
@@ -130,6 +139,32 @@ const Login = props => {
     fetchData();
   }, [successHere]);
 
+  useEffect(() => {
+    if (successHere == 0) {
+      setShowErrorModal(true);
+    }
+  }, [successHere]);
+
+  const closeModal = () => {
+    dispatch(clearAllStateLogin());
+    setShowErrorModal(false);
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        // Close the app when the back button is pressed
+        BackHandler.exitApp();
+        return true; // Return true to prevent default behavior
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, []),
+  );
+
   return (
     <SafeAreaView
       style={{
@@ -138,6 +173,7 @@ const Login = props => {
           Platform.OS === 'android' ? colors.white : colors.white,
       }}>
       <StatusBar barStyle={'default'} backgroundColor={colors.loginIconColor} />
+      {loginHere?.isLoading && <Loader></Loader>}
 
       <ImageBackground
         source={{uri: 'appbg'}}
@@ -256,6 +292,15 @@ const Login = props => {
               <View style={{flex: 0.1}}></View>
             </TouchableOpacity>
           </View>
+
+          {showErrorModal && (
+            <MessageSuccessModal
+              textUpper={'Error'}
+              textLower={loginHere?.message}
+              btnText={'OK'}
+              onPressOpacity={closeModal}
+            />
+          )}
         </KeyboardAvoidingView>
       </ImageBackground>
     </SafeAreaView>

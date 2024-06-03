@@ -73,7 +73,8 @@ const DevelopmentArea = ({}) => {
             {item?.QUESTION}
           </Text>
         </View>
-        <View style={{paddingVertical: hp('0.5')}}>
+        <View
+          style={{paddingVertical: hp('0.5'), paddingHorizontal: wp('1.75')}}>
           <Text style={styles.answerText}>{item?.CARR_LEVEL}</Text>
         </View>
       </View>
@@ -154,7 +155,7 @@ const DevelopmentArea = ({}) => {
         keyExtractor={(item, index) => index.toString()}
         ListEmptyComponent={
           <Text style={styles.noDataText}>
-            There are no Soft skills Objectives.
+            Oops! You have not added any Soft Skills.
           </Text>
         }
       />
@@ -174,7 +175,7 @@ const DevelopmentArea = ({}) => {
         keyExtractor={(item, index) => index.toString()}
         ListEmptyComponent={
           <Text style={styles.noDataText}>
-            There are no technical Objectives.
+            Oops! You have not added any Technical Skills.
           </Text>
         }
       />
@@ -187,7 +188,7 @@ const styles = EStyleSheet.create({
     color: '#343434',
     fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
-    fontSize: '0.58rem',
+    fontSize: '0.61rem',
   },
   answerText: {
     color: '#343434',
@@ -199,7 +200,7 @@ const styles = EStyleSheet.create({
     color: 'black',
     fontFamily: fontFamily.ceraMedium,
     fontWeight: '300',
-    fontSize: '0.58rem',
+    fontSize: '0.61rem',
   },
   descriptionText: {
     color: '#343434',
@@ -223,11 +224,9 @@ const styles = EStyleSheet.create({
     marginTop: hp('0.5'),
   },
   noDataText: {
-    fontSize: '0.55rem',
-    fontFamily: fontFamily.ceraLight,
+    fontSize: hp('1.75'),
     color: colors.drakGrey,
-    fontWeight: '300',
-    letterSpacing: 1,
+    fontStyle: 'italic',
     textAlign: 'left',
     paddingHorizontal: wp('2.5'),
     paddingVertical: hp('0.5'),

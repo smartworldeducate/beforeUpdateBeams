@@ -16,7 +16,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import colors from '../../Styles/colors';
 import fontFamily from '../../Styles/fontFamily';
 
-const MessageSuccessModal = ({
+const DatesComparisonModal = ({
   modalVisible,
   onPressOpacity,
   textUpper,
@@ -38,11 +38,11 @@ const MessageSuccessModal = ({
         <TouchableOpacity
           onPress={onPressOpacity}
           style={{
-            flex: 0.35,
+            flex: 0.4,
           }}></TouchableOpacity>
         <View
           style={{
-            flex: 0.3,
+            flex: 0.2,
             borderRadius: wp('3'),
 
             backgroundColor: colors.whiteColor,
@@ -99,7 +99,7 @@ const MessageSuccessModal = ({
         <TouchableOpacity
           onPress={onPressOpacity}
           style={{
-            flex: 0.35,
+            flex: 0.4,
           }}></TouchableOpacity>
       </View>
     </Modal>
@@ -107,4 +107,4 @@ const MessageSuccessModal = ({
 };
 
 const styles = EStyleSheet.create({});
-export default MessageSuccessModal;
+export default DatesComparisonModal;

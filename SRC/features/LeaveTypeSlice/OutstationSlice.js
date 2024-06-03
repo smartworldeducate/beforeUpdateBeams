@@ -25,9 +25,10 @@ const OutstationSlice = createSlice({
   name: 'outstation',
   initialState,
   reducers: {
-    clearAllState: (state, action) => {
-      //   state.policiesListAll = null;
-      //   state.message = '';
+    clearAllStateOutstationLeave: (state, action) => {
+      state.success = null;
+      state.message = '';
+      state.userData = null;
     },
   },
   extraReducers: builder => {
@@ -46,6 +47,6 @@ const OutstationSlice = createSlice({
   },
 });
 
-export const {clearAllState} = OutstationSlice.actions;
+export const {clearAllStateOutstationLeave} = OutstationSlice.actions;
 
 export default OutstationSlice.reducer;

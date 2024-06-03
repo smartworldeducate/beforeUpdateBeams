@@ -25,9 +25,10 @@ const ToilLeaveSlice = createSlice({
   name: 'ToilLeave',
   initialState,
   reducers: {
-    clearAllState: (state, action) => {
-      //   state.policiesListAll = null;
-      //   state.message = '';
+    clearAllStateToilleave: (state, action) => {
+      state.success = null;
+      state.message = '';
+      state.userData = null;
     },
   },
   extraReducers: builder => {
@@ -46,6 +47,6 @@ const ToilLeaveSlice = createSlice({
   },
 });
 
-export const {clearAllState} = ToilLeaveSlice.actions;
+export const {clearAllStateToilleave} = ToilLeaveSlice.actions;
 
 export default ToilLeaveSlice.reducer;

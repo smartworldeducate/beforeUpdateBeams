@@ -29,7 +29,11 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import moment from 'moment';
 import {AttendenceNotMarkedAction} from '../features/LeaveTypeSlice/AttendenceNotMarkedSlice';
 import {useFocusEffect} from '@react-navigation/native';
-import {ToilLeaveAction} from '../features/LeaveTypeSlice/ToilSlice';
+import {
+  clearAllStateToilleave,
+  ToilLeaveAction,
+} from '../features/LeaveTypeSlice/ToilSlice';
+import MessageSuccessModal from '../Components/Modal/MessageSuccessModal';
 
 const ToilLeave = props => {
   const dispatch = useDispatch();
@@ -41,6 +45,9 @@ const ToilLeave = props => {
 
   const toilHere = useSelector(state => state.ToilStore);
   console.log('toilHere', toilHere);
+
+  const toilResponseHere = useSelector(state => state.ToilStore.success);
+  console.log('toilResponseHere', toilResponseHere);
 
   // all states hooks starts
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -57,6 +64,9 @@ const ToilLeave = props => {
   const [fullDayToilRadio, setFullDayToilRadio] = useState(true);
   const [halfDayToilRadio, setHalfDayToilRadio] = useState(false);
   const [reasonText, setReasonText] = useState('');
+
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -148,28 +158,43 @@ const ToilLeave = props => {
         employee_id: JSON.parse(profileHereEmpId),
         leave_type: 16,
 
-        from_date: moment(fromDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
-        to_date: moment(offdayWorkTime, 'ddd, MMM DD, YYYY').format(
-          'DD/MM/YYYY',
-        ),
-        // in_out: firstDayValue,
+        from_date:
+          fromDate == null
+            ? null
+            : moment(fromDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
+        to_date:
+          offdayWorkTime == null
+            ? null
+            : moment(offdayWorkTime, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
 
         reason: reasonText,
-        forward_to: empLeaveForwardToId,
+        forward_to: JSON.parse(empLeaveForwardToId),
       }),
     );
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      // setIsFocused(true);
-      // Additional logic when screen gains focus
-      return () => {
-        // setIsFocused(false);
-        // Additional logic when screen loses focus
-      };
-    }, []),
-  );
+  useEffect(() => {
+    if (toilResponseHere == 0) {
+      setShowErrorModal(true);
+    } else if (toilResponseHere == 1) {
+      setShowSuccessModal(true);
+    }
+  }, [toilResponseHere]);
+
+  const closeModal = () => {
+    dispatch(clearAllStateToilleave());
+    setShowSuccessModal(false);
+    setShowErrorModal(false);
+  };
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     // Additional logic when screen gains focus
+  //     return () => {
+  //       // Additional logic when screen loses focus
+  //     };
+  //   }, []),
+  // );
 
   return (
     <ScrollView style={{flex: 1, backgroundColor: '#F5F8FC'}}>
@@ -408,6 +433,24 @@ const ToilLeave = props => {
           onPressOpacity={onPressForwardToModal}
           leaveTypesData={leaveTypeHere?.userData?.forward_to}
           renderItem={renderItemForwardTo}
+        />
+      )}
+
+      {showErrorModal && (
+        <MessageSuccessModal
+          textUpper={'Request Status'}
+          textLower={toilHere?.message}
+          btnText={'OK'}
+          onPressOpacity={closeModal}
+        />
+      )}
+
+      {showSuccessModal && (
+        <MessageSuccessModal
+          textUpper={'Request Status'}
+          textLower={toilHere?.message}
+          btnText={'OK'}
+          onPressOpacity={closeModal}
         />
       )}
     </ScrollView>

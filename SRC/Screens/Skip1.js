@@ -9,6 +9,7 @@ import {
   Text,
   TouchableOpacity,
   Platform,
+  BackHandler,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
 import {
@@ -20,6 +21,7 @@ import {
   useLinkProps,
   useNavigation,
   CommonActions,
+  useFocusEffect,
 } from '@react-navigation/native';
 import {StackActions} from '@react-navigation/native';
 import fontFamily from '../Styles/fontFamily';
@@ -43,6 +45,21 @@ const Skip1 = () => {
     AsyncStorage.setItem('skipStartupScreen', isSkip);
     navigation.dispatch(StackActions.replace('Login'));
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        // Close the app when the back button is pressed
+        BackHandler.exitApp();
+        return true; // Return true to prevent default behavior
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, []),
+  );
 
   return (
     <SafeAreaView
@@ -70,7 +87,7 @@ const Skip1 = () => {
                 flexDirection: 'row',
                 marginTop: hp(5),
               }}>
-              <View style={{width: wp(80)}}></View>
+              <View style={{width: wp(78)}}></View>
               <TouchableOpacity
                 style={{flex: 20}}
                 activeOpacity={0.4}
@@ -158,7 +175,7 @@ const Skip1 = () => {
                 flexDirection: 'row',
                 marginTop: hp(5),
               }}>
-              <View style={{width: wp(80)}}></View>
+              <View style={{width: wp(78)}}></View>
               <TouchableOpacity
                 style={{flex: 20}}
                 activeOpacity={0.4}
@@ -244,7 +261,7 @@ const Skip1 = () => {
                 flexDirection: 'row',
                 marginTop: hp(5),
               }}>
-              <View style={{width: wp(80)}}></View>
+              <View style={{width: wp(78)}}></View>
               <TouchableOpacity
                 style={{flex: 20}}
                 activeOpacity={0.4}

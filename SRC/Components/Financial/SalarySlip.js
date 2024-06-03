@@ -14,6 +14,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import Loader from '../Loader/Loader';
 
 const SalarySlip = ({
+  monthYear,
   finalAllowances,
   finalUtility,
   finalHrent,
@@ -40,7 +41,25 @@ const SalarySlip = ({
         <>
           <View
             style={{
-              marginTop: hp('3'),
+              marginTop: hp('2'),
+              marginBottom: hp('0.5'),
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text
+              style={{
+                color: 'black',
+                fontSize: hp('1.55'),
+                fontFamily: fontFamily.ceraLight,
+              }}>
+              <Text style={{fontFamily: fontFamily.ceraMedium}}>Note:</Text>
+              {` The salary details are for ${monthYear}.`}
+            </Text>
+          </View>
+
+          <View
+            style={{
+              marginTop: hp('0.5'),
               marginBottom: hp('1'),
               justifyContent: 'center',
               alignItems: 'center',
@@ -63,7 +82,7 @@ const SalarySlip = ({
                     style={{justifyContent: 'center', alignItems: 'center'}}>
                     <Text
                       style={{
-                        fontSize: hp('3'),
+                        fontSize: hp('2.75'),
                         color: '#646464',
                         fontFamily: fontFamily.ceraBold,
                         fontWeight: '700',

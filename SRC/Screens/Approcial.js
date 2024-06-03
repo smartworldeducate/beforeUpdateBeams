@@ -420,17 +420,11 @@ const Approcial = props => {
               </View>
               {appraisal && (
                 <>
-                  {/* {appraisalYearsHere?.userData?.length > 0 ? ( */}
                   <Appraisal
                     dataList={appraisalYearsHere?.userData}
                     renderItem={renderItem}
                     keyExtractor={(item, index) => index.toString()}
                   />
-                  {/* ) */}
-
-                  {/* // : */}
-                  {/* // <Text style={{}}>You have no appraisal list here.</Text> */}
-                  {/* } */}
                 </>
               )}
               {objective && <Objectives />}

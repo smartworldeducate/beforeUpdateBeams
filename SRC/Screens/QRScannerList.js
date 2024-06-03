@@ -151,11 +151,13 @@ const QRScannerList = props => {
   };
 
   const onRefresh = () => {
+    setRefreshing(true);
     dispatch(
       QRScannerListAction({
-        employee_id: profileHereEmpId,
+        employee_id: JSON.parse(profileHereEmpId),
       }),
     );
+    setRefreshing(false);
   };
 
   useFocusEffect(
@@ -163,7 +165,7 @@ const QRScannerList = props => {
       console.log('outside return');
       dispatch(
         QRScannerListAction({
-          employee_id: profileHereEmpId,
+          employee_id: JSON.parse(profileHereEmpId),
         }),
       );
 
@@ -171,7 +173,7 @@ const QRScannerList = props => {
         console.log('QR Scanner list Page is unfocused');
         dispatch(
           QRScannerListAction({
-            employee_id: profileHereEmpId,
+            employee_id: JSON.parse(profileHereEmpId),
           }),
         );
       };
@@ -213,12 +215,12 @@ const QRScannerList = props => {
               ListEmptyComponent={
                 <Text
                   style={{
-                    fontSize: hp('2'),
+                    fontSize: hp('1.75'),
                     color: 'black',
-                    fontFamily: fontFamily.ceraMedium,
                     textAlign: 'center',
+                    fontStyle: 'italic',
                   }}>
-                  No QR code scanned yet, please scan one to proceed.
+                  No QR codes have been scanned yet.
                 </Text>
               }
             />

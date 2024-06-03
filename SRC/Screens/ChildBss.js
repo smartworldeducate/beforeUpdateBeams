@@ -202,7 +202,7 @@ const ChildBss = props => {
     <>
       <View>
         <MainHeader
-          text={`Child's in BSS`}
+          text={`Children in Beaconhouse`}
           iconName={'arrow-left'}
           onpressBtn={() => props.navigation.goBack()}
         />
@@ -227,8 +227,14 @@ const ChildBss = props => {
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
             ListEmptyComponent={
-              <Text style={styles.noDataText}>
-                Not a single your Children in Beaconhouse.
+              <Text
+                style={{
+                  fontSize: hp('1.75'),
+                  color: 'black',
+                  textAlign: 'center',
+                  fontStyle: 'italic',
+                }}>
+                There are currently no children enrolled in Beaconhouse.
               </Text>
             }
           />
@@ -271,7 +277,7 @@ const styles = EStyleSheet.create({
     fontSize: '0.6rem',
   },
   noDataText: {
-    fontSize: '0.6rem',
+    fontSize: '0.5rem',
     fontFamily: fontFamily.ceraMedium,
     color: colors.drakGrey,
     fontWeight: '300',

@@ -62,11 +62,6 @@ const FinancialHistory = ({}) => {
       .then(loginData => {
         const parsedLoginData = JSON.parse(loginData);
 
-        // dispatch(
-        //   SalaryYearsAction({
-        //     employee_id: parsedLoginData,
-        //   }),
-        // );
         if (lastYear) {
           dispatch(
             SalaryHistoryWithYearsAction({
@@ -134,7 +129,7 @@ const FinancialHistory = ({}) => {
     const dateString = item?.SAL_DATE;
     const [day, month, year] = dateString.split('-');
 
-    const empGrossSalary = item?.GROSSSAL;
+    const empGrossSalary = item?.GROSS_SAL;
     const empBasicSalary = item?.BASIC_SAL;
     const empHouseRent = item?.HOUSE_RENT;
     const empAllowances = item?.ALLOWANCES;
@@ -224,7 +219,7 @@ const FinancialHistory = ({}) => {
                 <View
                   style={{
                     flex: 0.1,
-                    backgroundColor: '#C1B7FD',
+                    backgroundColor: '#F99E73',
                     height: hp('4'),
                   }}></View>
                 <View
@@ -242,7 +237,7 @@ const FinancialHistory = ({}) => {
                         color: '#353535',
                         fontWeight: '700',
                       }}>
-                      {item?.GROSSSAL}
+                      {Number(item?.GROSS_SAL)?.toLocaleString()}
                     </Text>
                   </View>
                   <View style={{}}>
@@ -268,7 +263,7 @@ const FinancialHistory = ({}) => {
                 <View
                   style={{
                     flex: 0.1,
-                    backgroundColor: '#FEBB5B',
+                    backgroundColor: '#73B0F9',
                     height: hp('4'),
                   }}></View>
                 <View
@@ -286,7 +281,7 @@ const FinancialHistory = ({}) => {
                         color: '#353535',
                         fontWeight: '700',
                       }}>
-                      {item?.NET_SAL}
+                      {Number(item?.NET_SAL)?.toLocaleString()}
                     </Text>
                   </View>
                   <View style={{}}>
@@ -313,7 +308,7 @@ const FinancialHistory = ({}) => {
               }}>
               <FontAwesomeIcon
                 icon="fat fa-arrow-down-right"
-                size={hp(3.25)}
+                size={hp('2.85')}
                 style={{color: '#1C37A4'}}
               />
             </View>
@@ -337,7 +332,7 @@ const FinancialHistory = ({}) => {
 
   const lastMonthSalary = monthData;
 
-  const empGrossSalary = lastMonthSalary?.GROSSSAL;
+  const empGrossSalary = lastMonthSalary?.GROSS_SAL;
   const empBasicSalary = lastMonthSalary?.BASIC_SAL;
   const empHouseRent = lastMonthSalary?.HOUSE_RENT;
   const empAllowances = lastMonthSalary?.ALLOWANCES;
@@ -372,6 +367,17 @@ const FinancialHistory = ({}) => {
           renderItem={renderItemYearsSalary}
           keyExtractor={(item, index) => index.toString()}
           showsHorizontalScrollIndicator={false}
+          ListEmptyComponent={
+            <Text
+              style={{
+                fontSize: hp('1.75'),
+                color: 'black',
+                textAlign: 'center',
+                fontStyle: 'italic',
+              }}>
+              There is no financial history available for you.
+            </Text>
+          }
         />
       </View>
 
@@ -412,7 +418,9 @@ const FinancialHistory = ({}) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Text style={styles.textstyle}>{monthData.HEADING}</Text>
+                <Text style={styles.textstyle}>
+                  {monthData.HEADING?.replace('-', ' ')}
+                </Text>
               </View>
               <View style={{flex: 0.15}}></View>
             </View>
@@ -426,9 +434,30 @@ const FinancialHistory = ({}) => {
             }}>
             <View
               style={{
+                marginTop: hp('2'),
+                marginBottom: hp('0.5'),
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginTop: hp('6'),
+              }}>
+              <Text
+                style={{
+                  color: 'black',
+                  fontSize: hp('1.55'),
+                  fontFamily: fontFamily.ceraLight,
+                }}>
+                <Text style={{fontFamily: fontFamily.ceraMedium}}>Note:</Text>
+                {` The salary details are for ${monthData.HEADING?.replace(
+                  '-',
+                  ' ',
+                )}.`}
+              </Text>
+            </View>
+
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: hp('1'),
               }}>
               <PieChart
                 data={[
@@ -456,7 +485,7 @@ const FinancialHistory = ({}) => {
                           fontFamily: fontFamily.ceraBold,
                           fontWeight: '700',
                         }}>
-                        {Number(monthData?.GROSSSAL)?.toLocaleString()}
+                        {Number(monthData?.GROSS_SAL)?.toLocaleString()}
                       </Text>
                       <Text
                         style={{
@@ -493,7 +522,7 @@ const FinancialHistory = ({}) => {
                     }}>
                     <View style={{}}>
                       <Text style={styles.upperSalaryText}>
-                        {monthData.BASIC_SAL}
+                        {Number(monthData?.BASIC_SAL)?.toLocaleString()}
                       </Text>
                     </View>
                     <View style={{}}>
@@ -516,7 +545,7 @@ const FinancialHistory = ({}) => {
                     }}>
                     <View style={{}}>
                       <Text style={styles.upperSalaryText}>
-                        {monthData.HOUSE_RENT}
+                        {Number(monthData?.HOUSE_RENT)?.toLocaleString()}
                       </Text>
                     </View>
                     <View style={{}}>
@@ -540,7 +569,7 @@ const FinancialHistory = ({}) => {
                     }}>
                     <View style={{}}>
                       <Text style={styles.upperSalaryText}>
-                        {monthData.ALLOWANCES}
+                        {Number(monthData?.ALLOWANCES).toLocaleString()}
                       </Text>
                     </View>
                     <View style={{}}>
@@ -563,7 +592,7 @@ const FinancialHistory = ({}) => {
                     }}>
                     <View style={{}}>
                       <Text style={styles.upperSalaryText}>
-                        {monthData.UTILITIES}
+                        {Number(monthData?.UTILITIES).toLocaleString()}
                       </Text>
                     </View>
                     <View style={{}}>
@@ -585,7 +614,10 @@ const FinancialHistory = ({}) => {
               <Text style={styles.deductionsText}>Deductions</Text>
             </View>
 
-            <LeftRightText leftText={'PF Own'} rightText={monthData.PF_OWN} />
+            <LeftRightText
+              leftText={'PF Own'}
+              rightText={Number(monthData?.PF_OWN).toLocaleString()}
+            />
             <LineSeprator
               height={hp('0.15')}
               backgroundColor={'#DBDBDB'}
@@ -593,7 +625,7 @@ const FinancialHistory = ({}) => {
             />
             <LeftRightText
               leftText={'EOBI Own'}
-              rightText={monthData.EOBI_OWN}
+              rightText={Number(monthData?.EOBI_OWN).toLocaleString()}
             />
             <LineSeprator
               height={hp('0.15')}
@@ -602,7 +634,7 @@ const FinancialHistory = ({}) => {
             />
             <LeftRightText
               leftText={'Income Tax'}
-              rightText={monthData.INCOME_TAX}
+              rightText={Number(monthData?.INCOME_TAX).toLocaleString()}
             />
             <LineSeprator
               height={hp('0.15')}
@@ -611,8 +643,8 @@ const FinancialHistory = ({}) => {
             />
             <LeftRightText
               leftText={'Absent Deduction (Absent days)'}
-              rightText={monthData.ABSENT_DED}
-              rightInner={`(${monthData.ABSENTS})`}
+              rightText={Number(monthData?.ABSENT_DED).toLocaleString()}
+              rightInner={`(${monthData?.ABSENTS})`}
             />
             <LineSeprator
               height={hp('0.15')}
@@ -621,7 +653,7 @@ const FinancialHistory = ({}) => {
             />
             <LeftRightText
               leftText={'Other Deduction'}
-              rightText={monthData.OTH_DED}
+              rightText={Number(monthData?.OTH_DED).toLocaleString()}
             />
             <LineSeprator
               height={hp('0.15')}
@@ -630,7 +662,7 @@ const FinancialHistory = ({}) => {
             />
             <LeftRightText
               leftText={'Total Deduction'}
-              rightText={monthData.TOTAL_DED}
+              rightText={Number(monthData?.TOTAL_DED).toLocaleString()}
             />
             <LineSeprator
               height={hp('0.15')}
@@ -639,7 +671,7 @@ const FinancialHistory = ({}) => {
             />
             <LeftRightText
               leftText={'Net Salary'}
-              rightText={monthData.NET_SAL}
+              rightText={Number(monthData?.NET_SAL).toLocaleString()}
             />
             <LineSeprator
               height={hp('0.15')}

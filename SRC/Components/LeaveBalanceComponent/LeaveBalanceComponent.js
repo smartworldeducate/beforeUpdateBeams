@@ -16,6 +16,7 @@ const LeaveBalanceComponent = ({
   upperText,
   LowerText,
   availLeaves,
+  centerSlash,
   totalLeaves,
 }) => {
   return (
@@ -52,7 +53,8 @@ const LeaveBalanceComponent = ({
           alignItems: 'center',
         }}>
         <Text style={styles.availedLeaves}>
-          {`${availLeaves}`}/
+          {`${availLeaves}`}
+          {`${centerSlash}`}
           <Text style={styles.totalProvidedLeaves}>{totalLeaves}</Text>
         </Text>
       </View>

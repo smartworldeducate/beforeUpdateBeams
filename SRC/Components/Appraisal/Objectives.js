@@ -107,7 +107,6 @@ const Objectives = ({}) => {
   );
 
   const renderItemObjectives = ({item, index}) => {
-    console.log('item', item);
     return (
       <View style={{marginHorizontal: wp('3')}}>
         <View style={{}}>
@@ -161,7 +160,7 @@ const Objectives = ({}) => {
           keyExtractor={(item, index) => index.toString()}
           ListEmptyComponent={
             <Text style={styles.noDataText}>
-              There are no Administrative Line Manager Objectives.
+              No objectives have been set by your administrative line manager.
             </Text>
           }
         />
@@ -186,7 +185,7 @@ const Objectives = ({}) => {
           keyExtractor={(item, index) => index.toString()}
           ListEmptyComponent={
             <Text style={styles.noDataText}>
-              There are no Functional Line Manager Objectives.
+              No objectives have been set by your functional line manager.
             </Text>
           }
         />
@@ -200,29 +199,27 @@ const styles = EStyleSheet.create({
     color: '#343434',
     fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
-    fontSize: '0.55rem',
+    fontSize: '0.58rem',
   },
   descText: {
     color: '#363636',
     fontFamily: fontFamily.ceraLight,
     fontWeight: '300',
-    fontSize: '0.6rem',
+    fontSize: '0.62rem',
     letterSpacing: 0.5,
   },
   dateText: {
     color: '#969696',
     fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
-    fontSize: '0.5rem',
+    fontSize: '0.52rem',
     letterSpacing: 0.35,
     marginTop: hp('0.5'),
   },
   noDataText: {
-    fontSize: '0.55rem',
-    fontFamily: fontFamily.ceraLight,
+    fontSize: '0.58rem',
     color: colors.drakGrey,
-    fontWeight: '300',
-    letterSpacing: 1,
+    fontStyle: 'italic',
     textAlign: 'center',
     paddingHorizontal: wp('2.5'),
     paddingVertical: hp('0.5'),

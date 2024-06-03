@@ -24,9 +24,17 @@ import {
   RatingAction,
   updateRating,
 } from '../features/RatingAndFeedbackSlice/RatingSlice';
-import {UpdateRatingAction} from '../features/RatingAndFeedbackSlice/UpdateRatingSlice';
+import {
+  clearAllStateUpdateRating,
+  UpdateRatingAction,
+} from '../features/RatingAndFeedbackSlice/UpdateRatingSlice';
 import Toast from 'react-native-simple-toast';
-import {SuggestionFeedbackAction} from '../features/RatingAndFeedbackSlice/SuggestionFeedback';
+import {
+  clearAllStateSuggestionFeedback,
+  SuggestionFeedbackAction,
+} from '../features/RatingAndFeedbackSlice/SuggestionFeedback';
+import MessageSuccessModal from '../Components/Modal/MessageSuccessModal';
+import Loader from '../Components/Loader/Loader';
 
 const FeedBack = props => {
   const dispatch = useDispatch();
@@ -34,13 +42,14 @@ const FeedBack = props => {
     state => state.updateRatingStore.success,
   );
   const updateRatingHere = useSelector(state => state.updateRatingStore);
-  console.log('updateRatingHere', updateRatingHere);
+
+  const updateRatingSuccessResponseHere = useSelector(
+    state => state.updateRatingStore.success,
+  );
 
   const ratingHereStore = useSelector(state => state.ratingStore);
-  // console.log('ratingHereStore', ratingHereStore?.userData?.RATING_ID);
 
   const ratingGet = ratingHereStore?.userData?.RATING_ID;
-  console.log('ratingGet', ratingGet);
 
   const userId = useSelector(
     state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
@@ -50,7 +59,9 @@ const FeedBack = props => {
     state => state.suggestionFeedbackStore,
   );
 
-  // console.log('suggestionFeedbackHere', suggestionFeedbackHere?.success);
+  const updateSuggestionSuccessResponseHere = useSelector(
+    state => state.suggestionFeedbackStore.success,
+  );
 
   const [feedback, setFeedbak] = useState(true);
   const [suggestion, setSuggestion] = useState(false);
@@ -60,6 +71,16 @@ const FeedBack = props => {
 
   const [title, setTitle] = useState('');
   const [suggestionDesc, setSuggestionDesc] = useState('');
+
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  const [showErrorModalSuggestion, setShowErrorModalSuggestion] =
+    useState(false);
+  const [showSuccessModalSuggestion, setShowSuccessModalSuggestion] =
+    useState(false);
+
+  const [hideButtonsonSuccess, setHideButtonsOnSuccess] = useState(false);
 
   useEffect(() => {
     try {
@@ -82,29 +103,49 @@ const FeedBack = props => {
 
   const onChangeRating = val => {
     console.log('onChangeRating');
-    // dispatch(updateRating(val));
     setRating(val);
   };
+
+  const onChangeDisable = () => {};
 
   const onPressSubmitRating = () => {
     dispatch(
       UpdateRatingAction({
-        employee_id: userId,
+        employee_id: JSON.parse(userId),
         rating_id: rating,
         type_id: 1,
       }),
     );
   };
 
+  const onPressNotNow = () => {
+    setRating(ratingGet);
+  };
+
+  console.log('ratingGet', ratingGet);
+  console.log('ratingGetType', typeof ratingGet);
+
   useEffect(() => {
     if (updateRatingHere?.success == 1) {
       setDesc(updateRatingHere?.userData?.message);
-      console.log(
-        'updateRatingHereSuccess',
-        updateRatingHere?.userData?.message,
-      );
     }
   }, [updateRatingHere]);
+
+  useEffect(() => {
+    if (updateRatingSuccessResponseHere == 0) {
+      setShowErrorModal(true);
+    } else if (updateRatingSuccessResponseHere == 1) {
+      setRating(updateRatingHere?.userData?.RATING_ID);
+      setShowSuccessModal(true);
+      setHideButtonsOnSuccess(true);
+    }
+  }, [updateRatingSuccessResponseHere]);
+
+  const closeModal = () => {
+    dispatch(clearAllStateUpdateRating());
+    setShowSuccessModal(false);
+    setShowErrorModal(false);
+  };
 
   const onPressFeedback = () => {
     setFeedbak(true);
@@ -124,10 +165,9 @@ const FeedBack = props => {
   };
 
   const onPressSuggestionSubmit = () => {
-    console.log('onPressSuggestionSubmit');
     dispatch(
       SuggestionFeedbackAction({
-        employee_id: userId,
+        employee_id: JSON.parse(userId),
         title: title,
         feedback_desc: suggestionDesc,
         type_id: 2,
@@ -142,19 +182,37 @@ const FeedBack = props => {
     }
   }, [suggestionFeedbackHere]);
 
-  console.log('rating', rating);
+  useEffect(() => {
+    if (updateSuggestionSuccessResponseHere == 0) {
+      setShowErrorModalSuggestion(true);
+    } else if (updateSuggestionSuccessResponseHere == 1) {
+      setShowSuccessModalSuggestion(true);
+    }
+  }, [updateSuggestionSuccessResponseHere]);
+
+  const closeModalSuggestion = () => {
+    dispatch(clearAllStateSuggestionFeedback());
+    setShowSuccessModalSuggestion(false);
+    setShowErrorModalSuggestion(false);
+  };
 
   useFocusEffect(
     React.useCallback(() => {
+      //  Additional logic when screen gains focus
       setDesc(null);
       setFeedbak(true);
       setSuggestion(false);
+      // setRating(ratingGet);
 
       return () => {
-        console.log('Page1 is unfocused');
+        // Additional logic when screen loses focus
+        console.log('Feedback Page is unfocused');
+        setRating(ratingGet);
       };
     }, []),
   );
+
+  console.log('rating', rating);
 
   return (
     <SafeAreaView
@@ -176,6 +234,8 @@ const FeedBack = props => {
             flexGrow: 1,
             backgroundColor: colors.appBackGroundColor,
           }}>
+          {suggestionFeedbackHere?.isLoading && <Loader></Loader>}
+
           <View style={{marginVertical: hp('3')}}>
             <View style={{marginHorizontal: wp('5')}}>
               <View
@@ -237,13 +297,19 @@ const FeedBack = props => {
                     <Text style={styles.mainText}>
                       How do you rate this App?
                     </Text>
+                    <Text style={styles.belowText}>
+                      No feedback has been provided yet.
+                    </Text>
                   </View>
 
                   <View
                     style={{justifyContent: 'center', alignItems: 'center'}}>
                     <StarRating
                       rating={rating}
-                      onChange={onChangeRating}
+                      onChange={
+                        ratingGet > 1 ? onChangeDisable : onChangeRating
+                      }
+                      // onChange={onChangeRating}
                       maxStars={5}
                       starSize={hp('5.5')}
                       color={'#fdd835'}
@@ -254,25 +320,51 @@ const FeedBack = props => {
                     />
                   </View>
 
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      marginHorizontal: wp('4'),
-                      marginVertical: hp('2'),
-                    }}>
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      style={styles.btnView1}>
-                      <Text style={styles.btnText}>Not Now</Text>
-                    </TouchableOpacity>
-                    <View style={{flex: 0.35}}></View>
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      onPress={onPressSubmitRating}
-                      style={styles.btnView2}>
-                      <Text style={styles.btnText}>Submit</Text>
-                    </TouchableOpacity>
-                  </View>
+                  <View sty></View>
+
+                  {ratingGet > 0 || hideButtonsonSuccess ? (
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginTop: hp('2'),
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: hp('1.75'),
+                          fontFamily: fontFamily.ceraLight,
+                          color: 'black',
+                        }}>{`You gave a ${rating}-star rating`}</Text>
+                      <Text
+                        style={{
+                          fontSize: hp('1.75'),
+                          fontFamily: fontFamily.ceraLight,
+                          fontStyle: 'italic',
+                          color: 'black',
+                        }}>{`Thank you for your feedback.`}</Text>
+                    </View>
+                  ) : (
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        marginHorizontal: wp('4'),
+                        marginVertical: hp('2'),
+                      }}>
+                      <TouchableOpacity
+                        onPress={onPressNotNow}
+                        activeOpacity={0.8}
+                        style={styles.btnView1}>
+                        <Text style={styles.btnText}>Not Now</Text>
+                      </TouchableOpacity>
+                      <View style={{flex: 0.35}}></View>
+                      <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={onPressSubmitRating}
+                        style={styles.btnView2}>
+                        <Text style={styles.btnText}>Submit</Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
                 </>
               )}
 
@@ -313,6 +405,42 @@ const FeedBack = props => {
                   </TouchableOpacity>
                 </>
               )}
+
+              {showErrorModal && (
+                <MessageSuccessModal
+                  textUpper={'Request Status'}
+                  textLower={updateRatingHere?.message}
+                  btnText={'OK'}
+                  onPressOpacity={closeModal}
+                />
+              )}
+
+              {showSuccessModal && (
+                <MessageSuccessModal
+                  textUpper={'Request Status'}
+                  textLower={updateRatingHere?.userData?.message}
+                  btnText={'OK'}
+                  onPressOpacity={closeModal}
+                />
+              )}
+
+              {showErrorModalSuggestion && (
+                <MessageSuccessModal
+                  textUpper={'Request Status'}
+                  textLower={suggestionFeedbackHere?.message}
+                  btnText={'OK'}
+                  onPressOpacity={closeModalSuggestion}
+                />
+              )}
+
+              {showSuccessModalSuggestion && (
+                <MessageSuccessModal
+                  textUpper={'Request Status'}
+                  textLower={suggestionFeedbackHere?.message}
+                  btnText={'OK'}
+                  onPressOpacity={closeModalSuggestion}
+                />
+              )}
             </View>
           </View>
         </ScrollView>
@@ -326,10 +454,15 @@ export default FeedBack;
 const styles = EStyleSheet.create({
   mainText: {
     color: '#363636',
-    fontFamily: fontFamily.ceraMedium,
-    fontWeight: '500',
+    fontStyle: 'italic',
     fontSize: '0.8rem',
-    letterSpacing: 0,
+    letterSpacing: 0.5,
+  },
+  belowText: {
+    color: '#363636',
+    fontWeight: '300',
+    fontSize: hp('1.55'),
+    fontStyle: 'italic',
   },
   upperText: {
     color: '#363636',

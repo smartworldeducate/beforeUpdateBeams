@@ -29,6 +29,7 @@ import {
   FlatList,
   Image,
   Dimensions,
+  BackHandler,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -70,7 +71,7 @@ const HomeScreen = props => {
   const profileHereEmpId = useSelector(
     state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
   );
-  const slicedData = profileHere?.userData?.reporting_result?.data.slice(0, 7);
+  const slicedData = profileHere?.userData?.reporting_result?.data?.slice(0, 6);
 
   const messagesHere = useSelector(state => state.MessageSliceHomePageStore);
 
@@ -81,8 +82,6 @@ const HomeScreen = props => {
   const profileHereEmpBirthday = useSelector(
     state => state.profileStore?.empBirthday,
   );
-
-  console.log('profileHereEmpBirthday', profileHereEmpBirthday);
 
   // const leaveHistoryHere = useSelector(state => state.salaryYearsStore);
 
@@ -125,7 +124,7 @@ const HomeScreen = props => {
             messagesActionHomePage({
               employeeId: parsedLoginDataId,
               ofset: 1,
-              limit: 10,
+              limit: 5,
             }),
           );
 
@@ -262,8 +261,9 @@ const HomeScreen = props => {
               lineHeight: hp('2.5'),
               paddingHorizontal: wp('1.25'),
             }}>
-            {item?.MSG_SUBJECT}
-            {` ${item?.LONG_DESC}`}
+            {/* {item?.MSG_SUBJECT} */}
+            {item?.MSG_SUB_DESC}
+            {/* {` ${item?.LONG_DESC}`} */}
           </Text>
         </View>
 
@@ -345,7 +345,6 @@ const HomeScreen = props => {
   };
 
   const renderItemReportees = ({item, index}) => {
-    console.log('item', item);
     return (
       <TouchableOpacity
         activeOpacity={0.5}
@@ -359,23 +358,42 @@ const HomeScreen = props => {
                   itemDeptId: item?.DEPARTMENT_ID,
                 })
         }
-        style={{justifyContent: 'center'}}>
-        <Image
-          source={{uri: item?.EMP_PHOTO}}
+        style={{
+          justifyContent: 'center',
+          // backgroundColor: 'green',
+          marginRight: wp('1'),
+          alignItems: 'center',
+        }}>
+        <View
           style={{
             height: hp('6'),
             width: wp('12'),
             borderRadius: wp('10'),
-            marginLeft: wp('2'),
-          }}
-          resizeMode={'cover'}
-        />
+            borderWidth: wp('0.15'),
+            borderColor: 'grey',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginHorizontal: wp('0.5'),
+          }}>
+          <Image
+            source={{
+              uri: item?.EMP_PHOTO,
+            }}
+            style={{
+              height: hp('6'),
+              width: wp('12'),
+              borderRadius: wp('10'),
+              marginHorizontal: wp('1'),
+            }}
+            resizeMode={'cover'}
+          />
+        </View>
 
         {index === 5 && (
           <View
             style={{
               position: 'absolute',
-              left: '12.5%',
+              left: '5.10%',
               backgroundColor: 'rgba(0,0,0,0.5)',
               borderRadius: wp('10'),
               justifyContent: 'center',
@@ -407,7 +425,6 @@ const HomeScreen = props => {
   };
 
   const onPressPlusReportee = () => {
-    // console.log('onPressPlusReportee');
     navigation.navigate('ReporteeDrawer');
   };
 
@@ -438,7 +455,11 @@ const HomeScreen = props => {
             </View>
             <View style={styles.LBNestedRightView}>
               <Text style={styles.countText}>
-                {item?.BALANCE == null ? '0' : item?.BALANCE}
+                {item?.BALANCE == null ||
+                item?.BALANCE == '' ||
+                item?.BALANCE == undefined
+                  ? 0
+                  : item?.BALANCE}
               </Text>
               <Text style={styles.titleText}>Casual Leaves</Text>
             </View>
@@ -456,7 +477,11 @@ const HomeScreen = props => {
             </View>
             <View style={styles.LBNestedRightView}>
               <Text style={styles.countText}>
-                {item?.BALANCE == null ? '0' : item?.BALANCE}
+                {item?.BALANCE == null ||
+                item?.BALANCE == '' ||
+                item?.BALANCE == undefined
+                  ? 0
+                  : item?.BALANCE}
               </Text>
               <Text style={styles.titleText}>Sick Leaves</Text>
             </View>
@@ -474,7 +499,11 @@ const HomeScreen = props => {
             </View>
             <View style={styles.LBNestedRightView}>
               <Text style={styles.countText}>
-                {item?.BALANCE == null ? '0' : item?.BALANCE}
+                {item?.BALANCE == null ||
+                item?.BALANCE == '' ||
+                item?.BALANCE == undefined
+                  ? 0
+                  : item?.BALANCE}
               </Text>
               <Text style={styles.titleText}>Annual Leavess</Text>
             </View>
@@ -497,6 +526,21 @@ const HomeScreen = props => {
         console.log('Home page is unfocused');
         // dispatch(clearViewAllMessagesState());
       };
+    }, []),
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        // Close the app when the back button is pressed
+        BackHandler.exitApp();
+        return true; // Return true to prevent default behavior
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
     }, []),
   );
 
@@ -538,384 +582,398 @@ const HomeScreen = props => {
         />
       </LinearGradient>
 
-      {profileHere.isLoading ? (
-        <Loader></Loader>
-      ) : (
+      <>
+        <View>
+          <HeaderTop
+            onPressUserImg={() => navigation.navigate('Profile')}
+            userImg={profileHere?.userData?.emp_result?.EMP_PHOTO}
+            welcomeText={'Welcome'}
+            userName={profileHere?.userData?.emp_result?.EMP_NAME}
+            onPressIcon={() => navigation.openDrawer()}
+            iconName={'arrowleft'}
+          />
+        </View>
+
         <>
-          <View>
-            <HeaderTop
-              onPressUserImg={() => navigation.navigate('Profile')}
-              userImg={profileHere?.userData?.emp_result?.EMP_PHOTO}
-              welcomeText={'Welcome'}
-              userName={profileHere?.userData?.emp_result?.EMP_NAME}
-              onPressIcon={() => navigation.openDrawer()}
-              iconName={'arrowleft'}
-            />
-          </View>
-          <ScrollView
-            contentContainerStyle={{flexGrow: 1}}
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-                colors={['#2A72B6', '#203B88']}
-                progressBackgroundColor={'#fcfcfc'}
-                tintColor={'#1C37A4'}
-              />
-            }>
-            <View style={styles.botContainer}>
-              <View
-                style={{
-                  flex: 0.33,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Image
-                  source={{uri: 'servicelength'}}
-                  style={{height: hp('3.5'), width: wp('7')}}
-                  resizeMode={'contain'}
+          {profileHere.isLoading ? (
+            <Loader></Loader>
+          ) : (
+            <ScrollView
+              contentContainerStyle={{flexGrow: 1}}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+                  colors={['#2A72B6', '#203B88']}
+                  progressBackgroundColor={'#fcfcfc'}
+                  tintColor={'#1C37A4'}
                 />
-
-                <Text style={[styles.serviceSection]}>
-                  {profileHere?.userData?.emp_result?.SERVICE_LENGTH}
-                </Text>
-
-                <Text style={[styles.bootContText2]}>Service Length</Text>
-              </View>
-              <View style={styles.monial}>
-                <Image
-                  source={{uri: 'empstatus'}}
-                  style={{height: hp('3.5'), width: wp('7')}}
-                  resizeMode={'contain'}
-                />
-
-                <Text style={[styles.serviceSection]}>
-                  {profileHere?.userData?.emp_result?.EMP_STATUS_DESCRIPTION}
-                </Text>
-                <Text style={[styles.bootContText2]}>Status</Text>
-              </View>
-
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  flex: 0.33,
-                }}>
-                <Image
-                  source={{uri: 'empcalendar'}}
-                  style={{height: hp('3.5'), width: wp('7')}}
-                  resizeMode={'contain'}
-                />
-
-                <Text style={styles.serviceSection}>
-                  {profileHere?.empTimeIn == null ||
-                  profileHere?.empTimeIn == undefined
-                    ? '--:--:--'
-                    : profileHere?.empTimeIn}
-                </Text>
-                <Text style={[styles.bootContText2]}>Attendance</Text>
-              </View>
-            </View>
-
-            <View style={{marginHorizontal: wp('5.5'), marginTop: hp('1.75')}}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  marginBottom: hp('1'),
-                  height: hp('4'),
-                }}>
+              }>
+              <View style={styles.botContainer}>
                 <View
                   style={{
-                    flex: 0.3,
-                    justifyContent: 'center',
-                  }}>
-                  <Text style={styles.messageText}>Messages</Text>
-                </View>
-                <View style={{flex: 0.45}}></View>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={() => navigation.navigate('ViewAllMessages')}
-                  style={{
-                    flex: 0.25,
-                    justifyContent: 'center',
-                    alignItems: 'flex-end',
-                  }}>
-                  <Text style={[styles.messageText, {fontSize: hp('1.65')}]}>
-                    View All
-                  </Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={{marginHorizontal: wp('-2'), marginTop: hp('-1')}}>
-                <FlatList
-                  data={messagesHere?.userData}
-                  renderItem={renderItem}
-                  keyExtractor={(item, index) => index.toString()}
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}
-                />
-              </View>
-            </View>
-            {profileHere?.userData?.reporting_result?.reportee_length > 0 && (
-              <>
-                <View style={{marginHorizontal: wp('5.5'), marginTop: hp('1')}}>
-                  <Text style={styles.messageText}>Reportees</Text>
-                </View>
-                <View
-                  style={{
-                    marginHorizontal: wp('5.5'),
-                    marginTop: hp('1'),
-                    height: hp('10'),
-                    backgroundColor: 'white',
-                    borderRadius: wp('2'),
+                    flex: 0.33,
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}>
+                  <Image
+                    source={{uri: 'servicelength'}}
+                    style={{height: hp('3.5'), width: wp('7')}}
+                    resizeMode={'contain'}
+                  />
+
+                  <Text style={[styles.serviceSection]}>
+                    {profileHere?.userData?.emp_result?.SERVICE_LENGTH}
+                  </Text>
+
+                  <Text style={[styles.bootContText2]}>Service Length</Text>
+                </View>
+                <View style={styles.monial}>
+                  <Image
+                    source={{uri: 'empstatus'}}
+                    style={{height: hp('3.5'), width: wp('7')}}
+                    resizeMode={'contain'}
+                  />
+
+                  <Text style={[styles.serviceSection]}>
+                    {profileHere?.userData?.emp_result?.EMP_STATUS_DESCRIPTION}
+                  </Text>
+                  <Text style={[styles.bootContText2]}>Status</Text>
+                </View>
+
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flex: 0.33,
+                  }}>
+                  <Image
+                    source={{uri: 'empcalendar'}}
+                    style={{height: hp('3.5'), width: wp('7')}}
+                    resizeMode={'contain'}
+                  />
+
+                  <Text style={styles.serviceSection}>
+                    {profileHere?.empTimeIn == null ||
+                    profileHere?.empTimeIn == undefined ||
+                    profileHere?.empTimeIn == ''
+                      ? '--:--:--'
+                      : profileHere?.empTimeIn}
+                  </Text>
+                  <Text style={[styles.bootContText2]}>Attendance</Text>
+                </View>
+              </View>
+
+              <View
+                style={{marginHorizontal: wp('5.5'), marginTop: hp('1.75')}}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginBottom: hp('1'),
+                    height: hp('4'),
+                  }}>
+                  <View
+                    style={{
+                      flex: 0.3,
+                      justifyContent: 'center',
+                    }}>
+                    <Text style={styles.messageText}>Messages</Text>
+                  </View>
+                  <View style={{flex: 0.45}}></View>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => navigation.navigate('ViewAllMessages')}
+                    style={{
+                      flex: 0.25,
+                      justifyContent: 'center',
+                      alignItems: 'flex-end',
+                    }}>
+                    <Text style={[styles.messageText, {fontSize: hp('1.65')}]}>
+                      View All
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+
+                <View style={{marginHorizontal: wp('-2'), marginTop: hp('-1')}}>
                   <FlatList
-                    data={slicedData}
-                    renderItem={renderItemReportees}
+                    data={messagesHere?.userData}
+                    renderItem={renderItem}
                     keyExtractor={(item, index) => index.toString()}
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
                   />
                 </View>
-              </>
-            )}
-
-            <View style={{marginHorizontal: wp('5.5'), marginTop: hp('1')}}>
-              <Text style={styles.messageText}>Leaves</Text>
-            </View>
-
-            {leaveBalanceHere?.success == 1 && (
-              <View
-                style={{
-                  flexDirection: 'column',
-                  backgroundColor: 'white',
-                  marginHorizontal: wp('5.5'),
-                  marginTop: hp('1'),
-                  borderRadius: wp('2'),
-
-                  shadowColor: '#000',
-                  shadowOpacity: 0.5,
-                  shadowRadius: 4,
-                  elevation: 4,
-                  marginBottom: hp('1'),
-                }}>
-                <View style={styles.LBMainView}>
-                  <TouchableOpacity
-                    activeOpacity={0.75}
-                    onPress={() => navigation.navigate('LeaveBalance')}
-                    style={styles.LBLeftView}>
-                    <PieChart
-                      data={[
-                        {
-                          value: annual,
-                          color: '#B141CE',
-                        },
-                        {
-                          value: casual,
-                          color: '#41CE68',
-                        },
-                        {
-                          value: sick,
-                          color: '#CE5141',
-                        },
-                        {
-                          value: maternity,
-                          color: '#41CE68',
-                        },
-                        {
-                          value: long,
-                          color: '#4167C4',
-                        },
-                        {
-                          value: hajj,
-                          color: '#41CEB4',
-                        },
-                        {
-                          value: without,
-                          color: '#7051CE',
-                        },
-                        {
-                          value: pending,
-                          color: '#edebeb',
-                        },
-                      ]}
-                      donut
-                      // showGradient
-                      sectionAutoFocus
-                      radius={57}
-                      innerRadius={52}
-                      centerLabelComponent={() => {
-                        return (
-                          <View
-                            style={{
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                            }}>
-                            <Text style={styles.LBCountText}>
-                              {leaveBalanceHere?.userData?.total_count}
-                            </Text>
-                            <Text style={styles.LBText}>LEAVE BALANCE</Text>
-                          </View>
-                        );
-                      }}
-                    />
-                  </TouchableOpacity>
+              </View>
+              {profileHere?.userData?.reporting_result?.reportee_length > 0 && (
+                <>
+                  <View
+                    style={{marginHorizontal: wp('5.5'), marginTop: hp('1')}}>
+                    <Text style={styles.messageText}>Reportees</Text>
+                  </View>
                   <View
                     style={{
-                      flex: 0.45,
+                      marginHorizontal: wp('5.5'),
+                      marginTop: hp('1'),
+                      height: hp('10'),
+
+                      borderRadius: wp('2'),
+                      justifyContent: 'center',
+                      alignItems: 'center',
+
+                      backgroundColor: '#FFFFFF',
+                      shadowColor: '#000',
+                      shadowOpacity: 0.5,
+                      shadowRadius: 4,
+                      elevation: 4,
+                      marginVertical: hp('1'),
                     }}>
                     <FlatList
-                      data={leaveBalanceHere?.userData?.result}
-                      renderItem={renderItemLeaves}
+                      data={slicedData}
+                      renderItem={renderItemReportees}
                       keyExtractor={(item, index) => index.toString()}
+                      horizontal={true}
+                      showsHorizontalScrollIndicator={false}
+                      style={{paddingHorizontal: wp('1')}}
                     />
                   </View>
-                </View>
+                </>
+              )}
 
-                <View style={styles.LBBtnMainView}>
-                  <TouchableOpacity
-                    activeOpacity={0.5}
-                    onPress={() => navigation.navigate('ApplyLeave')}
-                    style={styles.LBBtnView}>
-                    <Text style={[styles.btnText, {color: '#1C37A4'}]}>
-                      Apply Leave
-                    </Text>
-                  </TouchableOpacity>
-                  <View style={{flex: 0.1}}></View>
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => navigation.navigate('AttendanceTab')}
-                    style={[styles.LBBtnView, {backgroundColor: '#1C37A4'}]}>
-                    <Text style={[styles.btnText, {color: '#FFFFFF'}]}>
-                      View Calendar
-                    </Text>
-                  </TouchableOpacity>
-                </View>
+              <View style={{marginHorizontal: wp('5.5'), marginTop: hp('1')}}>
+                <Text style={styles.messageText}>Leaves</Text>
               </View>
-            )}
 
-            {profileHere?.userData?.wfh_result == 1 && (
-              <>
+              {leaveBalanceHere?.success == 1 && (
                 <View
                   style={{
+                    flexDirection: 'column',
+                    backgroundColor: 'white',
                     marginHorizontal: wp('5.5'),
                     marginTop: hp('1'),
+                    borderRadius: wp('2'),
+
+                    shadowColor: '#000',
+                    shadowOpacity: 0.5,
+                    shadowRadius: 4,
+                    elevation: 4,
                     marginBottom: hp('1'),
                   }}>
-                  <Text style={styles.messageText}>W.F.H</Text>
-                </View>
-
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={() => navigation.navigate('WFHScreen')}
-                  style={{
-                    backgroundColor: '#1C37A4',
-                    marginHorizontal: wp('5.5'),
-                    marginVertical: hp('2'),
-                    borderRadius: wp('10'),
-                    height: hp('5'),
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Text
-                    style={[
-                      styles.btnText,
-                      {color: '#FFFFFF', fontSize: hp('1.85')},
-                    ]}>
-                    Work From Home
-                  </Text>
-                </TouchableOpacity>
-              </>
-            )}
-
-            {profileHereEmpBirthday == 0 ? (
-              <>
-                {playAnimation ? (
-                  <View style={styles.animationContainer}>
-                    <View style={{flexDirection: 'row'}}>
-                      <View style={{flex: 0.8}}></View>
-                      <View
-                        style={{
-                          flex: 0.2,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}>
-                        <TouchableOpacity
-                          activeOpacity={0.5}
-                          onPress={onPressCrossBirthday}
-                          style={{
-                            height: hp('5'),
-                            width: wp('10'),
-                            backgroundColor: '#1C37A4',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderRadius: wp('50'),
-                          }}>
-                          <FontAwesomeIcon
-                            icon="fa fa-xmark"
-                            size={hp(2.75)}
-                            style={{color: 'white'}}
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-
-                    <View style={{}}>
-                      <LottieView
-                        style={styles.animation}
-                        source={
-                          profileHere?.userData?.emp_result?.EMP_GENDER ==
-                          'Male'
-                            ? require('../assets/birthdaymale.json')
-                            : require('../assets/birthdayfemale.json')
-                        }
-                        autoPlay
-                        loop={false}
+                  <View style={styles.LBMainView}>
+                    <TouchableOpacity
+                      activeOpacity={0.75}
+                      onPress={() => navigation.navigate('LeaveBalance')}
+                      style={styles.LBLeftView}>
+                      <PieChart
+                        data={[
+                          {
+                            value: annual,
+                            color: '#B141CE',
+                          },
+                          {
+                            value: casual,
+                            color: '#41CE68',
+                          },
+                          {
+                            value: sick,
+                            color: '#CE5141',
+                          },
+                          {
+                            value: maternity,
+                            color: '#41CE68',
+                          },
+                          {
+                            value: long,
+                            color: '#4167C4',
+                          },
+                          {
+                            value: hajj,
+                            color: '#41CEB4',
+                          },
+                          {
+                            value: without,
+                            color: '#7051CE',
+                          },
+                          {
+                            value: pending,
+                            color: '#edebeb',
+                          },
+                        ]}
+                        donut
+                        // showGradient
+                        sectionAutoFocus
+                        radius={57}
+                        innerRadius={52}
+                        centerLabelComponent={() => {
+                          return (
+                            <View
+                              style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}>
+                              <Text style={styles.LBCountText}>
+                                {leaveBalanceHere?.userData?.total_count}
+                              </Text>
+                              <Text style={styles.LBText}>LEAVE BALANCE</Text>
+                            </View>
+                          );
+                        }}
+                      />
+                    </TouchableOpacity>
+                    <View
+                      style={{
+                        flex: 0.45,
+                      }}>
+                      <FlatList
+                        data={leaveBalanceHere?.userData?.result}
+                        renderItem={renderItemLeaves}
+                        keyExtractor={(item, index) => index.toString()}
                       />
                     </View>
                   </View>
-                ) : (
-                  <></>
-                )}
-              </>
-            ) : (
-              <></>
-            )}
-          </ScrollView>
 
-          {modalVisible && (
-            <ViewMessageDetailModal
-              activeOpacityLikeIcon={msgLike != 'Y' ? 0.8 : 1}
-              closeModal={closeModal}
-              headTitleText={'Message'}
-              msgSubject={messageSubject}
-              empPhoto={empPhoto}
-              empName={empName}
-              msgDate={msgDate}
-              htmlSource={messageDetailHere?.userData?.MSG_DETAIL_SUBSTRING}
-              onPressLikeIcon={
-                msgLike != 'Y' ? onPressThumbUpIcon : onPressInElse
-              }
-              inconType={msgLike == 'Y' ? 'solid' : 'light'}
-            />
-          )}
+                  <View style={styles.LBBtnMainView}>
+                    <TouchableOpacity
+                      activeOpacity={0.5}
+                      onPress={() => navigation.navigate('ApplyLeave')}
+                      style={styles.LBBtnView}>
+                      <Text style={[styles.btnText, {color: '#1C37A4'}]}>
+                        Apply Leave
+                      </Text>
+                    </TouchableOpacity>
+                    <View style={{flex: 0.1}}></View>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      onPress={() => navigation.navigate('AttendanceTab')}
+                      style={[styles.LBBtnView, {backgroundColor: '#1C37A4'}]}>
+                      <Text style={[styles.btnText, {color: '#FFFFFF'}]}>
+                        View Calendar
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              )}
 
-          {reporteeModal ? (
-            <ReporteeProfileModal
-              onPressBackIcon={onRequestClose}
-              modalVisible={reporteeModal}
-              onRequestClose={onRequestClose}
-              reporteeId={idHere}
-              my_branch_id={branchIdHere}
-              my_DEPARTMENT_ID={deptIdHere}
-            />
-          ) : (
-            <></>
+              {profileHere?.userData?.wfh_result == 1 && (
+                <>
+                  <View
+                    style={{
+                      marginHorizontal: wp('5.5'),
+                      marginTop: hp('1'),
+                      marginBottom: hp('1'),
+                    }}>
+                    <Text style={styles.messageText}>W.F.H</Text>
+                  </View>
+
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => navigation.navigate('WFHScreen')}
+                    style={{
+                      backgroundColor: '#1C37A4',
+                      marginHorizontal: wp('5.5'),
+                      marginVertical: hp('2'),
+                      borderRadius: wp('10'),
+                      height: hp('5'),
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text
+                      style={[
+                        styles.btnText,
+                        {color: '#FFFFFF', fontSize: hp('1.85')},
+                      ]}>
+                      Work From Home
+                    </Text>
+                  </TouchableOpacity>
+                </>
+              )}
+
+              {profileHereEmpBirthday == 0 ? (
+                <>
+                  {playAnimation ? (
+                    <View style={styles.animationContainer}>
+                      <View style={{flexDirection: 'row'}}>
+                        <View style={{flex: 0.8}}></View>
+                        <View
+                          style={{
+                            flex: 0.2,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}>
+                          <TouchableOpacity
+                            activeOpacity={0.5}
+                            onPress={onPressCrossBirthday}
+                            style={{
+                              height: hp('5'),
+                              width: wp('10'),
+                              backgroundColor: '#1C37A4',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              borderRadius: wp('50'),
+                            }}>
+                            <FontAwesomeIcon
+                              icon="fa fa-xmark"
+                              size={hp(2.75)}
+                              style={{color: 'white'}}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+
+                      <View style={{}}>
+                        <LottieView
+                          style={styles.animation}
+                          source={
+                            profileHere?.userData?.emp_result?.EMP_GENDER ==
+                            'Male'
+                              ? require('../assets/birthdaymale.json')
+                              : require('../assets/birthdayfemale.json')
+                          }
+                          autoPlay
+                          loop={false}
+                        />
+                      </View>
+                    </View>
+                  ) : (
+                    <></>
+                  )}
+                </>
+              ) : (
+                <></>
+              )}
+            </ScrollView>
           )}
         </>
-      )}
+
+        {modalVisible && (
+          <ViewMessageDetailModal
+            activeOpacityLikeIcon={msgLike != 'Y' ? 0.8 : 1}
+            closeModal={closeModal}
+            headTitleText={'Message'}
+            msgSubject={messageSubject}
+            empPhoto={empPhoto}
+            empName={empName}
+            msgDate={msgDate}
+            htmlSource={messageDetailHere?.userData?.MSG_DETAIL_SUBSTRING}
+            onPressLikeIcon={
+              msgLike != 'Y' ? onPressThumbUpIcon : onPressInElse
+            }
+            inconType={msgLike == 'Y' ? 'solid' : 'light'}
+          />
+        )}
+
+        {reporteeModal ? (
+          <ReporteeProfileModal
+            onPressBackIcon={onRequestClose}
+            modalVisible={reporteeModal}
+            onRequestClose={onRequestClose}
+            reporteeId={idHere}
+            my_branch_id={branchIdHere}
+            my_DEPARTMENT_ID={deptIdHere}
+          />
+        ) : (
+          <></>
+        )}
+      </>
     </SafeAreaView>
   );
 };

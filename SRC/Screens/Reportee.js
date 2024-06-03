@@ -475,6 +475,17 @@ const Reportee = props => {
                 data={allReporteesHere?.userData?.data}
                 renderItem={renderItem}
                 keyExtractor={(item, index) => index.toString()}
+                ListEmptyComponent={
+                  <Text
+                    style={{
+                      fontSize: hp('1.75'),
+                      color: 'black',
+                      textAlign: 'center',
+                      fontStyle: 'italic',
+                    }}>
+                    You have no reportees assigned to you.
+                  </Text>
+                }
               />
             </View>
           </View>

@@ -94,10 +94,16 @@ const ArchiveMessages = props => {
     fetchData();
   }, [dispatch]);
 
-  const renderItem = useCallback(({item}) => {
+  const colorArray = ['#D5F5E3', '#D6EAF8', '#EBDEF0', '#F6DDCC', '#FCF3CF'];
+
+  const renderItem = useCallback(({item, index}) => {
+    const firstChar =
+      item?.FROM_NAME == null
+        ? item?.EMP_NAME?.split(' ')[0].charAt(0)
+        : item?.FROM_NAME?.split(' ')[0].charAt(0);
     return (
       <View style={{}}>
-        <View
+        <TouchableOpacity
           activeOpacity={0.8}
           style={{
             alignItems: 'center',
@@ -110,23 +116,36 @@ const ArchiveMessages = props => {
             backgroundColor:
               item?.IS_READ === 'Y' ? colors.appBackGroundColor : '#e6e6e6',
           }}>
-          <TouchableOpacity
-            activeOpacity={0.9}
+          <View
             style={{
               flex: 0.15,
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Image
-              source={{uri: item?.EMP_PHOTO}}
+            <View
               style={{
-                height: hp('5.75'),
-                width: wp('11.5'),
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: hp('5'),
+                width: wp('10'),
                 borderRadius: wp(50),
-              }}
-              resizeMode="cover"
-            />
-          </TouchableOpacity>
+                borderWidth: item?.IS_READ === 'Y' ? wp('0.05') : wp('0.25'),
+                borderColor: item?.IS_READ === 'Y' ? 'silver' : 'white',
+                marginHorizontal: wp('0.25'),
+                marginVertical: hp('0.25'),
+                backgroundColor: colorArray[index % colorArray?.length],
+              }}>
+              <Text
+                style={{
+                  color: 'black',
+                  fontFamily: fontFamily.ceraMedium,
+                  fontSize: hp('2.75'),
+                  textAlign: 'center',
+                }}>
+                {firstChar}
+              </Text>
+            </View>
+          </View>
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => {
@@ -180,7 +199,7 @@ const ArchiveMessages = props => {
               </Text>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
     );
   }, []);
@@ -376,7 +395,7 @@ const ArchiveMessages = props => {
         <View
           style={{
             paddingHorizontal: wp('5'),
-            paddingTop: hp('3'),
+            paddingTop: hp('2'),
             backgroundColor: colors.appBackGroundColor,
             marginBottom: hp('11.85'),
           }}>
@@ -401,12 +420,12 @@ const ArchiveMessages = props => {
             ListEmptyComponent={
               <Text
                 style={{
-                  fontSize: hp('2'),
+                  fontSize: hp('1.75'),
                   color: 'black',
-                  fontFamily: fontFamily.ceraMedium,
                   textAlign: 'center',
+                  fontStyle: 'italic',
                 }}>
-                You have no message.
+                There are no archived messages to display.
               </Text>
             }
             style={{paddingTop: hp('1.5')}}

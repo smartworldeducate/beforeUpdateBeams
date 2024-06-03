@@ -46,9 +46,28 @@ const LeaveBalance = props => {
           iconName={item?.ICONNAME}
           iconColor={item?.CLOR}
           upperText={item?.Leave_Name}
-          LowerText={`${item?.leave_text}`}
-          availLeaves={item?.APPRV_LVS == null ? '0' : item?.APPRV_LVS}
-          totalLeaves={item?.total}
+          LowerText={
+            item?.PENDING > 0
+              ? `${item?.PENDING} Pending Leaves`
+              : 'No Leaves Applied'
+          }
+          availLeaves={
+            item?.BALANCE == null ||
+            item?.BALANCE == '' ||
+            item?.BALANCE == undefined
+              ? 0
+              : item?.BALANCE
+          }
+          centerSlash={
+            item?.ENTL == null || item?.ENTL == undefined || item?.ENTL == ''
+              ? '/'
+              : `/`
+          }
+          totalLeaves={
+            item?.ENTL == null || item?.ENTL == undefined || item?.ENTL == ''
+              ? '0'
+              : item?.ENTL
+          }
         />
         <LineSeprator
           height={hp('0.1')}

@@ -5,6 +5,8 @@ import {
   ScrollView,
   FlatList,
   useWindowDimensions,
+  Image,
+  RefreshControl,
 } from 'react-native';
 import MainHeader from '../Components/Headers/MainHeader';
 import {
@@ -25,30 +27,39 @@ import Loader from '../Components/Loader/Loader';
 
 const TimeLine = props => {
   const dispatch = useDispatch();
+
+  const profileHereEmpId = useSelector(
+    state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
+  );
+
   const profileHere = useSelector(state => state.profileStore);
   const timeLineHere = useSelector(state => state.timeLineStore);
-  console.log('timeLineHere>', timeLineHere?.userData);
+  // console.log('timeLineHere>>>', timeLineHere?.userData);
+
+  const [refreshing, setRefreshing] = useState(false);
 
   const {width} = useWindowDimensions();
 
   useEffect(() => {
-    // console.log('TimeLine');
-    AsyncStorage.getItem('loginData')
-      .then(loginData => {
-        console.log('loginData', loginData);
+    const fetchData = async () => {
+      try {
+        const loginData = await AsyncStorage.getItem('loginData');
         const parsedLoginData = JSON.parse(loginData);
-        console.log('parsedLoginData', parsedLoginData);
 
-        console.log('insideUseEffect');
-        dispatch(TimelineAction({employee_id: parsedLoginData}));
-      })
-      .catch(error => {
-        console.error('Error retrieving loginData from AsyncStorage:', error);
-      });
+        dispatch(
+          TimelineAction({
+            employee_id: parsedLoginData,
+          }),
+        );
+      } catch (error) {
+        console.error('Error retrieving values from AsyncStorage:', error);
+      }
+    };
+
+    fetchData();
   }, [dispatch]);
-  const circleColor = 'red';
+
   const renderItem = ({item, index}) => {
-    // console.log('item', item);
     return (
       <View
         style={{
@@ -66,15 +77,15 @@ const TimeLine = props => {
           }}>
           <View
             style={{
-              // backgroundColor: '#1C37A4',
               flex: 0.2,
               justifyContent: 'center',
               alignItems: 'center',
-              // width: wp('5'),
-              // height: hp('1'),
-              // borderRadius: wp('5'),
             }}>
-            <Icon type="solid" name="circle" size={hp(2.25)} color="#1C37A4" />
+            <Image
+              style={{height: hp(2.5), width: wp(5)}}
+              source={{uri: 'timelinecircle'}}
+              resizeMode="cover"
+            />
           </View>
           <View
             style={{
@@ -147,19 +158,7 @@ const TimeLine = props => {
               </Text>
             </View>
           </View>
-          <View
-            style={
-              {
-                // marginVertical: hp('1.25'),
-                // backgroundColor: 'red',
-              }
-            }>
-            {/* <Text style={styles.textDesc}>
-              Hired as a{' '}
-              <Text style={{color: item?.COLOR}}>{item?.DESIGNATION}</Text> in{' '}
-              <Text style={{color: item?.COLOR}}>{item?.DEPT_NAME}</Text>
-            </Text> */}
-
+          <View>
             <RenderHTML
               contentWidth={width}
               source={{html: item?.MESSAGE}}
@@ -169,6 +168,16 @@ const TimeLine = props => {
         </View>
       </View>
     );
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    dispatch(
+      TimelineAction({
+        employee_id: JSON.parse(profileHereEmpId),
+      }),
+    );
+    setRefreshing(false);
   };
 
   return (
@@ -187,7 +196,16 @@ const TimeLine = props => {
         contentContainerStyle={{
           flexGrow: 1,
           backgroundColor: '#f5f8fc',
-        }}>
+        }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={['#2A72B6', '#203B88']}
+            progressBackgroundColor={'#fcfcfc'}
+            tintColor={'#1C37A4'}
+          />
+        }>
         <View style={{marginVertical: hp('3')}}>
           <View style={{marginHorizontal: wp('5')}}>
             <EmpCardPart

@@ -28,9 +28,10 @@ const EarlyLeavingSlice = createSlice({
   name: 'EarlyLeaving',
   initialState,
   reducers: {
-    clearAllState: (state, action) => {
-      //   state.policiesListAll = null;
-      //   state.message = '';
+    clearAllStateEarlyLeaving: (state, action) => {
+      state.success = null;
+      state.message = '';
+      state.userData = null;
     },
   },
   extraReducers: builder => {
@@ -49,6 +50,6 @@ const EarlyLeavingSlice = createSlice({
   },
 });
 
-export const {clearAllState} = EarlyLeavingSlice.actions;
+export const {clearAllStateEarlyLeaving} = EarlyLeavingSlice.actions;
 
 export default EarlyLeavingSlice.reducer;

@@ -32,7 +32,7 @@ const ProfileCardBody = ({leftText, rightText}) => {
           justifyContent: 'center',
           alignItems: 'flex-end',
         }}>
-        <Text numberOfLines={1} ellipsizeMode={'tail'} style={styles.rightText}>
+        <Text numberOfLines={2} ellipsizeMode={'tail'} style={styles.rightText}>
           {rightText}
         </Text>
       </View>

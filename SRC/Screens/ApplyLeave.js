@@ -47,6 +47,8 @@ import {
 import ViewInputAnother from '../Components/ViewInputAnother';
 import {useFocusEffect} from '@react-navigation/native';
 import MessageSuccessModal from '../Components/Modal/MessageSuccessModal';
+import Loader from '../Components/Loader/Loader';
+import DatesComparisonModal from '../Components/Modal/DatesComparisonModal';
 
 const ApplyLeave = props => {
   const dispatch = useDispatch();
@@ -57,12 +59,11 @@ const ApplyLeave = props => {
   const leaveTypeHere = useSelector(state => state.LeaveTypeStore);
 
   const applyLeaveHere = useSelector(state => state.ApplyLeaveStore);
-  console.log('applyLeaveHere', applyLeaveHere);
+  console.log('applyLeaveHere>>>', applyLeaveHere);
 
   const applyLeaveSuccessResponseHere = useSelector(
     state => state.ApplyLeaveStore.success,
   );
-  console.log('applyLeaveSuccessResponseHere', applyLeaveSuccessResponseHere);
 
   // all states hooks starts
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -88,8 +89,10 @@ const ApplyLeave = props => {
   const [withoutPay, setWithoutPay] = useState(false);
   const [reasonText, setReasonText] = useState('');
 
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [datesValid, setDatesValid] = useState(false);
+
   const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -119,6 +122,7 @@ const ApplyLeave = props => {
   };
 
   const handleDateConfirm = date => {
+    console.log('date', date);
     const formattedFromDate = date.toLocaleDateString('en-US', {
       weekday: 'short',
       month: 'short',
@@ -131,11 +135,14 @@ const ApplyLeave = props => {
     var year = date.getFullYear();
 
     const fromDateForTotalDays = day + '-' + month + '-' + year;
+    console.log('fromDateForTotalDays', fromDateForTotalDays);
     setForFromDate(fromDateForTotalDays);
 
     setFromDate(formattedFromDate);
     hideDatePicker();
   };
+
+  console.log('fromDate', fromDate);
 
   //second datetime picker
   const showDatePickerTwo = () => {
@@ -159,7 +166,6 @@ const ApplyLeave = props => {
     var year = date.getFullYear();
 
     const toDateForTotalDays = day + '-' + month + '-' + year;
-    console.log('toDateForTotalDays', toDateForTotalDays);
     setForToDate(toDateForTotalDays);
 
     setToDate(formattedToDate);
@@ -172,9 +178,15 @@ const ApplyLeave = props => {
       const endMoment = moment(forToDate, 'DD-MM-YYYY');
 
       const diffInDays = endMoment.diff(startMoment, 'days') + 1;
-      setTotalDays(diffInDays);
+      if (diffInDays > 0) {
+        setTotalDays(diffInDays);
+      }
     }
   }, [fromDate, toDate]);
+
+  const closeDateComparisonModal = () => {
+    setDatesValid(false);
+  };
 
   const onPressLeaveTypeModal = () => {
     setLeaveTypeModal(!leaveTypeModal);
@@ -184,24 +196,7 @@ const ApplyLeave = props => {
     setForwardToModal(!forwardToModal);
   };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const loginData = await AsyncStorage.getItem('loginData');
-  //       const parsedLoginData = JSON.parse(loginData);
-
-  //       dispatch(
-  //         LeaveTypeAction({
-  //           employee_id: parsedLoginData,
-  //         }),
-  //       );
-  //     } catch (error) {
-  //       console.error('Error retrieving values from AsyncStorage:', error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [dispatch]);
+  console.log('datesValid', datesValid);
 
   const renderItemLeaveTypes = ({item, index}) => {
     return (
@@ -288,21 +283,64 @@ const ApplyLeave = props => {
     setReasonText(val);
   };
 
+  // useEffect(() => {
+  //   const fromDateObj = new Date(fromDate);
+  //   const toDateObj = new Date(toDate);
+  //   if (fromDate !== null && toDate !== null) {
+  //     if (toDateObj <= fromDateObj) {
+  //       Alert.alert('Dates are valid', 'You can carry on');
+  //       console.log('dates', toDateObj, fromDateObj);
+  //     } else {
+  //       setToDate(null);
+  //       setTotalDays(null);
+
+  //       Alert.alert(
+  //         'Dates are not valid',
+  //         'To Date must be greater than or equal to From Date',
+  //       );
+  //     }
+  //   }
+  // }, [fromDate, toDate]);
+
   const onPressSubmitRequest = () => {
+    console.log('onPressSubmitRequest');
     dispatch(
       ApplyLeaveAction({
         employee_id: JSON.parse(profileHereEmpId),
-        from_date: moment(fromDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
-        to_date: moment(toDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
-        total_days: totalDays,
-        leave_type: empLeaveTypeId,
+        from_date:
+          fromDate == null
+            ? null
+            : moment(fromDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
+        to_date:
+          toDate == null
+            ? null
+            : moment(toDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
+        total_days: JSON.parse(totalDays),
+        leave_type: JSON.parse(empLeaveTypeId),
         op_leave_type: firstDayValue,
         op_pay_type: payValue,
         reason: reasonText,
-        forward_to: empLeaveForwardToId,
+        forward_to: JSON.parse(empLeaveForwardToId),
       }),
     );
   };
+
+  // const onPressSubmitRequest = () => {
+  //   console.log('onPressSubmitRequest');
+  //   dispatch(
+  //     ApplyLeaveAction({
+  //       employee_id: 93139,
+  //       from_date: '01/01/2024',
+  //       to_date: '03/01/2024',
+  //       total_days: 3,
+  //       leave_type: 1,
+  //       op_leave_type: 'F',
+  //       op_pay_type: 'Y',
+  //       reason: 'Test',
+  //       forward_to: 57660,
+  //     }),
+  //   );
+  // };
 
   useEffect(() => {
     if (applyLeaveSuccessResponseHere == 0) {
@@ -318,19 +356,20 @@ const ApplyLeave = props => {
     setShowErrorModal(false);
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      // Additional logic when screen gains focus
-      // dispatch(clearAllStateApplyLeave());
-      return () => {
-        // Additional logic when screen loses focus
-        // dispatch(clearAllStateApplyLeave());
-      };
-    }, []),
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     // Additional logic when screen gains focus
+  //     // dispatch(clearAllStateApplyLeave());
+  //     return () => {
+  //       // Additional logic when screen loses focus
+  //       // dispatch(clearAllStateApplyLeave());
+  //     };
+  //   }, []),
+  // );
 
   return (
     <ScrollView style={{flex: 1, backgroundColor: '#F5F8FC'}}>
+      {applyLeaveHere?.isLoading && <Loader></Loader>}
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
         mode="date"
@@ -392,6 +431,7 @@ const ApplyLeave = props => {
           style={styles.textInputCustomStyle}
         />
       </View>
+
       <View
         style={{
           marginTop: hp(1.5),
@@ -410,7 +450,6 @@ const ApplyLeave = props => {
           placeholder={'Total Days'}
           placeholderColor={colors.loginTextColor}
           iconColor={colors.loginIconColor}
-          // style={styles.textInputCustomStyle}
         />
       </View>
 
@@ -762,16 +801,9 @@ const ApplyLeave = props => {
         />
       )}
 
-      {showSuccessModal && (
-        <MessageSuccessModal
-          text={'Request Submit'}
-          onPressOpacity={closeModal}
-        />
-      )}
-
       {showErrorModal && (
         <MessageSuccessModal
-          textUpper={'Request Failed'}
+          textUpper={'Request Status'}
           textLower={applyLeaveHere?.message}
           btnText={'OK'}
           onPressOpacity={closeModal}
@@ -780,10 +812,19 @@ const ApplyLeave = props => {
 
       {showSuccessModal && (
         <MessageSuccessModal
-          textUpper={'Request Completed'}
+          textUpper={'Request Status'}
           textLower={applyLeaveHere?.message}
           btnText={'OK'}
           onPressOpacity={closeModal}
+        />
+      )}
+
+      {datesValid && (
+        <DatesComparisonModal
+          textUpper={'Alert'}
+          textLower={'To date must be greater than From date'}
+          btnText={'OK'}
+          onPressOpacity={closeDateComparisonModal}
         />
       )}
     </ScrollView>

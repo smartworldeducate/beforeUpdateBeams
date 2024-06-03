@@ -7,6 +7,7 @@ import {
   Modal,
   FlatList,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {
@@ -49,8 +50,12 @@ const ReporteeMovementLogModal = ({
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Icon type="solid" name="circle" size={hp(2.25)} color="#1C37A4" />
-            {/* <Text style={{color: 'black'}}>🔵</Text> */}
+            {/* <Icon type="solid" name="circle" size={hp(2.25)} color="#1C37A4" /> */}
+            <Image
+              style={{height: hp(2.5), width: wp(5)}}
+              source={{uri: 'timelinecircle'}}
+              resizeMode="cover"
+            />
           </View>
           <View
             style={{
@@ -205,7 +210,7 @@ const ReporteeMovementLogModal = ({
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Text style={styles.textstyle}>{'Reportee Movment Log'}</Text>
+                <Text style={styles.textstyle}>{'Movment Log'}</Text>
               </View>
               <View style={{flex: 0.15}}></View>
             </View>

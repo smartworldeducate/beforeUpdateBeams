@@ -91,16 +91,18 @@ const FavouriteMessages = props => {
     fetchData();
   }, [dispatch]);
 
-  const renderItem = useCallback(({item}) => {
+  const colorArray = ['#D5F5E3', '#D6EAF8', '#EBDEF0', '#F6DDCC', '#FCF3CF'];
+
+  const renderItem = useCallback(({item, index}) => {
+    const firstChar =
+      item?.FROM_NAME == null
+        ? item?.EMP_NAME?.split(' ')[0].charAt(0)
+        : item?.FROM_NAME?.split(' ')[0].charAt(0);
     return (
       <View style={{}}>
-        <View
+        <TouchableOpacity
           activeOpacity={0.8}
           style={{
-            // height: hp('8'),
-            // flexDirection: 'row',
-            // marginBottom: hp('1'),
-
             alignItems: 'center',
             justifyContent: 'center',
             height: hp('8'),
@@ -111,23 +113,36 @@ const FavouriteMessages = props => {
             backgroundColor:
               item?.IS_READ === 'Y' ? colors.appBackGroundColor : '#e6e6e6',
           }}>
-          <TouchableOpacity
-            activeOpacity={0.9}
+          <View
             style={{
               flex: 0.15,
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Image
-              source={{uri: item?.EMP_PHOTO}}
+            <View
               style={{
-                height: hp('5.75'),
-                width: wp('11.5'),
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: hp('5'),
+                width: wp('10'),
                 borderRadius: wp(50),
-              }}
-              resizeMode="cover"
-            />
-          </TouchableOpacity>
+                borderWidth: item?.IS_READ === 'Y' ? wp('0.05') : wp('0.25'),
+                borderColor: item?.IS_READ === 'Y' ? 'silver' : 'white',
+                marginHorizontal: wp('0.25'),
+                marginVertical: hp('0.25'),
+                backgroundColor: colorArray[index % colorArray?.length],
+              }}>
+              <Text
+                style={{
+                  color: 'black',
+                  fontFamily: fontFamily.ceraMedium,
+                  fontSize: hp('2.75'),
+                  textAlign: 'center',
+                }}>
+                {firstChar}
+              </Text>
+            </View>
+          </View>
           <TouchableOpacity
             activeOpacity={0.8}
             // onPress={() =>
@@ -195,7 +210,7 @@ const FavouriteMessages = props => {
               <Icon type="solid" name={'star'} size={hp(2.5)} color="#f4b543" />
             </TouchableOpacity>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
     );
   }, []);
@@ -350,12 +365,12 @@ const FavouriteMessages = props => {
           ListEmptyComponent={
             <Text
               style={{
-                fontSize: hp('2'),
+                fontSize: hp('1.75'),
                 color: 'black',
-                fontFamily: fontFamily.ceraMedium,
                 textAlign: 'center',
+                fontStyle: 'italic',
               }}>
-              You have no favourite message.
+              You have not marked any messages as favorites.
             </Text>
           }
           showsVerticalScrollIndicator={true}

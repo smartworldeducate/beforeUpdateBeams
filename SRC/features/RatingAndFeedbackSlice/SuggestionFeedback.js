@@ -12,7 +12,7 @@ const initialState = {
 export const SuggestionFeedbackAction = createAsyncThunk(
   'SuggestionFeedback',
   async values => {
-    console.log('values', values);
+    console.log('valuesFeedbackSuggestion', values);
     return axios
       .post(`${APIS.SuggestionFeedbackAPI}`, values, {
         headers: {
@@ -29,9 +29,10 @@ const SuggestionFeedbackSlice = createSlice({
   name: 'SuggestionFeedback',
   initialState,
   reducers: {
-    clearAllState: (state, action) => {
-      //   state.policiesListAll = null;
-      //   state.message = '';
+    clearAllStateSuggestionFeedback: (state, action) => {
+      state.success = null;
+      state.message = '';
+      state.userData = null;
     },
   },
   extraReducers: builder => {
@@ -50,6 +51,7 @@ const SuggestionFeedbackSlice = createSlice({
   },
 });
 
-export const {clearAllState} = SuggestionFeedbackSlice.actions;
+export const {clearAllStateSuggestionFeedback} =
+  SuggestionFeedbackSlice.actions;
 
 export default SuggestionFeedbackSlice.reducer;

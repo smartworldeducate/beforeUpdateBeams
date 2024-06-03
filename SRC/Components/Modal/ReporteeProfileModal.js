@@ -34,14 +34,14 @@ const ReporteeProfileModal = ({
 }) => {
   const dispatch = useDispatch();
   const reporteeProfileHere = useSelector(state => state.reporteeProfileStore);
-  console.log('reporteeProfileHere', reporteeProfileHere);
+  // console.log('reporteeProfileHere', reporteeProfileHere);
 
   useEffect(() => {
     dispatch(
       reporteeProfileAction({
-        employee_id: reporteeId,
-        branch_id: my_branch_id,
-        dept_id: my_DEPARTMENT_ID,
+        employee_id: JSON.parse(reporteeId),
+        // branch_id: my_branch_id,
+        // dept_id: my_DEPARTMENT_ID,
       }),
     );
   }, [dispatch, reporteeId]);
@@ -107,6 +107,10 @@ const ReporteeProfileModal = ({
                 zIndex: 1,
                 marginTop: hp('6.85'),
                 left: wp('37.5'),
+
+                borderRadius: wp('50'),
+                borderWidth: wp('0.25'),
+                borderColor: '#cfdbfa',
               }}>
               <Image
                 source={{
@@ -180,6 +184,9 @@ const ReporteeProfileModal = ({
                       flex: 0.8,
                       flexDirection: 'column',
                       marginHorizontal: wp('2'),
+
+                      justifyContent: 'center',
+                      alignItems: 'center',
                     }}>
                     <View style={{}}>
                       <Text
@@ -374,21 +381,21 @@ const ReporteeProfileModal = ({
                 empServiceLength={
                   reporteeProfileHere?.userData?.profile_result?.SERVICE_LENGTH
                 }
-                empBasicSalary={
-                  reporteeProfileHere?.userData?.profile_result?.BASIC_SAL
-                }
-                empGrossSalary={
-                  reporteeProfileHere?.userData?.profile_result?.GROSS_SAL
-                }
-                empAllowance={
-                  reporteeProfileHere?.userData?.profile_result?.ALLOWANCES
-                }
-                empTakeHomeSalary={
-                  reporteeProfileHere?.userData?.profile_result?.TAKE_HOME
-                }
-                empCostToSchool={
-                  reporteeProfileHere?.userData?.profile_result?.CTS
-                }
+                empBasicSalary={Number(
+                  reporteeProfileHere?.userData?.profile_result?.BASIC_SAL,
+                ).toLocaleString()}
+                empGrossSalary={Number(
+                  reporteeProfileHere?.userData?.profile_result?.GROSS_SAL,
+                ).toLocaleString()}
+                empAllowance={Number(
+                  reporteeProfileHere?.userData?.profile_result?.ALLOWANCES,
+                ).toLocaleString()}
+                empTakeHomeSalary={Number(
+                  reporteeProfileHere?.userData?.profile_result?.TAKE_HOME,
+                ).toLocaleString()}
+                empCostToSchool={Number(
+                  reporteeProfileHere?.userData?.profile_result?.CTS,
+                ).toLocaleString()}
                 empAccounTitle={
                   reporteeProfileHere?.userData?.profile_result?.AC_TITLE
                 }

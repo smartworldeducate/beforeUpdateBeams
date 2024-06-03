@@ -25,9 +25,10 @@ const LoginSlice = createSlice({
   name: 'Login',
   initialState,
   reducers: {
-    clearAllState: (state, action) => {
-      //   state.policiesListAll = null;
-      //   state.message = '';
+    clearAllStateLogin: (state, action) => {
+      state.success = null;
+      state.message = '';
+      state.userData = null;
     },
     logoutSuccess: (state, action) => {
       state.success = 0;
@@ -49,6 +50,6 @@ const LoginSlice = createSlice({
   },
 });
 
-export const {clearAllState, logoutSuccess} = LoginSlice.actions;
+export const {clearAllStateLogin, logoutSuccess} = LoginSlice.actions;
 
 export default LoginSlice.reducer;

@@ -36,7 +36,7 @@ const Utility = props => {
   const utilityLoadingHere = useSelector(state => state.utilityStore);
 
   const utilityHere = useSelector(state => state.utilityStore?.userData);
-  // console.log('utilityHere>>>>>', utilityHere);
+  console.log('utilityHere>>>', utilityHere);
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -106,7 +106,7 @@ const Utility = props => {
           }}>
           <FontAwesomeIcon
             icon="fat fa-arrow-down-right"
-            size={hp(3.3)}
+            size={hp('2.85')}
             style={{color: '#1C37A4'}}
           />
         </View>
@@ -148,6 +148,17 @@ const Utility = props => {
             data={utilityHere}
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
+            ListEmptyComponent={
+              <Text
+                style={{
+                  fontSize: hp('1.75'),
+                  color: 'black',
+                  textAlign: 'center',
+                  fontStyle: 'italic',
+                }}>
+                There are no miscellaneous items to show.
+              </Text>
+            }
           />
         </View>
       </ScrollView>

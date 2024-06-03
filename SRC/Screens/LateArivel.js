@@ -41,7 +41,12 @@ import moment from 'moment';
 import {ApplyLeaveAction} from '../features/LeaveTypeSlice/ApplyLeaveSlice';
 import ViewInputAnother from '../Components/ViewInputAnother';
 import {useFocusEffect} from '@react-navigation/native';
-import {LateArrivalAction} from '../features/LeaveTypeSlice/LateArrivalSlice';
+import {
+  clearAllStateLateArrival,
+  LateArrivalAction,
+} from '../features/LeaveTypeSlice/LateArrivalSlice';
+import MessageSuccessModal from '../Components/Modal/MessageSuccessModal';
+import Loader from '../Components/Loader/Loader';
 
 const LateArivel = props => {
   const dispatch = useDispatch();
@@ -52,7 +57,12 @@ const LateArivel = props => {
   const leaveTypeHere = useSelector(state => state.LeaveTypeStore);
 
   const lateArrivalHere = useSelector(state => state.LateArrivalStore);
-  console.log('lateArrivalHere', lateArrivalHere);
+  console.log('lateArrivalHere>>>', lateArrivalHere);
+
+  const lateArrivalLeaveResponseHere = useSelector(
+    state => state.LateArrivalStore.success,
+  );
+  // console.log('lateArrivalLeaveResponseHere', lateArrivalLeaveResponseHere);
 
   // all states hooks starts
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -71,8 +81,10 @@ const LateArivel = props => {
   const [empLeaveTypeId, setEmpLeaveTypeId] = useState(null);
   const [empLeaveForwardToId, setEmpLeaveForwardToId] = useState(null);
   const [empLeaveForwardTo, setEmpLeaveForwardTo] = useState(null);
-
   const [reasonText, setReasonText] = useState('');
+
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -194,30 +206,49 @@ const LateArivel = props => {
         employee_id: JSON.parse(profileHereEmpId),
         leave_type: 18,
 
-        from_date: moment(fromDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
-        to_date: moment(toDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
-        total_days: totalDays,
+        from_date:
+          fromDate == null
+            ? null
+            : moment(fromDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
+        to_date:
+          toDate == null
+            ? null
+            : moment(toDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
+        total_days: JSON.parse(totalDays),
 
         txt_exp_tm: lateArrivalTime,
         reason: reasonText,
-        forward_to: empLeaveForwardToId,
+        forward_to: JSON.parse(empLeaveForwardToId),
       }),
     );
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      // setIsFocused(true);
-      // Additional logic when screen gains focus
-      return () => {
-        // setIsFocused(false);
-        // Additional logic when screen loses focus
-      };
-    }, []),
-  );
+  useEffect(() => {
+    if (lateArrivalLeaveResponseHere == 0) {
+      setShowErrorModal(true);
+    } else if (lateArrivalLeaveResponseHere == 1) {
+      setShowSuccessModal(true);
+    }
+  }, [lateArrivalLeaveResponseHere]);
+
+  const closeModal = () => {
+    dispatch(clearAllStateLateArrival());
+    setShowSuccessModal(false);
+    setShowErrorModal(false);
+  };
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     // Additional logic when screen gains focus
+  //     return () => {
+  //       // Additional logic when screen loses focus
+  //     };
+  //   }, []),
+  // );
 
   return (
     <ScrollView style={{flex: 1, backgroundColor: '#F5F8FC'}}>
+      {lateArrivalHere?.isLoading && <Loader></Loader>}
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
         mode="date"
@@ -431,6 +462,24 @@ const LateArivel = props => {
           onPressOpacity={onPressForwardToModal}
           leaveTypesData={leaveTypeHere?.userData?.forward_to}
           renderItem={renderItemForwardTo}
+        />
+      )}
+
+      {showErrorModal && (
+        <MessageSuccessModal
+          textUpper={'Request Status'}
+          textLower={lateArrivalHere?.message}
+          btnText={'OK'}
+          onPressOpacity={closeModal}
+        />
+      )}
+
+      {showSuccessModal && (
+        <MessageSuccessModal
+          textUpper={'Request Status'}
+          textLower={lateArrivalHere?.message}
+          btnText={'OK'}
+          onPressOpacity={closeModal}
         />
       )}
     </ScrollView>

@@ -112,27 +112,33 @@ const CustomDrawer = ({navigation}) => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Image
+              <View
                 style={{
                   width: wp(16),
-                  borderColor: '#b0bbeb',
                   height: hp(8),
-                  borderRadius: hp(50),
 
                   borderRadius: wp('50'),
                   borderWidth: wp('0.35'),
                   borderColor: '#cfdbfa',
-                }}
-                source={{uri: profileHere?.userData?.emp_result?.EMP_PHOTO}}
-                resizeMode="cover"
-              />
+                }}>
+                <Image
+                  style={{
+                    width: wp(15),
+                    height: hp(7.5),
+
+                    borderRadius: wp('50'),
+                  }}
+                  source={{uri: profileHere?.userData?.emp_result?.EMP_PHOTO}}
+                  resizeMode="cover"
+                />
+              </View>
             </View>
 
             <View
               style={{
                 flex: 0.02,
                 flexDirection: 'column',
-                marginLeft: wp('-4'),
+                marginLeft: wp('-5'),
               }}>
               <View style={{flex: 0.7}}></View>
               <View
@@ -157,7 +163,7 @@ const CustomDrawer = ({navigation}) => {
                 flex: 0.73,
                 justifyContent: 'center',
                 paddingLeft: wp('1'),
-                marginLeft: wp('2'),
+                marginLeft: wp('4'),
               }}>
               <View style={{}}>
                 <Text

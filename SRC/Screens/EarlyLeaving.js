@@ -35,7 +35,12 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import moment from 'moment';
 import ViewInputAnother from '../Components/ViewInputAnother';
 import {useFocusEffect} from '@react-navigation/native';
-import {EarlyLeavingAction} from '../features/LeaveTypeSlice/EarlyLeavingSlice';
+import {
+  clearAllStateEarlyLeaving,
+  EarlyLeavingAction,
+} from '../features/LeaveTypeSlice/EarlyLeavingSlice';
+import MessageSuccessModal from '../Components/Modal/MessageSuccessModal';
+import Loader from '../Components/Loader/Loader';
 
 const EarlyLeaving = props => {
   const dispatch = useDispatch();
@@ -46,7 +51,11 @@ const EarlyLeaving = props => {
   const leaveTypeHere = useSelector(state => state.LeaveTypeStore);
 
   const earlyLeavinglHere = useSelector(state => state.EarlyLeavingStore);
-  console.log('earlyLeavinglHere', earlyLeavinglHere);
+  console.log('earlyLeavinglHere>>>', earlyLeavinglHere);
+
+  const earlyLeavingResponseHere = useSelector(
+    state => state.EarlyLeavingStore.success,
+  );
 
   // all states hooks starts
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -65,8 +74,10 @@ const EarlyLeaving = props => {
   const [empLeaveTypeId, setEmpLeaveTypeId] = useState(null);
   const [empLeaveForwardToId, setEmpLeaveForwardToId] = useState(null);
   const [empLeaveForwardTo, setEmpLeaveForwardTo] = useState(null);
-
   const [reasonText, setReasonText] = useState('');
+
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -188,30 +199,49 @@ const EarlyLeaving = props => {
         employee_id: JSON.parse(profileHereEmpId),
         leave_type: 20,
 
-        from_date: moment(fromDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
-        to_date: moment(toDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
-        total_days: totalDays,
+        from_date:
+          fromDate == null
+            ? null
+            : moment(fromDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
+        to_date:
+          toDate == null
+            ? null
+            : moment(toDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
+        total_days: JSON.parse(totalDays),
 
         txt_exp_tm: lateArrivalTime,
         reason: reasonText,
-        forward_to: empLeaveForwardToId,
+        forward_to: JSON.parse(empLeaveForwardToId),
       }),
     );
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      // setIsFocused(true);
-      // Additional logic when screen gains focus
-      return () => {
-        // setIsFocused(false);
-        // Additional logic when screen loses focus
-      };
-    }, []),
-  );
+  useEffect(() => {
+    if (earlyLeavingResponseHere == 0) {
+      setShowErrorModal(true);
+    } else if (earlyLeavingResponseHere == 1) {
+      setShowSuccessModal(true);
+    }
+  }, [earlyLeavingResponseHere]);
+
+  const closeModal = () => {
+    dispatch(clearAllStateEarlyLeaving());
+    setShowSuccessModal(false);
+    setShowErrorModal(false);
+  };
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     // Additional logic when screen gains focus
+  //     return () => {
+  //       // Additional logic when screen loses focus
+  //     };
+  //   }, []),
+  // );
 
   return (
     <ScrollView style={{flex: 1, backgroundColor: '#F5F8FC'}}>
+      {earlyLeavinglHere?.isLoading && <Loader></Loader>}
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
         mode="date"
@@ -425,6 +455,24 @@ const EarlyLeaving = props => {
           onPressOpacity={onPressForwardToModal}
           leaveTypesData={leaveTypeHere?.userData?.forward_to}
           renderItem={renderItemForwardTo}
+        />
+      )}
+
+      {showErrorModal && (
+        <MessageSuccessModal
+          textUpper={'Request Status'}
+          textLower={earlyLeavinglHere?.message}
+          btnText={'OK'}
+          onPressOpacity={closeModal}
+        />
+      )}
+
+      {showSuccessModal && (
+        <MessageSuccessModal
+          textUpper={'Request Status'}
+          textLower={earlyLeavinglHere?.message}
+          btnText={'OK'}
+          onPressOpacity={closeModal}
         />
       )}
     </ScrollView>

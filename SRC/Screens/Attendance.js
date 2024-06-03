@@ -40,7 +40,7 @@ const Attendance = props => {
   const [yearSelectionModal, setyearSelectionModal] = useState(false);
 
   const lastElement = totalYears[totalYears?.length - 1];
-  console.log('lastElement', lastElement);
+  // console.log('lastElement', lastElement);
 
   const [selectedYear, setSelectedYear] = useState(lastElement);
 
@@ -49,7 +49,7 @@ const Attendance = props => {
   );
 
   const onPressSelectYearModal = () => {
-    console.log('onPressSelectYearModal');
+    // console.log('onPressSelectYearModal');
     setyearSelectionModal(!yearSelectionModal);
   };
 
@@ -70,13 +70,13 @@ const Attendance = props => {
 
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth() + 1;
-  console.log('currentMonth', currentMonth);
+  // console.log('currentMonth', currentMonth);
 
   const selectedMonth = currentMonth - 1;
-  console.log('selectedMonth', selectedMonth);
+  // console.log('selectedMonth', selectedMonth);
 
   const [initialMonth, setInitialMonth] = useState(currentMonth);
-  console.log('initialMonth', initialMonth);
+  // console.log('initialMonth', initialMonth);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -143,13 +143,13 @@ const Attendance = props => {
             </Text>
           </View>
         </TouchableOpacity>
+
         <LineSeprator height={hp('0.1')} backgroundColor={'grey'} />
       </>
     );
   };
 
   const renderItem = ({item, index}) => {
-    console.log('item', item);
     return (
       <LinearGradient
         start={{x: 0, y: 0}}
@@ -196,7 +196,7 @@ const Attendance = props => {
   };
 
   const onPressMonth = item => {
-    console.log('item', item?.item?.id);
+    // console.log('item', item?.item?.id);
     setInitialMonth(item?.item?.id);
 
     dispatch(
@@ -211,7 +211,7 @@ const Attendance = props => {
 
   const onPressYear = ({item}) => {
     setSelectedYear(item);
-    console.log('onPressYear');
+    // console.log('onPressYear');
 
     dispatch(
       AttendanceCalanderAction({
@@ -240,6 +240,7 @@ const Attendance = props => {
           backgroundColor: item?.holiday_desc != null ? '#FEF7DC' : null,
           borderBottomWidth: wp('0.08'),
           borderBottomColor: 'black',
+          paddingVertical: hp('1'),
         }}>
         <View
           style={{
@@ -251,14 +252,14 @@ const Attendance = props => {
             style={{
               flexDirection: 'column',
               backgroundColor: '#cfcfcf',
-              paddingVertical: hp('0.5'),
             }}>
             <Text
               style={{
                 color: 'black',
                 textAlign: 'center',
-                fontSize: hp('2'),
+                fontSize: hp('2.25'),
                 fontFamily: fontFamily.ceraBold,
+                letterSpacing: 1,
               }}>
               {day}
             </Text>
@@ -266,7 +267,8 @@ const Attendance = props => {
               style={{
                 color: 'black',
                 textAlign: 'center',
-                fontSize: hp('1.75'),
+                fontSize: hp('1.6'),
+                marginTop: hp('-0.7'),
                 fontFamily: fontFamily.ceraLight,
               }}>
               {item?.fin_year_day}
@@ -277,7 +279,10 @@ const Attendance = props => {
           activeOpacity={item?.late_minutes > 15 ? 0.4 : 1}
           onPress={
             item?.late_minutes > 15
-              ? () => navigation.navigate('ApplicationTypeTab')
+              ? () =>
+                  navigation.navigate('AttendanceDrawer', {
+                    screen: 'ApplicationTypeTab',
+                  })
               : null
           }
           style={{
@@ -359,8 +364,14 @@ const Attendance = props => {
           activeOpacity={item?.early_minutes > 15 ? 0.4 : 1}
           onPress={
             item?.early_minutes > 15
-              ? () => navigation.navigate('ApplicationTypeTab')
+              ? () =>
+                  navigation.navigate('AttendanceDrawer', {
+                    screen: 'ApplicationTypeTab',
+                  })
               : null
+
+            // ? () => navigation.navigate('ApplicationTypeTab')
+            // : null
           }
           style={{flex: 0.3, justifyContent: 'center', alignItems: 'center'}}>
           {item?.holiday_desc == null ? (
@@ -484,7 +495,18 @@ const Attendance = props => {
           marginHorizontal: wp('5'),
         }}>
         <Text style={styles.lateminut}>
-          Late Minutes: {attendanceCalanderHere?.userData?.late_minutes}
+          <Text>
+            Late Minutes: {attendanceCalanderHere?.userData?.late_minutes}
+          </Text>
+          {attendanceCalanderHere?.userData?.late_percentage == null ||
+          undefined ? (
+            <></>
+          ) : (
+            <Text
+              style={{
+                fontStyle: 'italic',
+              }}>{` (${attendanceCalanderHere?.userData?.late_percentage}%)`}</Text>
+          )}
         </Text>
       </View>
       <View
@@ -544,10 +566,13 @@ const Attendance = props => {
           ListEmptyComponent={
             <Text
               style={{
+                fontSize: hp('1.75'),
                 color: 'black',
-                fontSize: hp('2'),
-                fontFamily: fontFamily.ceraBold,
-              }}></Text>
+                textAlign: 'center',
+                fontStyle: 'italic',
+              }}>
+              Attendance data updation could take one day.
+            </Text>
           }
         />
 
@@ -556,6 +581,7 @@ const Attendance = props => {
             onPressOpacity={onPressSelectYearModal}
             yaersListData={leaveHistoryHere?.userData?.total_years}
             renderItem={renderItemYears}
+            // inverted={true}
           />
         )}
       </ScrollView>

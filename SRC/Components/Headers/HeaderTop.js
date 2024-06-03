@@ -40,10 +40,7 @@ const HeaderTop = ({
   const navigation = useNavigation();
   const profileHere = useSelector(state => state.profileStore);
 
-  // console.log(
-  //   'lengthEvents',
-  //   profileHere?.userData?.reporting_result?.events?.length,
-  // );
+  const events = profileHere?.userData?.reporting_result?.events || [];
 
   return (
     <>
@@ -55,9 +52,6 @@ const HeaderTop = ({
           styles.mainHeader,
           {
             height:
-              // profileHere?.userData?.reporting_result?.reportee_length > 0
-              //   ? hp('24')
-              // :
               profileHere?.userData?.reporting_result?.events?.length > 0
                 ? hp('21.7')
                 : hp('19'),
@@ -71,6 +65,11 @@ const HeaderTop = ({
               flex: 0.15,
               justifyContent: 'center',
               alignItems: 'center',
+              borderRadius: hp(5),
+              borderColor: 'white',
+              borderWidth: wp('0.25'),
+              width: wp(13),
+              height: hp(7),
             }}>
             <Image
               style={{width: wp(13), height: hp(6.5), borderRadius: hp(5)}}
@@ -82,7 +81,7 @@ const HeaderTop = ({
             style={{
               flex: 0.02,
               flexDirection: 'column',
-              marginLeft: wp('-2.25'),
+              marginLeft: wp('-3'),
             }}>
             <View style={{flex: 0.7}}></View>
             <View
@@ -104,7 +103,7 @@ const HeaderTop = ({
             style={{
               flex: 0.48,
               justifyContent: 'center',
-              paddingLeft: wp('2.5'),
+              paddingLeft: wp('3'),
             }}>
             <Text style={styles.welCome}>{welcomeText}</Text>
             <Text
@@ -214,49 +213,30 @@ const HeaderTop = ({
             showsButtons={false}
             showsPagination={false}
             horizontal={false}>
-            {profileHere?.userData?.reporting_result?.events?.map(
-              (item, index) => (
-                <View
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                  }}>
-                  <FontAwesomeIcon
-                    icon={item?.first_icon}
-                    size={hp(2)}
-                    style={{color: item?.first_icon_color}}
-                  />
-                  <Text>{` `}</Text>
-                  <Text key={index} style={styles.slideText}>
-                    {item?.message}
-                  </Text>
-                  <Text>{` `}</Text>
-                  <FontAwesomeIcon
-                    icon={item?.last_icon}
-                    size={hp(2)}
-                    style={{color: item?.last_icon_color}}
-                  />
-                </View>
-              ),
-            )}
-
-            {/* <> */}
-            {/* <Text style={styles.slideText}>
-              🧁 Happy Birthday Muhammad Ayaz
-            </Text>
-            <Text style={styles.slideText}>
-              🍰 Happy Birthday Muhammad Zeeshan
-            </Text>
-            <Text style={styles.slideText}>🎁 Happy Birthday Umair Rehan</Text>
-            <Text style={styles.slideText}>🎉 Happy Birthday Salman Ali</Text>
-            <Text style={styles.slideText}>
-              💃 Happy Birthday Qasim Ali Khan
-            </Text>
-            <Text style={styles.slideText}>
-              💃 Happy Birthday Faisal Chaudhary
-            </Text> */}
-            {/* </> */}
+            {events?.map((item, index) => (
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                }}>
+                <FontAwesomeIcon
+                  icon={item?.first_icon}
+                  size={hp(2)}
+                  style={{color: item?.first_icon_color}}
+                />
+                <Text>{` `}</Text>
+                <Text key={index} style={styles.slideText}>
+                  {item?.message}
+                </Text>
+                <Text>{` `}</Text>
+                <FontAwesomeIcon
+                  icon={item?.last_icon}
+                  size={hp(2)}
+                  style={{color: item?.last_icon_color}}
+                />
+              </View>
+            ))}
           </Swiper>
         </View>
       </LinearGradient>

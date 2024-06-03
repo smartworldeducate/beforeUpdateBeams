@@ -1,5 +1,5 @@
-export const BASE_URL =
-  'https://b2training.beaconhouse.net/beams_ci/index.php/api/';
+export const BASE_URL = 'https://ws.beaconhouse.net/beams_ci/index.php/api/';
+// 'https://b2training.beaconhouse.net/beams_ci/index.php/api/';
 export const config = {
   headers: {
     api_key: 'X5Ne0km78x2Q1ykny9FfcIK',
@@ -11,6 +11,7 @@ export const APIS = {
   LoginAPI: BASE_URL + 'login',
   ProfileAPI: BASE_URL + 'user_profile',
   FinancialAPI: BASE_URL + 'salaryEmpHistory',
+  LastMonthSalaryAPI: BASE_URL + 'emp_last_salary',
   SalaryYearsAPI: BASE_URL + 'employee_years',
   SalaryHistoryWithYearsAPI: BASE_URL + 'salary_history_year',
   AppraisalYearsAPI: BASE_URL + 'selectAppraisal',

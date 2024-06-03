@@ -102,17 +102,15 @@ function DrawerStack() {
 function TabNavigator() {
   return (
     <Tab.Navigator
-      // headerMode={"none"}
       initialRouteName={'HomeScreenTab'}
       tabBar={props => <BottomTab {...props} />}
       screenOptions={{
         headerShown: false,
-        unmountOnBlur: true,
+        // unmountOnBlur: true,
       }}>
       <Tab.Screen name="HomeScreenTab" component={HomeScreen} />
       <Tab.Screen name="LeaveBalanceTab" component={LeaveBalance} />
       <Tab.Screen name="QRCodeScreenTab" component={QRCodeScreen} />
-      {/* <Tab.Screen name="ViewAllMessagesTab" component={ViewAllMessages} /> */}
       <Tab.Screen name="AttendanceTab" component={Attendance} />
       <Tab.Screen name="ProfileTab" component={Profile} />
     </Tab.Navigator>
@@ -122,7 +120,6 @@ function TabNavigator() {
 function MessagesNavigator() {
   return (
     <Tab.Navigator
-      // headerMode={"none"}
       initialRouteName={'ViewAllMessagesTab'}
       tabBar={props => <MessagesTab {...props} />}
       screenOptions={{
@@ -139,7 +136,6 @@ function MessagesNavigator() {
 function AttendenceAndLeaveTabNavigator() {
   return (
     <Tab.Navigator
-      // headerMode={"none"}
       initialRouteName={'CalanderAttendanceTab'}
       tabBar={props => <AttendenceAndLeaveTab {...props} />}
       screenOptions={{
@@ -188,33 +184,6 @@ const Routes = () => {
 
         <Stack.Screen name="EarlyLeaving" component={EarlyLeaving} />
         <Stack.Screen name="ToilLeave" component={ToilLeave} />
-
-        {/* <Stack.Screen name="ApplicationType" component={BottomTabApplication} />
-        <Stack.Screen name="ApplyLeave" component={ApplyLeave} />
-        <Stack.Screen name="Outstation" component={Outstation} />
-        <Stack.Screen name="AttendenceMarked" component={AttendenceMarked} />
-        <Stack.Screen name="LateArivel" component={LateArivel} />
-        <Stack.Screen name="EarliLeaving" component={EarliLeaving} />
-        <Stack.Screen name="ToilLeave" component={ToilLeave} />
-        <Stack.Screen name="Notification" component={Notification} />
-        <Stack.Screen name="Wfh" component={Wfh} />
-        <Stack.Screen name="Financial" component={Financial} />
-        <Stack.Screen name="TimeLine" component={TimeLine} />
-        <Stack.Screen name="ChildBss" component={ChildBss} />
-        <Stack.Screen name="FeedBack" component={FeedBack} />
-        <Stack.Screen name="WorkFromHome" component={WorkFromHome} />
-        <Stack.Screen name="LeaveBalance" component={LeaveBalance} />
-        <Stack.Screen name="LeaveHistory" component={LeaveHistory} />
-        <Stack.Screen name="Search" component={Search} />
-        <Stack.Screen name="TestScreen" component={TestScreen} />
-        <Stack.Screen name="Index" component={Index} />
-        <Stack.Screen name="ScannerDetail" component={ScannerDetail} />
-        <Stack.Screen name="Messages" component={Messages} />
-        <Stack.Screen name="MovementLine" component={MovementLine} />
-        <Stack.Screen name="ViewAllMessages" component={ViewAllMessages} />
-        <Stack.Screen name="ViewMessageDetail" component={ViewMessageDetail} /> */}
-
-        {/* <Stack.Screen name="Scanner" component={Scanner} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

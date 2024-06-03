@@ -237,7 +237,9 @@ const ReporteeChildrenInBSSModal = ({
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Text style={styles.textstyle}>{'Reportee Child In BSS'}</Text>
+                <Text style={styles.textstyle}>
+                  {'Children in Beaconhouse'}
+                </Text>
               </View>
               <View style={{flex: 0.15}}></View>
             </View>
@@ -252,6 +254,17 @@ const ReporteeChildrenInBSSModal = ({
               data={reporteeChildrenData}
               renderItem={renderItem}
               keyExtractor={(item, index) => index.toString()}
+              ListEmptyComponent={
+                <Text
+                  style={{
+                    fontSize: hp('1.75'),
+                    color: 'black',
+                    textAlign: 'center',
+                    fontStyle: 'italic',
+                  }}>
+                  There are currently no children enrolled in Beaconhouse.
+                </Text>
+              }
             />
           </View>
         </ScrollView>

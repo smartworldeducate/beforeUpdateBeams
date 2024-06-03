@@ -28,9 +28,10 @@ const AttendenceNotMarkedSlice = createSlice({
   name: 'AttendenceNotMarked',
   initialState,
   reducers: {
-    clearAllState: (state, action) => {
-      //   state.policiesListAll = null;
-      //   state.message = '';
+    clearAllStateAttendenceNotMarked: (state, action) => {
+      state.success = null;
+      state.message = '';
+      state.userData = null;
     },
   },
   extraReducers: builder => {
@@ -49,6 +50,7 @@ const AttendenceNotMarkedSlice = createSlice({
   },
 });
 
-export const {clearAllState} = AttendenceNotMarkedSlice.actions;
+export const {clearAllStateAttendenceNotMarked} =
+  AttendenceNotMarkedSlice.actions;
 
 export default AttendenceNotMarkedSlice.reducer;

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ScrollView, View, Text, FlatList} from 'react-native';
+import {ScrollView, View, Text, FlatList, Image} from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -37,8 +37,12 @@ const MovementLine = props => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Icon type="solid" name="circle" size={hp(2.25)} color="#1C37A4" />
-            {/* <Text style={{color: 'black'}}>🔵</Text> */}
+            {/* <Icon type="solid" name="circle" size={hp(2.25)} color="#1C37A4" /> */}
+            <Image
+              style={{height: hp(2.5), width: wp(5)}}
+              source={{uri: 'timelinecircle'}}
+              resizeMode="cover"
+            />
           </View>
           <View
             style={{

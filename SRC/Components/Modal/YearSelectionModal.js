@@ -23,6 +23,7 @@ const YearSelectionModal = ({
   yaersListData,
   renderItem,
   keyExtractor,
+  inverted,
 }) => {
   return (
     <Modal
@@ -65,7 +66,8 @@ const YearSelectionModal = ({
               data={yaersListData}
               renderItem={renderItem}
               keyExtractor={keyExtractor}
-              style={{marginHorizontal: hp('2')}}
+              style={{marginHorizontal: hp('2'), marginBottom: hp('10')}}
+              inverted={inverted}
             />
           </View>
         </View>

@@ -27,8 +27,13 @@ import LineSeprator from '../Components/LineSeprator/LineSeprator';
 import LeaveForwardToModal from '../Components/Modal/LeaveForwardToModal';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import moment from 'moment';
-import {AttendenceNotMarkedAction} from '../features/LeaveTypeSlice/AttendenceNotMarkedSlice';
+import {
+  AttendenceNotMarkedAction,
+  clearAllStateAttendenceNotMarked,
+} from '../features/LeaveTypeSlice/AttendenceNotMarkedSlice';
 import {useFocusEffect} from '@react-navigation/native';
+import MessageSuccessModal from '../Components/Modal/MessageSuccessModal';
+import Loader from '../Components/Loader/Loader';
 
 const AttendenceNotMarked = props => {
   const dispatch = useDispatch();
@@ -41,7 +46,11 @@ const AttendenceNotMarked = props => {
   const attendenceNotMarkedHere = useSelector(
     state => state.AttendenceNotMarkedStore,
   );
-  console.log('attendenceNotMarkedHere', attendenceNotMarkedHere);
+  console.log('attendenceNotMarkedHere>>>', attendenceNotMarkedHere);
+
+  const attendenceNotMarkedResponseHere = useSelector(
+    state => state.AttendenceNotMarkedStore.success,
+  );
 
   // all states hooks starts
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -61,6 +70,9 @@ const AttendenceNotMarked = props => {
   const [both, setBoth] = useState(false);
   const [bothTimeValue, setBothTimeValue] = useState(null);
   const [reasonText, setReasonText] = useState('');
+
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -184,35 +196,50 @@ const AttendenceNotMarked = props => {
       AttendenceNotMarkedAction({
         employee_id: JSON.parse(profileHereEmpId),
         leave_type: 19,
-        att_date: moment(fromDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
+        att_date:
+          fromDate == null
+            ? null
+            : moment(fromDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
         in_out: firstDayValue,
 
         reason: reasonText,
-        forward_to: empLeaveForwardToId,
+        forward_to: JSON.parse(empLeaveForwardToId),
 
         // in_time: timeIn ? timeInValue : null,
 
         ...(timeIn ? {in_time: timeInValue} : {}),
         ...(timeOut ? {out_time: timeOutValue} : {}),
-        // ...(both && timeIn && timeOut ? {both: true} : {}),
         ...(both ? {in_time: timeInValue, out_time: timeOutValue} : {}),
       }),
     );
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      // setIsFocused(true);
-      // Additional logic when screen gains focus
-      return () => {
-        // setIsFocused(false);
-        // Additional logic when screen loses focus
-      };
-    }, []),
-  );
+  useEffect(() => {
+    if (attendenceNotMarkedResponseHere == 0) {
+      setShowErrorModal(true);
+    } else if (attendenceNotMarkedResponseHere == 1) {
+      setShowSuccessModal(true);
+    }
+  }, [attendenceNotMarkedResponseHere]);
+
+  const closeModal = () => {
+    dispatch(clearAllStateAttendenceNotMarked());
+    setShowSuccessModal(false);
+    setShowErrorModal(false);
+  };
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     // Additional logic when screen gains focus
+  //     return () => {
+  //       // Additional logic when screen loses focus
+  //     };
+  //   }, []),
+  // );
 
   return (
     <ScrollView style={{flex: 1, backgroundColor: '#F5F8FC'}}>
+      {attendenceNotMarkedHere?.isLoading && <Loader></Loader>}
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
         mode="date"
@@ -510,6 +537,24 @@ const AttendenceNotMarked = props => {
           onPressOpacity={onPressForwardToModal}
           leaveTypesData={leaveTypeHere?.userData?.forward_to}
           renderItem={renderItemForwardTo}
+        />
+      )}
+
+      {showErrorModal && (
+        <MessageSuccessModal
+          textUpper={'Request Status'}
+          textLower={attendenceNotMarkedHere?.message}
+          btnText={'OK'}
+          onPressOpacity={closeModal}
+        />
+      )}
+
+      {showSuccessModal && (
+        <MessageSuccessModal
+          textUpper={'Request Status'}
+          textLower={attendenceNotMarkedHere?.message}
+          btnText={'OK'}
+          onPressOpacity={closeModal}
         />
       )}
     </ScrollView>

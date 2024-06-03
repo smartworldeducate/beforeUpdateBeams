@@ -29,9 +29,10 @@ const UpdateRatingSlice = createSlice({
   name: 'UpdateRating',
   initialState,
   reducers: {
-    clearAllState: (state, action) => {
-      //   state.policiesListAll = null;
-      //   state.message = '';
+    clearAllStateUpdateRating: (state, action) => {
+      state.success = null;
+      state.message = '';
+      state.userData = null;
     },
   },
   extraReducers: builder => {
@@ -50,6 +51,6 @@ const UpdateRatingSlice = createSlice({
   },
 });
 
-export const {clearAllState} = UpdateRatingSlice.actions;
+export const {clearAllStateUpdateRating} = UpdateRatingSlice.actions;
 
 export default UpdateRatingSlice.reducer;
