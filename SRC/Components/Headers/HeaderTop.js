@@ -197,7 +197,7 @@ const HeaderTop = ({
         <View
           style={{
             marginHorizontal: wp('5'),
-            marginTop: hp('2'),
+            marginTop: hp('1.65'),
             justifyContent: 'center',
             alignItems: 'center',
             height: hp('4'),

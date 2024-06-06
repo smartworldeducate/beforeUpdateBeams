@@ -256,18 +256,18 @@ const CustomDrawer = ({navigation}) => {
               </TouchableOpacity>
             </View>
 
-            {profileHere?.userData?.emp_result?.MARITAL_STATUS == 'M' && (
-              <View style={styles.listnameStyle}>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('ChildBSSDrawer')}>
-                  <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
-                    <View style={styles.homeleft}>
-                      <Text style={styles.textlistStyle}>Children in BSS</Text>
-                    </View>
+            {/* {profileHere?.userData?.emp_result?.MARITAL_STATUS == 'M' && ( */}
+            <View style={styles.listnameStyle}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('ChildBSSDrawer')}>
+                <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
+                  <View style={styles.homeleft}>
+                    <Text style={styles.textlistStyle}>Children in BSS</Text>
                   </View>
-                </TouchableOpacity>
-              </View>
-            )}
+                </View>
+              </TouchableOpacity>
+            </View>
+            {/* )} */}
 
             <View style={styles.listnameStyle}>
               <TouchableOpacity

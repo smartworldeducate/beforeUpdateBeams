@@ -25,12 +25,30 @@ import FinancialHistory from '../Components/Financial/FinancialHistory';
 import {clearSalaryHistoryList} from '../features/SalaryYearsSlice/SalaryHistoryWithYearsSlice';
 import {SalaryYearsAction} from '../features/SalaryYearsSlice/SalaryYearsSlice';
 import CertificateModal from '../Components/Modal/CertificateModal';
+import {FinancialYearsForPFAction} from '../features/FinanicialYearsForPFAndTaxSlice/FinanicialYearsForPFSlice';
+import TaxCertificateModal from '../Components/Modal/TaxCertificateModal';
+import {FinancialYearsForTaxAction} from '../features/FinanicialYearsForPFAndTaxSlice/FinanicialYearsForTaxSlice';
+import {LastMonthSalaryAction} from '../features/FinancialSlice/LastMonthSalarySlice';
 // import {LastMonthSalaryAction} from '../features/FinancialSlice/LastMonthSalarySlice';
 
 const Financial = props => {
   const dispatch = useDispatch();
+
+  const financialLastMonthSalaryHere = useSelector(
+    state => state.LastMonthSalaryStore,
+  );
+  console.log('financialLastMonthSalaryHere', financialLastMonthSalaryHere);
+
   const financialHere = useSelector(state => state.financialStore);
-  // console.log('financialHere', financialHere?.userData);
+
+  const financialYearsForPFHere = useSelector(
+    state => state.FinancialYearsPFStore?.userData?.pf_financial_year,
+  );
+
+  const financialYearsForTaxHere = useSelector(
+    state => state.FinancialYearsTaxStore?.userData?.pf_tax_year,
+  );
+
   const salaryHistoryHere = useSelector(state => state.salaryYearsStore);
 
   const lastMonthIndex = salaryHistoryHere?.userData?.total_years_count - 1;
@@ -39,15 +57,23 @@ const Financial = props => {
   const [salaryHistory, setSalaryHistory] = useState(false);
 
   const [PFCertificateModal, setPFCertificateModal] = useState(false);
-
   const [taxCertificateModal, setTaxCertificateModal] = useState(false);
+
+  const [yearValueHere, setYearValueHere] = useState(null);
+  const [taxYearValueHere, setTaxYearValueHere] = useState(null);
+  const [isYearSelected, setIsYearSelected] = useState(false);
+  const [isTaxYearSelected, setIsTaxYearSelected] = useState(false);
 
   const onPressPFCertificateModal = () => {
     setPFCertificateModal(!PFCertificateModal);
+    setYearValueHere(null);
+    setIsYearSelected(false);
   };
 
   const onPressTaxCertificateModal = () => {
     setTaxCertificateModal(!taxCertificateModal);
+    setTaxYearValueHere(null);
+    setIsTaxYearSelected(false);
   };
 
   useEffect(() => {
@@ -55,6 +81,12 @@ const Financial = props => {
       try {
         const loginData = await AsyncStorage.getItem('loginData');
         const parsedLoginData = JSON.parse(loginData);
+
+        dispatch(
+          LastMonthSalaryAction({
+            employee_id: parsedLoginData,
+          }),
+        );
 
         dispatch(
           FinancialAction({
@@ -68,11 +100,17 @@ const Financial = props => {
           }),
         );
 
-        // dispatch(
-        //   LastMonthSalaryAction({
-        //     employee_id: parsedLoginData,
-        //   }),
-        // );
+        dispatch(
+          FinancialYearsForPFAction({
+            employee_id: parsedLoginData,
+          }),
+        );
+
+        dispatch(
+          FinancialYearsForTaxAction({
+            employee_id: parsedLoginData,
+          }),
+        );
       } catch (error) {
         console.error('Error retrieving values from AsyncStorage:', error);
       }
@@ -104,27 +142,10 @@ const Financial = props => {
   const empAllowances = lastMonthSalary?.ALLOWANCES;
   const empUtilities = lastMonthSalary?.UTILITIES;
 
-  // console.log('empGrossSalary', empGrossSalary);
-  // console.log('empBasicSalary', empBasicSalary);
-  // console.log('empHouseRent', empHouseRent);
-  // console.log('empAllowances', empAllowances);
-  // console.log('empUtilities', empUtilities);
-
   const percentageBasicSalary = (empBasicSalary / empGrossSalary) * 100;
   const percentageHouseRent = (empHouseRent / empGrossSalary) * 100;
   const percentageAllowances = (empAllowances / empGrossSalary) * 100;
   const percentageUtilities = (empUtilities / empGrossSalary) * 100;
-
-  useFocusEffect(
-    React.useCallback(() => {
-      setSalarySlip(true);
-      setSalaryHistory(false);
-
-      return () => {
-        console.log('Page1 is unfocused');
-      };
-    }, []),
-  );
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -151,6 +172,89 @@ const Financial = props => {
     }
     setRefreshing(false);
   };
+
+  const onPressYearDropdown = () => {
+    setIsYearSelected(!isYearSelected);
+  };
+
+  const onPressTaxYearDropdown = () => {
+    setIsTaxYearSelected(!isTaxYearSelected);
+  };
+
+  const itemLength = financialYearsForPFHere?.length - 1;
+  const itemLengthTax = financialYearsForTaxHere?.length - 1;
+
+  const renderItem = ({item, index}) => {
+    return (
+      <TouchableOpacity onPress={() => onPressFinancialYear(item)}>
+        <View style={{}}>
+          <Text
+            style={{
+              color: 'black',
+              fontSize: hp('1.6'),
+              fontFamily: fontFamily.ceraMedium,
+              letterSpacing: 0.65,
+              marginVertical: hp('1'),
+              marginHorizontal: wp('3'),
+            }}>
+            {item?.INC_YEAR_DESC}
+          </Text>
+        </View>
+        {itemLength !== index && (
+          <View style={{height: hp('0.07'), backgroundColor: 'silver'}}></View>
+        )}
+      </TouchableOpacity>
+    );
+  };
+
+  const onPressFinancialYear = item => {
+    // console.log('onPressFinancialYear', item?.INC_YEAR_DESC);
+    setYearValueHere(item?.INC_YEAR_DESC);
+    setIsYearSelected(false);
+  };
+
+  const renderItemTaxYears = ({item, index}) => {
+    return (
+      <TouchableOpacity onPress={() => onPressTaxFinancialTaxYear(item)}>
+        <View style={{}}>
+          <Text
+            style={{
+              color: 'black',
+              fontSize: hp('1.6'),
+              fontFamily: fontFamily.ceraMedium,
+              letterSpacing: 0.65,
+              marginVertical: hp('1'),
+              marginHorizontal: wp('3'),
+            }}>
+            {item?.INC_YEAR_DESC}
+          </Text>
+        </View>
+        {itemLengthTax !== index && (
+          <View style={{height: hp('0.07'), backgroundColor: 'silver'}}></View>
+        )}
+      </TouchableOpacity>
+    );
+  };
+
+  const onPressTaxFinancialTaxYear = item => {
+    console.log('onPressTaxFinancialTaxYear', item?.INC_YEAR_DESC);
+    setTaxYearValueHere(item?.INC_YEAR_DESC);
+    setIsTaxYearSelected(false);
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setSalarySlip(true);
+      setSalaryHistory(false);
+
+      setYearValueHere(null);
+      setIsYearSelected(false);
+
+      return () => {
+        console.log('Page1 is unfocused');
+      };
+    }, []),
+  );
 
   return (
     <SafeAreaView
@@ -235,42 +339,51 @@ const Financial = props => {
 
               {salarySlip && (
                 <SalarySlip
-                  monthYear={lastMonthSalary?.HEADING?.replace('-', ' ')}
+                  monthYear={financialLastMonthSalaryHere?.userData?.HEADING?.replace(
+                    '-',
+                    ' ',
+                  )}
                   finalAllowances={percentageAllowances}
                   finalUtility={percentageUtilities}
                   finalHrent={percentageHouseRent}
                   finalBasic={percentageBasicSalary}
                   grossSalary={Number(
-                    lastMonthSalary?.GROSS_SAL,
+                    financialLastMonthSalaryHere?.userData?.GROSS_SAL,
                   )?.toLocaleString()}
                   basicSalary={Number(
-                    lastMonthSalary?.BASIC_SAL,
+                    financialLastMonthSalaryHere?.userData?.BASIC_SAL,
                   )?.toLocaleString()}
                   houseRent={Number(
-                    lastMonthSalary?.HOUSE_RENT,
+                    financialLastMonthSalaryHere?.userData?.HOUSE_RENT,
                   )?.toLocaleString()}
                   allowances={Number(
-                    lastMonthSalary?.ALLOWANCES,
+                    financialLastMonthSalaryHere?.userData?.ALLOWANCES,
                   )?.toLocaleString()}
                   utilities={Number(
-                    lastMonthSalary?.UTILITIES,
+                    financialLastMonthSalaryHere?.userData?.UTILITIES,
                   )?.toLocaleString()}
-                  PFOwn={Number(lastMonthSalary?.PF_OWN)?.toLocaleString()}
-                  EOBIOwn={Number(lastMonthSalary?.EOBI_OWN)?.toLocaleString()}
+                  PFOwn={Number(
+                    financialLastMonthSalaryHere?.userData?.PF_OWN,
+                  )?.toLocaleString()}
+                  EOBIOwn={Number(
+                    financialLastMonthSalaryHere?.userData?.EOBI_OWN,
+                  )?.toLocaleString()}
                   incomeTax={Number(
-                    lastMonthSalary?.INCOME_TAX,
+                    financialLastMonthSalaryHere?.userData?.INCOME_TAX,
                   )?.toLocaleString()}
                   absentDeduction={Number(
-                    lastMonthSalary?.ABSENT_DED,
+                    financialLastMonthSalaryHere?.userData?.ABSENT_DED,
                   )?.toLocaleString()}
-                  absentDays={`(${lastMonthSalary?.ABSENTS})`}
+                  absentDays={`(${financialLastMonthSalaryHere?.userData?.ABSENTS})`}
                   otherDeduction={Number(
-                    lastMonthSalary?.OTH_DED,
+                    financialLastMonthSalaryHere?.userData?.OTH_DED,
                   )?.toLocaleString()}
                   totalDeduction={Number(
-                    lastMonthSalary?.TOTAL_DED,
+                    financialLastMonthSalaryHere?.userData?.TOTAL_DED,
                   )?.toLocaleString()}
-                  netSalary={Number(lastMonthSalary?.NET_SAL)?.toLocaleString()}
+                  netSalary={Number(
+                    financialLastMonthSalaryHere?.userData?.NET_SAL,
+                  )?.toLocaleString()}
                 />
               )}
 
@@ -318,8 +431,8 @@ const Financial = props => {
                           color: 'black',
                           paddingRight: wp('2'),
                         }}>{`Provident Fund: ${Number(
-                        200000,
-                      )?.toLocaleString()}`}</Text>
+                        financialLastMonthSalaryHere?.userData?.EMPLOYEE_PF,
+                      ).toLocaleString()}`}</Text>
                     </View>
                   </TouchableOpacity>
 
@@ -357,14 +470,34 @@ const Financial = props => {
                   upperText={'PF Certificate'}
                   PrintText={'Print'}
                   onPressOpacity={onPressPFCertificateModal}
+                  yearValue={
+                    yearValueHere == null || yearValueHere == undefined
+                      ? 'Select financial year'
+                      : yearValueHere
+                  }
+                  onPressYearDropdown={onPressYearDropdown}
+                  isYearSelected={isYearSelected}
+                  data={financialYearsForPFHere}
+                  renderItem={renderItem}
+                  keyExtractor={(item, index) => index.toString()}
                 />
               )}
 
               {taxCertificateModal && (
-                <CertificateModal
+                <TaxCertificateModal
                   upperText={'Tax Certificate'}
                   PrintText={'Print'}
                   onPressOpacity={onPressTaxCertificateModal}
+                  yearValue={
+                    taxYearValueHere == null || taxYearValueHere == undefined
+                      ? 'Select financial year'
+                      : taxYearValueHere
+                  }
+                  onPressYearDropdown={onPressTaxYearDropdown}
+                  isYearSelected={isTaxYearSelected}
+                  data={financialYearsForTaxHere}
+                  renderItem={renderItemTaxYears}
+                  keyExtractor={(item, index) => index.toString()}
                 />
               )}
 

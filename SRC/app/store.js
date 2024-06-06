@@ -37,6 +37,9 @@ import leaveBalanceReducer from '../features/balanceleave/createSlice';
 import loginSliceReducer from '../features/loginSlice/loginSlice';
 import profileSliceReducer from '../features/profileSlice/profileSlice';
 import financialSliceReducer from '../features/FinancialSlice/FinancialSlice';
+
+import lastMonthSalarySliceReducer from '../features/FinancialSlice/LastMonthSalarySlice';
+
 import salaryYearsSliceReducer from '../features/SalaryYearsSlice/SalaryYearsSlice';
 import salaryHistoryWithYearsSliceReducer from '../features/SalaryYearsSlice/SalaryHistoryWithYearsSlice';
 import appraisalYearsSliceReducer from '../features/AppraisalYearsSlice/AppraisalYearsSlice';
@@ -104,6 +107,10 @@ import QRScannerListSliceReducer from '../features/QRScannerListSlice/QRScannerL
 
 import QRScanSliceReducer from '../features/QRScan/QRScan';
 
+import FinanicialYearsForPFSliceReducer from '../features/FinanicialYearsForPFAndTaxSlice/FinanicialYearsForPFSlice';
+
+import FinanicialYearsForTaxSliceReducer from '../features/FinanicialYearsForPFAndTaxSlice/FinanicialYearsForTaxSlice';
+
 export const store = configureStore({
   reducer: {
     register: authReducer,
@@ -145,7 +152,11 @@ export const store = configureStore({
 
     loginStore: loginSliceReducer,
     profileStore: profileSliceReducer,
+
     financialStore: financialSliceReducer,
+
+    LastMonthSalaryStore: lastMonthSalarySliceReducer,
+
     salaryYearsStore: salaryYearsSliceReducer,
     salaryHistoryWithYearsStore: salaryHistoryWithYearsSliceReducer,
     appraisalYearsStore: appraisalYearsSliceReducer,
@@ -208,6 +219,9 @@ export const store = configureStore({
 
     QRScanStore: QRScanSliceReducer,
     QRScannerListStore: QRScannerListSliceReducer,
+
+    FinancialYearsPFStore: FinanicialYearsForPFSliceReducer,
+    FinancialYearsTaxStore: FinanicialYearsForTaxSliceReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

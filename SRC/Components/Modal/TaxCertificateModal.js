@@ -17,7 +17,7 @@ import colors from '../../Styles/colors';
 import fontFamily from '../../Styles/fontFamily';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
-const CertificateModal = ({
+const TaxCertificateModal = ({
   modalVisible,
   onPressOpacity,
   yearValue,
@@ -106,9 +106,7 @@ const CertificateModal = ({
                   fontFamily: fontFamily.ceraMedium,
                   color: 'grey',
                 }}>
-                {
-                  'Select the financial year to download your provident fund certificate.'
-                }
+                {'Select the financial year to download your Tax certificate.'}
               </Text>
             </View>
 
@@ -163,7 +161,6 @@ const CertificateModal = ({
                   marginHorizontal: wp('3'),
                   borderColor: 'silver',
                   borderWidth: wp('0.07'),
-                  marginBottom: hp('15'),
                 }}>
                 <FlatList
                   data={data}
@@ -177,8 +174,6 @@ const CertificateModal = ({
               onPress={onPressOpacity}
               style={{
                 flex: 1,
-                // backgroundColor: 'red',
-                marginBottom: hp('1'),
               }}>
               <View
                 style={{
@@ -211,4 +206,4 @@ const CertificateModal = ({
 };
 
 const styles = EStyleSheet.create({});
-export default CertificateModal;
+export default TaxCertificateModal;

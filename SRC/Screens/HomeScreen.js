@@ -362,7 +362,7 @@ const HomeScreen = props => {
           justifyContent: 'center',
           // backgroundColor: 'green',
           marginRight: wp('1'),
-          alignItems: 'center',
+          // alignItems: 'center',
         }}>
         <View
           style={{
@@ -704,40 +704,6 @@ const HomeScreen = props => {
                   />
                 </View>
               </View>
-              {profileHere?.userData?.reporting_result?.reportee_length > 0 && (
-                <>
-                  <View
-                    style={{marginHorizontal: wp('5.5'), marginTop: hp('1')}}>
-                    <Text style={styles.messageText}>Reportees</Text>
-                  </View>
-                  <View
-                    style={{
-                      marginHorizontal: wp('5.5'),
-                      marginTop: hp('1'),
-                      height: hp('10'),
-
-                      borderRadius: wp('2'),
-                      justifyContent: 'center',
-                      alignItems: 'center',
-
-                      backgroundColor: '#FFFFFF',
-                      shadowColor: '#000',
-                      shadowOpacity: 0.5,
-                      shadowRadius: 4,
-                      elevation: 4,
-                      marginVertical: hp('1'),
-                    }}>
-                    <FlatList
-                      data={slicedData}
-                      renderItem={renderItemReportees}
-                      keyExtractor={(item, index) => index.toString()}
-                      horizontal={true}
-                      showsHorizontalScrollIndicator={false}
-                      style={{paddingHorizontal: wp('1')}}
-                    />
-                  </View>
-                </>
-              )}
 
               <View style={{marginHorizontal: wp('5.5'), marginTop: hp('1')}}>
                 <Text style={styles.messageText}>Leaves</Text>
@@ -851,6 +817,41 @@ const HomeScreen = props => {
                     </TouchableOpacity>
                   </View>
                 </View>
+              )}
+
+              {profileHere?.userData?.reporting_result?.reportee_length > 0 && (
+                <>
+                  <View
+                    style={{marginHorizontal: wp('5.5'), marginTop: hp('1')}}>
+                    <Text style={styles.messageText}>Reportees</Text>
+                  </View>
+                  <View
+                    style={{
+                      marginHorizontal: wp('5.5'),
+                      marginTop: hp('1'),
+                      height: hp('10'),
+
+                      borderRadius: wp('2'),
+                      justifyContent: 'center',
+                      alignItems: 'flex-start',
+
+                      backgroundColor: '#FFFFFF',
+                      shadowColor: '#000',
+                      shadowOpacity: 0.5,
+                      shadowRadius: 4,
+                      elevation: 4,
+                      marginVertical: hp('1'),
+                    }}>
+                    <FlatList
+                      data={slicedData}
+                      renderItem={renderItemReportees}
+                      keyExtractor={(item, index) => index.toString()}
+                      horizontal={true}
+                      showsHorizontalScrollIndicator={false}
+                      style={{paddingHorizontal: wp('1'), marginLeft: wp('2')}}
+                    />
+                  </View>
+                </>
               )}
 
               {profileHere?.userData?.wfh_result == 1 && (
