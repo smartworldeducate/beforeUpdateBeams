@@ -414,10 +414,6 @@ const HomeScreen = props => {
   const [deptIdHere, setDeptIdHere] = useState(null);
 
   const onPressReporteeItem = item => {
-    // console.log('onPressReporteeId', item?.item);
-    // console.log('onPressReporteeBranchId', item?.itemBranchId);
-    // console.log('onPressReporteeDeptId', item?.itemDeptId);
-
     setReporteeModal(!reporteeModal);
     setIdHere(item?.item);
     setBranchIdHere(item?.itemBranchId);
@@ -794,6 +790,7 @@ const HomeScreen = props => {
                         renderItem={renderItemLeaves}
                         keyExtractor={(item, index) => index.toString()}
                       />
+                      {/* <Text style={{color: 'black'}}>kkk</Text> */}
                     </View>
                   </View>
 

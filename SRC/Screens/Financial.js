@@ -5,6 +5,9 @@ import {
   SafeAreaView,
   ScrollView,
   RefreshControl,
+  Linking,
+  ImageBackground,
+  Image,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import MainHeader from '../Components/Headers/MainHeader';
@@ -29,15 +32,28 @@ import {FinancialYearsForPFAction} from '../features/FinanicialYearsForPFAndTaxS
 import TaxCertificateModal from '../Components/Modal/TaxCertificateModal';
 import {FinancialYearsForTaxAction} from '../features/FinanicialYearsForPFAndTaxSlice/FinanicialYearsForTaxSlice';
 import {LastMonthSalaryAction} from '../features/FinancialSlice/LastMonthSalarySlice';
+import {
+  clearStateTaxPDFDownload,
+  FinancialTaxPDFDownloadAction,
+} from '../features/FinanicialYearsForPFAndTaxSlice/FinancialTaxPDFDownloadSlice';
+import {
+  clearStatePFPDFDownload,
+  FinancialPFPDFDownloadAction,
+} from '../features/FinanicialYearsForPFAndTaxSlice/FinancialPFPDFDownloadSlice';
+import Loader from '../Components/Loader/Loader';
 // import {LastMonthSalaryAction} from '../features/FinancialSlice/LastMonthSalarySlice';
 
 const Financial = props => {
   const dispatch = useDispatch();
 
+  const empId = useSelector(
+    state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
+  );
+
   const financialLastMonthSalaryHere = useSelector(
     state => state.LastMonthSalaryStore,
   );
-  console.log('financialLastMonthSalaryHere', financialLastMonthSalaryHere);
+  // console.log('financialLastMonthSalaryHere', financialLastMonthSalaryHere);
 
   const financialHere = useSelector(state => state.financialStore);
 
@@ -50,6 +66,17 @@ const Financial = props => {
   );
 
   const salaryHistoryHere = useSelector(state => state.salaryYearsStore);
+
+  const taxCertificatePDFDownloadHere = useSelector(
+    state => state.FinanicialTaxPDFDownloadStore,
+  );
+  console.log('taxCertificatePDFDownloadHere', taxCertificatePDFDownloadHere);
+
+  const PFCertificatePDFDownloadHere = useSelector(
+    state => state.FinanicialPFPDFDownloadStore,
+  );
+
+  console.log('PFCertificatePDFDownloadHere', PFCertificatePDFDownloadHere);
 
   const lastMonthIndex = salaryHistoryHere?.userData?.total_years_count - 1;
 
@@ -73,6 +100,9 @@ const Financial = props => {
   const onPressTaxCertificateModal = () => {
     setTaxCertificateModal(!taxCertificateModal);
     setTaxYearValueHere(null);
+    setFromDate(null);
+    setToDate(null);
+    dispatch(clearStateTaxPDFDownload());
     setIsTaxYearSelected(false);
   };
 
@@ -134,7 +164,7 @@ const Financial = props => {
   // const lastMonthSalary = financialHere?.userData;
 
   const lastMonthSalary = financialHere?.userData[0];
-  console.log('lastMonthSalary', lastMonthSalary);
+  // console.log('lastMonthSalary', lastMonthSalary);
 
   const empGrossSalary = lastMonthSalary?.GROSSSAL;
   const empBasicSalary = lastMonthSalary?.BASIC_SAL;
@@ -208,8 +238,14 @@ const Financial = props => {
   };
 
   const onPressFinancialYear = item => {
-    // console.log('onPressFinancialYear', item?.INC_YEAR_DESC);
+    console.log('onPressFinancialYear', item);
     setYearValueHere(item?.INC_YEAR_DESC);
+    dispatch(
+      FinancialPFPDFDownloadAction({
+        employee_id: JSON.parse(empId),
+        selected_fin_year: item?.FIN_YEAR_ID,
+      }),
+    );
     setIsYearSelected(false);
   };
 
@@ -236,10 +272,34 @@ const Financial = props => {
     );
   };
 
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
+
   const onPressTaxFinancialTaxYear = item => {
-    console.log('onPressTaxFinancialTaxYear', item?.INC_YEAR_DESC);
     setTaxYearValueHere(item?.INC_YEAR_DESC);
+    dispatch(
+      FinancialTaxPDFDownloadAction({
+        employee_id: JSON.parse(empId),
+        from_date: item?.FROM_DATE,
+        to_date: item?.TO_DATE,
+      }),
+    );
+
     setIsTaxYearSelected(false);
+  };
+
+  const onPressPrint = () => {
+    Linking.openURL(taxCertificatePDFDownloadHere?.userData);
+
+    setTaxCertificateModal(false);
+    dispatch(clearStateTaxPDFDownload());
+  };
+
+  const onPressPrintPF = () => {
+    Linking.openURL(PFCertificatePDFDownloadHere?.userData);
+
+    setPFCertificateModal(false);
+    dispatch(clearStatePFPDFDownload());
   };
 
   useFocusEffect(
@@ -248,7 +308,9 @@ const Financial = props => {
       setSalaryHistory(false);
 
       setYearValueHere(null);
+      setTaxYearValueHere(null);
       setIsYearSelected(false);
+      setIsTaxYearSelected(false);
 
       return () => {
         console.log('Page1 is unfocused');
@@ -270,6 +332,10 @@ const Financial = props => {
             onpressBtn={() => props.navigation.goBack()}
           />
         </View>
+
+        {taxCertificatePDFDownloadHere?.isLoading && <Loader></Loader>}
+        {PFCertificatePDFDownloadHere?.isLoading && <Loader></Loader>}
+
         <ScrollView
           contentContainerStyle={{
             flexGrow: 1,
@@ -389,98 +455,198 @@ const Financial = props => {
 
               {salarySlip && (
                 <>
-                  <TouchableOpacity
-                    onPress={onPressPFCertificateModal}
-                    activeOpacity={0.5}
+                  <View
                     style={{
-                      flexDirection: 'row',
-                      backgroundColor: '#E7E7E7',
-                      height: hp('4.5'),
+                      height: hp('17'),
                       marginBottom: hp('1'),
-                      justifyContent: 'center',
                     }}>
-                    <View
-                      style={{
-                        flex: 0.5,
-                        justifyContent: 'center',
-                        alignItems: 'flex-start',
-                      }}>
-                      <Text
+                    <ImageBackground
+                      source={{uri: 'taxbg'}}
+                      style={{flex: 1, borderRadius: wp('10')}}
+                      resizeMode={'cover'}>
+                      <View
                         style={{
-                          fontSize: hp('1.55'),
-                          fontFamily: fontFamily.ceraMedium,
-                          color: 'black',
-                          paddingLeft: wp('2'),
-                          textDecorationLine: 'underline',
-                          textDecorationColor: 'black',
+                          flexDirection: 'row',
+                          marginTop: hp('2'),
+                          marginBottom: hp('1'),
                         }}>
-                        PF Certificate Download
-                      </Text>
-                    </View>
+                        <View
+                          style={{
+                            flex: 0.2,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}>
+                          <Image
+                            source={{uri: 'taxicon'}}
+                            style={{height: hp('5'), width: wp('10')}}
+                            resizeMode="contain"
+                          />
+                        </View>
+                        <View style={{flex: 0.8}}></View>
+                      </View>
 
-                    <View
-                      style={{
-                        flex: 0.5,
-                        justifyContent: 'center',
-                        alignItems: 'flex-end',
-                      }}>
-                      <Text
+                      <View style={{paddingLeft: wp('5')}}>
+                        <Text
+                          style={{
+                            fontSize: hp('2'),
+                            fontFamily: fontFamily.ceraMedium,
+                            color: '#F24F1E',
+                          }}>
+                          TAX Certificate
+                        </Text>
+                      </View>
+
+                      <View
                         style={{
-                          fontSize: hp('1.55'),
-                          fontFamily: fontFamily.ceraMedium,
-                          color: 'black',
-                          paddingRight: wp('2'),
-                        }}>{`Provident Fund: ${Number(
-                        financialLastMonthSalaryHere?.userData?.EMPLOYEE_PF,
-                      ).toLocaleString()}`}</Text>
-                    </View>
-                  </TouchableOpacity>
+                          flexDirection: 'row',
+                          paddingHorizontal: wp('5'),
+                        }}>
+                        <View style={{flex: 0.45}}>
+                          <Text
+                            style={{
+                              fontSize: hp('1.65'),
+                              fontFamily: fontFamily.ceraLight,
+                              color: '#343434',
+                            }}>
+                            Taxes: Smart funding for societal progress.
+                          </Text>
+                        </View>
+                        <View style={{flex: 0.2}}></View>
+                        <TouchableOpacity
+                          activeOpacity={0.6}
+                          onPress={onPressTaxCertificateModal}
+                          style={{
+                            flex: 0.35,
+                            height: hp('4'),
+                            borderRadius: wp('5'),
+                            backgroundColor: '#F24F1E',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginTop: hp('0.5'),
 
-                  <TouchableOpacity
-                    onPress={onPressTaxCertificateModal}
-                    activeOpacity={0.5}
+                            shadowColor: '#000',
+                            shadowOpacity: 0.5,
+                            shadowRadius: 4,
+                            elevation: 4,
+                          }}>
+                          <Text
+                            style={{
+                              fontSize: hp('1.65'),
+                              fontFamily: fontFamily.ceraMedium,
+                              color: 'white',
+                            }}>
+                            Download
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    </ImageBackground>
+                  </View>
+
+                  <View
                     style={{
-                      backgroundColor: '#E7E7E7',
-                      height: hp('4.5'),
+                      height: hp('17'),
                       marginBottom: hp('1'),
-
-                      flex: 0.5,
-                      justifyContent: 'center',
-                      marginBottom: hp('1'),
-                      alignItems: 'flex-start',
                     }}>
-                    <Text
-                      style={{
-                        fontSize: hp('1.55'),
-                        fontFamily: fontFamily.ceraMedium,
-                        color: 'black',
-                        paddingLeft: wp('2'),
+                    <ImageBackground
+                      source={{uri: 'pfbg'}}
+                      style={{flex: 1, borderRadius: wp('10')}}
+                      resizeMode={'cover'}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          marginTop: hp('2'),
+                          marginBottom: hp('1'),
+                        }}>
+                        <View
+                          style={{
+                            flex: 0.2,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}>
+                          <Image
+                            source={{uri: 'pficon'}}
+                            style={{height: hp('5'), width: wp('10')}}
+                            resizeMode="contain"
+                          />
+                        </View>
+                        <View style={{flex: 0.4}}></View>
+                        <View
+                          style={{
+                            flex: 0.4,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}>
+                          <Text
+                            style={{
+                              fontSize: hp('2.15'),
+                              fontFamily: fontFamily.ceraMedium,
+                              color: 'white',
+                            }}>
+                            {`RS. ${Number(
+                              financialLastMonthSalaryHere?.userData
+                                ?.EMPLOYEE_PF,
+                            ).toLocaleString()}/-`}
+                          </Text>
+                        </View>
+                      </View>
 
-                        textDecorationLine: 'underline',
-                        textDecorationColor: 'black',
-                      }}>
-                      Tax Certificate Download
-                    </Text>
-                  </TouchableOpacity>
+                      <View style={{paddingLeft: wp('5')}}>
+                        <Text
+                          style={{
+                            fontSize: hp('2'),
+                            fontFamily: fontFamily.ceraMedium,
+                            color: '#2ED945',
+                          }}>
+                          Provident Fund
+                        </Text>
+                      </View>
+
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          paddingHorizontal: wp('5'),
+                        }}>
+                        <View style={{flex: 0.45}}>
+                          <Text
+                            style={{
+                              fontSize: hp('1.65'),
+                              fontFamily: fontFamily.ceraLight,
+                              color: '#343434',
+                            }}>
+                            Retirement savings scheme for employees.
+                          </Text>
+                        </View>
+                        <View style={{flex: 0.2}}></View>
+                        <TouchableOpacity
+                          activeOpacity={0.6}
+                          onPress={onPressPFCertificateModal}
+                          style={{
+                            flex: 0.35,
+                            height: hp('4'),
+                            borderRadius: wp('5'),
+                            backgroundColor: '#2ED945',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginTop: hp('0.5'),
+
+                            shadowColor: '#000',
+                            shadowOpacity: 0.5,
+                            shadowRadius: 4,
+                            elevation: 4,
+                          }}>
+                          <Text
+                            style={{
+                              fontSize: hp('1.65'),
+                              fontFamily: fontFamily.ceraMedium,
+                              color: 'white',
+                            }}>
+                            Download
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    </ImageBackground>
+                  </View>
                 </>
-              )}
-
-              {PFCertificateModal && (
-                <CertificateModal
-                  upperText={'PF Certificate'}
-                  PrintText={'Print'}
-                  onPressOpacity={onPressPFCertificateModal}
-                  yearValue={
-                    yearValueHere == null || yearValueHere == undefined
-                      ? 'Select financial year'
-                      : yearValueHere
-                  }
-                  onPressYearDropdown={onPressYearDropdown}
-                  isYearSelected={isYearSelected}
-                  data={financialYearsForPFHere}
-                  renderItem={renderItem}
-                  keyExtractor={(item, index) => index.toString()}
-                />
               )}
 
               {taxCertificateModal && (
@@ -498,6 +664,28 @@ const Financial = props => {
                   data={financialYearsForTaxHere}
                   renderItem={renderItemTaxYears}
                   keyExtractor={(item, index) => index.toString()}
+                  styleFlatlist={{}}
+                  onPressPrint={onPressPrint}
+                />
+              )}
+
+              {PFCertificateModal && (
+                <CertificateModal
+                  upperText={'PF Certificate'}
+                  PrintText={'Print'}
+                  onPressOpacity={onPressPFCertificateModal}
+                  yearValue={
+                    yearValueHere == null || yearValueHere == undefined
+                      ? 'Select financial year'
+                      : yearValueHere
+                  }
+                  onPressYearDropdown={onPressYearDropdown}
+                  isYearSelected={isYearSelected}
+                  data={financialYearsForPFHere}
+                  renderItem={renderItem}
+                  keyExtractor={(item, index) => index.toString()}
+                  styleFlatlist={{}}
+                  onPressPrint={onPressPrintPF}
                 />
               )}
 

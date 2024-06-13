@@ -29,7 +29,6 @@ const Profile = props => {
   const dispatch = useDispatch();
   const profileHere = useSelector(state => state.profileStore);
 
-  const curveHeight = hp(15);
   return (
     <SafeAreaView
       style={{
@@ -222,10 +221,9 @@ const Profile = props => {
               'DD-MMM-YY',
             ).format('DD MMM, YYYY')}
             empRegularDate={profileHere?.userData?.profile_result?.REGULAR_DATE}
-            empConfirmationDate={moment(
-              profileHere?.userData?.profile_result?.CONFIRMATION_DATE,
-              'DD-MMM-YY',
-            ).format('DD MMM, YYYY')}
+            empConfirmationDate={
+              profileHere?.userData?.profile_result?.CONFIRMATION_DATE
+            }
             empServiceLength={
               profileHere?.userData?.profile_result?.SERVICE_LENGTH
             }

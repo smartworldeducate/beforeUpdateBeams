@@ -9,6 +9,7 @@ import {
   FlatList,
   Image,
   useWindowDimensions,
+  StyleSheet,
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
@@ -20,8 +21,6 @@ import Icon from 'react-native-fontawesome-pro';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import colors from '../../Styles/colors';
 import fontFamily from '../../Styles/fontFamily';
-import LineSeprator from '../LineSeprator/LineSeprator';
-import MainHeader from '../Headers/MainHeader';
 import RenderHtml from 'react-native-render-html';
 
 const ViewMessageDetailModal = ({
@@ -38,6 +37,7 @@ const ViewMessageDetailModal = ({
   inconType,
 }) => {
   const {width} = useWindowDimensions();
+
   return (
     <Modal
       animationType="fade"
@@ -87,107 +87,106 @@ const ViewMessageDetailModal = ({
           </View>
         </LinearGradient>
 
-        <ScrollView
-          contentContainerStyle={{
-            flexGrow: 1,
+        <View
+          style={{
+            flexDirection: 'row',
+            marginHorizontal: wp('6'),
+            marginTop: hp('5'),
           }}>
           <View
             style={{
-              flexDirection: 'row',
-              marginHorizontal: wp('6'),
-              marginTop: hp('5'),
+              flex: 0.85,
+              justifyContent: 'center',
             }}>
-            <View
+            <Text
+              numberOfLines={2}
+              letterSpacing={'tail'}
+              style={[styles.messageCardEmpName, {fontSize: hp('2.5')}]}>
+              {msgSubject}
+            </Text>
+          </View>
+          <View
+            style={{
+              flex: 0.15,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}></View>
+        </View>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            marginHorizontal: wp('6'),
+            marginTop: hp('3'),
+          }}>
+          <View
+            style={{
+              flex: 0.15,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Image
+              source={{uri: empPhoto}}
               style={{
-                flex: 0.85,
-                justifyContent: 'center',
-              }}>
-              <Text
-                numberOfLines={2}
-                letterSpacing={'tail'}
-                style={[styles.messageCardEmpName, {fontSize: hp('2.5')}]}>
-                {msgSubject}
-              </Text>
-            </View>
-            <View
-              style={{
-                flex: 0.15,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              {/* <Icon type="solid" name="star" size={hp('3')} color="#41CE68" /> */}
-            </View>
+                height: hp('6'),
+                width: wp('12'),
+                borderRadius: wp('50'),
+              }}
+              resizeMode={'contain'}
+            />
           </View>
 
           <View
             style={{
-              flexDirection: 'row',
-              marginHorizontal: wp('6'),
-              marginTop: hp('3'),
+              flex: 0.7,
+              justifyContent: 'center',
+              marginLeft: wp('2'),
             }}>
-            <View
-              style={{
-                flex: 0.15,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Image
-                source={{uri: empPhoto}}
-                style={{
-                  height: hp('6'),
-                  width: wp('12'),
-                  borderRadius: wp('50'),
-                }}
-                resizeMode={'contain'}
-              />
-            </View>
-
-            <View
-              style={{
-                flex: 0.7,
-                justifyContent: 'center',
-                marginLeft: wp('2'),
-              }}>
-              <Text
-                numberOfLines={1}
-                letterSpacing={'tail'}
-                style={styles.messageCardEmpName}>
-                {empName}
-              </Text>
-              <Text style={styles.messageCardDate}>{msgDate}</Text>
-            </View>
-
-            <TouchableOpacity
-              activeOpacity={activeOpacityLikeIcon}
-              onPress={onPressLikeIcon}
-              style={{
-                flex: 0.15,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Icon
-                type={inconType}
-                name="thumbs-up"
-                color="#1C37A4"
-                size={hp(3.5)}
-              />
-            </TouchableOpacity>
+            <Text
+              numberOfLines={1}
+              letterSpacing={'tail'}
+              style={styles.messageCardEmpName}>
+              {empName}
+            </Text>
+            <Text style={styles.messageCardDate}>{msgDate}</Text>
           </View>
 
-          <View style={{marginHorizontal: wp('6')}}>
-            {/* {messageDetailHere.isLoading && <Loader></Loader>} */}
+          <TouchableOpacity
+            activeOpacity={activeOpacityLikeIcon}
+            onPress={onPressLikeIcon}
+            style={{
+              flex: 0.15,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Icon
+              type={inconType}
+              name="thumbs-up"
+              color="#1C37A4"
+              size={hp(3.5)}
+            />
+          </TouchableOpacity>
+        </View>
 
-            <View style={{paddingBottom: hp('2')}}>
-              <RenderHtml
-                contentWidth={width}
-                source={{
-                  html: htmlSource || '<p></p>',
-                }}
-                tagsStyles={tagsStyles}
-                ignoredDomTags={["wb'<", 'customTag', 'center']}
-              />
+        <ScrollView>
+          <ScrollView
+            horizontal
+            contentContainerStyle={{
+              flexGrow: 1,
+            }}>
+            <View style={{marginHorizontal: wp('6')}}>
+              <View style={{paddingBottom: hp('2')}}>
+                <RenderHtml
+                  contentWidth={width}
+                  source={{
+                    html: htmlSource || '<p></p>',
+                  }}
+                  tagsStyles={tagsStyles}
+                  ignoredDomTags={["wb'<", 'customTag', 'center']}
+                />
+              </View>
             </View>
-          </View>
+          </ScrollView>
         </ScrollView>
       </View>
     </Modal>
@@ -248,4 +247,5 @@ const tagsStyles = {
     margin: 0,
   },
 };
+
 export default ViewMessageDetailModal;

@@ -10,9 +10,12 @@ import fontFamily from '../../Styles/fontFamily';
 import Check from 'react-native-vector-icons/AntDesign';
 
 const ReporteesCardPart = ({
+  firstImage,
   statusValue,
   firstText,
+  secondImage,
   secondText,
+  thirdImage,
   thirdText,
   serviceLengthValue,
   ageValue,
@@ -27,7 +30,7 @@ const ReporteesCardPart = ({
             alignItems: 'flex-start',
           }}>
           <Image
-            source={{uri: 'total'}}
+            source={{uri: firstImage}}
             style={{height: hp('3'), width: wp('6')}}
             resizeMode={'contain'}
           />
@@ -53,7 +56,7 @@ const ReporteesCardPart = ({
             alignItems: 'flex-start',
           }}>
           <Image
-            source={{uri: 'present'}}
+            source={{uri: secondImage}}
             style={{height: hp('3'), width: wp('6')}}
             resizeMode={'contain'}
           />
@@ -78,7 +81,7 @@ const ReporteesCardPart = ({
             alignItems: 'flex-start',
           }}>
           <Image
-            source={{uri: 'absent'}}
+            source={{uri: thirdImage}}
             style={{height: hp('3'), width: wp('6')}}
             resizeMode={'contain'}
           />

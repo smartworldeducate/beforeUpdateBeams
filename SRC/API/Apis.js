@@ -1,6 +1,5 @@
-export const BASE_URL =
-  // 'https://ws.beaconhouse.net/beams_ci/index.php/api/';
-  'https://b2training.beaconhouse.net/beams_ci/index.php/api/';
+export const BASE_URL = 'https://ws.beaconhouse.net/beams_ci/index.php/api/';
+// 'https://b2training.beaconhouse.net/beams_ci/index.php/api/';
 export const config = {
   headers: {
     api_key: 'X5Ne0km78x2Q1ykny9FfcIK',
@@ -72,7 +71,11 @@ export const APIS = {
   QRScanAPI: BASE_URL + 'qr_scan',
   QRScannerListAPI: BASE_URL + 'qr_scanner_list',
 
+  FinancialYearsForTax: BASE_URL + 'tax_financial_years',
+
   FinancialYearsForPF: BASE_URL + 'pf_financial_years',
 
-  FinancialYearsForTax: BASE_URL + 'tax_financial_years',
+  FinancialTaxPDFDownload: BASE_URL + 'print_tax_certificate',
+
+  FinancialPFPDFDownload: BASE_URL + 'print_provident_fund',
 };

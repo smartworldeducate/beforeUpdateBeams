@@ -28,6 +28,8 @@ const CertificateModal = ({
   data,
   renderItem,
   keyExtractor,
+  styleFlatlist,
+  onPressPrint,
 }) => {
   return (
     <Modal
@@ -163,18 +165,20 @@ const CertificateModal = ({
                   marginHorizontal: wp('3'),
                   borderColor: 'silver',
                   borderWidth: wp('0.07'),
-                  marginBottom: hp('15'),
+                  // marginBottom: hp('15'),
+                  flex: 1,
                 }}>
                 <FlatList
                   data={data}
                   renderItem={renderItem}
                   keyExtractor={keyExtractor}
+                  style={styleFlatlist}
                 />
               </View>
             )}
 
             <TouchableOpacity
-              onPress={onPressOpacity}
+              onPress={onPressPrint}
               style={{
                 flex: 1,
                 // backgroundColor: 'red',

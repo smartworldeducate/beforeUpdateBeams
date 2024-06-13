@@ -111,6 +111,10 @@ import FinanicialYearsForPFSliceReducer from '../features/FinanicialYearsForPFAn
 
 import FinanicialYearsForTaxSliceReducer from '../features/FinanicialYearsForPFAndTaxSlice/FinanicialYearsForTaxSlice';
 
+import FinanicialTaxPDFDownloadSliceReducer from '../features/FinanicialYearsForPFAndTaxSlice/FinancialTaxPDFDownloadSlice';
+
+import FinanicialPFPDFDownloadSliceReducer from '../features/FinanicialYearsForPFAndTaxSlice/FinancialPFPDFDownloadSlice';
+
 export const store = configureStore({
   reducer: {
     register: authReducer,
@@ -222,6 +226,9 @@ export const store = configureStore({
 
     FinancialYearsPFStore: FinanicialYearsForPFSliceReducer,
     FinancialYearsTaxStore: FinanicialYearsForTaxSliceReducer,
+
+    FinanicialTaxPDFDownloadStore: FinanicialTaxPDFDownloadSliceReducer,
+    FinanicialPFPDFDownloadStore: FinanicialPFPDFDownloadSliceReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

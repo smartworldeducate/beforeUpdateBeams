@@ -28,6 +28,8 @@ const TaxCertificateModal = ({
   data,
   renderItem,
   keyExtractor,
+  styleFlatlist,
+  onPressPrint,
 }) => {
   return (
     <Modal
@@ -161,17 +163,19 @@ const TaxCertificateModal = ({
                   marginHorizontal: wp('3'),
                   borderColor: 'silver',
                   borderWidth: wp('0.07'),
+                  flex: 1,
                 }}>
                 <FlatList
                   data={data}
                   renderItem={renderItem}
                   keyExtractor={keyExtractor}
+                  style={styleFlatlist}
                 />
               </View>
             )}
 
             <TouchableOpacity
-              onPress={onPressOpacity}
+              onPress={onPressPrint}
               style={{
                 flex: 1,
               }}>

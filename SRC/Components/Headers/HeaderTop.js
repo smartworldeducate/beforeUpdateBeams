@@ -48,16 +48,8 @@ const HeaderTop = ({
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
         colors={['#1C37A5', '#4D69DC']}
-        style={[
-          styles.mainHeader,
-          {
-            height:
-              profileHere?.userData?.reporting_result?.events?.length > 0
-                ? hp('21.7')
-                : hp('19'),
-          },
-        ]}>
-        <View style={styles.headerChild}>
+        style={[styles.mainHeader]}>
+        <View style={[styles.headerChild, {marginBottom: hp('1.5')}]}>
           <TouchableOpacity
             onPress={onPressUserImg}
             activeOpacity={0.6}
@@ -145,100 +137,110 @@ const HeaderTop = ({
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => navigation.navigate('Search')}
-          style={{
-            backgroundColor: '#fff',
-            marginHorizontal: wp('5'),
-            marginTop: hp('2.2'),
-            borderRadius: hp(1.5),
-            shadowColor: '#000',
-            shadowOpacity: 0.5,
-            shadowRadius: 4,
-            elevation: 4,
-            flexDirection: 'row',
-            height: hp('5.5'),
-          }}>
-          <View
+        {profileHere?.userSearchAccess == 1 ? (
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => navigation.navigate('Search')}
             style={{
-              flex: 0.85,
-              borderTopLeftRadius: hp(1.5),
-              borderBottomLeftRadius: hp(1.5),
-              justifyContent: 'center',
-              paddingLeft: wp('3'),
+              backgroundColor: '#fff',
+              marginHorizontal: wp('5'),
+              marginTop: hp('0.5'),
+              borderRadius: hp(1.5),
+              shadowColor: '#000',
+              shadowOpacity: 0.5,
+              shadowRadius: 4,
+              elevation: 4,
+              flexDirection: 'row',
+              height: hp('5.5'),
+              marginBottom: hp('1.75'),
             }}>
-            <Text
+            <View
               style={{
-                fontSize: hp('1.75'),
-                color: 'grey',
-                fontFamily: fontFamily.ceraLight,
-                letterSpacing: 0.5,
+                flex: 0.85,
+                borderTopLeftRadius: hp(1.5),
+                borderBottomLeftRadius: hp(1.5),
+                justifyContent: 'center',
+                paddingLeft: wp('3'),
               }}>
-              Search Employee
-            </Text>
-          </View>
+              <Text
+                style={{
+                  fontSize: hp('1.75'),
+                  color: 'grey',
+                  fontFamily: fontFamily.ceraLight,
+                  letterSpacing: 0.5,
+                }}>
+                Search Employee
+              </Text>
+            </View>
+            <View
+              style={{
+                flex: 0.15,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderTopRightRadius: hp(1.5),
+                borderBottomRightRadius: hp(1.5),
+              }}>
+              <FontAwesomeIcon
+                icon="fat fa-magnifying-glass"
+                size={hp(3)}
+                style={{color: '#292D32'}}
+              />
+            </View>
+          </TouchableOpacity>
+        ) : (
+          <></>
+        )}
+
+        {profileHere?.userData?.reporting_result?.events?.length > 1 ? (
           <View
             style={{
-              flex: 0.15,
+              marginHorizontal: wp('5'),
               justifyContent: 'center',
               alignItems: 'center',
-              borderTopRightRadius: hp(1.5),
-              borderBottomRightRadius: hp(1.5),
+              height: hp('4'),
             }}>
-            <FontAwesomeIcon
-              icon="fat fa-magnifying-glass"
-              size={hp(3)}
-              style={{color: '#292D32'}}
-            />
+            <Swiper
+              style={{}}
+              autoplay={
+                profileHere?.userData?.reporting_result?.events?.length > 1
+                  ? true
+                  : false
+              }
+              loop={true}
+              showsPagination={false}
+              autoplayTimeout={3}
+              showsButtons={false}
+              horizontal={false}>
+              {events?.map((item, index) => (
+                <View
+                  key={index}
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                  }}>
+                  <FontAwesomeIcon
+                    icon={item?.first_icon}
+                    size={hp(2)}
+                    style={{color: item?.first_icon_color}}
+                  />
+                  <Text>{` `}</Text>
+                  <Text key={index} style={styles.slideText}>
+                    {item?.message}
+                  </Text>
+                  <Text>{` `}</Text>
+                  <FontAwesomeIcon
+                    icon={item?.last_icon}
+                    size={hp(2)}
+                    style={{color: item?.last_icon_color}}
+                  />
+                </View>
+              ))}
+            </Swiper>
           </View>
-        </TouchableOpacity>
-
-        <View
-          style={{
-            marginHorizontal: wp('5'),
-            marginTop: hp('1.65'),
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: hp('4'),
-          }}>
-          <Swiper
-            style={{}}
-            autoplay={
-              profileHere?.userData?.reporting_result?.events?.length > 1
-                ? true
-                : false
-            }
-            autoplayTimeout={3}
-            showsButtons={false}
-            showsPagination={false}
-            horizontal={false}>
-            {events?.map((item, index) => (
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  flexDirection: 'row',
-                }}>
-                <FontAwesomeIcon
-                  icon={item?.first_icon}
-                  size={hp(2)}
-                  style={{color: item?.first_icon_color}}
-                />
-                <Text>{` `}</Text>
-                <Text key={index} style={styles.slideText}>
-                  {item?.message}
-                </Text>
-                <Text>{` `}</Text>
-                <FontAwesomeIcon
-                  icon={item?.last_icon}
-                  size={hp(2)}
-                  style={{color: item?.last_icon_color}}
-                />
-              </View>
-            ))}
-          </Swiper>
-        </View>
+        ) : (
+          <></>
+        )}
       </LinearGradient>
     </>
   );
@@ -248,7 +250,6 @@ export default HeaderTop;
 
 const styles = EStyleSheet.create({
   mainHeader: {
-    height: hp(27),
     borderBottomRightRadius: hp(3),
     borderBottomLeftRadius: hp(3),
   },

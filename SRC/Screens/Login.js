@@ -209,7 +209,7 @@ const Login = props => {
                   value={employeeId}
                   onChangeText={onChangeEmpId}
                   keyboardType={'numeric'}
-                  maxLength={11}
+                  maxLength={12}
                   returnKeyType={'done'}
                   iconName={'user-tie'}
                   placeholder={'Employee ID'}
@@ -224,7 +224,7 @@ const Login = props => {
                   value={employeePassword}
                   onChangeText={onChangeEmpPassword}
                   keyboardType={'default'}
-                  maxLength={11}
+                  maxLength={35}
                   returnKeyType={'done'}
                   iconName={'key'}
                   iconRight={eyeType == true ? 'eye' : 'eye-slash'}

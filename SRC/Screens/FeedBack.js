@@ -235,214 +235,224 @@ const FeedBack = props => {
             backgroundColor: colors.appBackGroundColor,
           }}>
           {suggestionFeedbackHere?.isLoading && <Loader></Loader>}
-
-          <View style={{marginVertical: hp('3')}}>
-            <View style={{marginHorizontal: wp('5')}}>
-              <View
-                style={{
-                  backgroundColor: '#E7E7E7',
-                  height: hp('7'),
-                  borderRadius: wp('2'),
-                  justifyContent: 'center',
-                }}>
+          {ratingHereStore?.isLoading ? (
+            <Loader></Loader>
+          ) : (
+            <View style={{marginVertical: hp('3')}}>
+              <View style={{marginHorizontal: wp('5')}}>
                 <View
                   style={{
-                    flexDirection: 'row',
-                    height: hp('5'),
-                    marginHorizontal: wp('2'),
+                    backgroundColor: '#E7E7E7',
+                    height: hp('7'),
+                    borderRadius: wp('2'),
+                    justifyContent: 'center',
                   }}>
-                  <TouchableOpacity
-                    onPress={onPressFeedback}
-                    activeOpacity={0.5}
-                    style={{
-                      flex: 0.46,
-                      backgroundColor: feedback ? colors.whiteColor : '#E7E7E7',
-                      borderRadius: wp('2'),
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Text style={styles.upperText}>Feedback</Text>
-                  </TouchableOpacity>
                   <View
                     style={{
-                      flex: 0.08,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}></View>
-                  <TouchableOpacity
-                    onPress={onPressSuggestion}
-                    activeOpacity={0.5}
-                    style={{
-                      flex: 0.46,
-                      backgroundColor: suggestion
-                        ? colors.whiteColor
-                        : '#E7E7E7',
-                      borderRadius: wp('2'),
-                      justifyContent: 'center',
-                      alignItems: 'center',
+                      flexDirection: 'row',
+                      height: hp('5'),
+                      marginHorizontal: wp('2'),
                     }}>
-                    <Text style={styles.upperText}>Suggestion</Text>
-                  </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={onPressFeedback}
+                      activeOpacity={0.5}
+                      style={{
+                        flex: 0.46,
+                        backgroundColor: feedback
+                          ? colors.whiteColor
+                          : '#E7E7E7',
+                        borderRadius: wp('2'),
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Text style={styles.upperText}>Feedback</Text>
+                    </TouchableOpacity>
+                    <View
+                      style={{
+                        flex: 0.08,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}></View>
+                    <TouchableOpacity
+                      onPress={onPressSuggestion}
+                      activeOpacity={0.5}
+                      style={{
+                        flex: 0.46,
+                        backgroundColor: suggestion
+                          ? colors.whiteColor
+                          : '#E7E7E7',
+                        borderRadius: wp('2'),
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Text style={styles.upperText}>Suggestion</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
 
-              {feedback && (
-                <>
-                  <View
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginVertical: hp('3'),
-                    }}>
-                    <Text style={styles.mainText}>
-                      How do you rate this App?
-                    </Text>
-                    <Text style={styles.belowText}>
-                      No feedback has been provided yet.
-                    </Text>
-                  </View>
-
-                  <View
-                    style={{justifyContent: 'center', alignItems: 'center'}}>
-                    <StarRating
-                      rating={rating}
-                      onChange={
-                        ratingGet > 1 ? onChangeDisable : onChangeRating
-                      }
-                      // onChange={onChangeRating}
-                      maxStars={5}
-                      starSize={hp('5.5')}
-                      color={'#fdd835'}
-                      emptyColor={'#fdd835'}
-                      enableHalfStar={false}
-                      // style={{borderColor: 'red', borderWidth: 1}}
-                      // starStyle={{borderColor: 'red', borderWidth: 1}}
-                    />
-                  </View>
-
-                  <View sty></View>
-
-                  {ratingGet > 0 || hideButtonsonSuccess ? (
+                {feedback && (
+                  <>
                     <View
                       style={{
                         justifyContent: 'center',
                         alignItems: 'center',
-                        marginTop: hp('2'),
+                        marginVertical: hp('3'),
                       }}>
-                      <Text
-                        style={{
-                          fontSize: hp('1.75'),
-                          fontFamily: fontFamily.ceraLight,
-                          color: 'black',
-                        }}>{`You gave a ${rating}-star rating`}</Text>
-                      <Text
-                        style={{
-                          fontSize: hp('1.75'),
-                          fontFamily: fontFamily.ceraLight,
-                          fontStyle: 'italic',
-                          color: 'black',
-                        }}>{`Thank you for your feedback.`}</Text>
+                      <Text style={styles.mainText}>
+                        How do you rate this App?
+                      </Text>
+
+                      {ratingGet > 0 || hideButtonsonSuccess ? (
+                        <></>
+                      ) : (
+                        <Text style={styles.belowText}>
+                          No feedback has been provided yet.
+                        </Text>
+                      )}
                     </View>
-                  ) : (
+
                     <View
-                      style={{
-                        flexDirection: 'row',
-                        marginHorizontal: wp('4'),
-                        marginVertical: hp('2'),
-                      }}>
-                      <TouchableOpacity
-                        onPress={onPressNotNow}
-                        activeOpacity={0.8}
-                        style={styles.btnView1}>
-                        <Text style={styles.btnText}>Not Now</Text>
-                      </TouchableOpacity>
-                      <View style={{flex: 0.35}}></View>
-                      <TouchableOpacity
-                        activeOpacity={0.8}
-                        onPress={onPressSubmitRating}
-                        style={styles.btnView2}>
-                        <Text style={styles.btnText}>Submit</Text>
-                      </TouchableOpacity>
+                      style={{justifyContent: 'center', alignItems: 'center'}}>
+                      <StarRating
+                        rating={rating}
+                        onChange={
+                          ratingGet > 1 ? onChangeDisable : onChangeRating
+                        }
+                        // onChange={onChangeRating}
+                        maxStars={5}
+                        starSize={hp('5.5')}
+                        color={'#fdd835'}
+                        emptyColor={'#fdd835'}
+                        enableHalfStar={false}
+                        // style={{borderColor: 'red', borderWidth: 1}}
+                        // starStyle={{borderColor: 'red', borderWidth: 1}}
+                      />
                     </View>
-                  )}
-                </>
-              )}
 
-              {suggestion && (
-                <>
-                  <View style={styles.titleView}>
-                    <TextInput
-                      value={title}
-                      onChangeText={onChangeTitle}
-                      style={styles.titleInputStyle}
-                      placeholder={'Title'}
-                      placeholderTextColor={colors.drakGrey}
-                      maxLength={100}
-                      keyboardType={'default'}
-                      multiline={false}
-                      returnKeyType={'next'}
-                    />
-                  </View>
+                    <View sty></View>
 
-                  <View style={styles.suggestionView}>
-                    <TextInput
-                      value={suggestionDesc}
-                      onChangeText={onChangeSuggestionDesc}
-                      style={styles.suggestionDescInputStyle}
-                      placeholder={'Suggestion'}
-                      placeholderTextColor={colors.drakGrey}
-                      keyboardType={'default'}
-                      multiline={true}
-                      returnKeyType={'done'}
-                    />
-                  </View>
+                    {ratingGet > 0 || hideButtonsonSuccess ? (
+                      <View
+                        style={{
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          marginTop: hp('2'),
+                        }}>
+                        <Text
+                          style={{
+                            fontSize: hp('1.75'),
+                            fontFamily: fontFamily.ceraLight,
+                            color: 'black',
+                          }}>{`You gave a ${rating}-star rating`}</Text>
+                        <Text
+                          style={{
+                            fontSize: hp('1.75'),
+                            fontFamily: fontFamily.ceraLight,
+                            fontStyle: 'italic',
+                            color: 'black',
+                          }}>{`Thank you for your feedback.`}</Text>
+                      </View>
+                    ) : (
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          marginHorizontal: wp('4'),
+                          marginVertical: hp('2'),
+                        }}>
+                        <TouchableOpacity
+                          onPress={onPressNotNow}
+                          activeOpacity={0.8}
+                          style={styles.btnView1}>
+                          <Text style={styles.btnText}>Not Now</Text>
+                        </TouchableOpacity>
+                        <View style={{flex: 0.35}}></View>
+                        <TouchableOpacity
+                          activeOpacity={0.8}
+                          onPress={onPressSubmitRating}
+                          style={styles.btnView2}>
+                          <Text style={styles.btnText}>Submit</Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                  </>
+                )}
 
-                  <TouchableOpacity
-                    onPress={onPressSuggestionSubmit}
-                    activeOpacity={0.8}
-                    style={styles.submitBtn}>
-                    <Text style={styles.btnSubmitText}>Submit</Text>
-                  </TouchableOpacity>
-                </>
-              )}
+                {suggestion && (
+                  <>
+                    <View style={styles.titleView}>
+                      <TextInput
+                        value={title}
+                        onChangeText={onChangeTitle}
+                        style={styles.titleInputStyle}
+                        placeholder={'Title'}
+                        placeholderTextColor={colors.drakGrey}
+                        maxLength={100}
+                        keyboardType={'default'}
+                        multiline={false}
+                        returnKeyType={'next'}
+                      />
+                    </View>
 
-              {showErrorModal && (
-                <MessageSuccessModal
-                  textUpper={'Request Status'}
-                  textLower={updateRatingHere?.message}
-                  btnText={'OK'}
-                  onPressOpacity={closeModal}
-                />
-              )}
+                    <View style={styles.suggestionView}>
+                      <TextInput
+                        value={suggestionDesc}
+                        onChangeText={onChangeSuggestionDesc}
+                        style={styles.suggestionDescInputStyle}
+                        placeholder={'Suggestion'}
+                        placeholderTextColor={colors.drakGrey}
+                        keyboardType={'default'}
+                        multiline={true}
+                        returnKeyType={'done'}
+                      />
+                    </View>
 
-              {showSuccessModal && (
-                <MessageSuccessModal
-                  textUpper={'Request Status'}
-                  textLower={updateRatingHere?.userData?.message}
-                  btnText={'OK'}
-                  onPressOpacity={closeModal}
-                />
-              )}
+                    <TouchableOpacity
+                      onPress={onPressSuggestionSubmit}
+                      activeOpacity={0.8}
+                      style={styles.submitBtn}>
+                      <Text style={styles.btnSubmitText}>Submit</Text>
+                    </TouchableOpacity>
+                  </>
+                )}
 
-              {showErrorModalSuggestion && (
-                <MessageSuccessModal
-                  textUpper={'Request Status'}
-                  textLower={suggestionFeedbackHere?.message}
-                  btnText={'OK'}
-                  onPressOpacity={closeModalSuggestion}
-                />
-              )}
+                {showErrorModal && (
+                  <MessageSuccessModal
+                    textUpper={'Request Status'}
+                    textLower={updateRatingHere?.message}
+                    btnText={'OK'}
+                    onPressOpacity={closeModal}
+                  />
+                )}
 
-              {showSuccessModalSuggestion && (
-                <MessageSuccessModal
-                  textUpper={'Request Status'}
-                  textLower={suggestionFeedbackHere?.message}
-                  btnText={'OK'}
-                  onPressOpacity={closeModalSuggestion}
-                />
-              )}
+                {showSuccessModal && (
+                  <MessageSuccessModal
+                    textUpper={'Request Status'}
+                    textLower={updateRatingHere?.userData?.message}
+                    btnText={'OK'}
+                    onPressOpacity={closeModal}
+                  />
+                )}
+
+                {showErrorModalSuggestion && (
+                  <MessageSuccessModal
+                    textUpper={'Request Status'}
+                    textLower={suggestionFeedbackHere?.message}
+                    btnText={'OK'}
+                    onPressOpacity={closeModalSuggestion}
+                  />
+                )}
+
+                {showSuccessModalSuggestion && (
+                  <MessageSuccessModal
+                    textUpper={'Request Status'}
+                    textLower={suggestionFeedbackHere?.message}
+                    btnText={'OK'}
+                    onPressOpacity={closeModalSuggestion}
+                  />
+                )}
+              </View>
             </View>
-          </View>
+          )}
         </ScrollView>
       </>
     </SafeAreaView>

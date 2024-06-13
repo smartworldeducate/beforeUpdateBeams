@@ -6,7 +6,9 @@ import {
   Image,
   ScrollView,
   FlatList,
+  RefreshControl,
 } from 'react-native';
+import Clipboard from '@react-native-community/clipboard';
 import React, {useEffect, useState} from 'react';
 import MainHeader from '../Components/Headers/MainHeader';
 import Icon from 'react-native-fontawesome-pro';
@@ -29,14 +31,18 @@ import TeamModal from '../Components/Modal/TeamModal';
 import ReporteeProfileModal from '../Components/Modal/ReporteeProfileModal';
 import Loader from '../Components/Loader/Loader';
 import ReporteesCardPart from '../Components/EmpCardPart/ReporteesCardPart';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
 const options = {day: 'numeric', month: 'short', year: 'numeric'};
 
 const Reportee = props => {
   const dispatch = useDispatch();
   const profileHere = useSelector(state => state.profileStore);
+  const profileHereEmpId = useSelector(
+    state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
+  );
   const allReporteesHere = useSelector(state => state.allReporteesStore);
-  console.log('profileHere', profileHere);
+  // console.log('profileHere', profileHere);
   console.log('allReporteesHere', allReporteesHere);
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -50,6 +56,7 @@ const Reportee = props => {
   );
 
   const [selectReportee, setSelectReportee] = useState();
+  const [refreshing, setRefreshing] = useState(false);
 
   // console.log('profileHere', profileHere?.userData?.reporting_result?.data);
 
@@ -62,22 +69,21 @@ const Reportee = props => {
     }
   };
 
+  console.log('selectedDate', selectedDate);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const loginData = await AsyncStorage.getItem('loginData');
         const parsedLoginData = JSON.parse(loginData);
 
-        const branchId = await AsyncStorage.getItem('branchId');
-        const parsedBranchId = JSON.parse(branchId);
-
-        const deptId = await AsyncStorage.getItem('deptId');
-        const parsedDeptId = JSON.parse(deptId);
         dispatch(
           AllRepoteesAction({
-            reportingToId: parsedLoginData,
-            branch_id: parsedBranchId,
-            dept_id: parsedDeptId,
+            Remployee_id: parsedLoginData,
+
+            current_date: moment(selectedDate, 'D MMM YYYY').format(
+              'DD/MM/YYYY',
+            ),
           }),
         );
       } catch (error) {
@@ -88,24 +94,20 @@ const Reportee = props => {
     fetchData();
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   AsyncStorage.getItem('loginData')
-  //     .then(loginData => {
-  //       const parsedLoginData = JSON.parse(loginData);
-  //       setReportingToId(parsedLoginData);
-  //       dispatch(
-  //         AllRepoteesAction({
-  //           reportingToId: parsedLoginData,
-  //           month_date: moment(selectedDate, 'DD MMM YYYY').format(
-  //             'DD/MM/YYYY',
-  //           ),
-  //         }),
-  //       );
-  //     })
-  //     .catch(error => {
-  //       console.error('Error retrieving loginData from AsyncStorage:', error);
-  //     });
-  // }, [dispatch]);
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      dispatch(
+        AllRepoteesAction({
+          Remployee_id: JSON.parse(profileHereEmpId),
+          current_date: moment(selectedDate, 'D MMM YYYY').format('DD/MM/YYYY'),
+        }),
+      );
+    } catch (error) {
+      console.error('Error retrieving values from AsyncStorage:', error);
+    }
+    setRefreshing(false);
+  };
 
   const onPressModal = () => {
     setModalVisible(!modalVisible);
@@ -125,11 +127,11 @@ const Reportee = props => {
 
     dispatch(
       AllRepoteesAction({
-        reportingToId: reportingToId,
-        month_date: moment(selectedDateOnConfirm, 'DD MMM YYYY').format(
+        Remployee_id: JSON.parse(profileHereEmpId),
+        current_date: moment(selectedDateOnConfirm, 'DD MMM YYYY').format(
           'DD/MM/YYYY',
         ),
-        reporteeId: selectReportee,
+        // reporteeId: selectReportee,
       }),
     );
 
@@ -144,10 +146,8 @@ const Reportee = props => {
   const [deptIdHere, setDeptIdHere] = useState(null);
 
   const onPressReportee = item => {
-    setReporteeModal(!reporteeModal);
     setIdHere(item?.item);
-    setBranchIdHere(item?.itemBranchId);
-    setDeptIdHere(item?.itemDeptId);
+    setReporteeModal(!reporteeModal);
   };
   const onRequestClose = () => {
     setReporteeModal(false);
@@ -198,28 +198,34 @@ const Reportee = props => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Image
-              source={{uri: 'salman'}}
+            <View
               style={{
-                height: hp('4.5'),
-                width: wp('9'),
                 borderRadius: wp('5'),
-              }}
-              resizeMode={'cover'}
-            />
+                borderWidth: wp('0.1'),
+                borderColor: 'black',
+              }}>
+              <Image
+                source={{uri: item?.EMP_PHOTO}}
+                style={{
+                  height: hp('4.5'),
+                  width: wp('9'),
+                  borderRadius: wp('5'),
+                }}
+                resizeMode={'cover'}
+              />
+            </View>
           </View>
           <TouchableOpacity
             onPress={() =>
               onPressReportee({
                 item: item?.EMPLOYEE_ID,
-                itemBranchId: item?.BRANCH_ID,
-                itemDeptId: item?.DEPARTMENT_ID,
               })
             }
             activeOpacity={0.5}
             style={{
               flex: 0.45,
               flexDirection: 'column',
+              marginLeft: wp('0.75'),
             }}>
             <View style={{}}>
               <Text
@@ -376,6 +382,7 @@ const Reportee = props => {
             text={'Reportees'}
             iconName={'arrow-left'}
             onpressBtn={() => props.navigation.goBack()}
+            yearText={'Today'}
           />
         </View>
 
@@ -385,7 +392,16 @@ const Reportee = props => {
           contentContainerStyle={{
             flexGrow: 1,
             backgroundColor: '#f5f8fc',
-          }}>
+          }}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={['#2A72B6', '#203B88']}
+              progressBackgroundColor={'#fcfcfc'}
+              tintColor={'#1C37A4'}
+            />
+          }>
           <View style={{marginVertical: hp('3')}}>
             <View style={{marginHorizontal: wp('5')}}>
               <View
@@ -395,66 +411,48 @@ const Reportee = props => {
                 }}>
                 <TouchableOpacity
                   onPress={onPressModal}
-                  activeOpacity={0.5}
+                  activeOpacity={1}
                   style={{
-                    flex: 0.48,
+                    flex: 1,
                     flexDirection: 'row',
                     borderRadius: wp('3'),
                     borderWidth: wp('0.15'),
                   }}>
                   <View
                     style={{
-                      flex: 0.75,
+                      flex: 0.85,
                       justifyContent: 'center',
-                      alignItems: 'center',
+
+                      marginLeft: wp('2'),
                     }}>
                     <Text
                       numberOfLines={1}
                       ellipsizeMode={'tail'}
                       style={styles.filterText}>
-                      {filterTextName}
+                      {/* {filterTextName} */}
+                      {profileHere?.userData?.emp_result?.EMP_NAME + ' Team'}
                     </Text>
                   </View>
                   <View
                     style={{
-                      flex: 0.25,
+                      flex: 0.15,
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}>
-                    <Text style={{color: 'black'}}></Text>
-                  </View>
-                </TouchableOpacity>
-                <View style={{flex: 0.04}}></View>
-                <TouchableOpacity
-                  onPress={onPressDateModal}
-                  activeOpacity={0.5}
-                  style={{
-                    flex: 0.48,
-                    flexDirection: 'row',
-                    borderRadius: wp('3'),
-                    borderWidth: wp('0.15'),
-                  }}>
-                  <View
-                    style={{
-                      flex: 0.75,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Text style={styles.filterText}>{selectedDate}</Text>
-                  </View>
-                  <View
-                    style={{
-                      flex: 0.25,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Text style={{color: 'black'}}></Text>
+                    <FontAwesomeIcon
+                      icon="fat fa-solid fa-angles-up-down"
+                      size={hp(1.75)}
+                      style={{color: 'grey'}}
+                    />
                   </View>
                 </TouchableOpacity>
               </View>
 
               <View style={{marginVertical: hp('2')}}>
                 <ReporteesCardPart
+                  firstImage={'totalreportees'}
+                  secondImage={'present'}
+                  thirdImage={'absentreportees'}
                   firstText={'TOTAL'}
                   statusValue={allReporteesHere?.userData?.reportee_length}
                   secondText={'PRESENT'}
@@ -516,7 +514,7 @@ const Reportee = props => {
             <></>
           )}
 
-          {/* {reporteeModal ? (
+          {reporteeModal ? (
             <ReporteeProfileModal
               onPressBackIcon={onRequestClose}
               modalVisible={reporteeModal}
@@ -527,7 +525,7 @@ const Reportee = props => {
             />
           ) : (
             <></>
-          )} */}
+          )}
         </ScrollView>
       </>
     </SafeAreaView>
