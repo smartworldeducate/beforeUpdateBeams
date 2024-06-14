@@ -122,36 +122,36 @@ const LeaveBalance = props => {
                   <PieChart
                     data={[
                       {
-                        value: annual,
-                        color: '#5bcfb5',
+                        value: annual ? annual : 0,
+                        color: '#B141CE',
                       },
                       {
-                        value: casual,
-                        color: '#7151ce',
+                        value: casual ? casual : 0,
+                        color: '#41CE68',
                       },
                       {
-                        value: sick,
-                        color: '#b245ce',
+                        value: sick ? sick : 0,
+                        color: '#CE5141',
                       },
                       {
-                        value: maternity,
-                        color: '#4161ca',
+                        value: maternity ? maternity : 0,
+                        color: '#41CE68',
                       },
                       {
-                        value: long,
-                        color: '#e3e3e3',
+                        value: long ? long : 0,
+                        color: '#4167C4',
                       },
                       {
-                        value: hajj,
-                        color: '#5fce6a',
+                        value: hajj ? hajj : 0,
+                        color: '#41CEB4',
                       },
                       {
-                        value: without,
-                        color: 'red',
+                        value: without ? without : 0,
+                        color: '#7051CE',
                       },
                       {
-                        value: pending,
-                        color: 'grey',
+                        value: pending ? pending : 0,
+                        color: '#edebeb',
                       },
                     ]}
                     donut

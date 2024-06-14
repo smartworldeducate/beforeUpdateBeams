@@ -728,35 +728,35 @@ const HomeScreen = props => {
                       <PieChart
                         data={[
                           {
-                            value: annual,
+                            value: annual ? annual : 0,
                             color: '#B141CE',
                           },
                           {
-                            value: casual,
+                            value: casual ? casual : 0,
                             color: '#41CE68',
                           },
                           {
-                            value: sick,
+                            value: sick ? sick : 0,
                             color: '#CE5141',
                           },
                           {
-                            value: maternity,
+                            value: maternity ? maternity : 0,
                             color: '#41CE68',
                           },
                           {
-                            value: long,
+                            value: long ? long : 0,
                             color: '#4167C4',
                           },
                           {
-                            value: hajj,
+                            value: hajj ? hajj : 0,
                             color: '#41CEB4',
                           },
                           {
-                            value: without,
+                            value: without ? without : 0,
                             color: '#7051CE',
                           },
                           {
-                            value: pending,
+                            value: pending ? pending : 0,
                             color: '#edebeb',
                           },
                         ]}
