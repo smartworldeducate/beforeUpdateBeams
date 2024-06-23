@@ -19,8 +19,9 @@ const colors = {
   btnColor: '#061D7A',
   casulText: '#747474',
   cardEmpName: '#6A6A6A',
-  whiteTransparent: 'rgba(255,255,255,0.6)',
+  transparentWhite: 'rgba(255,255,255,0.6)',
   transparentBlack: 'rgba(0,0,0,0.5)',
+  transparentBlackLight: 'rgba(0,0,0,0.2)',
 };
 
 export default colors;

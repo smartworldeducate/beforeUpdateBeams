@@ -94,7 +94,7 @@ const TimeLine = props => {
           <View
             style={{
               backgroundColor: '#1C37A4',
-              flex: 0.8,
+              flex: 0.75,
               width: wp('1'),
               borderRadius: wp('1'),
             }}>

@@ -11,6 +11,7 @@ import {
   Platform,
   BackHandler,
 } from 'react-native';
+
 import Swiper from 'react-native-swiper';
 import {
   widthPercentageToDP as wp,
@@ -43,7 +44,8 @@ const Skip1 = () => {
 
   const onPressLogin = () => {
     AsyncStorage.setItem('skipStartupScreen', isSkip);
-    navigation.dispatch(StackActions.replace('Login'));
+    // navigation.dispatch(StackActions.replace('Login'));
+    navigation.navigate('Login');
   };
 
   useFocusEffect(

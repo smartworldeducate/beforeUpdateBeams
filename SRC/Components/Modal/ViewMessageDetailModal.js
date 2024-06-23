@@ -35,6 +35,7 @@ const ViewMessageDetailModal = ({
   activeOpacityLikeIcon,
   onPressLikeIcon,
   inconType,
+  renderers,
 }) => {
   const {width} = useWindowDimensions();
 
@@ -182,6 +183,11 @@ const ViewMessageDetailModal = ({
                     html: htmlSource || '<p></p>',
                   }}
                   tagsStyles={tagsStyles}
+                  // renderersProps={{
+                  //   renderers: renderersProps,
+                  //   text: defaultTextProps,
+                  // }}
+                  renderers={renderers}
                   ignoredDomTags={["wb'<", 'customTag', 'center']}
                 />
               </View>

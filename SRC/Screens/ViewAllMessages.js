@@ -879,6 +879,22 @@ const ViewAllMessages = props => {
     console.log('Opened row with key:', rowKey);
   };
 
+  const initialHtmlContent = `
+   <p style='color:black;'>'<p>&nbsp;</p>\n<!-- [if !mso]><!-->\n<p></p>\n<!--<![endif]-->\n<p></p>\n<!-- [if (gte mso 9)|(IE)]>\n    <xml>\n    <o:OfficeDocumentSettings>\n    <o:AllowPNG/>\n    <o:PixelsPerInch>96</o:PixelsPerInch>\n    </o:OfficeDocumentSettings>\n    </xml>\n    <![endif]-->\n<p></p>\n<!-- [if (gte mso 9)|(IE)]>\n    <style type=\"text/css\">\n      body {width: 700px;margin: 0 auto;}\n      table {border-collapse: collapse;}\n      table, td {mso-table-lspace: 0pt;mso-table-rspace: 0pt;}\n      img {-ms-interpolation-mode: bicubic;}\n    </style>\n    <![endif]--><!--user entered Head Start-->\n<p></p>\n<!--End Head user entered--><div class=\"wrapper\" data-link-color=\"#1188E6\" data-body-style=\"font-size: 14px; font-family: arial; color: #000000; background-color: #ffffff;\">\n<div class=\"webkit\">\n<table class=\"wrapper\" border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\">\n<tbody>\n<tr>\n<td valign=\"top\" bgcolor=\"#ffffff\" width=\"100%\">\n<table class=\"outer\" border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">\n<tbody>\n<tr>\n<td width=\"100%\">\n<table border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\">\n<tbody>\n<tr>\n<td><!-- [if mso]>\n                          <div>\n                          <table><tr><td width=\"700\">\n                          <![endif]-->\n<table style=\"width: 100%; max-width: 700px;\" border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">\n<tbody>\n<tr>\n<td style=\"padding: 0px 0px 0px 0px; color: #000000; text-align: left;\" align=\"left\" bgcolor=\"#ffffff\" width=\"100%\">\n<table class=\"module preheader preheader-hide\" style=\"display: none !important; mso-hide: all; visibility: hidden; opacity: 0; color: transparent; height: 0; width: 0;\" border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" data-type=\"preheader\">\n<tbody>\n<tr>\n<td>&nbsp;</td>\n</tr>\n</tbody>\n</table>\n<table class=\"wrapper\" style=\"table-layout: fixed;\" border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" data-type=\"image\">\n<tbody>\n<tr>\n<td style=\"font-size: 6px; line-height: 10px; padding: 0px 0px 0px 0px;\" align=\"center\" valign=\"top\"><img class=\"max-width\" style=\"display: block; color: #000000; text-decoration: none; font-family: Helvetica, arial, sans-serif; font-size: 16px; max-width: 100% !important; width: 100%; height: auto !important;\" src=\"https://d375w6nzl58bw0.cloudfront.net/uploads/5401e79685cd4c5403e3090dd8404061e175bacc936d96162efc0ec0a2c61509.jpg\" alt=\"\" width=\"700\" border=\"0\" /></td>\n</tr>\n</tbody>\n</table>\n<table class=\"module\" style=\"table-layout: fixed;\" border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" data-type=\"text\">\n<tbody>\n<tr>\n<td style=\"padding: 18px 0px 5px 0px; line-height: 22px; text-align: inherit; background-color: #ffffff;\" valign=\"top\" bgcolor=\"#ffffff\" height=\"100%\">\n<h2><span style=\"font-family: verdana,geneva,sans-serif;\">Beaconhouse brings you Homebridge</span></h2>\n<p><span style=\"font-family: verdana,geneva,sans-serif;\">Furthering its legacy as a pioneer in education, Beaconhouse Group is proud to announce yet another groundbreaking programme, Homebridge Online A Level Programme for <strong>PKR 16,000/-</strong> per month only.</span></p>\n</td>\n</tr>\n</tbody>\n</table>\n<table class=\"module\" style=\"table-layout: fixed;\" border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" data-type=\"text\">\n<tbody>\n<tr>\n<td style=\"padding: 0px 0px 18px 0px; line-height: 22px; text-align: inherit;\" valign=\"top\" bgcolor=\"\" height=\"100%\">\n<div>\n<h2><strong><span style=\"font-family: verdana,geneva,sans-serif;\">Pakistan&rsquo;s First Cambridge Certified Online A Level Programme with On-Campus Activities</span> </strong></h2>\n<div><span style=\"font-family: verdana,geneva,sans-serif;\">Homebridge welcomes students from both the O Level and Matriculation streams and offers an extensive induction workshop for Matriculation students where teachers schedule weekly review classes to align and support learning outcomes.</span></div>\n</div>\n</td>\n</tr>\n</tbody>\n</table>\n<table class=\"module\" style=\"table-layo'</p>
+  `;
+
+  // const initialHtmlContent = messageDetailHere?.userData?.MSG_DETAIL_SUBSTRING;
+
+  const preprocessHtml = html => {
+    if (!html) return ''; // Return empty string if html is undefined or null
+    return html
+      .replace(/<center>/g, '<div style="text-align: center;">')
+      .replace(/<\/center>/g, '</div>');
+  };
+
+  // Preprocess the HTML content
+  const processedHtmlContent = preprocessHtml(initialHtmlContent);
+
   return (
     <View
       style={{
@@ -1120,7 +1136,11 @@ const ViewAllMessages = props => {
           empPhoto={empPhoto}
           empName={empName}
           msgDate={msgDate}
-          htmlSource={messageDetailHere?.userData?.MSG_DETAIL_SUBSTRING}
+          htmlSource={processedHtmlContent}
+          // htmlSource={messageDetailHere?.userData?.MSG_DETAIL_SUBSTRING}
+          // renderers={renderers}
+          // renderersProps={renderersProps}
+          // defaultTextProps={defaultTextProps}
           onPressLikeIcon={msgLike != 'Y' ? onPressThumbUpIcon : onPressInElse}
           inconType={msgLike == 'Y' ? 'solid' : 'light'}
         />

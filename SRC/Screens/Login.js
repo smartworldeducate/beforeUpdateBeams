@@ -8,8 +8,6 @@ import {
 } from '@react-native-google-signin/google-signin';
 import {loginUserHandle} from '../features/register/googleLoginSlice';
 
-import Toast from 'react-native-simple-toast';
-
 import {
   SafeAreaView,
   StatusBar,
@@ -43,6 +41,8 @@ import {
 import fontFamily from '../Styles/fontFamily';
 import MessageSuccessModal from '../Components/Modal/MessageSuccessModal';
 import Loader from '../Components/Loader/Loader';
+import DeviceInfo from 'react-native-device-info';
+
 const Login = props => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -55,40 +55,6 @@ const Login = props => {
   const [employeeId, setEmployeeId] = useState(null);
   const [employeePassword, setEmployeePassword] = useState(null);
   const [showErrorModal, setShowErrorModal] = useState(false);
-
-  //249159142983-3r1307q40tb9de7qctsm4ckk244etg9h.apps.googleusercontent.com
-  useEffect(() => {
-    GoogleSignin.configure({
-      webClientId:
-        '820650781605-l9l1fmj1tj0icic0ovkld3q2o8souslj.apps.googleusercontent.com',
-    });
-  }, []);
-  const signinWithGoogle = async () => {
-    // setAnimodal(true)
-    try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      console.log(userInfo);
-      // handleNavigate('HomeScreen');
-      const {id, name, email, givenName, photo} = userInfo?.user;
-      //  console.log("google data",glData.payload.data)
-      await storeData({google_id: id, photo: photo});
-      const glData = await dispatch(loginUser({email: email, google_id: id}));
-      // console.log("google data",glData.payload.data)
-      // glData.payload.data ? props.navigation.navigate('Home') : props.navigation.navigate('Register')
-      // setAnimodal(false)
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        // user cancelled the login flow
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        // operation (e.g. sign in) is in progress already
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        // play services not available or outdated
-      } else {
-        // some other error happened
-      }
-    }
-  };
 
   const keyboardVerticalOffset = Platform.OS === 'ios' ? 60 : 20;
 
@@ -111,8 +77,54 @@ const Login = props => {
   const successHere = useSelector(state => state.loginStore.success);
   console.log('successHere', successHere);
 
+  const deviceType = Platform.OS;
+  const getDeviceId = DeviceInfo.getDeviceId();
+  const getDeviceBrand = DeviceInfo.getBrand();
+  const getDeviceVersion = DeviceInfo.getSystemVersion();
+  const getUserAppInstallVersion = DeviceInfo.getVersion();
+
+  const [deviceName, setDeviceName] = useState('');
+  const [deviceApiLevel, setDeviceApiLevel] = useState('');
+
+  DeviceInfo.getDeviceName().then(deviceName => {
+    setDeviceName(deviceName);
+  });
+  DeviceInfo.getApiLevel().then(apiLevel => {
+    setDeviceApiLevel(apiLevel);
+  });
+
+  // console.log('deviceType', deviceType);
+  // console.log('getDeviceId', getDeviceId);
+  // console.log('getDeviceBrand', getDeviceBrand);
+  // console.log('getDeviceVersion', getDeviceVersion);
+  // console.log('getUserAppInstallVersion', getUserAppInstallVersion);
+  // console.log('deviceName', deviceName);
+  // console.log('deviceApiLevel', deviceApiLevel);
+  // console.log('deviceToken', deviceToken);
+
   const onPressLoginBtn = () => {
-    dispatch(LoginAction({employeeId: employeeId, password: employeePassword}));
+    try {
+      AsyncStorage.setItem('deviceTypeAsyncStorage', deviceType);
+      AsyncStorage.setItem('getDeviceIdAsyncStorage', getDeviceId);
+      AsyncStorage.setItem('getDeviceBrandAsyncStorage', getDeviceBrand);
+      AsyncStorage.setItem('getDeviceVersionAsyncStorage', getDeviceVersion);
+      AsyncStorage.setItem(
+        'getUserAppInstallVersionAsyncStorage',
+        getUserAppInstallVersion,
+      );
+      AsyncStorage.setItem('deviceNameAsyncStorage', deviceName);
+
+      AsyncStorage.setItem(
+        'deviceApiLevelAsyncStorage',
+        deviceApiLevel.toString(),
+      );
+
+      dispatch(
+        LoginAction({employeeId: employeeId, password: employeePassword}),
+      );
+    } catch (error) {
+      console.log('error', error);
+    }
   };
 
   useEffect(() => {
@@ -255,16 +267,7 @@ const Login = props => {
 
             <TouchableOpacity
               activeOpacity={0.8}
-              style={styles.loginWithGoogle}
-              onPress={() =>
-                signinWithGoogle()
-                  .then(res => {
-                    console.log('respo:', res);
-                  })
-                  .catch(error => {
-                    console.log(error);
-                  })
-              }>
+              style={styles.loginWithGoogle}>
               <View style={{flex: 0.15}}></View>
 
               <View

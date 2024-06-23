@@ -1,44 +1,60 @@
 {
   "project_info": {
-    "project_number": "820650781605",
-    "project_id": "newbeams-99d51",
-    "storage_bucket": "newbeams-99d51.appspot.com"
+    "project_number": "941654580803",
+    "firebase_url": "https://beams-app-cae76.firebaseio.com",
+    "project_id": "beams-app-cae76",
+    "storage_bucket": "beams-app-cae76.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:820650781605:android:ec8994836f66f9720f964c",
+        "mobilesdk_app_id": "1:941654580803:android:ba631efc7401ba4d",
         "android_client_info": {
-          "package_name": "com.newbeams"
+          "package_name": "com.beamsapp.android"
         }
       },
       "oauth_client": [
         {
-          "client_id": "820650781605-cm6q4gqldl7bdn4hdbhmk40k6pra3lm0.apps.googleusercontent.com",
+          "client_id": "941654580803-8sl1ugrh6u0s0p3v93h51g7027fqqgf6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.newbeams",
+            "package_name": "com.beamsapp.android",
             "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },
         {
-          "client_id": "820650781605-l9l1fmj1tj0icic0ovkld3q2o8souslj.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "941654580803-adoi8vdu04kes8cc4aarm8ko57l5c2j3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.beamsapp.android",
+            "certificate_hash": "9fe10ada2d2a8422885a16c83c6c81dcda4a412d"
+          }
+        },
+        {
+          "client_id": "941654580803-btnt6no51u8js15k4aorf8gqiu9vq2jf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.beamsapp.android",
+            "certificate_hash": "42c4b05f352c804d55ba3df999486f8f0793a7d3"
+          }
+        },
+        {
+          "client_id": "941654580803-ng7pqk21th451gob5gfpv99ina8bohft.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.beamsapp.android",
+            "certificate_hash": "7d80fa9c0ca705746180a862c7ad252574403531"
+          }
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDQM9aUZio2NG_W2qDPnrNGLXWspg4OCQY"
+          "current_key": "AIzaSyAm0phyqOpGeVqM8eW3pI1BmXIleinUAlE"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "820650781605-l9l1fmj1tj0icic0ovkld3q2o8souslj.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

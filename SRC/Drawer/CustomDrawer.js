@@ -314,6 +314,17 @@ const CustomDrawer = ({navigation}) => {
             </View>
 
             <View style={styles.listnameStyle}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('DeviceInfoDrawer')}>
+                <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
+                  <View style={styles.homeleft}>
+                    <Text style={styles.textlistStyle}>Device Info</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.listnameStyle}>
               <TouchableOpacity onPress={saveData}>
                 <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
                   <View style={styles.homeleft}>
