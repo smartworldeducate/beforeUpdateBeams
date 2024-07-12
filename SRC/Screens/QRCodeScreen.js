@@ -27,6 +27,7 @@ import {RNCamera} from 'react-native-camera';
 import colors from '../Styles/colors';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {QRScanAction} from '../features/QRScan/QRScan';
+import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 
 const QRCodeScreen = props => {
   const dispatch = useDispatch();
@@ -74,6 +75,78 @@ const QRCodeScreen = props => {
       };
     }, []),
   );
+
+  const [hasCameraPermission, setHasCameraPermission] = useState(null);
+  const [permissionDeniedCount, setPermissionDeniedCount] = useState(0);
+  const MAX_DENIALS = 3; // Maximum number of times permission can be denied before showing a message
+
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      checkCameraPermission();
+    } else {
+      setHasCameraPermission(true); // Assume permission granted for iOS or handle iOS permissions separately
+    }
+  }, []);
+
+  const checkCameraPermission = async () => {
+    const result = await check(PERMISSIONS.ANDROID.CAMERA);
+    handlePermissionResult(result);
+  };
+
+  const requestCameraPermission = async () => {
+    const result = await request(PERMISSIONS.ANDROID.CAMERA);
+    handlePermissionResult(result);
+  };
+
+  const handlePermissionResult = result => {
+    if (result === RESULTS.GRANTED) {
+      setHasCameraPermission(true);
+      setPermissionDeniedCount(0);
+    } else {
+      setHasCameraPermission(false);
+      setPermissionDeniedCount(prevCount => prevCount + 1);
+    }
+  };
+
+  if (hasCameraPermission === null) {
+    return (
+      <Text style={{color: 'black', textAlign: 'center'}}>
+        Checking camera permission...
+      </Text>
+    );
+  }
+
+  if (hasCameraPermission === false) {
+    return (
+      <>
+        <View>
+          <MainHeader
+            text={'QR Scanner'}
+            iconName={'arrow-left'}
+            onpressBtn={() => props.navigation.goBack()}
+          />
+        </View>
+        <View style={styles.container}>
+          <Text style={styles.permissionText}>
+            Camera permission is required to scan QR codes.
+          </Text>
+          <TouchableOpacity
+            style={styles.permissionButton}
+            onPress={requestCameraPermission}>
+            <Text style={styles.permissionButtonText}>
+              Grant Camera Permission
+            </Text>
+          </TouchableOpacity>
+          {permissionDeniedCount >= MAX_DENIALS && (
+            <Text style={styles.permissionDeniedText}>
+              You have denied camera permission multiple times. Please enable it
+              in the settings.
+            </Text>
+          )}
+        </View>
+      </>
+    );
+  }
 
   return (
     <>
@@ -183,16 +256,6 @@ const QRCodeScreen = props => {
                 </View>
               </>
             )}
-            {/* <View style={{}}>
-              <Text
-                style={{
-                  fontSize: hp('2'),
-                  color: '#1C37A4',
-                  fontFamily: fontFamily.ceraMedium,
-                }}>
-                {scanData}
-              </Text>
-            </View> */}
 
             {QRCodeScanHere?.success == 1 ? (
               <View style={{marginTop: hp('5')}}>
@@ -260,7 +323,6 @@ const QRCodeScreen = props => {
                       Scan Again
                     </Text>
                   </TouchableOpacity>
-                  {/* <Button title="Scan Again" onPress={handleScanAgain} /> */}
                 </View>
               </>
             )}
@@ -270,26 +332,44 @@ const QRCodeScreen = props => {
     </>
   );
 };
-{
-  /* <Button title="Scan Again" onPress={handleScanAgain} /> */
-}
+
 const styles = EStyleSheet.create({
-  centerText: {
+  container: {
     flex: 1,
-    fontSize: 18,
-    padding: 32,
-    color: '#777',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  textBold: {
-    fontWeight: '500',
-    color: '#000',
+  permissionText: {
+    fontSize: hp('2'),
+    color: 'black',
+    textAlign: 'center',
+    marginBottom: hp('2'),
+    fontFamily: fontFamily.ceraMedium,
   },
-  buttonText: {
-    fontSize: 21,
-    color: 'rgb(0,122,255)',
+  permissionButton: {
+    height: hp('5.5'),
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: wp('10'),
+    backgroundColor: '#1C37A4',
+    shadowColor: '#000',
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 4,
   },
-  buttonTouchable: {
-    padding: 16,
+  permissionButtonText: {
+    fontSize: hp('1.75'),
+    color: 'white',
+    fontFamily: fontFamily.ceraMedium,
+    paddingHorizontal: wp('3'),
+  },
+  permissionDeniedText: {
+    fontSize: hp('1.75'),
+    color: 'red',
+    textAlign: 'center',
+    marginTop: hp('2'),
+    fontFamily: fontFamily.ceraMedium,
+    marginHorizontal: wp('5'),
   },
 });
 

@@ -23,7 +23,7 @@ import colors from '../../Styles/colors';
 import fontFamily from '../../Styles/fontFamily';
 import RenderHtml from 'react-native-render-html';
 
-const ViewMessageDetailModal = ({
+const ViewNotificationFullMessageModal = ({
   modalVisible,
   closeModal,
   msgSubject,
@@ -32,9 +32,9 @@ const ViewMessageDetailModal = ({
   msgDate,
   headTitleText,
   htmlSource,
-  activeOpacityLikeIcon,
-  onPressLikeIcon,
-  inconType,
+  // activeOpacityLikeIcon,
+  // onPressLikeIcon,
+  // inconType,
   renderers,
 }) => {
   const {width} = useWindowDimensions();
@@ -152,9 +152,9 @@ const ViewMessageDetailModal = ({
             <Text style={styles.messageCardDate}>{msgDate}</Text>
           </View>
 
-          {/* <View style={{flex: 0.15}}></View> */}
+          <View style={{flex: 0.15}}></View>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             activeOpacity={activeOpacityLikeIcon}
             onPress={onPressLikeIcon}
             style={{
@@ -168,7 +168,7 @@ const ViewMessageDetailModal = ({
               color="#1C37A4"
               size={hp(3.5)}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         <ScrollView>
@@ -256,4 +256,4 @@ const tagsStyles = {
   },
 };
 
-export default ViewMessageDetailModal;
+export default ViewNotificationFullMessageModal;

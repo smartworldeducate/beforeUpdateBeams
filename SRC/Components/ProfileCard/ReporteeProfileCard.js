@@ -16,7 +16,7 @@ import ProfileCardHeader from './ProfileCardHeader';
 import ProfileCardBody from './ProfileCardBody';
 import {useDispatch, useSelector} from 'react-redux';
 
-const ProfileCard = ({
+const ReporteeProfileCard = ({
   empId,
   empFatherName,
   empGender,
@@ -52,7 +52,7 @@ const ProfileCard = ({
     console.log('itemExp', item);
   };
 
-  const profileHere = useSelector(state => state.profileStore);
+  const reporteeProfileHere = useSelector(state => state.reporteeProfileStore);
 
   return (
     <View style={{}}>
@@ -233,7 +233,14 @@ const ProfileCard = ({
         </View>
       </View>
 
-      <View style={{marginTop: hp(1.5)}}>
+      <View
+        style={{
+          marginTop: hp(1.5),
+          marginBottom:
+            reporteeProfileHere?.userData?.emp_result?.MARITAL_STATUS == 'M'
+              ? hp('0')
+              : hp('1.5'),
+        }}>
         <TouchableOpacity
           onPress={onPressMovementLog}
           style={{
@@ -249,7 +256,7 @@ const ProfileCard = ({
         </TouchableOpacity>
       </View>
 
-      {profileHere?.userData?.emp_result?.MARITAL_STATUS == 'M' && (
+      {reporteeProfileHere?.userData?.emp_result?.MARITAL_STATUS == 'M' && (
         <View style={{marginTop: hp(1.5), marginBottom: hp('1.5')}}>
           <TouchableOpacity
             onPress={onPressChildInBSS}
@@ -279,4 +286,4 @@ const styles = EStyleSheet.create({
   },
 });
 
-export default ProfileCard;
+export default ReporteeProfileCard;

@@ -84,6 +84,8 @@ const Reportee = props => {
             current_date: moment(selectedDate, 'D MMM YYYY').format(
               'DD/MM/YYYY',
             ),
+
+            // current_date: '05/07/2022',
           }),
         );
       } catch (error) {
@@ -186,6 +188,18 @@ const Reportee = props => {
   console.log('selectReportee', selectReportee);
 
   const renderItem = ({item, index}) => {
+    const titleColorTimeIn = item.TIME_IN
+      ? item.IS_LATE > 0
+        ? 'red'
+        : 'green'
+      : 'black';
+
+    const titleColorTimeOut = item.TIME_OUT
+      ? item.IS_LATE > 0
+        ? 'red'
+        : 'green'
+      : 'black';
+
     return (
       <View style={{}}>
         <View
@@ -255,12 +269,14 @@ const Reportee = props => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Icon
-                type="regular"
-                name="arrow-down-right"
-                size={hp('2')}
-                color="#10B727"
-              />
+              {item?.TIME_IN != null && (
+                <Icon
+                  type="regular"
+                  name="arrow-down-right"
+                  size={hp('2')}
+                  color={titleColorTimeIn}
+                />
+              )}
             </View>
             <View
               style={{
@@ -270,8 +286,8 @@ const Reportee = props => {
               <Text
                 numberOfLines={1}
                 ellipsizeMode={'tail'}
-                style={styles.empInOutTime}>
-                {item?.TIME_IN}
+                style={[styles.empInOutTime, {color: titleColorTimeIn}]}>
+                {item?.TIME_IN == null ? '--:--:--' : item?.TIME_IN}
               </Text>
             </View>
           </View>
@@ -286,12 +302,14 @@ const Reportee = props => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Icon
-                type="regular"
-                name="arrow-up-right"
-                size={hp('2')}
-                color="#10B727"
-              />
+              {item?.TIME_OUT != null && (
+                <Icon
+                  type="regular"
+                  name="arrow-up-right"
+                  size={hp('2')}
+                  color="#10B727"
+                />
+              )}
             </View>
             <View
               style={{
@@ -301,8 +319,8 @@ const Reportee = props => {
               <Text
                 numberOfLines={1}
                 ellipsizeMode={'tail'}
-                style={styles.empInOutTime}>
-                {item?.TIME_OUT}
+                style={[styles.empInOutTime, {color: titleColorTimeOut}]}>
+                {item?.TIME_OUT == null ? '--:--:--' : item?.TIME_OUT}
               </Text>
             </View>
           </View>
@@ -558,6 +576,5 @@ const styles = EStyleSheet.create({
     fontSize: '0.43rem',
     fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
-    color: '#10B727',
   },
 });

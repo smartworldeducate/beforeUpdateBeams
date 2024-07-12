@@ -78,4 +78,8 @@ export const APIS = {
   FinancialTaxPDFDownload: BASE_URL + 'print_tax_certificate',
 
   FinancialPFPDFDownload: BASE_URL + 'print_provident_fund',
+
+  DeviceInfoEmail: BASE_URL + 'send_email',
+
+  NotificationsMessages: BASE_URL + 'notification_mesages',
 };

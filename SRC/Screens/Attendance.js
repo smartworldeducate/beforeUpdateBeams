@@ -229,6 +229,10 @@ const Attendance = props => {
 
     const [year, month, day] = today.split('-');
 
+    const showApplyText =
+      !item.holiday_desc && !item.emp_in_time && !item.emp_out_time;
+    const showLeaveType = item.leavetype_desc && item.leavetype_desc !== '';
+
     return (
       <View
         style={{
@@ -276,12 +280,24 @@ const Attendance = props => {
           </View>
         </View>
         <TouchableOpacity
-          activeOpacity={item?.late_minutes > 15 ? 0.4 : 1}
+          activeOpacity={
+            item?.late_minutes > 15 && item?.late_ded_run == 'N' ? 0.4 : 1
+          }
+          // onPress={
+          //   item?.late_minutes > 15
+          //     ? () =>
+          //         navigation.navigate('AttendanceDrawer', {
+          //           screen: 'ApplicationTypeTab',
+          //           params: {attenValue: item?.att_date},
+          //         })
+          //     : null
+          // }
+
           onPress={
-            item?.late_minutes > 15
+            item?.late_minutes > 15 && item?.late_ded_run == 'N'
               ? () =>
-                  navigation.navigate('AttendanceDrawer', {
-                    screen: 'ApplicationTypeTab',
+                  navigation.navigate('LateArivel', {
+                    attenValue: item?.att_date,
                   })
               : null
           }
@@ -300,7 +316,7 @@ const Attendance = props => {
 
               paddingVertical: hp('0.5'),
               paddingHorizontal: wp('2'),
-              // color: item?.is_late == 'Y' ? 'red' : 'black',
+
               color:
                 item?.late_exempt == 'Y'
                   ? 'black'
@@ -361,17 +377,26 @@ const Attendance = props => {
           )}
         </TouchableOpacity>
         <TouchableOpacity
-          activeOpacity={item?.early_minutes > 15 ? 0.4 : 1}
+          activeOpacity={
+            item?.early_minutes > 15 && item?.late_ded_run == 'N' ? 0.4 : 1
+          }
+          // onPress={
+          //   item?.early_minutes > 15
+          //     ? () =>
+          //         navigation.navigate('AttendanceDrawer', {
+          //           screen: 'ApplicationTypeTab',
+          //           params: {attenValue: item?.att_date},
+          //         })
+          //     : null
+          // }
+
           onPress={
-            item?.early_minutes > 15
+            item?.early_minutes > 15 && item?.late_ded_run == 'N'
               ? () =>
-                  navigation.navigate('AttendanceDrawer', {
-                    screen: 'ApplicationTypeTab',
+                  navigation.navigate('EarlyLeaving', {
+                    attenValue: item?.att_date,
                   })
               : null
-
-            // ? () => navigation.navigate('ApplicationTypeTab')
-            // : null
           }
           style={{flex: 0.3, justifyContent: 'center', alignItems: 'center'}}>
           {item?.holiday_desc == null ? (
@@ -419,6 +444,88 @@ const Attendance = props => {
                 ? item?.total_working_hours
                 : item?.leavetype_desc
               : ''}
+            {/* {item?.holiday_desc == null ? (
+              item?.emp_in_time == null && item?.emp_out_time == null ? (
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() =>
+                    navigation.navigate('AttendanceDrawer', {
+                      screen: 'ApplicationTypeTab',
+                    })
+                  }
+                  style={{justifyContent: 'center', alignItems: 'center'}}>
+                  <Text
+                    style={{
+                      backgroundColor: '#1C37A4',
+                      color: 'white',
+                      fontSize: hp('1.5'),
+                      textAlign: 'center',
+                      borderRadius: wp('50'),
+                      paddingVertical: wp('1.35'),
+                      paddingHorizontal: wp('5'),
+                    }}>
+                    APPLY
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                ''
+              )
+            ) : (
+              ''
+            )} */}
+
+            {item?.hd_pending == 'Y' ? (
+              <Text
+                numberOfLines={2}
+                ellipsizeMode={'middle'}
+                style={{
+                  color: 'black',
+                  fontSize: hp('1.25'),
+                  textAlign: 'center',
+                  borderRadius: wp('50'),
+                  paddingVertical: wp('1.35'),
+                  paddingHorizontal: wp('5'),
+                }}>
+                {item?.rec_status}
+              </Text>
+            ) : (
+              <>
+                {!showLeaveType && showApplyText && (
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={() =>
+                      navigation.navigate('AttendanceDrawer', {
+                        screen: 'ApplicationTypeTab',
+                      })
+                    }
+                    style={{justifyContent: 'center', alignItems: 'center'}}>
+                    <Text
+                      style={{
+                        backgroundColor: '#1C37A4',
+                        color: 'white',
+                        fontSize: hp('1.5'),
+                        textAlign: 'center',
+                        borderRadius: wp('50'),
+                        paddingVertical: wp('1.35'),
+                        paddingHorizontal: wp('5'),
+                      }}>
+                      APPLY
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </>
+            )}
+
+            {/* {showLeaveType && (
+              <Text
+                style={{
+                  color: 'black',
+                  fontSize: hp('1.5'),
+                  textAlign: 'center',
+                }}>
+                {item.leavetype_desc}
+              </Text>
+            )} */}
           </Text>
         </View>
       </View>

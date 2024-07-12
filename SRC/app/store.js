@@ -35,7 +35,9 @@ import movementReducer from '../features/movement/createSlice';
 import leaveBalanceReducer from '../features/balanceleave/createSlice';
 
 import loginSliceReducer from '../features/loginSlice/loginSlice';
-import profileSliceReducer from '../features/profileSlice/profileSlice';
+import profileSliceReducer, {
+  initialState as userProfileInitialState,
+} from '../features/profileSlice/profileSlice';
 import financialSliceReducer from '../features/FinancialSlice/FinancialSlice';
 
 import lastMonthSalarySliceReducer from '../features/FinancialSlice/LastMonthSalarySlice';
@@ -114,6 +116,10 @@ import FinanicialYearsForTaxSliceReducer from '../features/FinanicialYearsForPFA
 import FinanicialTaxPDFDownloadSliceReducer from '../features/FinanicialYearsForPFAndTaxSlice/FinancialTaxPDFDownloadSlice';
 
 import FinanicialPFPDFDownloadSliceReducer from '../features/FinanicialYearsForPFAndTaxSlice/FinancialPFPDFDownloadSlice';
+
+import DeviceInfoEmailSliceReducer from '../features/DeviceInfoEmailSlice/DeviceInfoEmailSlice';
+
+import NotificationsMessagesSliceReducer from '../features/NotificationsMessagesSlice/NotificationsMessagesSlice';
 
 export const store = configureStore({
   reducer: {
@@ -229,6 +235,10 @@ export const store = configureStore({
 
     FinanicialTaxPDFDownloadStore: FinanicialTaxPDFDownloadSliceReducer,
     FinanicialPFPDFDownloadStore: FinanicialPFPDFDownloadSliceReducer,
+
+    DeviceInfoEmailStore: DeviceInfoEmailSliceReducer,
+
+    NotificationsMessagesStore: NotificationsMessagesSliceReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

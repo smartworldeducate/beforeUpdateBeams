@@ -46,6 +46,8 @@ import Loader from '../Components/Loader/Loader';
 const Financial = props => {
   const dispatch = useDispatch();
 
+  const profileHere = useSelector(state => state.profileStore);
+
   const empId = useSelector(
     state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
   );
@@ -455,238 +457,248 @@ const Financial = props => {
 
               {salarySlip && (
                 <>
-                  <View
-                    style={{
-                      height: hp('17'),
-                      marginBottom: hp('1'),
-                    }}>
-                    <ImageBackground
-                      source={{uri: 'taxbg'}}
-                      style={{flex: 1, borderRadius: wp('10')}}
-                      resizeMode={'cover'}>
+                  {profileHere?.userData?.profile_result?.CONFIRMATION_DATE ==
+                    null ||
+                  profileHere?.userData?.profile_result?.CONFIRMATION_DATE ==
+                    '' ? (
+                    <></>
+                  ) : (
+                    <>
                       <View
                         style={{
-                          flexDirection: 'row',
-                          marginTop: hp('2'),
+                          height: hp('17'),
                           marginBottom: hp('1'),
                         }}>
-                        <View
-                          style={{
-                            flex: 0.2,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}>
-                          <Image
-                            source={{uri: 'taxicon'}}
-                            style={{height: hp('5'), width: wp('10')}}
-                            resizeMode="contain"
-                          />
-                        </View>
-                        <View style={{flex: 0.8}}></View>
-                      </View>
+                        <ImageBackground
+                          source={{uri: 'taxbg'}}
+                          style={{flex: 1, borderRadius: wp('10')}}
+                          resizeMode={'cover'}>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              marginTop: hp('2'),
+                              marginBottom: hp('1'),
+                            }}>
+                            <View
+                              style={{
+                                flex: 0.2,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}>
+                              <Image
+                                source={{uri: 'taxicon'}}
+                                style={{height: hp('5'), width: wp('10')}}
+                                resizeMode="contain"
+                              />
+                            </View>
+                            <View style={{flex: 0.8}}></View>
+                          </View>
 
-                      <View style={{paddingLeft: wp('5')}}>
-                        <Text
-                          style={{
-                            fontSize: hp('2'),
-                            fontFamily: fontFamily.ceraMedium,
-                            color: '#F24F1E',
-                          }}>
-                          TAX Certificate
-                        </Text>
+                          <View style={{paddingLeft: wp('5')}}>
+                            <Text
+                              style={{
+                                fontSize: hp('2'),
+                                fontFamily: fontFamily.ceraMedium,
+                                color: '#F24F1E',
+                              }}>
+                              TAX Certificate
+                            </Text>
+                          </View>
+
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              paddingHorizontal: wp('5'),
+                            }}>
+                            <View style={{flex: 0.45}}>
+                              <Text
+                                style={{
+                                  fontSize: hp('1.65'),
+                                  fontFamily: fontFamily.ceraLight,
+                                  color: '#343434',
+                                }}>
+                                Taxes: Smart funding for societal progress.
+                              </Text>
+                            </View>
+                            <View style={{flex: 0.2}}></View>
+                            <TouchableOpacity
+                              activeOpacity={0.6}
+                              onPress={onPressTaxCertificateModal}
+                              style={{
+                                flex: 0.35,
+                                height: hp('4'),
+                                borderRadius: wp('5'),
+                                backgroundColor: '#F24F1E',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginTop: hp('0.5'),
+
+                                shadowColor: '#000',
+                                shadowOpacity: 0.5,
+                                shadowRadius: 4,
+                                elevation: 4,
+                              }}>
+                              <Text
+                                style={{
+                                  fontSize: hp('1.65'),
+                                  fontFamily: fontFamily.ceraMedium,
+                                  color: 'white',
+                                }}>
+                                Download
+                              </Text>
+                            </TouchableOpacity>
+                          </View>
+                        </ImageBackground>
                       </View>
 
                       <View
                         style={{
-                          flexDirection: 'row',
-                          paddingHorizontal: wp('5'),
-                        }}>
-                        <View style={{flex: 0.45}}>
-                          <Text
-                            style={{
-                              fontSize: hp('1.65'),
-                              fontFamily: fontFamily.ceraLight,
-                              color: '#343434',
-                            }}>
-                            Taxes: Smart funding for societal progress.
-                          </Text>
-                        </View>
-                        <View style={{flex: 0.2}}></View>
-                        <TouchableOpacity
-                          activeOpacity={0.6}
-                          onPress={onPressTaxCertificateModal}
-                          style={{
-                            flex: 0.35,
-                            height: hp('4'),
-                            borderRadius: wp('5'),
-                            backgroundColor: '#F24F1E',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginTop: hp('0.5'),
-
-                            shadowColor: '#000',
-                            shadowOpacity: 0.5,
-                            shadowRadius: 4,
-                            elevation: 4,
-                          }}>
-                          <Text
-                            style={{
-                              fontSize: hp('1.65'),
-                              fontFamily: fontFamily.ceraMedium,
-                              color: 'white',
-                            }}>
-                            Download
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
-                    </ImageBackground>
-                  </View>
-
-                  <View
-                    style={{
-                      height: hp('17'),
-                      marginBottom: hp('1'),
-                    }}>
-                    <ImageBackground
-                      source={{uri: 'pfbg'}}
-                      style={{flex: 1, borderRadius: wp('10')}}
-                      resizeMode={'cover'}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          marginTop: hp('2'),
+                          height: hp('17'),
                           marginBottom: hp('1'),
                         }}>
-                        <View
-                          style={{
-                            flex: 0.2,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}>
-                          <Image
-                            source={{uri: 'pficon'}}
-                            style={{height: hp('5'), width: wp('10')}}
-                            resizeMode="contain"
-                          />
-                        </View>
-                        <View style={{flex: 0.4}}></View>
-                        <View
-                          style={{
-                            flex: 0.4,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}>
-                          <Text
+                        <ImageBackground
+                          source={{uri: 'pfbg'}}
+                          style={{flex: 1, borderRadius: wp('10')}}
+                          resizeMode={'cover'}>
+                          <View
                             style={{
-                              fontSize: hp('2.15'),
-                              fontFamily: fontFamily.ceraMedium,
-                              color: 'white',
+                              flexDirection: 'row',
+                              marginTop: hp('2'),
+                              marginBottom: hp('1'),
                             }}>
-                            {`RS. ${Number(
-                              financialLastMonthSalaryHere?.userData
-                                ?.EMPLOYEE_PF,
-                            ).toLocaleString()}/-`}
-                          </Text>
-                        </View>
-                      </View>
+                            <View
+                              style={{
+                                flex: 0.2,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}>
+                              <Image
+                                source={{uri: 'pficon'}}
+                                style={{height: hp('5'), width: wp('10')}}
+                                resizeMode="contain"
+                              />
+                            </View>
+                            <View style={{flex: 0.4}}></View>
+                            <View
+                              style={{
+                                flex: 0.4,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}>
+                              <Text
+                                style={{
+                                  fontSize: hp('2.15'),
+                                  fontFamily: fontFamily.ceraMedium,
+                                  color: 'white',
+                                }}>
+                                {`RS. ${Number(
+                                  financialLastMonthSalaryHere?.userData
+                                    ?.EMPLOYEE_PF,
+                                ).toLocaleString()}/-`}
+                              </Text>
+                            </View>
+                          </View>
 
-                      <View style={{paddingLeft: wp('5')}}>
-                        <Text
-                          style={{
-                            fontSize: hp('2'),
-                            fontFamily: fontFamily.ceraMedium,
-                            color: '#2ED945',
-                          }}>
-                          Provident Fund
-                        </Text>
-                      </View>
+                          <View style={{paddingLeft: wp('5')}}>
+                            <Text
+                              style={{
+                                fontSize: hp('2'),
+                                fontFamily: fontFamily.ceraMedium,
+                                color: '#2ED945',
+                              }}>
+                              Provident Fund
+                            </Text>
+                          </View>
 
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          paddingHorizontal: wp('5'),
-                        }}>
-                        <View style={{flex: 0.45}}>
-                          <Text
+                          <View
                             style={{
-                              fontSize: hp('1.65'),
-                              fontFamily: fontFamily.ceraLight,
-                              color: '#343434',
+                              flexDirection: 'row',
+                              paddingHorizontal: wp('5'),
                             }}>
-                            Retirement savings scheme for employees.
-                          </Text>
-                        </View>
-                        <View style={{flex: 0.2}}></View>
-                        <TouchableOpacity
-                          activeOpacity={0.6}
-                          onPress={onPressPFCertificateModal}
-                          style={{
-                            flex: 0.35,
-                            height: hp('4'),
-                            borderRadius: wp('5'),
-                            backgroundColor: '#2ED945',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginTop: hp('0.5'),
+                            <View style={{flex: 0.45}}>
+                              <Text
+                                style={{
+                                  fontSize: hp('1.65'),
+                                  fontFamily: fontFamily.ceraLight,
+                                  color: '#343434',
+                                }}>
+                                Retirement savings scheme for employees.
+                              </Text>
+                            </View>
+                            <View style={{flex: 0.2}}></View>
+                            <TouchableOpacity
+                              activeOpacity={0.6}
+                              onPress={onPressPFCertificateModal}
+                              style={{
+                                flex: 0.35,
+                                height: hp('4'),
+                                borderRadius: wp('5'),
+                                backgroundColor: '#2ED945',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginTop: hp('0.5'),
 
-                            shadowColor: '#000',
-                            shadowOpacity: 0.5,
-                            shadowRadius: 4,
-                            elevation: 4,
-                          }}>
-                          <Text
-                            style={{
-                              fontSize: hp('1.65'),
-                              fontFamily: fontFamily.ceraMedium,
-                              color: 'white',
-                            }}>
-                            Download
-                          </Text>
-                        </TouchableOpacity>
+                                shadowColor: '#000',
+                                shadowOpacity: 0.5,
+                                shadowRadius: 4,
+                                elevation: 4,
+                              }}>
+                              <Text
+                                style={{
+                                  fontSize: hp('1.65'),
+                                  fontFamily: fontFamily.ceraMedium,
+                                  color: 'white',
+                                }}>
+                                Download
+                              </Text>
+                            </TouchableOpacity>
+                          </View>
+                        </ImageBackground>
                       </View>
-                    </ImageBackground>
-                  </View>
+                    </>
+                  )}
+
+                  {taxCertificateModal && (
+                    <TaxCertificateModal
+                      upperText={'Tax Certificate'}
+                      PrintText={'Print'}
+                      onPressOpacity={onPressTaxCertificateModal}
+                      yearValue={
+                        taxYearValueHere == null ||
+                        taxYearValueHere == undefined
+                          ? 'Select financial year'
+                          : taxYearValueHere
+                      }
+                      onPressYearDropdown={onPressTaxYearDropdown}
+                      isYearSelected={isTaxYearSelected}
+                      data={financialYearsForTaxHere}
+                      renderItem={renderItemTaxYears}
+                      keyExtractor={(item, index) => index.toString()}
+                      styleFlatlist={{}}
+                      onPressPrint={onPressPrint}
+                    />
+                  )}
+
+                  {PFCertificateModal && (
+                    <CertificateModal
+                      upperText={'PF Certificate'}
+                      PrintText={'Print'}
+                      onPressOpacity={onPressPFCertificateModal}
+                      yearValue={
+                        yearValueHere == null || yearValueHere == undefined
+                          ? 'Select financial year'
+                          : yearValueHere
+                      }
+                      onPressYearDropdown={onPressYearDropdown}
+                      isYearSelected={isYearSelected}
+                      data={financialYearsForPFHere}
+                      renderItem={renderItem}
+                      keyExtractor={(item, index) => index.toString()}
+                      styleFlatlist={{}}
+                      onPressPrint={onPressPrintPF}
+                    />
+                  )}
                 </>
-              )}
-
-              {taxCertificateModal && (
-                <TaxCertificateModal
-                  upperText={'Tax Certificate'}
-                  PrintText={'Print'}
-                  onPressOpacity={onPressTaxCertificateModal}
-                  yearValue={
-                    taxYearValueHere == null || taxYearValueHere == undefined
-                      ? 'Select financial year'
-                      : taxYearValueHere
-                  }
-                  onPressYearDropdown={onPressTaxYearDropdown}
-                  isYearSelected={isTaxYearSelected}
-                  data={financialYearsForTaxHere}
-                  renderItem={renderItemTaxYears}
-                  keyExtractor={(item, index) => index.toString()}
-                  styleFlatlist={{}}
-                  onPressPrint={onPressPrint}
-                />
-              )}
-
-              {PFCertificateModal && (
-                <CertificateModal
-                  upperText={'PF Certificate'}
-                  PrintText={'Print'}
-                  onPressOpacity={onPressPFCertificateModal}
-                  yearValue={
-                    yearValueHere == null || yearValueHere == undefined
-                      ? 'Select financial year'
-                      : yearValueHere
-                  }
-                  onPressYearDropdown={onPressYearDropdown}
-                  isYearSelected={isYearSelected}
-                  data={financialYearsForPFHere}
-                  renderItem={renderItem}
-                  keyExtractor={(item, index) => index.toString()}
-                  styleFlatlist={{}}
-                  onPressPrint={onPressPrintPF}
-                />
               )}
 
               {salaryHistory && (

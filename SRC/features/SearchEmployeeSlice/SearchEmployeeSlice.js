@@ -5,9 +5,14 @@ import {APIS} from '../../API/Apis';
 const initialState = {
   success: null,
   message: '',
-  userData: [],
+
+  userDataViewAll: [],
+
   isLoading: false,
-  resultLength: null,
+  pageOffset: 1,
+  dataLength: null,
+
+  unReadLength: null,
 };
 
 export const SearchEmployeeAction = createAsyncThunk(
@@ -34,8 +39,13 @@ const SearchEmployeeSlice = createSlice({
       //   state.policiesListAll = null;
       //   state.message = '';
     },
-    clearSearchData: (state, action) => {
-      state.userData = [];
+    increaseOffset: (state, action) => {
+      state.pageOffset += 1;
+    },
+    clearViewAllSearchEmployeeState: (state, action) => {
+      console.log('clearViewAllSearchEmployeeState');
+      state.userDataViewAll = [];
+      state.dataLength = null;
     },
   },
   extraReducers: builder => {
@@ -46,15 +56,24 @@ const SearchEmployeeSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(SearchEmployeeAction.fulfilled, (state, action) => {
+      // console.log('API Response:', action.payload);
+      // if (action.payload && Array.isArray(action.payload.data)) {
       state.isLoading = false;
       state.success = action.payload.success;
       state.message = action.payload.message;
-      state.userData = action.payload.data;
-      state.resultLength = action.payload.data.data_length;
+
+      state.dataLength = action.payload.data.length;
+
+      state.userDataViewAll = [
+        ...state.userDataViewAll,
+        ...action.payload.data,
+      ];
+      // }
     });
   },
 });
 
-export const {clearAllState, clearSearchData} = SearchEmployeeSlice.actions;
+export const {clearAllState, increaseOffset, clearViewAllSearchEmployeeState} =
+  SearchEmployeeSlice.actions;
 
 export default SearchEmployeeSlice.reducer;

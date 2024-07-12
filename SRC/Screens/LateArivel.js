@@ -48,10 +48,31 @@ import {
 import MessageSuccessModal from '../Components/Modal/MessageSuccessModal';
 import Loader from '../Components/Loader/Loader';
 
-const LateArivel = props => {
+const LateArivel = ({route, ...props}) => {
+  console.log('route', route);
+  const routeValueAttenDate = route?.params?.attenValue;
+
+  const formatDate = dateString => {
+    const options = {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    };
+    if (route?.params != undefined) {
+      return new Date(dateString).toLocaleDateString('en-US', options);
+    }
+  };
+
+  const formattedDate = formatDate(routeValueAttenDate);
+
   const dispatch = useDispatch();
   const profileHereEmpId = useSelector(
     state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
+  );
+
+  const leaveApplyForwardToHere = useSelector(
+    state => state.profileStore?.leavesApplyForwardTo,
   );
 
   const leaveTypeHere = useSelector(state => state.LeaveTypeStore);
@@ -71,8 +92,12 @@ const LateArivel = props => {
 
   const [leaveTypeModal, setLeaveTypeModal] = useState(false);
   const [forwardToModal, setForwardToModal] = useState(false);
-  const [fromDate, setFromDate] = useState(null);
-  const [toDate, setToDate] = useState(null);
+  const [fromDate, setFromDate] = useState(
+    formattedDate != undefined || formattedDate != null ? formattedDate : null,
+  );
+  const [toDate, setToDate] = useState(
+    formattedDate != undefined || formattedDate != null ? formattedDate : null,
+  );
   const [totalDays, setTotalDays] = useState(null);
   const [lateArrivalTime, setLateArrivalTime] = useState(null);
 
@@ -85,6 +110,8 @@ const LateArivel = props => {
 
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  console.log('fromDate', fromDate);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -158,12 +185,36 @@ const LateArivel = props => {
     hideLateArrivalTimePicker();
   };
 
+  const calculateDifferenceInDays = (startDateString, endDateString) => {
+    const currentYear = moment().year();
+    const startMoment = moment(
+      `${startDateString} ${currentYear}`,
+      'ddd, MMM D YYYY',
+    );
+    const endMoment = moment(
+      `${endDateString} ${currentYear}`,
+      'ddd, MMM D YYYY',
+    );
+
+    const diffInDays = endMoment.diff(startMoment, 'days') + 1;
+    return diffInDays;
+  };
+
   useEffect(() => {
     if (forFromDate != null && forToDate != null) {
       const startMoment = moment(forFromDate, 'DD-MM-YYYY');
       const endMoment = moment(forToDate, 'DD-MM-YYYY');
 
       const diffInDays = endMoment.diff(startMoment, 'days') + 1;
+      setTotalDays(diffInDays);
+    }
+  }, [fromDate, toDate]);
+
+  useEffect(() => {
+    console.log('inSecond', fromDate, toDate);
+    if (fromDate != undefined && toDate != undefined) {
+      const diffInDays = calculateDifferenceInDays(fromDate, toDate);
+      console.log('diffInDays', diffInDays);
       setTotalDays(diffInDays);
     }
   }, [fromDate, toDate]);
@@ -460,7 +511,7 @@ const LateArivel = props => {
         <LeaveForwardToModal
           topText={'Forward To'}
           onPressOpacity={onPressForwardToModal}
-          leaveTypesData={leaveTypeHere?.userData?.forward_to}
+          leaveTypesData={leaveApplyForwardToHere}
           renderItem={renderItemForwardTo}
         />
       )}

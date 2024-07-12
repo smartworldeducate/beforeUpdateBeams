@@ -10,7 +10,6 @@ const initialState = {
 
   isLoading: true,
   pageOffset: 1,
-  isEmptyData: false,
   dataLength: null,
 
   unReadLength: null,

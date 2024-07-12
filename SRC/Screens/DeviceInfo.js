@@ -1,5 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  ToastAndroid,
+} from 'react-native';
 
 import MainHeader from '../Components/Headers/MainHeader';
 import {
@@ -9,15 +15,28 @@ import {
 import fontFamily from '../Styles/fontFamily';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import colors from '../Styles/colors';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import Loader from '../Components/Loader/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  clearAllStateDeviceInfoEmail,
+  DeviceInfoEmailAction,
+} from '../features/DeviceInfoEmailSlice/DeviceInfoEmailSlice';
 
 const DeviceInfo = props => {
+  const dispatch = useDispatch();
+
   const profileHereEmpId = useSelector(
     state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
   );
+
+  const deviceInfoEmailHere = useSelector(state => state.DeviceInfoEmailStore);
+
+  const deviceInfoEmailSuccessHere = useSelector(
+    state => state.DeviceInfoEmailStore.success,
+  );
+
   const [isLoading, setIsLoading] = useState(true);
 
   const [deviceType, setDeviceType] = useState(null);
@@ -71,20 +90,24 @@ const DeviceInfo = props => {
   }, []);
 
   const onPressGetInfoViaEmail = () => {
-    console.log('onPressGetInfoViaEmail');
-    // dispatch(
-    //   UserDeviceInfoAction({
-    //     user_id: userId,
-    //     phone_number: phoneNumberLogin,
-    //     device_type: deviceType,
-    //     device_identifier: deviceIdentifier,
-    //     device_token: deviceToken,
-    //     device_name: deviceName,
-    //     device_os_version: deviceOSVersion,
-    //     app_install_version: appInstallVersion,
-    //   }),
-    // );
+    dispatch(
+      DeviceInfoEmailAction({
+        employee_id: JSON.parse(profileHereEmpId),
+      }),
+    );
   };
+
+  useEffect(() => {
+    if (deviceInfoEmailSuccessHere == 0) {
+      ToastAndroid.show(deviceInfoEmailHere?.message, ToastAndroid.SHORT);
+      dispatch(clearAllStateDeviceInfoEmail());
+      // setShowErrorModal(true);
+    } else if (deviceInfoEmailSuccessHere == 1) {
+      ToastAndroid.show(deviceInfoEmailHere?.message, ToastAndroid.SHORT);
+      dispatch(clearAllStateDeviceInfoEmail());
+      // setShowSuccessModal(true);
+    }
+  }, [deviceInfoEmailSuccessHere]);
 
   return (
     <>

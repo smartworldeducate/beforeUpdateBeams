@@ -143,7 +143,7 @@ const FinancialHistory = ({}) => {
     return (
       <TouchableOpacity
         onPress={() => onPressMonthSalary(item)}
-        activeOpacity={0.6}
+        activeOpacity={0.9}
         style={{
           marginBottom: hp('1.75'),
           height: hp('14'),
@@ -469,8 +469,8 @@ const FinancialHistory = ({}) => {
                 donut
                 //   showGradient
                 sectionAutoFocus
-                radius={65}
-                innerRadius={50}
+                radius={70}
+                innerRadius={60}
                 centerLabelComponent={() => {
                   return (
                     <View
@@ -480,7 +480,7 @@ const FinancialHistory = ({}) => {
                       }}>
                       <Text
                         style={{
-                          fontSize: hp('3'),
+                          fontSize: hp('2.6'),
                           color: '#646464',
                           fontFamily: fontFamily.ceraBold,
                           fontWeight: '700',

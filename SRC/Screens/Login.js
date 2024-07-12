@@ -77,6 +77,16 @@ const Login = props => {
   const successHere = useSelector(state => state.loginStore.success);
   console.log('successHere', successHere);
 
+  const [deviceToken, setDeviceToken] = useState();
+
+  useEffect(() => {
+    async function ourFunc() {
+      const hereToken = await AsyncStorage.getItem('fcm');
+      setDeviceToken(hereToken);
+    }
+    ourFunc();
+  }, []);
+
   const deviceType = Platform.OS;
   const getDeviceId = DeviceInfo.getDeviceId();
   const getDeviceBrand = DeviceInfo.getBrand();
@@ -120,7 +130,18 @@ const Login = props => {
       );
 
       dispatch(
-        LoginAction({employeeId: employeeId, password: employeePassword}),
+        LoginAction({
+          employeeId: employeeId,
+          password: employeePassword,
+          deviceType: deviceType,
+          gettingDeviceId: getDeviceId,
+          gettingDeviceBrand: getDeviceBrand,
+          deviceVersion: getDeviceVersion,
+          userAppInstallVersion: getUserAppInstallVersion,
+          deviceName: deviceName,
+          deviceApiLevel: deviceApiLevel.toString(),
+          deviceToken: deviceToken,
+        }),
       );
     } catch (error) {
       console.log('error', error);
@@ -160,6 +181,44 @@ const Login = props => {
   const closeModal = () => {
     dispatch(clearAllStateLogin());
     setShowErrorModal(false);
+  };
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId:
+        '941654580803-tnhgibub7blprfh09c6a1fa9v144nssi.apps.googleusercontent.com',
+    });
+  }, []);
+
+  const onPressLoginWithGoogle = async () => {
+    console.log('onPressLoginWithGoogle');
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      console.log(userInfo);
+      // handleNavigate('HomeScreen');
+      const {id, name, email, givenName, photo} = userInfo?.user;
+      //  console.log("google data",glData.payload.data)
+      await storeData({google_id: id, photo: photo});
+      const glData = await dispatch(loginUser({email: email, google_id: id}));
+      // console.log("google data",glData.payload.data)
+      // glData.payload.data ? props.navigation.navigate('Home') : props.navigation.navigate('Register')
+      // setAnimodal(false)
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        console.log('cancelled');
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        console.log('in progress');
+        // operation (e.g. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        console.log('service not available');
+        // play services not available or outdated
+      } else {
+        console.log('at last else');
+        // some other error happened
+      }
+    }
   };
 
   useFocusEffect(
@@ -267,32 +326,44 @@ const Login = props => {
 
             <TouchableOpacity
               activeOpacity={0.8}
+              onPress={onPressLoginWithGoogle}
               style={styles.loginWithGoogle}>
-              <View style={{flex: 0.15}}></View>
+              <View style={{flex: 0.15, height: hp('7')}}></View>
 
               <View
                 style={{
-                  flex: 0.25,
+                  flex: 0.2,
                   justifyContent: 'center',
                   alignItems: 'center',
+                  height: hp('7'),
                 }}>
                 <Image
                   source={{uri: 'google'}}
                   style={{
-                    height: hp('3.75'),
-                    width: wp('7'),
+                    height: hp('2.75'),
+                    width: wp('5.5'),
                   }}
                   resizeMode={'contain'}
                 />
               </View>
 
-              <View style={{flex: 0.5}}>
-                <Text style={{color: colors.loginTextColor, fontSize: hp('2')}}>
+              <View
+                style={{
+                  flex: 0.5,
+                  height: hp('7'),
+                  justifyContent: 'center',
+                }}>
+                <Text
+                  style={{
+                    color: '#120D26',
+                    fontSize: hp('2'),
+                    fontFamily: fontFamily.ceraMedium,
+                  }}>
                   {'Login with Google'}
                 </Text>
               </View>
 
-              <View style={{flex: 0.1}}></View>
+              <View style={{flex: 0.15, height: hp('7')}}></View>
             </TouchableOpacity>
           </View>
 

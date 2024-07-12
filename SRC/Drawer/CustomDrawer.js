@@ -313,7 +313,7 @@ const CustomDrawer = ({navigation}) => {
               </TouchableOpacity>
             </View>
 
-            <View style={styles.listnameStyle}>
+            {/* <View style={styles.listnameStyle}>
               <TouchableOpacity
                 onPress={() => navigation.navigate('DeviceInfoDrawer')}>
                 <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
@@ -322,7 +322,7 @@ const CustomDrawer = ({navigation}) => {
                   </View>
                 </View>
               </TouchableOpacity>
-            </View>
+            </View> */}
 
             <View style={styles.listnameStyle}>
               <TouchableOpacity onPress={saveData}>
@@ -336,16 +336,19 @@ const CustomDrawer = ({navigation}) => {
           </ScrollView>
         </View>
         <View style={{marginHorizontal: hp(5)}}>
-          <View style={{marginLeft: wp('5')}}>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={() => navigation.navigate('DeviceInfoDrawer')}
+            style={{marginLeft: wp('5'), paddingBottom: hp('1.5')}}>
             <Text
               style={{
                 color: ' white',
-                fontSize: hp('1.25'),
-                fontFamily: fontFamily.ceraMedium,
+                fontSize: hp('1.5'),
+                fontFamily: fontFamily.ceraBold,
               }}>
               App Version: 1.1.1
             </Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </ImageBackground>
     </>

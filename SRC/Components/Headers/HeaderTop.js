@@ -35,6 +35,7 @@ const HeaderTop = ({
   userImg,
   welcomeText,
   userName,
+  onPressNotificationIcon,
   onPressIcon,
 }) => {
   const navigation = useNavigation();
@@ -110,6 +111,7 @@ const HeaderTop = ({
 
           <TouchableOpacity
             activeOpacity={0.8}
+            onPress={onPressNotificationIcon}
             style={{
               flex: 0.14,
               justifyContent: 'center',

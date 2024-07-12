@@ -74,15 +74,15 @@ const SalarySlip = ({
               donut
               //   showGradient
               sectionAutoFocus
-              radius={65}
-              innerRadius={50}
+              radius={70}
+              innerRadius={60}
               centerLabelComponent={() => {
                 return (
                   <View
                     style={{justifyContent: 'center', alignItems: 'center'}}>
                     <Text
                       style={{
-                        fontSize: hp('2.75'),
+                        fontSize: hp('2.6'),
                         color: '#646464',
                         fontFamily: fontFamily.ceraBold,
                         fontWeight: '700',

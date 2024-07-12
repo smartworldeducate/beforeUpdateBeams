@@ -6,7 +6,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import MainHeader from '../Components/Headers/MainHeader';
 import {
   widthPercentageToDP as wp,
@@ -30,14 +30,60 @@ const LeaveBalance = props => {
   console.log('leaveBalanceHereData', leaveBalanceHere?.userData);
   console.log('leaveBalanceHere', leaveBalanceHere?.success);
 
-  const annual = leaveBalanceHere?.userData?.anual_percentage;
-  const casual = leaveBalanceHere?.userData?.casual_percentage;
-  const sick = leaveBalanceHere?.userData?.sick_percentage;
-  const maternity = leaveBalanceHere?.userData?.materenity_percentage;
-  const hajj = leaveBalanceHere?.userData?.hajj_percentage;
-  const without = leaveBalanceHere?.userData?.withoutpay_percentage;
-  const pending = leaveBalanceHere?.userData?.pandding_balance_percentage;
-  const long = leaveBalanceHere?.userData?.long_percentage;
+  const [annualLeaveEntl, setAnnualLeaveEntl] = useState(null);
+  const [annualLeaveBalance, setAnnualLeaveBalance] = useState(null);
+  const [casualLeaveEntl, setCasualLeaveEntl] = useState(null);
+  const [casualLeaveBalance, setCasualLeaveBalance] = useState(null);
+  const [sickLeaveEntl, setSickLeaveEntl] = useState(null);
+  const [sickLeaveBalance, setSickLeaveBalance] = useState(null);
+
+  const totalEntitlted = annualLeaveEntl + casualLeaveEntl + sickLeaveEntl;
+
+  const reaminingBalance =
+    annualLeaveBalance + casualLeaveBalance + sickLeaveBalance;
+
+  const remaining = totalEntitlted - reaminingBalance;
+
+  const totalAvailedPercentage = remaining / totalEntitlted;
+
+  const afterDevide = totalAvailedPercentage * 100;
+
+  const AnnualPercentage = annualLeaveBalance / totalEntitlted;
+
+  const AnnualPercentage1 = AnnualPercentage * 100;
+
+  const CasualPercentage = casualLeaveBalance / totalEntitlted;
+
+  const CasualPercentage1 = CasualPercentage * 100;
+
+  const SickPercentage = sickLeaveBalance / totalEntitlted;
+
+  const SickPercentage1 = SickPercentage * 100;
+
+  useEffect(() => {
+    const findLeave = type =>
+      leaveBalanceHere?.userData?.result?.find(
+        item => item.LEAVE_TYPE === type,
+      );
+
+    const annualLeave = findLeave('Annual Leave');
+    if (annualLeave) {
+      setAnnualLeaveEntl(Number(annualLeave.ENTL));
+      setAnnualLeaveBalance(Number(annualLeave.BALANCE));
+    }
+
+    const casualLeave = findLeave('Casual Leave');
+    if (casualLeave) {
+      setCasualLeaveEntl(Number(casualLeave.ENTL));
+      setCasualLeaveBalance(Number(casualLeave.BALANCE));
+    }
+
+    const sickLeave = findLeave('Sick Leave');
+    if (sickLeave) {
+      setSickLeaveEntl(Number(sickLeave.ENTL));
+      setSickLeaveBalance(Number(sickLeave.BALANCE));
+    }
+  }, [leaveBalanceHere]);
 
   const renderItem = ({item, index}) => {
     return (
@@ -105,7 +151,7 @@ const LeaveBalance = props => {
             <View style={{marginHorizontal: wp('5')}}>
               {leaveBalanceHere?.success == 1 && (
                 <TouchableOpacity
-                  activeOpacity={0.6}
+                  activeOpacity={0.9}
                   style={{
                     height: hp('27.5'),
                     backgroundColor: 'white',
@@ -122,43 +168,28 @@ const LeaveBalance = props => {
                   <PieChart
                     data={[
                       {
-                        value: annual ? annual : 0,
+                        value: AnnualPercentage1 ? AnnualPercentage1 : 0,
+                        color: '#41CE68',
+                      },
+                      {
+                        value: CasualPercentage1 ? CasualPercentage1 : 0,
                         color: '#B141CE',
                       },
                       {
-                        value: casual ? casual : 0,
-                        color: '#41CE68',
-                      },
-                      {
-                        value: sick ? sick : 0,
+                        value: SickPercentage1 ? SickPercentage1 : 0,
                         color: '#CE5141',
                       },
+
                       {
-                        value: maternity ? maternity : 0,
-                        color: '#41CE68',
-                      },
-                      {
-                        value: long ? long : 0,
-                        color: '#4167C4',
-                      },
-                      {
-                        value: hajj ? hajj : 0,
-                        color: '#41CEB4',
-                      },
-                      {
-                        value: without ? without : 0,
-                        color: '#7051CE',
-                      },
-                      {
-                        value: pending ? pending : 0,
-                        color: '#edebeb',
+                        value: afterDevide ? afterDevide : 0,
+                        color: '#E3E3E3',
                       },
                     ]}
                     donut
                     //   showGradient
                     sectionAutoFocus
                     radius={75}
-                    innerRadius={65}
+                    innerRadius={70}
                     centerLabelComponent={() => {
                       return (
                         <View

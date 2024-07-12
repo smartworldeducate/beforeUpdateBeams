@@ -6,113 +6,114 @@ import {Linking, PermissionsAndroid, Platform, Alert} from 'react-native';
 import PushNotification from 'react-native-push-notification';
 import DeviceInfo from 'react-native-device-info';
 
-// export async function requestNotificationPermission() {
-//   try {
-//     DeviceInfo.getApiLevel().then(apiLevel => {
-//       console.log('apiLevelInApp.js', apiLevel);
-//     });
-//     // const granted = await PermissionsAndroid.request(
-//     //   PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-//     // );
-
-//     // console.log('granted', granted);
-
-//     // if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-//     //   console.log('granted');
-
-//     // if (apiLevel >= 33) {
-//     const granted = await PermissionsAndroid.request(
-//       PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-//     );
-
-//     console.log('granted', granted);
-//     // }
-
-//     const authStatus = await messaging().requestPermission();
-//     const enabled =
-//       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-//       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-//     console.log('enabled', enabled);
-
-//     if (enabled) {
-//       console.log('Authorization status:', authStatus);
-//       getFcmToken();
-//     }
-
-//     // getFcmToken();
-//     // }
-//     else {
-//       await AsyncStorage.setItem('fcm', 'user not allowed notfication');
-//       // Permission denied
-//       console.log('Notification permission denied');
-//     }
-//   } catch (err) {
-//     console.warn(err);
-//   }
-// }
-
 export async function requestNotificationPermission() {
   try {
-    if (Platform.OS === 'android') {
-      const apiLevel = await DeviceInfo.getApiLevel();
-      console.log('apiLevel', apiLevel);
+    DeviceInfo.getApiLevel().then(apiLevel => {
+      console.log('apiLevelInApp.js', apiLevel);
+    });
+    // const granted = await PermissionsAndroid.request(
+    //   PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+    // );
 
-      if (apiLevel >= 33) {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-        );
+    // console.log('granted', granted);
 
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          console.log('Notification permission granted.');
-          const authStatus = await messaging().requestPermission();
-          const enabled =
-            authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-            authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    // if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+    //   console.log('granted');
 
-          if (enabled) {
-            console.log('Authorization status:', authStatus);
-            getFcmToken();
-          } else {
-            console.log('Notification permission denied');
-            await AsyncStorage.setItem('fcm', 'user not allowed notification');
-          }
-        } else {
-          console.log('Notification permission denied');
-          await AsyncStorage.setItem('fcm', 'user not allowed notification');
-        }
-      } else {
-        const authStatus = await messaging().requestPermission();
-        const enabled =
-          authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-          authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    // if (apiLevel >= 33) {
+    //   const granted = await PermissionsAndroid.request(
+    //     // PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+    //     'android.permission.POST_NOTIFICATIONS',
+    //   );
 
-        if (enabled) {
-          console.log('Authorization status:', authStatus);
-          getFcmToken();
-        } else {
-          console.log('Notification permission denied');
-          await AsyncStorage.setItem('fcm', 'user not allowed notification');
-        }
-      }
-    } else {
-      const authStatus = await messaging().requestPermission();
-      const enabled =
-        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    //   console.log('granted', granted);
+    // }
 
-      if (enabled) {
-        console.log('Authorization status:', authStatus);
-        getFcmToken();
-      } else {
-        console.log('Notification permission denied');
-        await AsyncStorage.setItem('fcm', 'user not allowed notification');
-      }
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    console.log('enabled', enabled);
+
+    if (enabled) {
+      console.log('Authorization status:', authStatus);
+      getFcmToken();
+    }
+
+    // getFcmToken();
+    // }
+    else {
+      await AsyncStorage.setItem('fcm', 'user not allowed notfication');
+      // Permission denied
+      console.log('Notification permission denied');
     }
   } catch (err) {
     console.warn(err);
   }
 }
+
+// export async function requestNotificationPermission() {
+//   try {
+//     if (Platform.OS === 'android') {
+//       const apiLevel = await DeviceInfo.getApiLevel();
+//       console.log('apiLevel', apiLevel);
+
+//       if (apiLevel >= 33) {
+//         const granted = await PermissionsAndroid.request(
+//           PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+//         );
+
+//         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+//           console.log('Notification permission granted.');
+//           const authStatus = await messaging().requestPermission();
+//           const enabled =
+//             authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+//             authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+//           if (enabled) {
+//             console.log('Authorization status:', authStatus);
+//             getFcmToken();
+//           } else {
+//             console.log('Notification permission denied');
+//             await AsyncStorage.setItem('fcm', 'user not allowed notification');
+//           }
+//         } else {
+//           console.log('Notification permission denied');
+//           await AsyncStorage.setItem('fcm', 'user not allowed notification');
+//         }
+//       } else {
+//         const authStatus = await messaging().requestPermission();
+//         const enabled =
+//           authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+//           authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+//         if (enabled) {
+//           console.log('Authorization status:', authStatus);
+//           getFcmToken();
+//         } else {
+//           console.log('Notification permission denied');
+//           await AsyncStorage.setItem('fcm', 'user not allowed notification');
+//         }
+//       }
+//     } else {
+//       const authStatus = await messaging().requestPermission();
+//       const enabled =
+//         authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+//         authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+//       if (enabled) {
+//         console.log('Authorization status:', authStatus);
+//         getFcmToken();
+//       } else {
+//         console.log('Notification permission denied');
+//         await AsyncStorage.setItem('fcm', 'user not allowed notification');
+//       }
+//     }
+//   } catch (err) {
+//     console.warn(err);
+//   }
+// }
 
 const getFcmToken = async () => {
   let fcmTokenAlreadyExist = await AsyncStorage.getItem('fcm');
@@ -137,17 +138,20 @@ export async function notificationListener() {
   });
 
   // at the foreground case
-
   messaging().onMessage(remoteMessage => {
     console.log('Notification inforeground state:', remoteMessage);
-    Alert.alert(remoteMessage.data.title, remoteMessage.data.body, [
-      {
-        text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
-        style: 'cancel',
-      },
-      //   {text: 'OK', onPress: () => handleNavigation(message.data)},
-    ]);
+    Alert.alert(
+      remoteMessage.notification.title,
+      remoteMessage.notification.body,
+      [
+        {
+          text: 'Ok',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'default',
+        },
+        //   {text: 'OK', onPress: () => handleNavigation(message.data)},
+      ],
+    );
   });
 
   messaging().setBackgroundMessageHandler(async remoteMessage => {

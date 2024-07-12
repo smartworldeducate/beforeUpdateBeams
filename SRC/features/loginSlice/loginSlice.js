@@ -10,7 +10,7 @@ const initialState = {
 };
 
 export const LoginAction = createAsyncThunk('Login', async values => {
-  console.log('valuesMy', values);
+  // console.log('valuesLogin', values);
   return axios
     .post(`${APIS.LoginAPI}`, values, {
       headers: {

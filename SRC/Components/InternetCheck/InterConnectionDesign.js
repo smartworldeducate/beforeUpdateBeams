@@ -18,11 +18,11 @@ const InterConnectionDesign = ({setIsConnected}) => {
         marginHorizontal: wp('8'),
         borderRadius: wp('50'),
         bottom: hp('9'),
-        backgroundColor: colors.transparentBlackLight,
+        backgroundColor: '#223daa',
         left: wp('12.5'),
         height: hp('5'),
-        borderColor: 'white',
-        borderWidth: wp('0.1'),
+        borderColor: '#1C37A5',
+        borderWidth: wp('0.2'),
       }}>
       <Text
         style={{

@@ -10,6 +10,7 @@ const initialState = {
   empTimeIn: null,
   empBirthday: null,
   userSearchAccess: null,
+  leavesApplyForwardTo: [],
 };
 
 export const profileAction = createAsyncThunk('Profile', async values => {
@@ -54,6 +55,7 @@ const ProfileSlice = createSlice({
       state.empTimeIn = action.payload.emp_in_time;
       state.empBirthday = action.payload.birth_mark;
       state.userSearchAccess = action.payload.users_search_access;
+      state.leavesApplyForwardTo = action.payload.forward_to;
     });
   },
 });

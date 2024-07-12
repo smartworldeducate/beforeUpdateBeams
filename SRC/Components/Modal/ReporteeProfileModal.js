@@ -23,6 +23,7 @@ import Loader from '../Loader/Loader';
 import ProfileCard from '../ProfileCard/ProfileCard';
 import ReporteeMovementLogModal from './ReporteeMovementLogModal';
 import ReporteeChildrenInBSSModal from './ReporteeChildrenInBSSModal';
+import ReporteeProfileCard from '../ProfileCard/ReporteeProfileCard';
 
 const ReporteeProfileModal = ({
   onPressBackIcon,
@@ -34,14 +35,15 @@ const ReporteeProfileModal = ({
 }) => {
   const dispatch = useDispatch();
   const reporteeProfileHere = useSelector(state => state.reporteeProfileStore);
-  // console.log('reporteeProfileHere', reporteeProfileHere);
+  // console.log(
+  //   'reporteeProfileHere',
+  //   reporteeProfileHere?.userData?.emp_result?.MARITAL_STATUS,
+  // );
 
   useEffect(() => {
     dispatch(
       reporteeProfileAction({
         employee_id: JSON.parse(reporteeId),
-        // branch_id: my_branch_id,
-        // dept_id: my_DEPARTMENT_ID,
       }),
     );
   }, [dispatch, reporteeId]);
@@ -251,91 +253,8 @@ const ReporteeProfileModal = ({
               </View>
             </View>
 
-            {/* <View
-              style={{
-                height: hp('22'),
-                backgroundColor: 'white',
-                marginHorizontal: wp('4'),
-                marginTop: hp('3'),
-                borderRadius: wp('5'),
-              }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  marginTop: hp('5'),
-                }}>
-                <View style={{flex: 0.15}}></View>
-                <View
-                  style={{
-                    flex: 0.7,
-                    flexDirection: 'column',
-                    marginHorizontal: wp('2'),
-                  }}>
-                  <View style={{flexDirection: 'row'}}>
-                    <View style={{flex: 0.75}}>
-                      <Text
-                        numberOfLines={1}
-                        ellipsizeMode={'tail'}
-                        style={styles.empName}>
-                        {reporteeProfileHere?.userData?.emp_result?.EMP_NAME}
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        flex: 0.25,
-                        backgroundColor: '#D4FFCC',
-                        borderRadius: wp('3'),
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <Text style={styles.empId}>
-                        {reporteeProfileHere?.userData?.emp_result?.EMPLOYEE_ID}
-                      </Text>
-                    </View>
-                  </View>
-                  <View>
-                    <Text
-                      numberOfLines={1}
-                      ellipsizeMode={'tail'}
-                      style={styles.empDesignation}>
-                      {reporteeProfileHere?.userData?.emp_result?.DESIGNATION}
-                    </Text>
-                  </View>
-                </View>
-                <View
-                  style={{
-                    flex: 0.15,
-                  }}></View>
-              </View>
-              <View
-                style={{
-                  height: 1,
-                  backgroundColor: '#DBDBDB',
-                  marginTop: hp(3),
-                  marginBottom: hp(2),
-                }}></View>
-
-              <View style={{marginHorizontal: wp('3')}}>
-                <EmpCardPart
-                  firstText={'STATUS'}
-                  statusValue={
-                    reporteeProfileHere?.userData?.emp_result
-                      ?.EMP_STATUS_DESCRIPTION
-                  }
-                  secondText={'SERVICE'}
-                  serviceLengthValue={
-                    reporteeProfileHere?.userData?.emp_result?.SERVICE_LENGTH
-                  }
-                  thirdText={'AGE'}
-                  ageValue={
-                    reporteeProfileHere?.userData?.emp_result?.TOTAL_AGE
-                  }
-                />
-              </View>
-            </View> */}
-
             <View style={{marginHorizontal: wp('4'), marginTop: hp('2')}}>
-              <ProfileCard
+              <ReporteeProfileCard
                 empId={reporteeProfileHere?.userData?.emp_result?.EMPLOYEE_ID}
                 empFatherName={
                   reporteeProfileHere?.userData?.profile_result?.FATHER_NAME

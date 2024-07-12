@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Image,
   ToastAndroid,
+  Linking,
 } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {

@@ -8,8 +8,11 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
+  Keyboard,
+  Alert,
 } from 'react-native';
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, useCallback} from 'react';
 import fontFamily from '../Styles/fontFamily';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import Icon from 'react-native-fontawesome-pro';
@@ -24,19 +27,26 @@ import {useSelector, useDispatch} from 'react-redux';
 import ChildsInBss from '../Components/ChildsInBss/ChildsInBss';
 import ReporteeProfileModal from '../Components/Modal/ReporteeProfileModal';
 import {
-  clearSearchData,
   SearchEmployeeAction,
+  clearViewAllSearchEmployeeState,
 } from '../features/SearchEmployeeSlice/SearchEmployeeSlice';
 import LineSeprator from '../Components/LineSeprator/LineSeprator';
 
 const Search = ({}) => {
+  const [valuePageOffset, setValuePageOffset] = useState(1);
   const dispatch = useDispatch();
-  const searchEmployeeHere = useSelector(state => state.searchEmployyeStore);
-  const searchEmployeeHereByLength = useSelector(
-    state => state.searchEmployyeStore.resultLength,
+  const profileHereEmpId = useSelector(
+    state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
   );
-  console.log('searchEmployeeHere', searchEmployeeHere?.userData);
-  // console.log('searchEmployeeHereByLength', searchEmployeeHereByLength);
+
+  const searchAllEmployeesHere = useSelector(
+    state => state.searchEmployyeStore.userDataViewAll,
+  );
+
+  const searchEmployeesDataLengthHere = useSelector(
+    state => state.searchEmployyeStore?.dataLength,
+  );
+
   const navigation = useNavigation();
   const profileHere = useSelector(state => state.profileStore);
 
@@ -51,13 +61,25 @@ const Search = ({}) => {
   const [showSearchData, setShowSearchData] = useState(false);
 
   const onPressSearchIcon = () => {
-    dispatch(
-      SearchEmployeeAction({
-        searchEmp: searchText,
-        offset: 1,
-      }),
-    );
-    // console.log('123');
+    const trimmedText = searchText ? searchText.trim() : '';
+
+    if (trimmedText === '' || trimmedText == null) {
+      Alert.alert('Empty Input', 'Please enter some text.');
+    } else {
+      dispatch(clearViewAllSearchEmployeeState());
+      setValuePageOffset(1);
+      dispatch(
+        SearchEmployeeAction({
+          employee_id: JSON.parse(profileHereEmpId),
+          searchEmp: trimmedText,
+          // offset: valuePageOffset,
+          offset: 1,
+          limit: 12,
+        }),
+      );
+      setShowSearchData(true);
+      Keyboard.dismiss();
+    }
   };
 
   const onChangeSearchText = val => {
@@ -72,16 +94,13 @@ const Search = ({}) => {
   };
 
   const onRequestClose = () => {
-    console.log('123');
     setReporteeModal(false);
     setIdHere(null);
     setBranchIdHere(null);
     setDeptIdHere(null);
   };
 
-  console.log('reporteeModal', reporteeModal);
-
-  const renderItem = ({item, index}) => {
+  const renderItemReportee = ({item, index}) => {
     return (
       <View style={{}}>
         <View
@@ -114,7 +133,7 @@ const Search = ({}) => {
             }
             activeOpacity={0.6}
             style={{
-              flex: 0.55,
+              flex: 0.82,
               flexDirection: 'column',
             }}>
             <View style={{}}>
@@ -122,7 +141,8 @@ const Search = ({}) => {
                 numberOfLines={1}
                 ellipsizeMode={'tail'}
                 style={styles.reporteeName}>
-                {item?.EMP_NAME}
+                {item?.EMP_NAME} {` `}
+                <Text style={styles.reporteeId}>{`${item?.EMPLOYEE_ID}`}</Text>
               </Text>
             </View>
             <View style={{}}>
@@ -150,7 +170,7 @@ const Search = ({}) => {
               </Text>
             </View>
           </TouchableOpacity>
-          <View
+          {/* <View
             style={{
               flex: 0.07,
             }}></View>
@@ -172,7 +192,7 @@ const Search = ({}) => {
               }}>
               {item?.EMPLOYEE_ID}
             </Text>
-          </View>
+          </View> */}
         </View>
 
         <LineSeprator
@@ -183,6 +203,157 @@ const Search = ({}) => {
       </View>
     );
   };
+
+  const renderItem = useCallback(({item, index}) => {
+    return (
+      <View style={{}}>
+        <View
+          style={{
+            flexDirection: 'row',
+          }}>
+          <View
+            style={{
+              flex: 0.18,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Image
+              source={{uri: item?.EMP_PHOTO}}
+              style={{
+                height: hp('7'),
+                width: wp('14'),
+                borderRadius: wp('10'),
+              }}
+              resizeMode={'cover'}
+            />
+          </View>
+          <TouchableOpacity
+            onPress={() =>
+              onPressEmployee({
+                item: item?.EMPLOYEE_ID,
+                itemBranchId: item?.BRANCH_ID,
+                itemDeptId: item?.DEPARTMENT_ID,
+              })
+            }
+            activeOpacity={0.6}
+            style={{
+              flex: 0.82,
+              flexDirection: 'column',
+            }}>
+            <View style={{}}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode={'tail'}
+                style={styles.reporteeName}>
+                {item?.EMP_NAME} {` `}
+                <Text style={styles.reporteeId}>{`${item?.EMPLOYEE_ID}`}</Text>
+              </Text>
+            </View>
+            <View style={{}}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode={'tail'}
+                style={styles.reporteeDesignation}>
+                {item?.DESIGNATION}
+              </Text>
+            </View>
+            <View style={{}}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode={'tail'}
+                style={styles.reporteeBranchTexts}>
+                {item?.DEPT_NAME}
+              </Text>
+            </View>
+            <View style={{}}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode={'tail'}
+                style={styles.reporteeBranchTexts}>
+                {`${item?.BRANCH_NAME} - ${item?.BRANCH_ID}`}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <LineSeprator
+          height={hp('0.15')}
+          backgroundColor={'#DBDBDB'}
+          maginVertical={hp('1.25')}
+        />
+      </View>
+    );
+  }, []);
+
+  const keyExtractor = useCallback((item, index) => index.toString());
+
+  const loadMoreData = () => {
+    setValuePageOffset(valuePageOffset + 1);
+    dispatch(
+      SearchEmployeeAction({
+        employee_id: JSON.parse(profileHereEmpId),
+        searchEmp: searchText,
+        offset: valuePageOffset + 1,
+        limit: 12,
+      }),
+    );
+  };
+
+  const dataEnd = () => {
+    console.log('dataEnd');
+  };
+
+  const renderFooter = useCallback(() => {
+    return (
+      <>
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginBottom: hp('1'),
+          }}>
+          <View
+            style={{
+              width: wp(15),
+              height: hp(7.5),
+              backgroundColor: '#e4e8ed',
+              borderRadius: hp(50),
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginHorizontal: hp(15),
+              marginBottom: hp('6'),
+            }}>
+            <View style={{}}>
+              <ActivityIndicator size={'small'} color={'#1C37A4'} />
+            </View>
+          </View>
+        </View>
+      </>
+    );
+  }, []);
+
+  const dataEndForFooter = () => {
+    console.log('dataEndForFooter');
+  };
+
+  const onPressBack = () => {
+    dispatch(clearViewAllSearchEmployeeState());
+    setShowSearchData(false);
+    navigation.goBack();
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Additional logic when screen gains focus
+
+      setValuePageOffset(1);
+      return () => {
+        // Additional logic when screen loses focus
+        dispatch(clearViewAllSearchEmployeeState());
+        setShowSearchData(false);
+      };
+    }, []),
+  );
 
   return (
     <>
@@ -200,9 +371,7 @@ const Search = ({}) => {
               marginHorizontal: wp('2'),
             }}>
             <TouchableOpacity
-              onPress={() => {
-                navigation.goBack();
-              }}
+              onPress={onPressBack}
               style={{
                 flex: 0.15,
                 justifyContent: 'center',
@@ -282,20 +451,40 @@ const Search = ({}) => {
         style={{
           marginBottom: hp('20'),
           marginHorizontal: wp('4'),
-          marginTop: hp('1'),
-          // paddingTop: hp('3'),
         }}>
-        {searchEmployeeHere?.userData?.data_length > 0 ? (
+        {showSearchData ? (
           <FlatList
-            data={searchEmployeeHere?.userData?.results}
+            data={searchAllEmployeesHere}
             renderItem={renderItem}
-            keyExtractor={(item, index) => index.toString()}
+            keyExtractor={keyExtractor}
+            style={{paddingTop: hp('3.5'), paddingBottom: hp('3')}}
+            ListEmptyComponent={
+              <Text
+                style={{
+                  fontSize: hp('1.75'),
+                  color: 'black',
+                  textAlign: 'center',
+                  fontStyle: 'italic',
+                }}>
+                There is no user against your search.
+              </Text>
+            }
+            showsVerticalScrollIndicator={true}
+            onEndReached={
+              searchEmployeesDataLengthHere >= 12 ? loadMoreData : dataEnd
+            }
+            ListFooterComponent={
+              searchEmployeesDataLengthHere >= 12
+                ? renderFooter
+                : dataEndForFooter
+            }
           />
         ) : (
           <FlatList
             data={profileHere?.userData?.reporting_result?.data}
-            renderItem={renderItem}
+            renderItem={renderItemReportee}
             keyExtractor={(item, index) => index.toString()}
+            style={{paddingTop: hp('3.5'), paddingBottom: hp('3')}}
           />
         )}
       </View>
@@ -380,6 +569,11 @@ const styles = EStyleSheet.create({
     fontSize: '0.6rem',
     fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
+    color: '#343434',
+  },
+  reporteeId: {
+    fontSize: '0.6rem',
+    fontFamily: fontFamily.ceraMedium,
     color: '#343434',
   },
   reporteeDesignation: {
