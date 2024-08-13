@@ -48,6 +48,32 @@ const Attendance = props => {
     state => state.AttendanceCalanderStore,
   );
 
+  // const myArray = attendanceCalanderHere?.userData?.attendance;
+
+  // const removeDuplicates = array => {
+  //   if (!array) {
+  //     console.error('Array is undefined');
+  //     return [];
+  //   }
+
+  //   console.log('Original array:', array);
+
+  //   const seen = {};
+  //   const filteredArray = array.filter(item => {
+  //     if (!seen[item.fin_year_date]) {
+  //       seen[item.fin_year_date] = true;
+  //       return true;
+  //     }
+  //     return false;
+  //   });
+
+  //   console.log('Filtered array:', filteredArray);
+
+  //   return filteredArray;
+  // };
+
+  // const filteredArray = removeDuplicates(myArray);
+
   const onPressSelectYearModal = () => {
     // console.log('onPressSelectYearModal');
     setyearSelectionModal(!yearSelectionModal);
@@ -229,8 +255,14 @@ const Attendance = props => {
 
     const [year, month, day] = today.split('-');
 
+    const leaveStatus = item?.status == '' ? null : item?.status;
+
+    // const showApplyText =
+    //   !item.holiday_desc && !item.emp_in_time && !item.emp_out_time;
+
     const showApplyText =
       !item.holiday_desc && !item.emp_in_time && !item.emp_out_time;
+
     const showLeaveType = item.leavetype_desc && item.leavetype_desc !== '';
 
     return (
@@ -442,7 +474,10 @@ const Attendance = props => {
             {item?.holiday_desc == null
               ? item?.emp_in_time != null && item?.emp_out_time != null
                 ? item?.total_working_hours
-                : item?.leavetype_desc
+                : // : item?.leavetype_desc
+                item?.status == ''
+                ? item?.leavetype_desc
+                : item?.status
               : ''}
             {/* {item?.holiday_desc == null ? (
               item?.emp_in_time == null && item?.emp_out_time == null ? (
@@ -486,7 +521,7 @@ const Attendance = props => {
                   paddingVertical: wp('1.35'),
                   paddingHorizontal: wp('5'),
                 }}>
-                {item?.rec_status}
+                {/* {item?.status} */}
               </Text>
             ) : (
               <>

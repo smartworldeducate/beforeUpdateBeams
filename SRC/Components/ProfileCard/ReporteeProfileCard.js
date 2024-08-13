@@ -237,7 +237,8 @@ const ReporteeProfileCard = ({
         style={{
           marginTop: hp(1.5),
           marginBottom:
-            reporteeProfileHere?.userData?.emp_result?.MARITAL_STATUS == 'M'
+            // reporteeProfileHere?.userData?.emp_result?.MARITAL_STATUS == 'M'
+            reporteeProfileHere?.userData?.bsschildResult_result?.length > 0
               ? hp('0')
               : hp('1.5'),
         }}>
@@ -256,23 +257,26 @@ const ReporteeProfileCard = ({
         </TouchableOpacity>
       </View>
 
-      {reporteeProfileHere?.userData?.emp_result?.MARITAL_STATUS == 'M' && (
-        <View style={{marginTop: hp(1.5), marginBottom: hp('1.5')}}>
-          <TouchableOpacity
-            onPress={onPressChildInBSS}
-            style={{
-              justifyContent: 'center',
-              backgroundColor: '#EAFAF1',
-              borderRadius: hp(1.5),
-              elevation: 4,
-            }}>
-            <ProfileCardHeader
-              userIcon={'child'}
-              headerText={'Children In Beaconhouse'}
-            />
-          </TouchableOpacity>
-        </View>
-      )}
+      {
+        // reporteeProfileHere?.userData?.emp_result?.MARITAL_STATUS == 'M' &&
+        reporteeProfileHere?.userData?.bsschildResult_result?.length > 0 && (
+          <View style={{marginTop: hp(1.5), marginBottom: hp('1.5')}}>
+            <TouchableOpacity
+              onPress={onPressChildInBSS}
+              style={{
+                justifyContent: 'center',
+                backgroundColor: '#EAFAF1',
+                borderRadius: hp(1.5),
+                elevation: 4,
+              }}>
+              <ProfileCardHeader
+                userIcon={'child'}
+                headerText={'Children In Beaconhouse'}
+              />
+            </TouchableOpacity>
+          </View>
+        )
+      }
     </View>
   );
 };

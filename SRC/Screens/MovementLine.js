@@ -10,6 +10,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {useSelector} from 'react-redux';
 import Icon from 'react-native-fontawesome-pro';
 import EmpCardPart from '../Components/EmpCardPart/EmpCardPart';
+import LinearGradient from 'react-native-linear-gradient';
 
 const MovementLine = props => {
   const profileHere = useSelector(state => state.profileStore);
@@ -47,6 +48,8 @@ const MovementLine = props => {
           <View
             style={{
               flex: 0.1,
+              backgroundColor: 'red',
+              marginTop: hp('0.25'),
             }}></View>
           <View
             style={{
@@ -66,15 +69,23 @@ const MovementLine = props => {
             alignItems: 'center',
           }}></View>
 
-        <View
+        <LinearGradient
+          useAngle={true}
+          angle={180}
+          angleCenter={{x: 0.5, y: 0.5}}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          colors={['#FFFFFF', '#d9f3fa']}
+          locations={[0, 1]}
           style={{
             flex: 0.89,
             flexDirection: 'column',
             paddingHorizontal: wp('3'),
             backgroundColor: 'white',
-            borderRadius: wp('3'),
             paddingVertical: hp('0.5'),
-            shadowColor: '#000',
+
+            borderRadius: wp('4'),
+            shadowColor: 'rgba(0,0,0,0.5)',
             shadowOpacity: 0.5,
             shadowRadius: 4,
             elevation: 4,
@@ -149,7 +160,7 @@ const MovementLine = props => {
               {`${item?.SALARY} Rs`}
             </Text>
           </View>
-        </View>
+        </LinearGradient>
       </View>
     );
   };

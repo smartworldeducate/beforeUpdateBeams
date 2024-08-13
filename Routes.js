@@ -31,6 +31,7 @@ import Wfh from './SRC/Screens/Wfh';
 import Financial from './SRC/Screens/Financial';
 import TimeLine from './SRC/Screens/TimeLine';
 import ChildBss from './SRC/Screens/ChildBss';
+import Dependents from './SRC/Screens/Dependents';
 import FeedBack from './SRC/Screens/FeedBack';
 import WorkFromHome from './SRC/Screens/WorkFromHome';
 import WFHScreen from './SRC/Screens/WFHScreen';
@@ -172,6 +173,7 @@ const Routes = () => {
         <Stack.Screen name="ViewMessageDetail" component={ViewMessageDetail} />
         <Stack.Screen name="MovementLine" component={MovementLine} />
         <Stack.Screen name="ChildBSS" component={ChildBss} />
+        <Stack.Screen name="Dependents" component={Dependents} />
 
         <Stack.Screen name="WorkFromHome" component={WorkFromHome} />
         <Stack.Screen name="WFHScreen" component={WFHScreen} />

@@ -30,6 +30,8 @@ import {
   Image,
   Dimensions,
   BackHandler,
+  Button,
+  Alert,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -62,6 +64,8 @@ import {messageDetailAction} from '../features/MessagesSlice/MessageDetailSlice'
 import {messageStatusLikeAction} from '../features/MessagesSlice/MessageStatusLike';
 import ReporteeProfileModal from '../Components/Modal/ReporteeProfileModal';
 
+import RNPrint from 'react-native-print';
+
 const HomeScreen = props => {
   const width = Dimensions.get('window').width;
 
@@ -83,6 +87,23 @@ const HomeScreen = props => {
   const profileHereEmpBirthday = useSelector(
     state => state.profileStore?.empBirthday,
   );
+
+  const pdfUrl =
+    'https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf';
+
+  const handlePrint = async () => {
+    if (!pdfUrl) {
+      Alert.alert('Error', 'No PDF URL available');
+      return;
+    }
+
+    try {
+      await RNPrint.print({filePath: pdfUrl});
+    } catch (error) {
+      console.error('error', error);
+      Alert.alert('Error', 'Failed to print PDF');
+    }
+  };
 
   // const leaveHistoryHere = useSelector(state => state.salaryYearsStore);
 
@@ -183,116 +204,129 @@ const HomeScreen = props => {
 
   const renderItem = ({item, index}) => {
     return (
-      <TouchableOpacity
-        activeOpacity={0.8}
-        onPress={() => {
-          if (item?.IS_READ_STATUS != 'Y') {
-            dispatch(
-              messageReadAction({
-                employee_id: JSON.parse(profileHereEmpId),
-                messageId: item?.MSG_ID,
-                read_status: 'Y',
-              }),
-            );
-            dispatch(textColr(item?.MSG_ID));
-          }
-          setMessageId(item?.MSG_ID);
-          setMessageSubject(item?.MSG_SUBJECT);
-          setEmpPhoto(item?.EMP_PHOTO);
-          setEmpName(item?.EMP_NAME);
-          setMsgDate(item?.ENTRY_DATE);
-          onPressMessage(item?.MSG_ID);
-        }}
+      <LinearGradient
+        useAngle={true}
+        angle={180}
+        angleCenter={{x: 0.5, y: 0.5}}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 0}}
+        colors={['#FFFFFF', '#d9f3fa']}
+        locations={[0, 1]}
         style={{
           height: hp('16.5'),
           width: wp('70'),
           marginRight: wp('3'),
           marginLeft: wp('2'),
-          borderRadius: wp('1.5'),
-          flexDirection: 'column',
-          paddingHorizontal: wp('2'),
-
-          backgroundColor: '#FFFFFF',
-          shadowColor: '#000',
-          shadowOpacity: 0.5,
-          shadowRadius: 4,
-          elevation: 4,
+          borderRadius: wp('4'),
           marginVertical: hp('1'),
+
+          shadowColor: 'rgba(0,0,0,0.5)',
+          shadowOpacity: 0.5,
+          shadowRadius: 16,
+          elevation: 4,
+
+          // shadowColor: 'rgba(0,0,0,0.2)',
+          // shadowOpacity: 0.5,
+          // shadowRadius: 16,
+          // elevation: 24,
         }}>
-        <View
-          style={{
-            height: hp('3'),
-            justifyContent: 'flex-end',
-            alignItems: 'flex-end',
-          }}>
-          <FontAwesomeIcon
-            icon={
-              item?.IS_READ_STATUS === 'Y'
-                ? 'far fa-check-double'
-                : 'fat fa-check-double'
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => {
+            if (item?.IS_READ_STATUS != 'Y') {
+              dispatch(
+                messageReadAction({
+                  employee_id: JSON.parse(profileHereEmpId),
+                  messageId: item?.MSG_ID,
+                  read_status: 'Y',
+                }),
+              );
+              dispatch(textColr(item?.MSG_ID));
             }
-            size={hp(2.25)}
-            style={{color: item?.IS_READ_STATUS === 'Y' ? '#1C37A4' : 'grey'}}
-          />
-        </View>
-
-        <View
+            setMessageId(item?.MSG_ID);
+            setMessageSubject(item?.MSG_SUBJECT);
+            setEmpPhoto(item?.EMP_PHOTO);
+            setEmpName(item?.EMP_NAME);
+            setMsgDate(item?.ENTRY_DATE);
+            onPressMessage(item?.MSG_ID);
+          }}
           style={{
-            height: hp('10.5'),
-            marginTop: hp('-1'),
+            flexDirection: 'column',
+            paddingHorizontal: wp('2'),
           }}>
-          <Text
-            numberOfLines={4}
-            ellipsizeMode={'tail'}
+          <View
             style={{
-              color: '#343434',
-              fontFamily: fontFamily.ceraLight,
-              fontWeight: '300',
-              fontSize: hp('1.8'),
-              letterSpacing: 0.5,
-              lineHeight: hp('2.5'),
-              paddingHorizontal: wp('1.25'),
+              height: hp('3'),
+              justifyContent: 'flex-end',
+              alignItems: 'flex-end',
             }}>
-            {/* {item?.MSG_SUBJECT} */}
-            {item?.MSG_SUB_DESC}
-            {/* {` ${item?.LONG_DESC}`} */}
-          </Text>
-        </View>
+            <FontAwesomeIcon
+              icon={
+                item?.IS_READ_STATUS === 'Y'
+                  ? 'far fa-check-double'
+                  : 'fat fa-check-double'
+              }
+              size={hp(2.25)}
+              style={{color: item?.IS_READ_STATUS === 'Y' ? '#1C37A4' : 'grey'}}
+            />
+          </View>
 
-        <View
-          style={{
-            height: hp('3'),
-            justifyContent: 'flex-start',
-          }}>
-          <Text
-            numberOfLines={1}
-            ellipsizeMode={'tail'}
+          <View
             style={{
-              color: 'black',
-              fontFamily: fontFamily.ceraLight,
-              fontWeight: '300',
-              fontSize: hp('1.7'),
-              letterSpacing: 0.5,
-              lineHeight: hp('2.5'),
-              paddingHorizontal: wp('1'),
-              paddingTop: hp('0.25'),
+              height: hp('10.5'),
+              marginTop: hp('-1'),
             }}>
-            <Text style={styles.messageCardDate}>
-              <Text
-                style={{
-                  fontFamily: fontFamily.ceraMedium,
-                  color: 'black',
-                  fontSize: hp('1.5'),
-                }}>
-                {item?.FROM_NAME == null || undefined
-                  ? 'Coorporate Office:'
-                  : item?.FROM_NAME}
-              </Text>{' '}
-              {item?.ENTRY_DATE}
+            <Text
+              numberOfLines={4}
+              ellipsizeMode={'tail'}
+              style={{
+                color: '#343434',
+                fontFamily: fontFamily.ceraLight,
+                fontWeight: '300',
+                fontSize: hp('1.8'),
+                letterSpacing: 0.5,
+                lineHeight: hp('2.5'),
+                paddingHorizontal: wp('1.25'),
+              }}>
+              {`${item?.MSG_SUB_DESC} This blog post is for developers who already enrolled Apple Developer Program. if you don’t enroll Apple Developer Program`}
             </Text>
-          </Text>
-        </View>
-      </TouchableOpacity>
+          </View>
+
+          <View
+            style={{
+              height: hp('3'),
+              justifyContent: 'flex-start',
+            }}>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode={'tail'}
+              style={{
+                color: 'black',
+                fontFamily: fontFamily.ceraLight,
+                fontWeight: '300',
+                fontSize: hp('1.7'),
+                letterSpacing: 0.5,
+                lineHeight: hp('2.5'),
+                paddingHorizontal: wp('1'),
+                paddingTop: hp('0.25'),
+              }}>
+              <Text style={styles.messageCardDate}>
+                <Text
+                  style={{
+                    fontFamily: fontFamily.ceraMedium,
+                    color: 'black',
+                    fontSize: hp('1.5'),
+                  }}>
+                  {item?.FROM_NAME == null || undefined
+                    ? 'Coorporate Office:'
+                    : item?.FROM_NAME}
+                </Text>{' '}
+                {item?.ENTRY_DATE}
+              </Text>
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </LinearGradient>
     );
   };
 
@@ -352,9 +386,7 @@ const HomeScreen = props => {
         }
         style={{
           justifyContent: 'center',
-          // backgroundColor: 'green',
           marginRight: wp('1'),
-          // alignItems: 'center',
         }}>
         <View
           style={{
@@ -647,7 +679,7 @@ const HomeScreen = props => {
             <Loader></Loader>
           ) : (
             <ScrollView
-              contentContainerStyle={{flexGrow: 1}}
+              contentContainerStyle={{flexGrow: 1, backgroundColor: '#F7F8FA'}}
               refreshControl={
                 <RefreshControl
                   refreshing={refreshing}
@@ -753,7 +785,12 @@ const HomeScreen = props => {
                 </View>
               </View>
 
-              <View style={{marginHorizontal: wp('5.5'), marginTop: hp('1')}}>
+              <View
+                style={{
+                  marginHorizontal: wp('5.5'),
+                  marginTop: hp('1'),
+                  marginBottom: hp('0.5'),
+                }}>
                 <Text style={styles.messageText}>Leaves</Text>
               </View>
 
@@ -764,116 +801,150 @@ const HomeScreen = props => {
                     backgroundColor: 'white',
                     marginHorizontal: wp('5.5'),
                     marginTop: hp('1'),
-                    borderRadius: wp('2'),
+                    borderRadius: wp('4'),
 
-                    shadowColor: '#000',
-                    shadowOpacity: 0.5,
-                    shadowRadius: 4,
-                    elevation: 4,
-                    marginBottom: hp('1'),
+                    // shadowOffset: {
+                    //   width: 0,
+                    //   height: 12,
+                    // },
+                    // shadowColor: 'rgba(0,0,0,0.2)',
+                    // shadowOpacity: 0.5,
+                    // shadowRadius: 4,
+                    // elevation: 4,
+
+                    marginBottom: hp('2'),
                   }}>
-                  <View style={styles.LBMainView}>
-                    <TouchableOpacity
-                      activeOpacity={0.75}
-                      onPress={() => navigation.navigate('LeaveBalance')}
-                      style={styles.LBLeftView}>
-                      <PieChart
-                        data={[
-                          {
-                            value: AnnualPercentage1 ? AnnualPercentage1 : 0,
-                            color: '#41CE68',
-                          },
-                          {
-                            value: CasualPercentage1 ? CasualPercentage1 : 0,
-                            color: '#B141CE',
-                          },
-                          {
-                            value: SickPercentage1 ? SickPercentage1 : 0,
-                            color: '#CE5141',
-                          },
+                  <LinearGradient
+                    useAngle={true}
+                    angle={180}
+                    angleCenter={{x: 0.5, y: 0.5}}
+                    start={{x: 0, y: 0}}
+                    end={{x: 1, y: 0}}
+                    colors={['#FFFFFF', '#d9f3fa']}
+                    locations={[0, 1]}
+                    style={{
+                      borderRadius: wp('4'),
 
-                          {
-                            value: afterDevide ? afterDevide : 0,
-                            color: '#E3E3E3',
-                          },
-                        ]}
-                        donut
-                        // showGradient
-                        sectionAutoFocus
-                        radius={53}
-                        innerRadius={50}
-                        centerLabelComponent={() => {
-                          return (
-                            <View
-                              style={{
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                              }}>
-                              <Text style={styles.LBCountText}>
-                                {leaveBalanceHere?.userData?.total_count}
-                              </Text>
-                              <Text style={styles.LBText}>LEAVE BALANCE</Text>
-                            </View>
-                          );
-                        }}
-                      />
-                    </TouchableOpacity>
-                    <View
-                      style={{
-                        flex: 0.45,
-                      }}>
-                      <FlatList
-                        data={leaveBalanceHere?.userData?.result}
-                        renderItem={renderItemLeaves}
-                        keyExtractor={(item, index) => index.toString()}
-                      />
+                      shadowColor: 'rgba(0,0,0,0.5)',
+                      shadowOpacity: 0.5,
+                      shadowRadius: 4,
+                      elevation: 4,
+                    }}>
+                    <View style={styles.LBMainView}>
+                      <TouchableOpacity
+                        activeOpacity={0.75}
+                        onPress={() => navigation.navigate('LeaveBalance')}
+                        style={styles.LBLeftView}>
+                        <PieChart
+                          data={[
+                            {
+                              value: AnnualPercentage1 ? AnnualPercentage1 : 0,
+                              color: '#41CE68',
+                            },
+                            {
+                              value: CasualPercentage1 ? CasualPercentage1 : 0,
+                              color: '#B141CE',
+                            },
+                            {
+                              value: SickPercentage1 ? SickPercentage1 : 0,
+                              color: '#CE5141',
+                            },
+
+                            {
+                              value: afterDevide ? afterDevide : 0,
+                              color: '#E3E3E3',
+                            },
+                          ]}
+                          donut
+                          // showGradient
+                          sectionAutoFocus
+                          radius={53}
+                          innerRadius={50}
+                          centerLabelComponent={() => {
+                            return (
+                              <View
+                                style={{
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Text style={styles.LBCountText}>
+                                  {leaveBalanceHere?.userData?.total_count}
+                                </Text>
+                                <Text style={styles.LBText}>LEAVE BALANCE</Text>
+                              </View>
+                            );
+                          }}
+                        />
+                      </TouchableOpacity>
+                      <View
+                        style={{
+                          flex: 0.45,
+                        }}>
+                        <FlatList
+                          data={leaveBalanceHere?.userData?.result}
+                          renderItem={renderItemLeaves}
+                          keyExtractor={(item, index) => index.toString()}
+                        />
+                      </View>
                     </View>
-                  </View>
 
-                  <View style={styles.LBBtnMainView}>
-                    <TouchableOpacity
-                      activeOpacity={0.5}
-                      onPress={() => navigation.navigate('ApplyLeave')}
-                      style={styles.LBBtnView}>
-                      <Text style={[styles.btnText, {color: '#1C37A4'}]}>
-                        Apply Leave
-                      </Text>
-                    </TouchableOpacity>
-                    <View style={{flex: 0.1}}></View>
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      onPress={() => navigation.navigate('AttendanceTab')}
-                      style={[styles.LBBtnView, {backgroundColor: '#1C37A4'}]}>
-                      <Text style={[styles.btnText, {color: '#FFFFFF'}]}>
-                        View Calendar
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
+                    <View style={styles.LBBtnMainView}>
+                      <TouchableOpacity
+                        activeOpacity={0.5}
+                        onPress={() => navigation.navigate('ApplyLeave')}
+                        style={styles.LBBtnView}>
+                        <Text style={[styles.btnText, {color: '#1C37A4'}]}>
+                          Apply Leave
+                        </Text>
+                      </TouchableOpacity>
+                      <View style={{flex: 0.1}}></View>
+                      <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() => navigation.navigate('AttendanceTab')}
+                        style={[
+                          styles.LBBtnView,
+                          {backgroundColor: '#1C37A4'},
+                        ]}>
+                        <Text style={[styles.btnText, {color: '#FFFFFF'}]}>
+                          View Calendar
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </LinearGradient>
                 </View>
               )}
 
               {profileHere?.userData?.reporting_result?.reportee_length > 0 && (
                 <>
                   <View
-                    style={{marginHorizontal: wp('5.5'), marginTop: hp('1')}}>
+                    style={{
+                      marginHorizontal: wp('5.5'),
+                      marginTop: hp('1'),
+                      marginBottom: hp('0.5'),
+                    }}>
                     <Text style={styles.messageText}>Reportees</Text>
                   </View>
-                  <View
+
+                  <LinearGradient
+                    useAngle={true}
+                    angle={180}
+                    angleCenter={{x: 0.5, y: 0.5}}
+                    start={{x: 0, y: 0}}
+                    end={{x: 1, y: 0}}
+                    colors={['#FFFFFF', '#d9f3fa']}
+                    locations={[0, 1]}
                     style={{
                       marginHorizontal: wp('5.5'),
                       marginTop: hp('1'),
                       height: hp('10'),
-
-                      borderRadius: wp('2'),
                       justifyContent: 'center',
-                      alignItems: 'flex-start',
+                      marginVertical: hp('1'),
+                      borderRadius: wp('4'),
 
-                      backgroundColor: '#FFFFFF',
-                      shadowColor: '#000',
+                      shadowColor: 'rgba(0,0,0,0.5)',
                       shadowOpacity: 0.5,
                       shadowRadius: 4,
                       elevation: 4,
-                      marginVertical: hp('1'),
                     }}>
                     <FlatList
                       data={slicedData}
@@ -881,9 +952,13 @@ const HomeScreen = props => {
                       keyExtractor={(item, index) => index.toString()}
                       horizontal={true}
                       showsHorizontalScrollIndicator={false}
-                      style={{paddingHorizontal: wp('1'), marginLeft: wp('2')}}
+                      style={{
+                        // paddingHorizontal: wp('1'),
+                        marginLeft: wp('2'),
+                        // marginRight: wp('2.85'),
+                      }}
                     />
-                  </View>
+                  </LinearGradient>
                 </>
               )}
 
@@ -1007,6 +1082,10 @@ const HomeScreen = props => {
         ) : (
           <></>
         )}
+
+        <View style={{marginHorizontal: wp('3')}}>
+          {/* <Button title="Print PDF" onPress={handlePrint} /> */}
+        </View>
       </>
     </SafeAreaView>
   );

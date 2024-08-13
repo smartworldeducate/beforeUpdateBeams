@@ -310,7 +310,7 @@ const Login = props => {
             </View>
             <View
               style={{
-                marginTop: hp('3'),
+                marginTop: hp('5'),
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
@@ -322,9 +322,9 @@ const Login = props => {
               </TouchableOpacity>
             </View>
 
-            <Text style={styles.orbtn}>OR</Text>
+            {/* <Text style={styles.orbtn}>OR</Text> */}
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               activeOpacity={0.8}
               onPress={onPressLoginWithGoogle}
               style={styles.loginWithGoogle}>
@@ -364,7 +364,7 @@ const Login = props => {
               </View>
 
               <View style={{flex: 0.15, height: hp('7')}}></View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
 
           {showErrorModal && (

@@ -10,6 +10,7 @@ import {
   Image,
   RefreshControl,
   ActivityIndicator,
+  ToastAndroid,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -266,6 +267,7 @@ const FavouriteMessages = props => {
       }),
     );
     dispatch(removeFromFavouriteSlice(item?.MSG_ID));
+    ToastAndroid.show('Remove from favourites', ToastAndroid.SHORT);
   };
 
   const loadMoreData = () => {

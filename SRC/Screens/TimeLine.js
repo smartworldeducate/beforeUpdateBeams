@@ -24,6 +24,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RenderHTML from 'react-native-render-html';
 import Loader from '../Components/Loader/Loader';
+import LinearGradient from 'react-native-linear-gradient';
 
 const TimeLine = props => {
   const dispatch = useDispatch();
@@ -90,6 +91,7 @@ const TimeLine = props => {
           <View
             style={{
               flex: 0.1,
+              marginTop: hp('0.2'),
             }}></View>
           <View
             style={{
@@ -109,15 +111,22 @@ const TimeLine = props => {
             alignItems: 'center',
           }}></View>
 
-        <View
+        <LinearGradient
+          useAngle={true}
+          angle={180}
+          angleCenter={{x: 0.5, y: 0.5}}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          colors={['#FFFFFF', '#d9f3fa']}
+          locations={[0, 1]}
           style={{
             flex: 0.89,
             flexDirection: 'column',
             paddingHorizontal: wp('3'),
             backgroundColor: 'white',
-            borderRadius: wp('3'),
             paddingVertical: hp('0.5'),
-            shadowColor: '#000',
+            borderRadius: wp('4'),
+            shadowColor: 'rgba(0,0,0,0.5)',
             shadowOpacity: 0.5,
             shadowRadius: 4,
             elevation: 4,
@@ -165,7 +174,7 @@ const TimeLine = props => {
               tagsStyles={tagsStyles}
             />
           </View>
-        </View>
+        </LinearGradient>
       </View>
     );
   };

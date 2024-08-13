@@ -90,7 +90,6 @@ const ApplyLeave = props => {
   const [reasonText, setReasonText] = useState('');
 
   const [datesValid, setDatesValid] = useState(false);
-
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
@@ -347,6 +346,15 @@ const ApplyLeave = props => {
       setShowErrorModal(true);
     } else if (applyLeaveSuccessResponseHere == 1) {
       setShowSuccessModal(true);
+      setFromDate(null);
+      setToDate(null);
+      setTotalDays(null);
+      setForFromDate(null);
+      setForToDate(null);
+      setEmpLeaveTypeId(null);
+      setEmpLeaveType(null);
+      setEmpLeaveForwardToId(null);
+      setEmpLeaveForwardTo(null);
     }
   }, [applyLeaveSuccessResponseHere]);
 
@@ -355,6 +363,8 @@ const ApplyLeave = props => {
     setShowSuccessModal(false);
     setShowErrorModal(false);
   };
+
+  console.log('setReasonText>>>', reasonText);
 
   // useFocusEffect(
   //   React.useCallback(() => {
@@ -366,6 +376,12 @@ const ApplyLeave = props => {
   //     };
   //   }, []),
   // );
+
+  // console.log(
+  //   'applyLeaveSuccessResponseHere>>>',
+  //   applyLeaveSuccessResponseHere,
+  // );
+  // console.log('message>>>', applyLeaveHere?.message);
 
   return (
     <ScrollView style={{flex: 1, backgroundColor: '#F5F8FC'}}>

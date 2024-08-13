@@ -58,139 +58,141 @@ const Profile = props => {
           <TouchableOpacity style={styles.topLeftRightView}></TouchableOpacity>
         </View>
 
-        <View
-          style={{
-            position: 'absolute',
-            marginTop: hp('11.65'),
-            left: wp('37.25'),
-            zIndex: 1,
-
-            borderRadius: wp('50'),
-            borderWidth: wp('0.25'),
-            borderColor: '#cfdbfa',
-          }}>
-          <Image
-            source={{uri: profileHere?.userData?.emp_result?.EMP_PHOTO}}
+        <>
+          <View
             style={{
-              height: hp('12.5'),
-              width: wp('25'),
+              position: 'absolute',
+              marginTop: hp('11.65'),
+              left: wp('37.25'),
+              zIndex: 1,
+
               borderRadius: wp('50'),
               borderWidth: wp('0.25'),
               borderColor: '#cfdbfa',
-            }}
-            resizeMode={'contain'}
-          />
-        </View>
+            }}>
+            <Image
+              source={{uri: profileHere?.userData?.emp_result?.EMP_PHOTO}}
+              style={{
+                height: hp('12.5'),
+                width: wp('25'),
+                borderRadius: wp('50'),
+                borderWidth: wp('0.25'),
+                borderColor: '#cfdbfa',
+              }}
+              resizeMode={'contain'}
+            />
+          </View>
 
-        <View
-          style={{
-            position: 'absolute',
-            zIndex: 1,
-            marginTop: hp('20.5'),
-            left: wp('59'),
-            height: hp('1.5'),
-            width: wp('3'),
-            borderRadius: wp('50'),
-            backgroundColor:
-              profileHere?.userData?.profile_result?.CONFIRMATION_DATE ==
-                null ||
-              profileHere?.userData?.profile_result?.CONFIRMATION_DATE == ''
-                ? 'orange'
-                : '#10B727',
-          }}>
-          <Text></Text>
-        </View>
-
-        <View
-          style={{
-            height: hp('22'),
-            marginHorizontal: wp('4'),
-            marginTop: hp('10'),
-          }}>
           <View
             style={{
-              width: '100%',
-              height: '100%',
-              backgroundColor: 'white',
+              position: 'absolute',
+              zIndex: 1,
+              marginTop: hp('20.5'),
+              left: wp('59'),
+              height: hp('1.5'),
+              width: wp('3'),
+              borderRadius: wp('50'),
+              backgroundColor:
+                profileHere?.userData?.profile_result?.CONFIRMATION_DATE ==
+                  null ||
+                profileHere?.userData?.profile_result?.CONFIRMATION_DATE == ''
+                  ? 'orange'
+                  : '#10B727',
+            }}>
+            <Text></Text>
+          </View>
 
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderRadius: wp('5'),
-              flexDirection: 'column',
-              paddingHorizontal: wp('3'),
+          <View
+            style={{
+              height: hp('22'),
+              marginHorizontal: wp('4'),
+              marginTop: hp('10'),
             }}>
             <View
               style={{
-                flexDirection: 'row',
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'white',
+
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: wp('5'),
+                flexDirection: 'column',
+                paddingHorizontal: wp('3'),
               }}>
-              <View style={{flex: 0.1}}></View>
               <View
                 style={{
-                  flex: 0.8,
-                  flexDirection: 'column',
-                  marginHorizontal: wp('2'),
-                  justifyContent: 'center',
-                  alignItems: 'center',
+                  flexDirection: 'row',
                 }}>
-                <View style={{}}>
-                  <Text
-                    numberOfLines={1}
-                    ellipsizeMode={'tail'}
-                    style={styles.empName}>
-                    {profileHere?.userData?.emp_result?.EMP_NAME}
-                  </Text>
-                </View>
+                <View style={{flex: 0.1}}></View>
+                <View
+                  style={{
+                    flex: 0.8,
+                    flexDirection: 'column',
+                    marginHorizontal: wp('2'),
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <View style={{}}>
+                    <Text
+                      numberOfLines={1}
+                      ellipsizeMode={'tail'}
+                      style={styles.empName}>
+                      {profileHere?.userData?.emp_result?.EMP_NAME}
+                    </Text>
+                  </View>
 
-                <View>
-                  <Text
-                    numberOfLines={1}
-                    ellipsizeMode={'tail'}
-                    style={styles.empDesignation}>
-                    {profileHere?.userData?.emp_result?.DESIGNATION}
-                  </Text>
+                  <View>
+                    <Text
+                      numberOfLines={1}
+                      ellipsizeMode={'tail'}
+                      style={styles.empDesignation}>
+                      {profileHere?.userData?.emp_result?.DESIGNATION}
+                    </Text>
+                  </View>
                 </View>
+                <View
+                  style={{
+                    flex: 0.1,
+                  }}></View>
               </View>
+
               <View
                 style={{
-                  flex: 0.1,
+                  height: 1,
+                  backgroundColor: '#DBDBDB',
+                  marginTop: hp(3),
+                  marginBottom: hp(2),
+                  width: wp('92'),
                 }}></View>
+
+              <EmpCardPart
+                firstText={'STATUS'}
+                statusValue={
+                  profileHere?.userData?.emp_result?.EMP_STATUS_DESCRIPTION
+                }
+                secondText={'SERVICE'}
+                serviceLengthValue={
+                  profileHere?.userData?.emp_result?.SERVICE_LENGTH
+                }
+                thirdText={'AGE'}
+                ageValue={profileHere?.userData?.emp_result?.TOTAL_AGE}
+              />
+
+              <View
+                style={{
+                  width: '40%',
+                  height: '40%',
+                  position: 'absolute',
+                  top: -hp(6),
+                  borderBottomLeftRadius: hp(15) / 1.5,
+                  borderBottomRightRadius: hp(15) / 1.5,
+                  backgroundColor: '#1C37A4',
+                }}
+              />
             </View>
-
-            <View
-              style={{
-                height: 1,
-                backgroundColor: '#DBDBDB',
-                marginTop: hp(3),
-                marginBottom: hp(2),
-                width: wp('92'),
-              }}></View>
-
-            <EmpCardPart
-              firstText={'STATUS'}
-              statusValue={
-                profileHere?.userData?.emp_result?.EMP_STATUS_DESCRIPTION
-              }
-              secondText={'SERVICE'}
-              serviceLengthValue={
-                profileHere?.userData?.emp_result?.SERVICE_LENGTH
-              }
-              thirdText={'AGE'}
-              ageValue={profileHere?.userData?.emp_result?.TOTAL_AGE}
-            />
-
-            <View
-              style={{
-                width: '40%',
-                height: '40%',
-                position: 'absolute',
-                top: -hp(6),
-                borderBottomLeftRadius: hp(15) / 1.5,
-                borderBottomRightRadius: hp(15) / 1.5,
-                backgroundColor: '#1C37A4',
-              }}
-            />
           </View>
-        </View>
+        </>
 
         <View
           style={{
@@ -250,6 +252,7 @@ const Profile = props => {
             empAddress={profileHere?.userData?.profile_result?.ADRESS}
             onPressMovementLog={() => props.navigation.navigate('MovementLine')}
             onPressChildInBSS={() => props.navigation.navigate('ChildBSS')}
+            onPressDependents={() => props.navigation.navigate('Dependents')}
           />
         </View>
       </ScrollView>

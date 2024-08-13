@@ -22,11 +22,15 @@ import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {logoutSuccess} from '../features/loginSlice/loginSlice';
 import {clearUserProfileState} from '../features/profileSlice/profileSlice';
+import DeviceInfo from 'react-native-device-info';
 
 import RNExitApp from 'react-native-exit-app';
+import Loader from '../Components/Loader/Loader';
 
 const CustomDrawer = ({navigation}) => {
   const profileHere = useSelector(state => state.profileStore);
+
+  const [loading, setLoading] = useState(false);
 
   const exitNow = () => {
     const delay = 100;
@@ -36,18 +40,23 @@ const CustomDrawer = ({navigation}) => {
   };
 
   const dispatch = useDispatch();
-  async function saveData() {
-    console.log('logout');
+  const saveData = async () => {
+    setLoading(true);
+    // console.log('logout');
+    // setTimeout(async () => {
     await AsyncStorage.removeItem('loginData');
     await AsyncStorage.removeItem('branchId');
     await AsyncStorage.removeItem('deptId');
     //  dispatch({ type: 'RESET_APP_STATE' });
-    // dispatch(clearUserProfileState());
-    // dispatch(logoutSuccess());
-    exitNow();
 
-    // navigation.dispatch(StackActions.replace('Login'));
-  }
+    dispatch(clearUserProfileState());
+    dispatch(logoutSuccess());
+    // exitNow();
+
+    navigation.dispatch(StackActions.replace('Login'));
+    setLoading(false);
+    // }, 1000);
+  };
 
   const leaveHistoryHere = useSelector(state => state.salaryYearsStore);
 
@@ -63,12 +72,17 @@ const CustomDrawer = ({navigation}) => {
   console.log('lastYear', lastYear);
   console.log('lastYearType', typeof lastYear);
 
+  const versionName = DeviceInfo.getVersion();
+  console.log('versionName', versionName);
+
   return (
     <>
       <ImageBackground
         source={{uri: 'drawerbg'}}
         style={{flex: 1}}
         resizeMode={'cover'}>
+        {loading && <Loader></Loader>}
+
         <View
           style={{
             height: hp(7),
@@ -256,18 +270,23 @@ const CustomDrawer = ({navigation}) => {
               </TouchableOpacity>
             </View>
 
-            {profileHere?.userData?.emp_result?.MARITAL_STATUS == 'M' && (
-              <View style={styles.listnameStyle}>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('ChildBSSDrawer')}>
-                  <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
-                    <View style={styles.homeleft}>
-                      <Text style={styles.textlistStyle}>Children in BSS</Text>
+            {
+              // profileHere?.userData?.emp_result?.MARITAL_STATUS == 'M' &&
+              profileHere?.userData?.bsschildResult_result?.length > 0 && (
+                <View style={styles.listnameStyle}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('ChildBSSDrawer')}>
+                    <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
+                      <View style={styles.homeleft}>
+                        <Text style={styles.textlistStyle}>
+                          Children in BSS
+                        </Text>
+                      </View>
                     </View>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            )}
+                  </TouchableOpacity>
+                </View>
+              )
+            }
 
             <View style={styles.listnameStyle}>
               <TouchableOpacity
@@ -342,11 +361,15 @@ const CustomDrawer = ({navigation}) => {
             style={{marginLeft: wp('5'), paddingBottom: hp('1.5')}}>
             <Text
               style={{
-                color: ' white',
-                fontSize: hp('1.5'),
-                fontFamily: fontFamily.ceraBold,
+                color: 'white',
+                fontSize: hp('1.6'),
+                fontFamily: fontFamily.ceraMedium,
               }}>
-              App Version: 1.1.1
+              {`App Version: ${
+                versionName !== null && versionName !== undefined
+                  ? versionName
+                  : ''
+              }`}
             </Text>
           </TouchableOpacity>
         </View>

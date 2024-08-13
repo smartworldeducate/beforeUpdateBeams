@@ -11,6 +11,7 @@ import {
   RefreshControl,
   ActivityIndicator,
   StyleSheet,
+  ToastAndroid,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -255,6 +256,7 @@ const ArchiveMessages = props => {
       }),
     );
     dispatch(removeFromArchiveSlice(item?.MSG_ID));
+    ToastAndroid.show('Remove from archive', ToastAndroid.SHORT);
   };
 
   const loadMoreData = () => {
@@ -403,7 +405,7 @@ const ArchiveMessages = props => {
             data={archiveAllMessagesHere}
             renderItem={renderItem}
             renderHiddenItem={renderHiddenSearchItem}
-            rightOpenValue={-70}
+            rightOpenValue={-60}
             previewRowKey={'0'}
             previewOpenValue={-40}
             previewOpenDelay={3000}

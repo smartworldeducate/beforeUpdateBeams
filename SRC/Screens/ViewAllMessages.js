@@ -14,6 +14,7 @@ import {
   ActivityIndicator,
   StyleSheet,
   Alert,
+  ToastAndroid,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -526,6 +527,7 @@ const ViewAllMessages = props => {
     );
 
     dispatch(removeForArchiveFromAllMessages(item?.MSG_ID));
+    ToastAndroid.show('Move to archive.', ToastAndroid.SHORT);
   };
 
   const textInputRef = useRef(null);
@@ -1067,7 +1069,7 @@ const ViewAllMessages = props => {
             renderItem={renderItem}
             renderHiddenItem={renderHiddenItem}
             // leftOpenValue={75}
-            rightOpenValue={-70}
+            rightOpenValue={-60}
             previewRowKey={'0'}
             previewOpenValue={-40}
             previewOpenDelay={3000}
@@ -1097,7 +1099,7 @@ const ViewAllMessages = props => {
             data={searchMessagelHere}
             renderItem={renderItemSearchMessages}
             renderHiddenItem={renderHiddenSearchItem}
-            rightOpenValue={-70}
+            rightOpenValue={-60}
             previewRowKey={'0'}
             previewOpenValue={-40}
             previewOpenDelay={3000}

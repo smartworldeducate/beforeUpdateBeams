@@ -10,7 +10,7 @@ const initialState = {
 };
 
 export const LoginAction = createAsyncThunk('Login', async values => {
-  // console.log('valuesLogin', values);
+  console.log('valuesLogin', values);
   return axios
     .post(`${APIS.LoginAPI}`, values, {
       headers: {
@@ -28,10 +28,10 @@ const LoginSlice = createSlice({
     clearAllStateLogin: (state, action) => {
       state.success = null;
       state.message = '';
-      state.userData = null;
+      state.userData = [];
     },
     logoutSuccess: (state, action) => {
-      state.success = 0;
+      state.success = null;
     },
   },
   extraReducers: builder => {

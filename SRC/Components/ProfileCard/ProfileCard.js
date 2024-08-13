@@ -46,6 +46,7 @@ const ProfileCard = ({
   empAddress,
   onPressMovementLog,
   onPressChildInBSS,
+  onPressDependents,
 }) => {
   const [expanded, setExpended] = useState(false);
   const onPress = ({item}) => {
@@ -53,6 +54,11 @@ const ProfileCard = ({
   };
 
   const profileHere = useSelector(state => state.profileStore);
+
+  // console.log(
+  //   'childResultLeength',
+  //   profileHere?.userData?.bsschildResult_result?.length>0,
+  // );
 
   return (
     <View style={{}}>
@@ -249,10 +255,31 @@ const ProfileCard = ({
         </TouchableOpacity>
       </View>
 
-      {profileHere?.userData?.emp_result?.MARITAL_STATUS == 'M' && (
+      {
+        // profileHere?.userData?.emp_result?.MARITAL_STATUS == 'M' &&
+        profileHere?.userData?.bsschildResult_result?.length > 0 && (
+          <View style={{marginTop: hp(1.5), marginBottom: hp('0')}}>
+            <TouchableOpacity
+              onPress={onPressChildInBSS}
+              style={{
+                justifyContent: 'center',
+                backgroundColor: '#EAFAF1',
+                borderRadius: hp(1.5),
+                elevation: 4,
+              }}>
+              <ProfileCardHeader
+                userIcon={'child'}
+                headerText={'Children In Beaconhouse'}
+              />
+            </TouchableOpacity>
+          </View>
+        )
+      }
+
+      {profileHere?.userData?.dependents?.length > 0 && (
         <View style={{marginTop: hp(1.5), marginBottom: hp('1.5')}}>
           <TouchableOpacity
-            onPress={onPressChildInBSS}
+            onPress={onPressDependents}
             style={{
               justifyContent: 'center',
               backgroundColor: '#EAFAF1',
@@ -260,8 +287,8 @@ const ProfileCard = ({
               elevation: 4,
             }}>
             <ProfileCardHeader
-              userIcon={'child'}
-              headerText={'Children In Beaconhouse'}
+              userIcon={'family'}
+              headerText={'Health Insurance Dependents'}
             />
           </TouchableOpacity>
         </View>

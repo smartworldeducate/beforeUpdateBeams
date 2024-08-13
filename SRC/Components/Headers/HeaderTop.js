@@ -154,7 +154,7 @@ const HeaderTop = ({
               elevation: 4,
               flexDirection: 'row',
               height: hp('5.5'),
-              marginBottom: hp('1.75'),
+              marginBottom: hp('2.25'),
             }}>
             <View
               style={{
