@@ -24,6 +24,7 @@ import {AttendanceCalanderAction} from '../features/AttendanceCalanderSlice/Atte
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../Components/Loader/Loader';
 import colors from '../Styles/colors';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
 const Attendance = props => {
   const dispatch = useDispatch();
@@ -146,32 +147,27 @@ const Attendance = props => {
 
   const renderItemYears = ({item, index}) => {
     return (
-      <>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => onPressYear({item, index})}
+      <TouchableOpacity
+        activeOpacity={0.5}
+        onPress={() => onPressYear({item, index})}
+        style={{
+          borderBottomColor: 'grey',
+          borderBottomWidth: wp('0.15'),
+          justifyContent: 'center',
+          alignItems: 'flex-start',
+          paddingVertical: hp('1.25'),
+        }}>
+        <Text
           style={{
-            height: hp('5.5'),
-            width: wp('20'),
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: wp('8'),
+            fontSize: hp('2.5'),
+            fontFamily: fontFamily.ceraMedium,
+            color: 'black',
+            fontWeight: '500',
+            paddingLeft: wp('2'),
           }}>
-          <View>
-            <Text
-              style={{
-                fontSize: hp('2.5'),
-                fontFamily: fontFamily.ceraMedium,
-                color: 'black',
-                fontWeight: '500',
-              }}>
-              {item}
-            </Text>
-          </View>
-        </TouchableOpacity>
-
-        <LineSeprator height={hp('0.1')} backgroundColor={'grey'} />
-      </>
+          {item}
+        </Text>
+      </TouchableOpacity>
     );
   };
 
@@ -250,6 +246,11 @@ const Attendance = props => {
     setyearSelectionModal(!yearSelectionModal);
   };
 
+  const currentDate1 = new Date();
+
+  const formattedDate = currentDate1.toISOString().split('T')[0];
+  console.log('formattedDate', formattedDate);
+
   const renderItemAttendance = ({item, index}) => {
     const today = item?.att_date;
 
@@ -257,22 +258,25 @@ const Attendance = props => {
 
     const leaveStatus = item?.status == '' ? null : item?.status;
 
-    // const showApplyText =
-    //   !item.holiday_desc && !item.emp_in_time && !item.emp_out_time;
-
     const showApplyText =
       !item.holiday_desc && !item.emp_in_time && !item.emp_out_time;
 
     const showLeaveType = item.leavetype_desc && item.leavetype_desc !== '';
+
+    const displayedText =
+      item?.holiday_desc == null
+        ? item?.emp_in_time != null && item?.emp_out_time != null
+          ? item?.total_working_hours
+          : ''
+        : '';
+
+    const currentDate = new Date();
 
     return (
       <View
         style={{
           flexDirection: 'row',
 
-          // backgroundColor:
-          //   (item?.fin_year_day == 'Sun' ? '#FEF7DC' : null) ||
-          //   (item?.fin_year_day == 'Sat' ? '#FEF7DC' : null),
           backgroundColor: item?.holiday_desc != null ? '#FEF7DC' : null,
           borderBottomWidth: wp('0.08'),
           borderBottomColor: 'black',
@@ -311,176 +315,266 @@ const Attendance = props => {
             </Text>
           </View>
         </View>
-        <TouchableOpacity
-          activeOpacity={
-            item?.late_minutes > 15 && item?.late_ded_run == 'N' ? 0.4 : 1
-          }
-          // onPress={
-          //   item?.late_minutes > 15
-          //     ? () =>
-          //         navigation.navigate('AttendanceDrawer', {
-          //           screen: 'ApplicationTypeTab',
-          //           params: {attenValue: item?.att_date},
-          //         })
-          //     : null
-          // }
 
-          onPress={
-            item?.late_minutes > 15 && item?.late_ded_run == 'N'
-              ? () =>
-                  navigation.navigate('LateArivel', {
-                    attenValue: item?.att_date,
-                  })
-              : null
-          }
+        <View
           style={{
+            flexDirection: 'column',
             flex: 0.3,
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Text
-            numberOfLines={2}
-            ellipsizeMode={'tail'}
-            style={{
-              textAlign: 'center',
-              fontSize: item?.holiday_desc == null ? hp('1.75') : hp('1.5'),
-              fontFamily: fontFamily.ceraMedium,
+          <TouchableOpacity
+            activeOpacity={
+              item?.late_minutes > 15 && item?.late_ded_run == 'N' ? 0.4 : 1
+            }
+            onPress={
+              item?.late_minutes > 15 && item?.late_ded_run == 'N'
+                ? () =>
+                    navigation.navigate('LateArivel', {
+                      attenValue: item?.att_date,
+                    })
+                : null
+            }>
+            {item?.rec_status !== 'Toil' && (
+              <Text
+                numberOfLines={2}
+                ellipsizeMode={'tail'}
+                style={{
+                  textAlign: 'center',
+                  fontSize: item?.holiday_desc == null ? hp('1.75') : hp('1.5'),
+                  fontFamily: fontFamily.ceraMedium,
 
-              paddingVertical: hp('0.5'),
-              paddingHorizontal: wp('2'),
+                  paddingVertical: hp('0.5'),
+                  paddingHorizontal: wp('2'),
 
-              color:
-                item?.late_exempt == 'Y'
-                  ? 'black'
-                  : item?.is_late == 'Y'
-                  ? 'red'
-                  : 'black',
+                  color:
+                    item?.late_exempt == 'Y'
+                      ? 'black'
+                      : item?.is_late == 'Y'
+                      ? 'red'
+                      : 'black',
 
-              backgroundColor:
-                item?.late_exempt == 'Y'
-                  ? null
-                  : item?.is_late == 'Y'
-                  ? '#ffe6e6'
-                  : null,
-              borderRadius:
-                item?.late_exempt == 'Y'
-                  ? null
-                  : item?.is_late == 'Y'
-                  ? wp('5')
-                  : null,
-              borderWidth:
-                item?.late_exempt == 'Y'
-                  ? null
-                  : item?.is_late == 'Y'
-                  ? wp('0.15')
-                  : null,
-              borderColor:
-                item?.late_exempt == 'Y'
-                  ? null
-                  : item?.is_late == 'Y'
-                  ? 'red'
-                  : null,
-            }}>
-            {item?.holiday_desc != null
-              ? item?.holiday_desc
-              : item?.emp_in_time != null
-              ? item?.emp_in_time
-              : '--:--:--'}
-          </Text>
-          {item?.late_exempt == 'Y' && (
-            <Text
-              style={{
-                color: '#1C37A4',
-                fontSize: hp('1.15'),
-                fontFamily: fontFamily.ceraMedium,
-              }}>
-              {item?.late_exempt == 'Y' ? item?.status : ''}
-            </Text>
-          )}
-          {item?.hd_pending == 'Y' && (
-            <Text
-              style={{
-                color: '#1C37A4',
-                fontSize: hp('1.15'),
-                fontFamily: fontFamily.ceraMedium,
-              }}>
-              {item?.hd_pending == 'Y' ? item?.link : ''}
-            </Text>
-          )}
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={
-            item?.early_minutes > 15 && item?.late_ded_run == 'N' ? 0.4 : 1
-          }
-          // onPress={
-          //   item?.early_minutes > 15
-          //     ? () =>
-          //         navigation.navigate('AttendanceDrawer', {
-          //           screen: 'ApplicationTypeTab',
-          //           params: {attenValue: item?.att_date},
-          //         })
-          //     : null
-          // }
+                  backgroundColor:
+                    item?.late_exempt == 'Y'
+                      ? null
+                      : item?.is_late == 'Y'
+                      ? '#ffe6e6'
+                      : null,
+                  borderRadius:
+                    item?.late_exempt == 'Y'
+                      ? null
+                      : item?.is_late == 'Y'
+                      ? wp('5')
+                      : null,
+                  borderWidth:
+                    item?.late_exempt == 'Y'
+                      ? null
+                      : item?.is_late == 'Y'
+                      ? wp('0.15')
+                      : null,
+                  borderColor:
+                    item?.late_exempt == 'Y'
+                      ? null
+                      : item?.is_late == 'Y'
+                      ? 'red'
+                      : null,
 
-          onPress={
-            item?.early_minutes > 15 && item?.late_ded_run == 'N'
-              ? () =>
-                  navigation.navigate('EarlyLeaving', {
-                    attenValue: item?.att_date,
-                  })
-              : null
-          }
-          style={{flex: 0.3, justifyContent: 'center', alignItems: 'center'}}>
-          {item?.holiday_desc == null ? (
-            <Text
-              style={{
-                textAlign: 'center',
-                fontSize: hp('1.75'),
-                fontFamily: fontFamily.ceraMedium,
+                  paddingTop: item?.emp_in_time == null ? hp('1.35') : null,
+                  marginTop: item?.emp_in_time !== null ? hp('1.35') : null,
+                }}>
+                {item?.holiday_desc != null
+                  ? item?.holiday_desc
+                  : item?.emp_in_time != null
+                  ? item?.emp_in_time
+                  : '--:--:--'}
+              </Text>
+            )}
 
-                paddingVertical: hp('0.5'),
-                paddingHorizontal: wp('2'),
-                color: item?.is_early == 'Y' ? 'red' : 'black',
-                backgroundColor: item?.is_early == 'Y' ? '#ffe6e6' : null,
-                borderRadius: item?.is_early == 'Y' ? wp('5') : null,
-                borderWidth: item?.is_early == 'Y' ? wp('0.15') : null,
-                borderColor: item?.is_early == 'Y' ? 'red' : null,
-              }}>
-              {item?.emp_out_time != null ? item?.emp_out_time : '--:--:--'}
-            </Text>
+            {item?.rec_status == 'Toil' && (
+              <Text
+                numberOfLines={2}
+                ellipsizeMode={'tail'}
+                style={{
+                  textAlign: 'center',
+                  fontSize: hp('1.65'),
+                  fontFamily: fontFamily.ceraMedium,
+
+                  paddingVertical: hp('0.5'),
+                  paddingHorizontal: wp('2'),
+
+                  color: 'black',
+
+                  marginTop: hp('1.35'),
+                }}>
+                {`${item?.status}: \n ${item?.working_date}`}
+              </Text>
+            )}
+
+            {item?.late_exempt == 'Y' && (
+              <Text
+                numberOfLines={1}
+                ellipsizeMode={'tail'}
+                style={{
+                  color: '#1C37A4',
+                  fontSize: hp('1'),
+                  fontFamily: fontFamily.ceraMedium,
+                  textAlign: 'center',
+                }}>
+                {item?.late_exempt == 'Y' ? item?.status : ''}
+              </Text>
+            )}
+            {item?.hd_pending == 'Y' && (
+              <Text
+                numberOfLines={1}
+                ellipsizeMode={'tail'}
+                style={{
+                  color: '#1C37A4',
+                  fontSize: hp('1'),
+                  fontFamily: fontFamily.ceraMedium,
+                  textAlign: 'center',
+                }}>
+                {item?.hd_pending == 'Y' ? item?.link : ''}
+              </Text>
+            )}
+          </TouchableOpacity>
+
+          <View style={{}}>
+            {item?.hd_pending == 'N' && (
+              <Text
+                style={{
+                  color: '#1C37A4',
+                  fontSize: hp('1'),
+                  fontFamily: fontFamily.ceraMedium,
+                  textAlign: 'center',
+                }}>
+                {item?.late_minutes > 15 && item?.late_ded_run == 'N'
+                  ? item?.link
+                  : ''}
+              </Text>
+            )}
+          </View>
+        </View>
+
+        <View
+          style={{
+            flexDirection: 'column',
+            flex: 0.3,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          {formattedDate == item?.att_date && item?.emp_out_time == null ? (
+            <View>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  fontSize: hp('1.75'),
+                  fontFamily: fontFamily.ceraMedium,
+                  color: 'black',
+                }}>
+                {'--:--:--'}
+              </Text>
+            </View>
           ) : (
-            <Text></Text>
+            <>
+              {item?.rec_status !== 'Toil' && (
+                <>
+                  <TouchableOpacity
+                    activeOpacity={
+                      item?.early_minutes > 15 && item?.late_ded_run == 'N'
+                        ? 0.4
+                        : 1
+                    }
+                    onPress={
+                      item?.early_minutes > 15 && item?.late_ded_run == 'N'
+                        ? () =>
+                            navigation.navigate('EarlyLeaving', {
+                              attenValue: item?.att_date,
+                            })
+                        : null
+                    }>
+                    {item?.holiday_desc == null ? (
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          fontSize: hp('1.75'),
+                          fontFamily: fontFamily.ceraMedium,
+
+                          paddingVertical: hp('0.5'),
+                          paddingHorizontal: wp('2'),
+                          color: item?.is_early == 'Y' ? 'red' : 'black',
+                          backgroundColor:
+                            item?.is_early == 'Y' ? '#ffe6e6' : null,
+                          borderRadius: item?.is_early == 'Y' ? wp('5') : null,
+                          borderWidth:
+                            item?.is_early == 'Y' ? wp('0.15') : null,
+                          borderColor: item?.is_early == 'Y' ? 'red' : null,
+                        }}>
+                        {item?.emp_out_time != null
+                          ? item?.emp_out_time
+                          : '--:--:--'}
+                      </Text>
+                    ) : (
+                      <Text></Text>
+                    )}
+                    {item?.early_exempt == 'Y' && (
+                      <Text
+                        style={{
+                          color: '#1C37A4',
+                          fontSize: hp('1'),
+                          fontFamily: fontFamily.ceraMedium,
+                        }}>
+                        {item?.early_exempt == 'Y' ? item?.status : ''}
+                      </Text>
+                    )}
+                  </TouchableOpacity>
+
+                  <View style={{}}>
+                    {item?.early_minutes > 15 && item?.late_ded_run == 'N' && (
+                      <Text
+                        style={{
+                          color: '#1C37A4',
+                          fontSize: hp('1'),
+                          fontFamily: fontFamily.ceraMedium,
+                          textAlign: 'center',
+                        }}>
+                        {item?.late_minutes > 15 && item?.late_ded_run == 'N'
+                          ? 'Raise Early Leaving'
+                          : ''}
+                      </Text>
+                    )}
+                  </View>
+                </>
+              )}
+
+              {item?.rec_status == 'Toil' && (
+                <>
+                  <Text
+                    numberOfLines={2}
+                    ellipsizeMode={'tail'}
+                    style={{
+                      textAlign: 'center',
+                      fontSize: hp('1.65'),
+                      fontFamily: fontFamily.ceraMedium,
+
+                      paddingVertical: hp('0.5'),
+                      paddingHorizontal: wp('2'),
+
+                      color: 'black',
+                    }}>
+                    {`${item?.link}: \n ${item?.fin_year_date}`}
+                  </Text>
+                </>
+              )}
+            </>
           )}
-          {item?.early_exempt == 'Y' && (
-            <Text
-              style={{
-                color: '#1C37A4',
-                fontSize: hp('1'),
-                fontFamily: fontFamily.ceraMedium,
-              }}>
-              {item?.early_exempt == 'Y' ? item?.status : ''}
-            </Text>
-          )}
-        </TouchableOpacity>
+        </View>
         <View
           style={{flex: 0.3, justifyContent: 'center', alignItems: 'center'}}>
-          <Text
-            style={{
-              color: 'black',
-              textAlign: 'center',
-              fontSize: hp('1.75'),
-              fontFamily: fontFamily.ceraMedium,
-            }}>
-            {item?.holiday_desc == null
-              ? item?.emp_in_time != null && item?.emp_out_time != null
-                ? item?.total_working_hours
-                : // : item?.leavetype_desc
-                item?.status == ''
-                ? item?.leavetype_desc
-                : item?.status
-              : ''}
-            {/* {item?.holiday_desc == null ? (
-              item?.emp_in_time == null && item?.emp_out_time == null ? (
+          {item?.hd_pending == 'Y' ? (
+            <></>
+          ) : (
+            <>
+              {item?.late_ded_run == 'N' && !showLeaveType && showApplyText && (
                 <TouchableOpacity
                   activeOpacity={0.7}
                   onPress={() =>
@@ -502,66 +596,147 @@ const Attendance = props => {
                     APPLY
                   </Text>
                 </TouchableOpacity>
-              ) : (
-                ''
-              )
-            ) : (
-              ''
-            )} */}
+              )}
+            </>
+          )}
 
-            {item?.hd_pending == 'Y' ? (
-              <Text
-                numberOfLines={2}
-                ellipsizeMode={'middle'}
+          <>
+            <View style={{flexDirection: 'row'}}>
+              {item?.leavetype_desc == 'Annual Leave' && (
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'flex-end',
+                  }}>
+                  <FontAwesomeIcon
+                    icon={`fat fa-island-tropical`}
+                    size={hp(2.25)}
+                    style={{color: '#41CE68'}}
+                  />
+                </View>
+              )}
+
+              {item?.leavetype_desc == 'Casual Leave' && (
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'flex-end',
+                  }}>
+                  <FontAwesomeIcon
+                    icon={`fat fa-masks-theater`}
+                    size={hp(2.25)}
+                    style={{color: '#B141CE'}}
+                  />
+                </View>
+              )}
+
+              {item?.leavetype_desc == 'Sick Leave' && (
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'flex-end',
+                  }}>
+                  <FontAwesomeIcon
+                    icon={`fat fa-temperature-half`}
+                    size={hp(2.25)}
+                    style={{color: '#CE5141'}}
+                  />
+                </View>
+              )}
+
+              {item?.leavetype_desc == 'Long Leave' && (
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'flex-end',
+                  }}>
+                  <FontAwesomeIcon
+                    icon={`fat fa-calendar-range`}
+                    size={hp(2.25)}
+                    style={{color: '#4167C4'}}
+                  />
+                </View>
+              )}
+
+              {item?.leavetype_desc == 'Haj Leave' && (
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'flex-end',
+                  }}>
+                  <FontAwesomeIcon
+                    icon={`fat fa-kaaba`}
+                    size={hp(2.25)}
+                    style={{color: '#41CEB4'}}
+                  />
+                </View>
+              )}
+
+              {item?.leavetype_desc == 'Without Pay' && (
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'flex-end',
+                    paddingRight: wp('0.25'),
+                  }}>
+                  <FontAwesomeIcon
+                    icon={`fat fa-money-bill-wave`}
+                    size={hp(2.25)}
+                    style={{color: '#7051CE'}}
+                  />
+                </View>
+              )}
+
+              <View
                 style={{
-                  color: 'black',
-                  fontSize: hp('1.25'),
-                  textAlign: 'center',
-                  borderRadius: wp('50'),
-                  paddingVertical: wp('1.35'),
-                  paddingHorizontal: wp('5'),
+                  justifyContent: 'center',
+                  alignItems:
+                    item?.leavetype_desc == 'Annual Leave'
+                      ? 'flex-start'
+                      : 'center',
                 }}>
-                {/* {item?.status} */}
-              </Text>
-            ) : (
-              <>
-                {!showLeaveType && showApplyText && (
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    onPress={() =>
-                      navigation.navigate('AttendanceDrawer', {
-                        screen: 'ApplicationTypeTab',
-                      })
-                    }
-                    style={{justifyContent: 'center', alignItems: 'center'}}>
-                    <Text
-                      style={{
-                        backgroundColor: '#1C37A4',
-                        color: 'white',
-                        fontSize: hp('1.5'),
-                        textAlign: 'center',
-                        borderRadius: wp('50'),
-                        paddingVertical: wp('1.35'),
-                        paddingHorizontal: wp('5'),
-                      }}>
-                      APPLY
-                    </Text>
-                  </TouchableOpacity>
+                {item?.rec_status !== 'Toil' && (
+                  <Text
+                    numberOfLines={2}
+                    ellipsizeMode={'tail'}
+                    style={{
+                      color: 'black',
+                      textAlign: 'center',
+                      // fontSize: displayedText ? hp('1.75') : hp('1.65'),
+                      fontSize:
+                        item?.status === 'Application Not Raised'
+                          ? hp('1.1')
+                          : displayedText
+                          ? hp('1.75')
+                          : hp('1.5'),
+                      fontFamily: fontFamily.ceraMedium,
+                    }}>
+                    {item?.holiday_desc == null
+                      ? item?.emp_in_time != null && item?.emp_out_time != null
+                        ? item?.total_working_hours
+                        : item?.status == ''
+                        ? item?.leavetype_desc
+                        : item?.status
+                      : ''}
+                  </Text>
                 )}
-              </>
-            )}
 
-            {/* {showLeaveType && (
-              <Text
-                style={{
-                  color: 'black',
-                  fontSize: hp('1.5'),
-                  textAlign: 'center',
-                }}>
-                {item.leavetype_desc}
-              </Text>
-            )} */}
-          </Text>
+                {item?.rec_status == 'Toil' && (
+                  <Text
+                    numberOfLines={2}
+                    ellipsizeMode={'tail'}
+                    style={{
+                      color: 'black',
+                      textAlign: 'center',
+                      fontSize: hp('1.75'),
+                      fontFamily: fontFamily.ceraMedium,
+                    }}>
+                    {item?.link}
+                  </Text>
+                )}
+              </View>
+            </View>
+          </>
         </View>
       </View>
     );
@@ -723,7 +898,7 @@ const Attendance = props => {
             onPressOpacity={onPressSelectYearModal}
             yaersListData={leaveHistoryHere?.userData?.total_years}
             renderItem={renderItemYears}
-            // inverted={true}
+            inverted={true}
           />
         )}
       </ScrollView>

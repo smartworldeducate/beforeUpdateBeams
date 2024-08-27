@@ -311,6 +311,12 @@ const Notificantions = props => {
 
   const closeFullModal = () => {
     setModalVisibleFullView(false);
+
+    setMessageId(null);
+    setEmpName(null);
+    setMsgDate(null);
+    setEmpPhoto(null);
+    setMessageSubject(null);
   };
 
   useEffect(() => {

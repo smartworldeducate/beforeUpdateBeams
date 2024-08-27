@@ -49,7 +49,12 @@ const YearSelectionModal = ({
             paddingHorizontal: wp('4'),
             backgroundColor: colors.whiteColor,
           }}>
-          <View style={{margin: hp(2)}}>
+          <View
+            style={{
+              margin: hp(2),
+              borderBottomColor: 'black',
+              borderBottomWidth: wp('0.25'),
+            }}>
             <Text
               style={{
                 fontSize: hp('2.85'),

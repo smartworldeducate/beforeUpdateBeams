@@ -50,7 +50,14 @@ const HeaderTop = ({
         end={{x: 1, y: 0}}
         colors={['#1C37A5', '#4D69DC']}
         style={[styles.mainHeader]}>
-        <View style={[styles.headerChild, {marginBottom: hp('1.5')}]}>
+        <View
+          style={[
+            styles.headerChild,
+            {
+              marginBottom:
+                profileHere?.userSearchAccess == 1 ? hp('1.5') : hp('1.75'),
+            },
+          ]}>
           <TouchableOpacity
             onPress={onPressUserImg}
             activeOpacity={0.6}
@@ -154,7 +161,7 @@ const HeaderTop = ({
               elevation: 4,
               flexDirection: 'row',
               height: hp('5.5'),
-              marginBottom: hp('2.25'),
+              marginBottom: hp('2.65'),
             }}>
             <View
               style={{
