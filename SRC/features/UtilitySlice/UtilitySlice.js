@@ -10,7 +10,7 @@ const initialState = {
 };
 
 export const UtilityAction = createAsyncThunk('Utility', async values => {
-  console.log('values', values);
+  // console.log('values', values);
   return axios
     .post(`${APIS.UtilityAPI}`, values, {
       headers: {

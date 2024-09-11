@@ -638,6 +638,31 @@ const HomeScreen = props => {
     setPlayAnimation(false);
   };
 
+  const numberToWords = num => {
+    const words = {
+      0: 'zero',
+      1: 'one',
+      2: 'two',
+      3: 'three',
+      4: 'four',
+      5: 'five',
+      6: 'six',
+      7: 'seven',
+      8: 'eight',
+      9: 'nine',
+      10: 'ten',
+    };
+    return words[num] || num; // Return the word if found, otherwise the number itself
+  };
+
+  const empTimeIn = profileHere?.empTimeIn || '';
+  const firstValue = empTimeIn.split(':')[0]
+    ? parseInt(empTimeIn.split(':')[0], 10)
+    : 0;
+
+  const firstValueInWords = numberToWords(firstValue);
+  console.log('firstValueInWords', firstValueInWords);
+
   return (
     <SafeAreaView
       style={{
@@ -689,7 +714,7 @@ const HomeScreen = props => {
                   tintColor={'#1C37A4'}
                 />
               }>
-              <View style={styles.botContainer}>
+              {/* <View style={styles.botContainer}>
                 <View
                   style={{
                     flex: 0.33,
@@ -742,10 +767,270 @@ const HomeScreen = props => {
                   </Text>
                   <Text style={[styles.bootContText2]}>Attendance</Text>
                 </View>
-              </View>
+              </View> */}
 
               <View
-                style={{marginHorizontal: wp('5.5'), marginTop: hp('1.75')}}>
+                style={[
+                  styles.botContainer,
+                  {
+                    justifyContent: 'space-between',
+                    height: hp('21'),
+                    alignItems: 'center',
+                    marginTop: hp('3'),
+                    marginBottom: hp('1'),
+                  },
+                ]}>
+                <LinearGradient
+                  useAngle={true}
+                  angle={180}
+                  angleCenter={{x: 0.5, y: 0.5}}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  colors={['#FEEBD8', '#FFFBF7']}
+                  locations={[0, 1]}
+                  style={{
+                    flex: 0.3,
+                    justifyContent: 'center',
+                    height: hp('17'),
+                    borderRadius: wp('5'),
+                    shadowColor: 'rgba(0,0,0,0.5)',
+                    shadowOpacity: 0.5,
+                    shadowRadius: 16,
+                    elevation: 4,
+                  }}>
+                  <View
+                    style={{
+                      height: hp('7'),
+                      justifyContent: 'flex-end',
+                      paddingLeft: wp('3'),
+                    }}>
+                    <View style={{flexDirection: 'row'}}>
+                      <View>
+                        <Text
+                          style={[
+                            styles.serviceSection,
+                            {
+                              textAlign: 'left',
+                              fontSize: hp('2.35'),
+                              letterSpacing: -1.5,
+                              fontFamily: fontFamily.ceraBold,
+                            },
+                          ]}>
+                          {
+                            profileHere?.userData?.emp_result?.SERVICE_LENGTH.match(
+                              /[\d.]+/,
+                            )[0]
+                          }
+                        </Text>
+                      </View>
+                      <View style={{marginLeft: wp('1')}}>
+                        <Text
+                          style={{
+                            fontSize: hp('2.15'),
+                            fontFamily: fontFamily.ceraMedium,
+                            color: '#353535',
+                            paddingTop: hp('0.65'),
+                          }}>
+                          y
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                  <View style={{height: hp('10'), paddingHorizontal: wp('3')}}>
+                    <View
+                      style={{
+                        height: hp('5'),
+                        justifyContent: 'center',
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: hp('1.65'),
+                          fontFamily: fontFamily.ceraMedium,
+                          color: '#999696',
+                        }}>
+                        {`Service \n Length`}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        height: hp('6'),
+                        justifyContent: 'center',
+                        alignItems: 'flex-end',
+                        marginTop: hp('-1'),
+                        marginHorizontal: wp('-1.5'),
+                      }}>
+                      <FontAwesomeIcon
+                        icon="fat fa-gear-complex"
+                        size={hp('4')}
+                        style={{color: '#999696'}}
+                      />
+                    </View>
+                  </View>
+                </LinearGradient>
+
+                <LinearGradient
+                  useAngle={true}
+                  angle={180}
+                  angleCenter={{x: 0.5, y: 0.5}}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  colors={['#DAFFE6', '#F6FFF7']}
+                  locations={[0, 1]}
+                  style={{
+                    flex: 0.3,
+                    justifyContent: 'center',
+                    height: hp('17'),
+                    borderRadius: wp('5'),
+
+                    shadowColor: 'rgba(0,0,0,0.5)',
+                    shadowOpacity: 0.5,
+                    shadowRadius: 16,
+                    elevation: 4,
+                  }}>
+                  <View
+                    style={{
+                      height: hp('7'),
+                      justifyContent: 'flex-end',
+                      paddingLeft: wp('3'),
+                    }}>
+                    <View style={{}}>
+                      <View>
+                        <Text
+                          style={[
+                            styles.serviceSection,
+                            {
+                              textAlign: 'left',
+                              fontSize: hp('2.25'),
+                              fontFamily: fontFamily.ceraBold,
+                            },
+                          ]}>
+                          {profileHere?.userData?.emp_result?.EMP_STATUS_DESCRIPTION.substring(
+                            0,
+                            3,
+                          )}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                  <View style={{height: hp('10'), paddingHorizontal: wp('3')}}>
+                    <View
+                      style={{
+                        height: hp('5'),
+                        justifyContent: 'center',
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: hp('1.65'),
+                          fontFamily: fontFamily.ceraMedium,
+                          color: '#999696',
+                        }}>
+                        {`${profileHere?.userData?.emp_result?.EMP_STATUS_DESCRIPTION}\n Status`}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        height: hp('6'),
+                        justifyContent: 'center',
+                        alignItems: 'flex-end',
+                        marginTop: hp('-1'),
+                        marginHorizontal: wp('-1.5'),
+                      }}>
+                      <FontAwesomeIcon
+                        icon="fat fa-heart-pulse"
+                        size={hp('4')}
+                        style={{color: '#999696'}}
+                      />
+                    </View>
+                  </View>
+                </LinearGradient>
+
+                <LinearGradient
+                  useAngle={true}
+                  angle={180}
+                  angleCenter={{x: 0.5, y: 0.5}}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  colors={['#DAEBFF', '#F6FDFF']}
+                  locations={[0, 1]}
+                  style={{
+                    flex: 0.3,
+                    justifyContent: 'center',
+
+                    height: hp('17'),
+                    borderRadius: wp('5'),
+
+                    shadowColor: 'rgba(0,0,0,0.5)',
+                    shadowOpacity: 0.5,
+                    shadowRadius: 16,
+                    elevation: 4,
+                  }}>
+                  <View
+                    style={{
+                      height: hp('7'),
+                      justifyContent: 'flex-end',
+                      paddingLeft: wp('3'),
+                    }}>
+                    <View style={{flexDirection: 'row'}}>
+                      <View>
+                        <Text
+                          style={[
+                            styles.serviceSection,
+                            {
+                              textAlign: 'left',
+                              fontSize: hp('2.25'),
+                              letterSpacing: -0.75,
+                              fontFamily: fontFamily.ceraBold,
+                            },
+                          ]}>
+                          {profileHere?.empTimeIn == null ||
+                          profileHere?.empTimeIn == undefined ||
+                          profileHere?.empTimeIn == ''
+                            ? '--:--:--'
+                            : profileHere?.empTimeIn}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                  <View style={{height: hp('10'), paddingHorizontal: wp('3')}}>
+                    <View
+                      style={{
+                        height: hp('5'),
+                        justifyContent: 'center',
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: hp('1.65'),
+                          fontFamily: fontFamily.ceraMedium,
+                          color: '#999696',
+                        }}>
+                        {`Attendance \n Today`}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        height: hp('6'),
+                        justifyContent: 'center',
+                        alignItems: 'flex-end',
+                        marginTop: hp('-1'),
+                        marginHorizontal: wp('-1.5'),
+                      }}>
+                      <FontAwesomeIcon
+                        icon={`fat fa-clock-${
+                          profileHere?.empTimeIn == null ||
+                          profileHere?.empTimeIn == undefined ||
+                          profileHere?.empTimeIn == ''
+                            ? 'nine'
+                            : firstValueInWords
+                        }`}
+                        size={hp('4')}
+                        style={{color: '#999696'}}
+                      />
+                    </View>
+                  </View>
+                </LinearGradient>
+              </View>
+
+              <View style={{marginHorizontal: wp('5.5')}}>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -1168,8 +1453,7 @@ const styles = EStyleSheet.create({
     height: hp(10),
     marginTop: hp(1.5),
     flexDirection: 'row',
-    justifyContent: 'center',
-    marginHorizontal: wp('7'),
+    marginHorizontal: wp('6'),
   },
   zetext: {
     color: '#fff',
@@ -1187,7 +1471,7 @@ const styles = EStyleSheet.create({
   bootContText2: {
     fontSize: '0.5rem',
     fontWeight: '500',
-    fontFamily: fontFamily.robotoMedium,
+
     fontStyle: 'normal',
     color: '#979797',
     textTransform: 'uppercase',
@@ -1195,9 +1479,9 @@ const styles = EStyleSheet.create({
     letterSpacing: 0.35,
   },
   serviceSection: {
-    fontSize: '0.7rem',
+    // fontSize: '0.7rem',
     fontWeight: '700',
-    fontFamily: fontFamily.robotoMedium,
+
     fontStyle: 'normal',
     color: '#353535',
     paddingTop: hp(0.3),

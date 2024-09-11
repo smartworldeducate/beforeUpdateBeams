@@ -115,7 +115,7 @@ const Utility = props => {
   };
 
   return (
-    <View>
+    <View style={{flex: 1}}>
       <MainHeader
         text={'Miscellaneous'}
         iconName={'arrow-left'}
@@ -141,14 +141,17 @@ const Utility = props => {
         <View
           style={{
             marginHorizontal: wp('5.5'),
-            marginTop: hp('4'),
+            marginTop: utilityHere?.length > 0 ? hp('4') : hp('1'),
             marginBottom: hp('1'),
           }}>
-          <FlatList
-            data={utilityHere}
-            renderItem={renderItem}
-            keyExtractor={(item, index) => index.toString()}
-            ListEmptyComponent={
+          {utilityHere && utilityHere?.length > 0 ? (
+            <FlatList
+              data={utilityHere}
+              renderItem={renderItem}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          ) : (
+            <View style={{}}>
               <Text
                 style={{
                   fontSize: hp('1.75'),
@@ -158,8 +161,8 @@ const Utility = props => {
                 }}>
                 There are no miscellaneous items to show.
               </Text>
-            }
-          />
+            </View>
+          )}
         </View>
       </ScrollView>
     </View>

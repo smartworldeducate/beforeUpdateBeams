@@ -362,8 +362,9 @@ const CustomDrawer = ({navigation}) => {
             <Text
               style={{
                 color: 'white',
-                fontSize: hp('1.6'),
+                fontSize: hp('1.5'),
                 fontFamily: fontFamily.ceraMedium,
+                fontStyle: 'italic',
               }}>
               {`App Version: ${
                 versionName !== null && versionName !== undefined
