@@ -58,6 +58,8 @@ export const APIS = {
   LeaveTypeAPI: BASE_URL + 'leave_type_new',
   ApplyLeaveAPI: BASE_URL + 'apply_leave',
 
+  LeaveTypesArrayAPI: 'leave_types_array',
+
   OutstationAPI: BASE_URL + 'apply_outstation_send',
 
   AttendenceNotMarkedAPI: BASE_URL + 'apply_attendance_not_marked',

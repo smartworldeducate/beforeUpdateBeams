@@ -49,7 +49,6 @@ import MessageSuccessModal from '../Components/Modal/MessageSuccessModal';
 import Loader from '../Components/Loader/Loader';
 
 const LateArivel = ({route, ...props}) => {
-  console.log('route', route);
   const routeValueAttenDate = route?.params?.attenValue;
 
   const formatDate = dateString => {
@@ -83,14 +82,13 @@ const LateArivel = ({route, ...props}) => {
   const lateArrivalLeaveResponseHere = useSelector(
     state => state.LateArrivalStore.success,
   );
-  // console.log('lateArrivalLeaveResponseHere', lateArrivalLeaveResponseHere);
+  console.log('lateArrivalLeaveResponseHere', lateArrivalLeaveResponseHere);
 
   // all states hooks starts
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isDatePickerVisibleTwo, setDatePickerVisibilityTwo] = useState(false);
   const [timePickerVisible, setTimePickerVisibility] = useState(false);
 
-  const [leaveTypeModal, setLeaveTypeModal] = useState(false);
   const [forwardToModal, setForwardToModal] = useState(false);
   const [fromDate, setFromDate] = useState(
     formattedDate != undefined || formattedDate != null ? formattedDate : null,
@@ -98,20 +96,27 @@ const LateArivel = ({route, ...props}) => {
   const [toDate, setToDate] = useState(
     formattedDate != undefined || formattedDate != null ? formattedDate : null,
   );
+
   const [totalDays, setTotalDays] = useState(null);
-  const [lateArrivalTime, setLateArrivalTime] = useState(null);
+  const [lateArrivalTime, setLateArrivalTime] = useState(
+    route?.params?.lateArrivalTime
+      ? route?.params?.lateArrivalTime.substring(0, 5)
+      : null,
+  );
 
   const [forFromDate, setForFromDate] = useState(null);
   const [forToDate, setForToDate] = useState(null);
   const [empLeaveTypeId, setEmpLeaveTypeId] = useState(null);
-  const [empLeaveForwardToId, setEmpLeaveForwardToId] = useState(null);
-  const [empLeaveForwardTo, setEmpLeaveForwardTo] = useState(null);
+  const [empLeaveForwardToId, setEmpLeaveForwardToId] = useState(
+    leaveApplyForwardToHere[0]?.employee_id,
+  );
+  const [empLeaveForwardTo, setEmpLeaveForwardTo] = useState(
+    leaveApplyForwardToHere[0]?.emp_name,
+  );
   const [reasonText, setReasonText] = useState('');
 
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-
-  console.log('fromDate', fromDate);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -135,8 +140,12 @@ const LateArivel = ({route, ...props}) => {
 
     const fromDateForTotalDays = day + '-' + month + '-' + year;
     setForFromDate(fromDateForTotalDays);
-
     setFromDate(formattedFromDate);
+
+    setForToDate(fromDateForTotalDays);
+
+    setToDate(formattedFromDate);
+
     hideDatePicker();
   };
 
@@ -162,7 +171,6 @@ const LateArivel = ({route, ...props}) => {
     var year = date.getFullYear();
 
     const toDateForTotalDays = day + '-' + month + '-' + year;
-    console.log('toDateForTotalDays', toDateForTotalDays);
     setForToDate(toDateForTotalDays);
 
     setToDate(formattedToDate);
@@ -180,8 +188,13 @@ const LateArivel = ({route, ...props}) => {
   const handleLateArrivalTimeConfirm = time => {
     const pakTime = new Date(time);
     setLateArrivalTime(
-      pakTime.toLocaleTimeString('en-PK', {hour: '2-digit', minute: '2-digit'}),
+      pakTime.toLocaleTimeString('en-PK', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      }),
     );
+
     hideLateArrivalTimePicker();
   };
 
@@ -267,7 +280,7 @@ const LateArivel = ({route, ...props}) => {
             : moment(toDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
         total_days: JSON.parse(totalDays),
 
-        txt_exp_tm: lateArrivalTime,
+        txt_exp_tm: lateArrivalTime.replace(':', ''),
         reason: reasonText,
         forward_to: JSON.parse(empLeaveForwardToId),
       }),
@@ -279,6 +292,15 @@ const LateArivel = ({route, ...props}) => {
       setShowErrorModal(true);
     } else if (lateArrivalLeaveResponseHere == 1) {
       setShowSuccessModal(true);
+
+      setFromDate(null);
+      setToDate(null);
+      setForFromDate(null);
+      setForToDate(null);
+      setTotalDays(null);
+      setLateArrivalTime(null);
+
+      setReasonText('');
     }
   }, [lateArrivalLeaveResponseHere]);
 
@@ -314,6 +336,8 @@ const LateArivel = ({route, ...props}) => {
       />
       <DateTimePickerModal
         mode="time"
+        is24Hour={true}
+        display={'clock'}
         isVisible={timePickerVisible}
         onConfirm={handleLateArrivalTimeConfirm}
         onCancel={hideLateArrivalTimePicker}
@@ -425,6 +449,7 @@ const LateArivel = ({route, ...props}) => {
           placeholder={'Reason'}
           placeholderTextColor="#363636"
           multiline={true}
+          value={reasonText}
           onChangeText={onChangeReason}
           style={{
             height: hp(17),

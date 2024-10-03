@@ -67,6 +67,7 @@ import QRScannerList from './SRC/Screens/QRScannerList';
 import AttendenceAndLeaveTab from './SRC/Components/CustomTab/AttendenceAndLeaveTab';
 import DeviceInfo from './SRC/Screens/DeviceInfo';
 import Notificantions from './SRC/Screens/Notificantions';
+import ChatScreen from './SRC/Screens/ChatScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -100,6 +101,7 @@ function DrawerStack() {
       <Drawer.Screen name="UtilityDrawer" component={Utility} />
       <Drawer.Screen name="ProfileDrawer" component={Profile} />
       <Drawer.Screen name="QRScannerListDrawer" component={QRScannerList} />
+      <Drawer.Screen name="ChatScreenDrawer" component={ChatScreen} />
       <Drawer.Screen name="DeviceInfoDrawer" component={DeviceInfo} />
     </Drawer.Navigator>
   );

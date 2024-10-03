@@ -57,8 +57,12 @@ const AttendenceNotMarked = props => {
   const [forwardToModal, setForwardToModal] = useState(false);
   const [fromDate, setFromDate] = useState(null);
   const [forFromDate, setForFromDate] = useState(null);
-  const [empLeaveForwardToId, setEmpLeaveForwardToId] = useState(null);
-  const [empLeaveForwardTo, setEmpLeaveForwardTo] = useState(null);
+  const [empLeaveForwardToId, setEmpLeaveForwardToId] = useState(
+    leaveTypeHere?.userData?.forward_to[0]?.employee_id,
+  );
+  const [empLeaveForwardTo, setEmpLeaveForwardTo] = useState(
+    leaveTypeHere?.userData?.forward_to[0]?.emp_name,
+  );
 
   const [timeInModal, setTimeInModal] = useState(false);
   const [timeOutModal, setTimeOutModal] = useState(false);
@@ -115,7 +119,11 @@ const AttendenceNotMarked = props => {
   const handleTimeInConfirm = time => {
     const pakTime = new Date(time);
     setTimeInValue(
-      pakTime.toLocaleTimeString('en-PK', {hour: '2-digit', minute: '2-digit'}),
+      pakTime.toLocaleTimeString('en-PK', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      }),
     );
     hideTimeInModal();
   };
@@ -131,7 +139,11 @@ const AttendenceNotMarked = props => {
   const handleTimeOutConfirm = time => {
     const pakTime = new Date(time);
     setTimeOutValue(
-      pakTime.toLocaleTimeString('en-PK', {hour: '2-digit', minute: '2-digit'}),
+      pakTime.toLocaleTimeString('en-PK', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      }),
     );
     hideTimeOutModal();
   };
@@ -167,6 +179,7 @@ const AttendenceNotMarked = props => {
   const onPressTimeIn = () => {
     setTimeIn(true);
     setTimeInValue(null);
+    setTimeOutValue(null);
     setTimeOut(false);
     setBoth(false);
     setFirstDayValue('in');
@@ -174,6 +187,7 @@ const AttendenceNotMarked = props => {
   const onPressTimeOut = () => {
     setTimeIn(false);
     setTimeOut(true);
+    setTimeInValue(null);
     setTimeOutValue(null);
     setBoth(false);
     setFirstDayValue('out');
@@ -191,6 +205,9 @@ const AttendenceNotMarked = props => {
     setReasonText(val);
   };
 
+  console.log('timeInValue', timeInValue);
+  console.log('timeOutValue', timeOutValue);
+
   const onPressSubmitRequest = () => {
     dispatch(
       AttendenceNotMarkedAction({
@@ -207,9 +224,14 @@ const AttendenceNotMarked = props => {
 
         // in_time: timeIn ? timeInValue : null,
 
-        ...(timeIn ? {in_time: timeInValue} : {}),
-        ...(timeOut ? {out_time: timeOutValue} : {}),
-        ...(both ? {in_time: timeInValue, out_time: timeOutValue} : {}),
+        ...(timeIn ? {in_time: timeInValue.replace(':', '')} : {}),
+        ...(timeOut ? {out_time: timeOutValue.replace(':', '')} : {}),
+        ...(both
+          ? {
+              in_time: timeInValue.replace(':', ''),
+              out_time: timeOutValue.replace(':', ''),
+            }
+          : {}),
       }),
     );
   };
@@ -219,6 +241,17 @@ const AttendenceNotMarked = props => {
       setShowErrorModal(true);
     } else if (attendenceNotMarkedResponseHere == 1) {
       setShowSuccessModal(true);
+
+      setTimeIn(true);
+      setTimeOut(false);
+      setBoth(false);
+
+      setFromDate(null);
+      setForFromDate(null);
+      setTimeInValue(null);
+      setTimeOutValue(null);
+
+      setReasonText('');
     }
   }, [attendenceNotMarkedResponseHere]);
 
@@ -249,6 +282,8 @@ const AttendenceNotMarked = props => {
       <DateTimePickerModal
         isVisible={timeInModal}
         mode="time"
+        is24Hour={true}
+        display={'clock'}
         onConfirm={handleTimeInConfirm}
         onCancel={hideTimeInModal}
       />
@@ -256,6 +291,8 @@ const AttendenceNotMarked = props => {
       <DateTimePickerModal
         isVisible={timeOutModal}
         mode="time"
+        is24Hour={true}
+        display={'clock'}
         onConfirm={handleTimeOutConfirm}
         onCancel={hideTimeOutModal}
       />
@@ -403,7 +440,7 @@ const AttendenceNotMarked = props => {
           <ViewInput
             dateText={timeInValue == null ? 'Time In' : timeInValue}
             dateFun={onPressTimeInModal}
-            iconName={'fat fa-calendar-days'}
+            iconName={'fat fa-clock-nine'}
             placeholder={'Time in'}
             placeholderColor={colors.loginTextColor}
             style={styles.textInputCustomStyle}
@@ -426,7 +463,7 @@ const AttendenceNotMarked = props => {
           <ViewInput
             dateText={timeOutValue == null ? 'Time Out' : timeOutValue}
             dateFun={onPressTimeOutModal}
-            iconName={'fat fa-calendar-days'}
+            iconName={'fat fa-clock-five'}
             placeholder={'Time Out'}
             placeholderColor={colors.loginTextColor}
             style={styles.textInputCustomStyle}
@@ -449,6 +486,7 @@ const AttendenceNotMarked = props => {
           placeholder={'Reason'}
           placeholderTextColor="#363636"
           multiline={true}
+          value={reasonText}
           onChangeText={onChangeReason}
           style={{
             height: hp(17),

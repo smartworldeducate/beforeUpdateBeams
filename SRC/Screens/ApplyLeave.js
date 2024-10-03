@@ -16,9 +16,7 @@ import React, {useEffect, useState} from 'react';
 import MainHeader from '../Components/Headers/MainHeader';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import colors from '../Styles/colors';
-import {Div, ThemeProvider, Radio} from 'react-native-magnus';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import SelectDropdown from 'react-native-select-dropdown';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -32,8 +30,6 @@ import ViewInputTwo from '../Components/ViewInputTwo';
 import InputBackground from '../Components/InputBackground';
 import Icon from 'react-native-fontawesome-pro';
 import {useDispatch, useSelector} from 'react-redux';
-import {getLineMangerHandller} from '../features/lineManager/createSlice';
-import {reporteeHandleFun} from '../features/reportee/createSlice';
 import LeaveTypeModal from '../Components/Modal/LeaveTypeModal';
 import {LeaveTypeAction} from '../features/LeaveTypeSlice/LeaveTypeSlice';
 import LineSeprator from '../Components/LineSeprator/LineSeprator';
@@ -45,7 +41,6 @@ import {
   clearAllStateApplyLeave,
 } from '../features/LeaveTypeSlice/ApplyLeaveSlice';
 import ViewInputAnother from '../Components/ViewInputAnother';
-import {useFocusEffect} from '@react-navigation/native';
 import MessageSuccessModal from '../Components/Modal/MessageSuccessModal';
 import Loader from '../Components/Loader/Loader';
 import DatesComparisonModal from '../Components/Modal/DatesComparisonModal';
@@ -55,6 +50,10 @@ const ApplyLeave = props => {
   const profileHereEmpId = useSelector(
     state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
   );
+
+  // const leaveApplyForwardToHere = useSelector(
+  //   state => state.profileStore?.leavesApplyForwardTo,
+  // );
 
   const leaveTypeHere = useSelector(state => state.LeaveTypeStore);
 
@@ -77,15 +76,25 @@ const ApplyLeave = props => {
   const [forToDate, setForToDate] = useState(null);
   const [empLeaveTypeId, setEmpLeaveTypeId] = useState(null);
   const [empLeaveType, setEmpLeaveType] = useState(null);
-  const [empLeaveForwardToId, setEmpLeaveForwardToId] = useState(null);
-  const [empLeaveForwardTo, setEmpLeaveForwardTo] = useState(null);
+  const [empLeaveForwardToId, setEmpLeaveForwardToId] = useState(
+    leaveTypeHere?.userData?.forward_to[0]?.employee_id,
+  );
+  const [empLeaveForwardTo, setEmpLeaveForwardTo] = useState(
+    leaveTypeHere?.userData?.forward_to[0]?.emp_name,
+  );
 
   const [fullDay, setFullDay] = useState(true);
   const [firstDayValue, setFirstDayValue] = useState('F');
   const [halfDay, setHalfDay] = useState(false);
+
+  const [firstHalf, setFirstHalf] = useState(false);
+  const [secondHalf, setSecondHalf] = useState(false);
+
+  const [halfDayValue, setHalfDayValue] = useState(null);
+
   const [shortLeave, setShortLeave] = useState(false);
   const [withPay, setWithPay] = useState(true);
-  const [payValue, setPayValue] = useState('Y');
+  const [payValue, setPayValue] = useState('N');
   const [withoutPay, setWithoutPay] = useState(false);
   const [reasonText, setReasonText] = useState('');
 
@@ -134,14 +143,15 @@ const ApplyLeave = props => {
     var year = date.getFullYear();
 
     const fromDateForTotalDays = day + '-' + month + '-' + year;
-    console.log('fromDateForTotalDays', fromDateForTotalDays);
     setForFromDate(fromDateForTotalDays);
-
     setFromDate(formattedFromDate);
+
+    setForToDate(fromDateForTotalDays);
+
+    setToDate(formattedFromDate);
+
     hideDatePicker();
   };
-
-  console.log('fromDate', fromDate);
 
   //second datetime picker
   const showDatePickerTwo = () => {
@@ -194,8 +204,6 @@ const ApplyLeave = props => {
   const onPressForwardToModal = () => {
     setForwardToModal(!forwardToModal);
   };
-
-  console.log('datesValid', datesValid);
 
   const renderItemLeaveTypes = ({item, index}) => {
     return (
@@ -254,28 +262,52 @@ const ApplyLeave = props => {
     setHalfDay(false);
     setShortLeave(false);
     setFirstDayValue('F');
+
+    setFirstHalf(false);
+    setSecondHalf(false);
+    setHalfDayValue(null);
   };
   const onPressHalfDay = () => {
     setFullDay(false);
     setHalfDay(true);
     setShortLeave(false);
     setFirstDayValue('H');
+    setFirstHalf(true);
+    setSecondHalf(false);
+    setHalfDayValue(1);
   };
+
+  const onPressFirstHalf = () => {
+    setFirstHalf(true);
+    setSecondHalf(false);
+    setHalfDayValue(1);
+  };
+
+  const onPressSecondHalf = () => {
+    setFirstHalf(false);
+    setSecondHalf(true);
+    setHalfDayValue(2);
+  };
+
   const onPressShortLeave = () => {
     setFullDay(false);
     setHalfDay(false);
     setShortLeave(true);
     setFirstDayValue('Q');
+
+    setFirstHalf(false);
+    setSecondHalf(false);
+    setHalfDayValue(null);
   };
   const onPressWithPay = () => {
     setWithPay(true);
     setWithoutPay(false);
-    setPayValue('Y');
+    setPayValue('N');
   };
   const onPressWithoutPay = () => {
     setWithPay(false);
     setWithoutPay(true);
-    setPayValue('N');
+    setPayValue('Y');
   };
 
   const onChangeReason = val => {
@@ -302,7 +334,6 @@ const ApplyLeave = props => {
   // }, [fromDate, toDate]);
 
   const onPressSubmitRequest = () => {
-    console.log('onPressSubmitRequest');
     dispatch(
       ApplyLeaveAction({
         employee_id: JSON.parse(profileHereEmpId),
@@ -318,28 +349,12 @@ const ApplyLeave = props => {
         leave_type: JSON.parse(empLeaveTypeId),
         op_leave_type: firstDayValue,
         op_pay_type: payValue,
+        half_leave_span: halfDayValue,
         reason: reasonText,
         forward_to: JSON.parse(empLeaveForwardToId),
       }),
     );
   };
-
-  // const onPressSubmitRequest = () => {
-  //   console.log('onPressSubmitRequest');
-  //   dispatch(
-  //     ApplyLeaveAction({
-  //       employee_id: 93139,
-  //       from_date: '01/01/2024',
-  //       to_date: '03/01/2024',
-  //       total_days: 3,
-  //       leave_type: 1,
-  //       op_leave_type: 'F',
-  //       op_pay_type: 'Y',
-  //       reason: 'Test',
-  //       forward_to: 57660,
-  //     }),
-  //   );
-  // };
 
   useEffect(() => {
     if (applyLeaveSuccessResponseHere == 0) {
@@ -351,10 +366,12 @@ const ApplyLeave = props => {
       setTotalDays(null);
       setForFromDate(null);
       setForToDate(null);
+
       setEmpLeaveTypeId(null);
       setEmpLeaveType(null);
-      setEmpLeaveForwardToId(null);
-      setEmpLeaveForwardTo(null);
+
+      onPressFullDay();
+      setReasonText('');
     }
   }, [applyLeaveSuccessResponseHere]);
 
@@ -363,8 +380,6 @@ const ApplyLeave = props => {
     setShowSuccessModal(false);
     setShowErrorModal(false);
   };
-
-  console.log('setReasonText>>>', reasonText);
 
   // useFocusEffect(
   //   React.useCallback(() => {
@@ -629,6 +644,91 @@ const ApplyLeave = props => {
           alignItems: 'center',
         }}></View>
 
+      {halfDay && (
+        <View
+          style={{
+            flexDirection: 'row',
+            marginHorizontal: wp('4'),
+            height: hp('4'),
+            marginTop: hp('1.5'),
+            marginBottom: hp('1.5'),
+          }}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={onPressFirstHalf}
+            style={{flex: 0.333, flexDirection: 'row'}}>
+            <View
+              style={{
+                flex: 0.3,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                style={{
+                  width: wp(6),
+                  height: hp(3),
+                }}
+                source={{uri: firstHalf ? 'radiogreen' : 'circelgrey'}}
+                resizeMode="cover"
+              />
+            </View>
+            <View
+              style={{
+                flex: 0.7,
+                justifyContent: 'center',
+                alignItems: 'flex-start',
+              }}>
+              <Text style={styles.dropdown1RowTxtStyle}>First Half</Text>
+            </View>
+          </TouchableOpacity>
+          <View
+            style={{
+              flex: 0.33,
+              flexDirection: 'row',
+            }}></View>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={onPressSecondHalf}
+            style={{
+              flex: 0.334,
+              flexDirection: 'row',
+            }}>
+            <View
+              style={{
+                flex: 0.3,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                style={{
+                  width: wp(6),
+                  height: hp(3),
+                }}
+                source={{uri: secondHalf ? 'radiogreen' : 'circelgrey'}}
+                resizeMode="cover"
+              />
+            </View>
+            <View
+              style={{
+                flex: 0.7,
+                justifyContent: 'center',
+                alignItems: 'flex-start',
+              }}>
+              <Text style={styles.dropdown1RowTxtStyle}>Second Half</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      <View
+        style={{
+          marginHorizontal: hp(2.5),
+          height: hp(0.05),
+          backgroundColor: '#DBDBDB',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}></View>
+
       <View
         style={{
           flexDirection: 'row',
@@ -718,6 +818,7 @@ const ApplyLeave = props => {
           placeholder={'Reason'}
           placeholderTextColor="#363636"
           multiline={true}
+          value={reasonText}
           onChangeText={onChangeReason}
           style={{
             height: hp(17),
@@ -796,6 +897,7 @@ const ApplyLeave = props => {
           backgroundColor: '#1C37A4',
           borderRadius: hp(50),
           alignItems: 'center',
+          marginBottom: hp('2'),
         }}>
         <Text style={styles.submittext}>SUBMIT REQUEST</Text>
       </TouchableOpacity>

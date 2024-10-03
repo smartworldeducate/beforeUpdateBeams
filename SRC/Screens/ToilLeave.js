@@ -55,8 +55,12 @@ const ToilLeave = props => {
   const [fromDate, setFromDate] = useState(null);
   const [offdayWorkTime, setOffDayWorkTime] = useState(null);
 
-  const [empLeaveForwardToId, setEmpLeaveForwardToId] = useState(null);
-  const [empLeaveForwardTo, setEmpLeaveForwardTo] = useState(null);
+  const [empLeaveForwardToId, setEmpLeaveForwardToId] = useState(
+    leaveTypeHere?.userData?.forward_to[0]?.employee_id,
+  );
+  const [empLeaveForwardTo, setEmpLeaveForwardTo] = useState(
+    leaveTypeHere?.userData?.forward_to[0]?.emp_name,
+  );
 
   const [offDayWorkModal, setOffDayWorkModal] = useState(false);
 
@@ -85,6 +89,7 @@ const ToilLeave = props => {
     });
 
     setFromDate(formattedFromDate);
+    setOffDayWorkTime(formattedFromDate);
     hideDatePicker();
   };
 
@@ -173,11 +178,37 @@ const ToilLeave = props => {
     );
   };
 
+  const [fullDayToil, setFullDayToil] = useState(false);
+  const [halfDayToil, setHalfDayToil] = useState(false);
+  const [toilValue, setToilValue] = useState(null);
+
+  const onPressFullDayToil = () => {
+    setFullDayToil(true);
+    setHalfDayToil(false);
+    setToilValue(1);
+  };
+
+  const onPressHalfDayToil = () => {
+    setFullDayToil(false);
+    setHalfDayToil(true);
+    setToilValue(2);
+  };
+
+  console.log('fullDayToil', fullDayToil);
+  console.log('halfDayToil', halfDayToil);
+  console.log('toilValue', toilValue);
+
   useEffect(() => {
     if (toilResponseHere == 0) {
       setShowErrorModal(true);
     } else if (toilResponseHere == 1) {
       setShowSuccessModal(true);
+
+      setFullDayToil(false);
+      setHalfDayToil(false);
+      setToilValue(null);
+
+      setReasonText('');
     }
   }, [toilResponseHere]);
 
@@ -260,6 +291,91 @@ const ToilLeave = props => {
           style={styles.textInputCustomStyle}
         />
       </View>
+
+      <>
+        <View
+          style={{
+            marginHorizontal: hp(2.5),
+            height: hp(0.05),
+            backgroundColor: '#DBDBDB',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}></View>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            marginHorizontal: wp('4'),
+            height: hp('4'),
+            marginTop: hp('1.5'),
+            marginBottom: hp('1.5'),
+          }}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={onPressFullDayToil}
+            style={{flex: 0.333, flexDirection: 'row'}}>
+            <View
+              style={{
+                flex: 0.3,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                style={{
+                  width: wp(6),
+                  height: hp(3),
+                }}
+                source={{uri: fullDayToil ? 'radiogreen' : 'circelgrey'}}
+                resizeMode="cover"
+              />
+            </View>
+            <View
+              style={{
+                flex: 0.7,
+                justifyContent: 'center',
+                alignItems: 'flex-start',
+              }}>
+              <Text style={styles.dropdown1RowTxtStyle}>Full Day Toil</Text>
+            </View>
+          </TouchableOpacity>
+          <View
+            style={{
+              flex: 0.33,
+              flexDirection: 'row',
+            }}></View>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={onPressHalfDayToil}
+            style={{
+              flex: 0.334,
+              flexDirection: 'row',
+            }}>
+            <View
+              style={{
+                flex: 0.3,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                style={{
+                  width: wp(6),
+                  height: hp(3),
+                }}
+                source={{uri: halfDayToil ? 'radiogreen' : 'circelgrey'}}
+                resizeMode="cover"
+              />
+            </View>
+            <View
+              style={{
+                flex: 0.7,
+                justifyContent: 'center',
+                alignItems: 'flex-start',
+              }}>
+              <Text style={styles.dropdown1RowTxtStyle}>Full Day Toil</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </>
 
       {/* <View
         style={{
@@ -345,6 +461,7 @@ const ToilLeave = props => {
           placeholder={'Reason'}
           placeholderTextColor="#363636"
           multiline={true}
+          value={reasonText}
           onChangeText={onChangeReason}
           style={{
             height: hp(17),

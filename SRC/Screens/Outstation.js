@@ -60,12 +60,23 @@ const Outstation = props => {
   const [totalDays, setTotalDays] = useState(null);
   const [forFromDate, setForFromDate] = useState(null);
   const [forToDate, setForToDate] = useState(null);
-  const [empLeaveForwardToId, setEmpLeaveForwardToId] = useState(null);
-  const [empLeaveForwardTo, setEmpLeaveForwardTo] = useState(null);
+  const [empLeaveForwardToId, setEmpLeaveForwardToId] = useState(
+    leaveTypeHere?.userData?.forward_to[0]?.employee_id,
+  );
+  const [empLeaveForwardTo, setEmpLeaveForwardTo] = useState(
+    leaveTypeHere?.userData?.forward_to[0]?.emp_name,
+  );
 
   const [fullDay, setFullDay] = useState(true);
   const [firstDayValue, setFirstDayValue] = useState('F');
+
   const [halfDay, setHalfDay] = useState(false);
+
+  const [firstHalf, setFirstHalf] = useState(false);
+  const [secondHalf, setSecondHalf] = useState(false);
+
+  const [halfDayValue, setHalfDayValue] = useState(null);
+
   const [shortLeave, setShortLeave] = useState(false);
   const [reasonText, setReasonText] = useState('');
 
@@ -96,6 +107,11 @@ const Outstation = props => {
     setForFromDate(fromDateForTotalDays);
 
     setFromDate(formattedFromDate);
+
+    setForToDate(fromDateForTotalDays);
+
+    setToDate(formattedFromDate);
+
     hideDatePicker();
   };
 
@@ -170,18 +186,47 @@ const Outstation = props => {
     setHalfDay(false);
     setShortLeave(false);
     setFirstDayValue('F');
+
+    setFirstHalf(false);
+    setSecondHalf(false);
+    setHalfDayValue(null);
   };
   const onPressHalfDay = () => {
     setFullDay(false);
     setHalfDay(true);
     setShortLeave(false);
     setFirstDayValue('H');
+
+    setFirstHalf(true);
+    setSecondHalf(false);
+    setHalfDayValue(1);
   };
+
+  const onPressFirstHalf = () => {
+    setFirstHalf(true);
+    setSecondHalf(false);
+    setHalfDayValue(1);
+  };
+
+  const onPressSecondHalf = () => {
+    setFirstHalf(false);
+    setSecondHalf(true);
+    setHalfDayValue(2);
+  };
+
+  console.log('firstHalf', firstHalf);
+  console.log('secondHalf', secondHalf);
+  console.log('halfDayValue', halfDayValue);
+
   const onPressShortLeave = () => {
     setFullDay(false);
     setHalfDay(false);
     setShortLeave(true);
     setFirstDayValue('Q');
+
+    setFirstHalf(false);
+    setSecondHalf(false);
+    setHalfDayValue(null);
   };
 
   const onChangeReason = val => {
@@ -204,6 +249,7 @@ const Outstation = props => {
         leave_type: 17,
 
         op_leave_type: firstDayValue,
+        half_leave_span: halfDayValue,
         reason: reasonText,
         forward_to: JSON.parse(empLeaveForwardToId),
       }),
@@ -215,6 +261,15 @@ const Outstation = props => {
       setShowErrorModal(true);
     } else if (outstationLeaveResponseHere == 1) {
       setShowSuccessModal(true);
+
+      setFromDate(null);
+      setToDate(null);
+      setTotalDays(null);
+      setForFromDate(null);
+      setForToDate(null);
+
+      onPressFullDay();
+      setReasonText('');
     }
   }, [outstationLeaveResponseHere]);
 
@@ -413,10 +468,98 @@ const Outstation = props => {
               justifyContent: 'center',
               alignItems: 'flex-start',
             }}>
-            <Text style={styles.dropdown1RowTxtStyle}>Short Leave</Text>
+            {/* short leave write as Quarter */}
+            <Text style={styles.dropdown1RowTxtStyle}>Quarter</Text>
           </View>
         </TouchableOpacity>
       </View>
+
+      {halfDay && (
+        <>
+          <View
+            style={{
+              marginHorizontal: hp(2.5),
+              height: hp(0.05),
+              backgroundColor: '#DBDBDB',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}></View>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              marginHorizontal: wp('4'),
+              height: hp('4'),
+              marginTop: hp('1.5'),
+              marginBottom: hp('1.5'),
+            }}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={onPressFirstHalf}
+              style={{flex: 0.333, flexDirection: 'row'}}>
+              <View
+                style={{
+                  flex: 0.3,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  style={{
+                    width: wp(6),
+                    height: hp(3),
+                  }}
+                  source={{uri: firstHalf ? 'radiogreen' : 'circelgrey'}}
+                  resizeMode="cover"
+                />
+              </View>
+              <View
+                style={{
+                  flex: 0.7,
+                  justifyContent: 'center',
+                  alignItems: 'flex-start',
+                }}>
+                <Text style={styles.dropdown1RowTxtStyle}>First Half</Text>
+              </View>
+            </TouchableOpacity>
+            <View
+              style={{
+                flex: 0.33,
+                flexDirection: 'row',
+              }}></View>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={onPressSecondHalf}
+              style={{
+                flex: 0.334,
+                flexDirection: 'row',
+              }}>
+              <View
+                style={{
+                  flex: 0.3,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  style={{
+                    width: wp(6),
+                    height: hp(3),
+                  }}
+                  source={{uri: secondHalf ? 'radiogreen' : 'circelgrey'}}
+                  resizeMode="cover"
+                />
+              </View>
+              <View
+                style={{
+                  flex: 0.7,
+                  justifyContent: 'center',
+                  alignItems: 'flex-start',
+                }}>
+                <Text style={styles.dropdown1RowTxtStyle}>Second Half</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
 
       <View
         style={{
@@ -433,6 +576,7 @@ const Outstation = props => {
           placeholder={'Reason'}
           placeholderTextColor="#363636"
           multiline={true}
+          value={reasonText}
           onChangeText={onChangeReason}
           style={{
             height: hp(17),

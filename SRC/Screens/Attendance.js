@@ -40,7 +40,11 @@ const Attendance = props => {
 
   const [yearSelectionModal, setyearSelectionModal] = useState(false);
 
-  const lastElement = totalYears[totalYears?.length - 1];
+  // const lastElement = totalYears[totalYears?.length - 1];
+
+  // blelow line from chat gpt logic
+  const lastElement = totalYears ? totalYears[totalYears?.length - 1] : null;
+
   // console.log('lastElement', lastElement);
 
   const [selectedYear, setSelectedYear] = useState(lastElement);
@@ -332,6 +336,7 @@ const Attendance = props => {
                 ? () =>
                     navigation.navigate('LateArivel', {
                       attenValue: item?.att_date,
+                      lateArrivalTime: item?.emp_in_time,
                     })
                 : null
             }>
@@ -423,6 +428,7 @@ const Attendance = props => {
                 {item?.late_exempt == 'Y' ? item?.status : ''}
               </Text>
             )}
+
             {item?.hd_pending == 'Y' && (
               <Text
                 numberOfLines={1}
@@ -479,6 +485,7 @@ const Attendance = props => {
               {item?.rec_status !== 'Toil' && (
                 <>
                   <TouchableOpacity
+                    style={{paddingTop: hp('1.25')}}
                     activeOpacity={
                       item?.early_minutes > 15 && item?.late_ded_run == 'N'
                         ? 0.4
@@ -489,6 +496,7 @@ const Attendance = props => {
                         ? () =>
                             navigation.navigate('EarlyLeaving', {
                               attenValue: item?.att_date,
+                              earlyLeavingTime: item?.emp_out_time,
                             })
                         : null
                     }>
@@ -528,7 +536,7 @@ const Attendance = props => {
                     )}
                   </TouchableOpacity>
 
-                  <View style={{}}>
+                  {/* <View style={{}}>
                     {item?.early_minutes > 15 && item?.late_ded_run == 'N' && (
                       <Text
                         style={{
@@ -542,7 +550,7 @@ const Attendance = props => {
                           : ''}
                       </Text>
                     )}
-                  </View>
+                  </View> */}
                 </>
               )}
 
@@ -564,6 +572,36 @@ const Attendance = props => {
                     {`${item?.link}: \n ${item?.fin_year_date}`}
                   </Text>
                 </>
+              )}
+
+              {item?.is_early_applied == 'Y' ? (
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode={'tail'}
+                  style={{
+                    color: '#1C37A4',
+                    fontSize: hp('1'),
+                    fontFamily: fontFamily.ceraMedium,
+                    textAlign: 'center',
+                  }}>
+                  {item?.is_early_applied == 'Y' ? item?.link : ''}
+                </Text>
+              ) : (
+                <View style={{}}>
+                  {item?.early_minutes > 15 && item?.late_ded_run == 'N' && (
+                    <Text
+                      style={{
+                        color: '#1C37A4',
+                        fontSize: hp('1'),
+                        fontFamily: fontFamily.ceraMedium,
+                        textAlign: 'center',
+                      }}>
+                      {item?.late_minutes > 15 && item?.late_ded_run == 'N'
+                        ? item?.link
+                        : ''}
+                    </Text>
+                  )}
+                </View>
               )}
             </>
           )}

@@ -45,6 +45,8 @@ import Loader from '../Components/Loader/Loader';
 const EarlyLeaving = ({route, ...props}) => {
   const routeValueAttenDate = route?.params?.attenValue;
 
+  const routeValueLeaveTime = route?.params?.earlyLeavingTime;
+
   const formatDate = dateString => {
     const options = {
       weekday: 'short',
@@ -91,13 +93,21 @@ const EarlyLeaving = ({route, ...props}) => {
     formattedDate != undefined || formattedDate != null ? formattedDate : null,
   );
   const [totalDays, setTotalDays] = useState(null);
-  const [lateArrivalTime, setLateArrivalTime] = useState(null);
+  const [lateArrivalTime, setLateArrivalTime] = useState(
+    route?.params?.earlyLeavingTime
+      ? route?.params?.earlyLeavingTime.substring(0, 5)
+      : null,
+  );
 
   const [forFromDate, setForFromDate] = useState(null);
   const [forToDate, setForToDate] = useState(null);
   const [empLeaveTypeId, setEmpLeaveTypeId] = useState(null);
-  const [empLeaveForwardToId, setEmpLeaveForwardToId] = useState(null);
-  const [empLeaveForwardTo, setEmpLeaveForwardTo] = useState(null);
+  const [empLeaveForwardToId, setEmpLeaveForwardToId] = useState(
+    leaveApplyForwardToHere[0]?.employee_id,
+  );
+  const [empLeaveForwardTo, setEmpLeaveForwardTo] = useState(
+    leaveApplyForwardToHere[0]?.emp_name,
+  );
   const [reasonText, setReasonText] = useState('');
 
   const [showErrorModal, setShowErrorModal] = useState(false);
@@ -127,6 +137,11 @@ const EarlyLeaving = ({route, ...props}) => {
     setForFromDate(fromDateForTotalDays);
 
     setFromDate(formattedFromDate);
+
+    setForToDate(fromDateForTotalDays);
+
+    setToDate(formattedFromDate);
+
     hideDatePicker();
   };
 
@@ -170,7 +185,11 @@ const EarlyLeaving = ({route, ...props}) => {
   const handleLateArrivalTimeConfirm = time => {
     const pakTime = new Date(time);
     setLateArrivalTime(
-      pakTime.toLocaleTimeString('en-PK', {hour: '2-digit', minute: '2-digit'}),
+      pakTime.toLocaleTimeString('en-PK', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      }),
     );
     hideLateArrivalTimePicker();
   };
@@ -257,7 +276,7 @@ const EarlyLeaving = ({route, ...props}) => {
             : moment(toDate, 'ddd, MMM DD, YYYY').format('DD/MM/YYYY'),
         total_days: JSON.parse(totalDays),
 
-        txt_exp_tm: lateArrivalTime,
+        txt_exp_tm: lateArrivalTime.replace(':', ''),
         reason: reasonText,
         forward_to: JSON.parse(empLeaveForwardToId),
       }),
@@ -269,6 +288,15 @@ const EarlyLeaving = ({route, ...props}) => {
       setShowErrorModal(true);
     } else if (earlyLeavingResponseHere == 1) {
       setShowSuccessModal(true);
+
+      setFromDate(null);
+      setToDate(null);
+      setForFromDate(null);
+      setForToDate(null);
+      setTotalDays(null);
+      setLateArrivalTime(null);
+
+      setReasonText('');
     }
   }, [earlyLeavingResponseHere]);
 
@@ -304,6 +332,8 @@ const EarlyLeaving = ({route, ...props}) => {
       />
       <DateTimePickerModal
         mode="time"
+        is24Hour={true}
+        display={'clock'}
         isVisible={timePickerVisible}
         onConfirm={handleLateArrivalTimeConfirm}
         onCancel={hideLateArrivalTimePicker}
@@ -415,6 +445,7 @@ const EarlyLeaving = ({route, ...props}) => {
           placeholder={'Reason'}
           placeholderTextColor="#363636"
           multiline={true}
+          value={reasonText}
           onChangeText={onChangeReason}
           style={{
             height: hp(17),

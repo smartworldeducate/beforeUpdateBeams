@@ -343,6 +343,17 @@ const CustomDrawer = ({navigation}) => {
               </TouchableOpacity>
             </View> */}
 
+            {/* <View style={styles.listnameStyle}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('ChatScreenDrawer')}>
+                <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
+                  <View style={styles.homeleft}>
+                    <Text style={styles.textlistStyle}>Chat</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </View> */}
+
             <View style={styles.listnameStyle}>
               <TouchableOpacity onPress={saveData}>
                 <View style={{flexDirection: 'row', marginLeft: hp(2)}}>

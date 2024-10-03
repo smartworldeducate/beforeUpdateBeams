@@ -80,6 +80,8 @@ const HomeScreen = props => {
 
   const messagesHere = useSelector(state => state.MessageSliceHomePageStore);
 
+  const messagesSlicedData = messagesHere?.userData?.slice(0, 6);
+
   const leaveBalanceHere = useSelector(state => state.leaveBalanceStore);
 
   const messageDetailHere = useSelector(state => state.messageDetailStore);
@@ -288,7 +290,7 @@ const HomeScreen = props => {
                 lineHeight: hp('2.5'),
                 paddingHorizontal: wp('1.25'),
               }}>
-              {`${item?.MSG_SUB_DESC} This blog post is for developers who already enrolled Apple Developer Program. if you don’t enroll Apple Developer Program`}
+              {item?.MSG_SUB_DESC}
             </Text>
           </View>
 
@@ -776,8 +778,8 @@ const HomeScreen = props => {
                     justifyContent: 'space-between',
                     height: hp('21'),
                     alignItems: 'center',
-                    marginTop: hp('3'),
-                    marginBottom: hp('1'),
+                    marginTop: hp('2'),
+                    marginBottom: hp('0.25'),
                   },
                 ]}>
                 <LinearGradient
@@ -856,12 +858,12 @@ const HomeScreen = props => {
                         height: hp('6'),
                         justifyContent: 'center',
                         alignItems: 'flex-end',
-                        marginTop: hp('-1'),
-                        marginHorizontal: wp('-1.5'),
+                        marginTop: hp('-1.5'),
+                        marginHorizontal: wp('-1.15'),
                       }}>
                       <FontAwesomeIcon
-                        icon="fat fa-gear-complex"
-                        size={hp('4')}
+                        icon="fat fa-calendar-range"
+                        size={hp('3.75')}
                         style={{color: '#999696'}}
                       />
                     </View>
@@ -936,7 +938,7 @@ const HomeScreen = props => {
                         marginHorizontal: wp('-1.5'),
                       }}>
                       <FontAwesomeIcon
-                        icon="fat fa-heart-pulse"
+                        icon="fat fa-badge-check"
                         size={hp('4')}
                         style={{color: '#999696'}}
                       />
@@ -1061,7 +1063,7 @@ const HomeScreen = props => {
 
                 <View style={{marginHorizontal: wp('-2'), marginTop: hp('-1')}}>
                   <FlatList
-                    data={messagesHere?.userData}
+                    data={messagesSlicedData}
                     renderItem={renderItem}
                     keyExtractor={(item, index) => index.toString()}
                     horizontal={true}
