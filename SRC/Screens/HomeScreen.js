@@ -1032,6 +1032,24 @@ const HomeScreen = props => {
                 </LinearGradient>
               </View>
 
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={() => navigation.navigate('ChallengeSignUp')}
+                style={{marginHorizontal: wp('5'), marginVertical: hp('1')}}>
+                <Image
+                  source={{
+                    uri: 'https://t4.ftcdn.net/jpg/08/07/08/49/360_F_807084954_zefPh3Yyj1jkgj5ETOfeGAounpUL5AUM.jpg',
+                  }}
+                  style={{
+                    height: hp('20'),
+                    width: wp('90'),
+
+                    borderRadius: wp('5'),
+                  }}
+                  resizeMode={'cover'}
+                />
+              </TouchableOpacity>
+
               <View style={{marginHorizontal: wp('5.5')}}>
                 <View
                   style={{

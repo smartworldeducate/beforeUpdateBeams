@@ -1,5 +1,9 @@
 export const BASE_URL = 'https://ws.beaconhouse.net/beams_ci/index.php/api/';
 // 'https://b2training.beaconhouse.net/beams_ci/index.php/api/';
+
+export const BASE_INSPIRE_URL =
+  'https://ws.beaconhouse.net/beams_ci/index.php/inspire/';
+
 export const config = {
   headers: {
     api_key: 'X5Ne0km78x2Q1ykny9FfcIK',
@@ -84,4 +88,6 @@ export const APIS = {
   DeviceInfoEmail: BASE_URL + 'send_email',
 
   NotificationsMessages: BASE_URL + 'notification_mesages',
+
+  InspireSignUp: BASE_INSPIRE_URL + 'inspire_signup',
 };

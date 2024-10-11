@@ -121,6 +121,8 @@ import DeviceInfoEmailSliceReducer from '../features/DeviceInfoEmailSlice/Device
 
 import NotificationsMessagesSliceReducer from '../features/NotificationsMessagesSlice/NotificationsMessagesSlice';
 
+import InspireSignupSliceReducer from '../features/Inspire50/InspireSignUpHTMLSlice';
+
 export const store = configureStore({
   reducer: {
     register: authReducer,
@@ -239,6 +241,8 @@ export const store = configureStore({
     DeviceInfoEmailStore: DeviceInfoEmailSliceReducer,
 
     NotificationsMessagesStore: NotificationsMessagesSliceReducer,
+
+    InspireSignupStore: InspireSignupSliceReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

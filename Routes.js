@@ -68,6 +68,9 @@ import AttendenceAndLeaveTab from './SRC/Components/CustomTab/AttendenceAndLeave
 import DeviceInfo from './SRC/Screens/DeviceInfo';
 import Notificantions from './SRC/Screens/Notificantions';
 import ChatScreen from './SRC/Screens/ChatScreen';
+import ChallengeSignUp from './SRC/Screens/Challenge/ChallengeSignUp';
+import ChallengeFormList from './SRC/Screens/Challenge/ChallengeFormList';
+import ChallengeFormFill from './SRC/Screens/Challenge/ChallengeFormFill';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -193,6 +196,11 @@ const Routes = () => {
 
         <Stack.Screen name="EarlyLeaving" component={EarlyLeaving} />
         <Stack.Screen name="ToilLeave" component={ToilLeave} />
+
+        <Stack.Screen name="ChallengeSignUp" component={ChallengeSignUp} />
+
+        <Stack.Screen name="ChallengeFormList" component={ChallengeFormList} />
+        <Stack.Screen name="ChallengeFormFill" component={ChallengeFormFill} />
       </Stack.Navigator>
     </NavigationContainer>
   );

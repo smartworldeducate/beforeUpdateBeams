@@ -379,7 +379,7 @@ const CustomDrawer = ({navigation}) => {
               }}>
               {`App Version: ${
                 versionName !== null && versionName !== undefined
-                  ? versionName
+                  ? `${versionName}.01`
                   : ''
               }`}
             </Text>

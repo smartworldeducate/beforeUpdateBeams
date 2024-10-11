@@ -120,7 +120,7 @@ const Login = props => {
       AsyncStorage.setItem('getDeviceVersionAsyncStorage', getDeviceVersion);
       AsyncStorage.setItem(
         'getUserAppInstallVersionAsyncStorage',
-        getUserAppInstallVersion,
+        `${getUserAppInstallVersion}.01`,
       );
       AsyncStorage.setItem('deviceNameAsyncStorage', deviceName);
 
@@ -137,7 +137,7 @@ const Login = props => {
           gettingDeviceId: getDeviceId,
           gettingDeviceBrand: getDeviceBrand,
           deviceVersion: getDeviceVersion,
-          userAppInstallVersion: getUserAppInstallVersion,
+          userAppInstallVersion: `${getUserAppInstallVersion}.01`,
           deviceName: deviceName,
           deviceApiLevel: deviceApiLevel.toString(),
           deviceToken: deviceToken,
