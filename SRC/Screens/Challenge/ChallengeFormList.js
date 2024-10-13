@@ -15,6 +15,8 @@ import Ficon from 'react-native-fontawesome-pro';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+
 import React, {useEffect, useState} from 'react';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
@@ -31,10 +33,27 @@ import {useDispatch, useSelector} from 'react-redux';
 import MainHeader from '../../Components/Headers/MainHeader';
 import fontFamily from '../../Styles/fontFamily';
 import ChallengeListOpen from '../../Components/Modal/ChallengeListOpen';
+import {InspireTrainingsAction} from '../../features/Inspire50/InspireTrainingsSlice';
 
 const ChallengeFormList = props => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+
+  const profileHereEmpId = useSelector(
+    state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
+  );
+
+  const inspireTrainingsHere = useSelector(
+    state => state.InspireTrainingsStore,
+  );
+
+  useEffect(() => {
+    dispatch(
+      InspireTrainingsAction({
+        employee_id: profileHereEmpId,
+      }),
+    );
+  }, []);
 
   const [openListModal, setOpenListModal] = useState(false);
 
@@ -171,6 +190,11 @@ const ChallengeFormList = props => {
   ];
 
   const renderItem = ({item, index}) => {
+    const filesLength = item?.training_files?.length - 1;
+    console.log('item', item?.training_files);
+    const firstImage =
+      item?.training_files && item?.training_files[0]?.file_path;
+    console.log('firstImage', firstImage);
     return (
       <>
         <TouchableOpacity
@@ -180,7 +204,7 @@ const ChallengeFormList = props => {
             flexDirection: 'row',
             backgroundColor: 'white',
             marginBottom: hp('2'),
-            height: hp('14.5'),
+
             justifyContent: 'center',
             borderTopLeftRadius: wp('4'),
             borderBottomLeftRadius: wp('4'),
@@ -191,6 +215,7 @@ const ChallengeFormList = props => {
               paddingLeft: wp('2'),
               borderTopLeftRadius: wp('4'),
               borderBottomLeftRadius: wp('4'),
+              padding: wp('1'),
             }}>
             <Text
               numberOfLines={1}
@@ -202,10 +227,10 @@ const ChallengeFormList = props => {
                 fontFamily: fontFamily.ceraBold,
                 paddingTop: hp('1.5'),
               }}>
-              {item?.trainingTitle}
+              {item?.training_title}
             </Text>
             <Text
-              numberOfLines={1}
+              numberOfLines={2}
               ellipsizeMode="tail"
               style={{
                 color: '#1C37A4',
@@ -213,7 +238,7 @@ const ChallengeFormList = props => {
                 fontWeight: '500',
                 fontFamily: fontFamily.ceraMedium,
               }}>
-              {item?.PDCategories}
+              {item?.category_title}
             </Text>
 
             <Text
@@ -226,7 +251,7 @@ const ChallengeFormList = props => {
                 fontFamily: fontFamily.ceraMedium,
                 paddingVertical: hp('0.35'),
               }}>
-              {item?.date}
+              {item?.training_date}
             </Text>
 
             <Text
@@ -238,17 +263,15 @@ const ChallengeFormList = props => {
                 fontWeight: '500',
                 fontFamily: fontFamily.ceraMedium,
               }}>
-              {item?.campus}
+              {item?.school_name}
             </Text>
 
-            <View style={{flexDirection: 'row'}}>
+            <View style={{flexDirection: 'row', paddingVertical: hp('0.25')}}>
               <View>
-                <Image
-                  source={{
-                    uri: 'https://static.vecteezy.com/system/resources/thumbnails/029/167/048/small_2x/icon-location-map-ai-generative-png.png',
-                  }}
-                  style={{height: hp('2'), width: wp('4')}}
-                  resizeMode={'contain'}
+                <FontAwesomeIcon
+                  icon="fas fa-location-dot"
+                  size={hp(2)}
+                  style={{color: '#1C37A4'}}
                 />
               </View>
 
@@ -262,7 +285,7 @@ const ChallengeFormList = props => {
                     fontWeight: '500',
                     fontFamily: fontFamily.ceraMedium,
                   }}>
-                  {`${item?.location}`}
+                  {`${item?.city_name ? item?.city_name : ''}`}
                 </Text>
               </View>
             </View>
@@ -275,25 +298,31 @@ const ChallengeFormList = props => {
               alignItems: 'center',
             }}>
             <View style={{position: 'relative'}}>
-              <Text
-                style={{
-                  position: 'absolute',
-                  top: hp('1'),
-                  left: wp('2'),
-                  fontSize: hp('2'),
-                  fontWeight: '500',
-                  fontFamily: fontFamily.ceraLight,
-                  color: 'white',
-                  zIndex: 1,
-                  backgroundColor: 'grey',
-                  paddingHorizontal: wp('1.5'),
-                  borderRadius: wp('1'),
-                }}>
-                +2
-              </Text>
+              {filesLength > 1 && (
+                <Text
+                  style={{
+                    position: 'absolute',
+                    top: hp('1'),
+                    left: wp('2'),
+                    fontSize: hp('2'),
+                    fontWeight: '500',
+                    fontFamily: fontFamily.ceraLight,
+                    color: 'white',
+                    zIndex: 1,
+                    backgroundColor: 'grey',
+                    paddingHorizontal: wp('1.5'),
+                    borderRadius: wp('1'),
+                  }}>
+                  {`+${filesLength}`}
+                </Text>
+              )}
 
               <Image
-                source={{uri: item?.images[0]?.imageUrl}}
+                source={{
+                  uri: firstImage
+                    ? firstImage
+                    : 'https://cdn.pixabay.com/photo/2015/07/19/10/00/school-work-851328_640.jpg',
+                }}
                 style={{
                   height: hp('14.5'),
                   width: wp('26'),
@@ -322,14 +351,16 @@ const ChallengeFormList = props => {
 
   const onPressItem = item => {
     setOpenListModal(true);
-    setHeader(item?.item?.PDCategories);
-    setImagesArray(item?.item?.images);
-    setFirstText(item?.item?.PDCategories);
-    setSecondText(item?.item?.trainingTitle);
-    setDate(item?.item?.date);
-    setCampus(item?.item?.campus);
-    setCity(item?.item?.location);
+    setHeader('I50 (Inspire 50)');
+    setImagesArray(item?.item?.training_files);
+    setFirstText(item?.item?.category_title);
+    setSecondText(item?.item?.training_title);
+    setDate(item?.item?.training_date);
+    setCampus(item?.item?.school_name);
+    setCity(item?.item?.city_name);
   };
+
+  console.log('imagesArray', imagesArray);
 
   const renderItemImagesList = ({item, index}) => {
     console.log('item', item);
@@ -342,7 +373,7 @@ const ChallengeFormList = props => {
         }}>
         <Image
           source={{
-            uri: item?.imageUrl,
+            uri: item?.file_path,
           }}
           style={{
             height: hp('33'),
@@ -527,7 +558,7 @@ const ChallengeFormList = props => {
 
           <View style={{marginTop: hp('2')}}>
             <FlatList
-              data={data}
+              data={inspireTrainingsHere?.userData}
               renderItem={renderItem}
               keyExtractor={(item, index) => index.toString()}
             />

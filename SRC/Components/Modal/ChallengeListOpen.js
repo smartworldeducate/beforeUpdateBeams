@@ -15,7 +15,7 @@ import {
 
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-fontawesome-pro';
-
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import colors from '../../Styles/colors';
 import fontFamily from '../../Styles/fontFamily';
@@ -27,8 +27,6 @@ const ChallengeListOpen = ({
   textHeader,
 
   imagesListData,
-  renderItem,
-  keyExtractor,
 
   text1,
   text2,
@@ -42,7 +40,7 @@ const ChallengeListOpen = ({
       animationType="fade"
       transparent={true}
       visible={modalVisible}
-      onRequestClose={null}>
+      onRequestClose={onpressBtn}>
       <>
         <LinearGradient
           start={{x: 0, y: 0}}
@@ -96,7 +94,7 @@ const ChallengeListOpen = ({
               style={styles.wrapper}
               showsPagination={true}
               paginationStyle={styles.paginationDotStyle}
-              dotColor={'#eeeee4'}
+              dotColor={'grey'}
               dotStyle={{height: hp('1'), width: hp('1')}}
               activeDotColor={'black'}
               activeDotStyle={{height: hp('1'), width: hp('1')}}
@@ -109,11 +107,14 @@ const ChallengeListOpen = ({
                     paddingHorizontal: wp('1'),
                     justifyContent: 'center',
                     alignItems: 'center',
+                    borderRadius: wp('3'),
+                    borderWidth: wp('0.15'),
+                    borderColor: 'silver',
                   }}
                   key={index}>
                   <Image
                     source={{
-                      uri: item?.imageUrl,
+                      uri: item?.file_path,
                     }}
                     style={{
                       height: hp('35'),
@@ -159,11 +160,10 @@ const ChallengeListOpen = ({
                   paddingVertical: hp('2.15'),
                   borderRadius: wp('50'),
                 }}>
-                <Icon
-                  type="light"
-                  name={'calendar-check'}
+                <FontAwesomeIcon
+                  icon="far fa-calendar-check"
                   size={hp(2.5)}
-                  color="#1C37A4"
+                  style={{color: '#1C37A4'}}
                 />
               </View>
 
@@ -204,11 +204,10 @@ const ChallengeListOpen = ({
                   paddingVertical: hp('2.15'),
                   borderRadius: wp('50'),
                 }}>
-                <Icon
-                  type="light"
-                  name={'location-dot'}
-                  size={hp(2.5)}
-                  color="#1C37A4"
+                <FontAwesomeIcon
+                  icon="fas fa-location-dot"
+                  size={hp(2.25)}
+                  style={{color: '#1C37A4'}}
                 />
               </View>
 

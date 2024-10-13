@@ -14,25 +14,108 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import TitleCategoriesListModal from '../../Components/Modal/TitleCategoriesListModal';
 import LineSeprator from '../../Components/LineSeprator/LineSeprator';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import {InspireAddTrainingAction} from '../../features/Inspire50/InspireAddTrainingSlice';
 
 const ChallengeFormFill = props => {
   const dispatch = useDispatch();
 
+  const profileHereEmpId = useSelector(
+    state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
+  );
+
+  const inspireAddTrainingTitleHere = useSelector(
+    state => state.InspireAddTrainingStore?.userData?.trainings,
+  );
+
+  const inspireAddTrainingCategiriesHere = useSelector(
+    state => state.InspireAddTrainingStore?.userData?.categories,
+  );
+
+  const inspireAddTrainingSchoolHere = useSelector(
+    state => state.InspireAddTrainingStore?.userData?.schools,
+  );
+
+  const inspireAddTrainingCityHere = useSelector(
+    state => state.InspireAddTrainingStore?.userData?.cities,
+  );
+
+  const inspireAddTrainingDurationHere = useSelector(
+    state => state.InspireAddTrainingStore?.userData?.durations,
+  );
+
+  // console.log('inspireAddTrainingTitleHere', inspireAddTrainingTitleHere);
+
+  useEffect(() => {
+    dispatch(
+      InspireAddTrainingAction({
+        employee_id: profileHereEmpId,
+      }),
+    );
+  }, []);
+
   const [traingTitle, setTrainingTitle] = useState('');
+  const [traingTitleId, setTrainingTitleId] = useState(null);
+
   const [pdCategories, setPDCateories] = useState('');
-  const [trainingDate, setTrainingDate] = useState('');
+  const [traingCategoryId, setTrainingCategoryId] = useState(null);
+
+  const [trainingDate, setTrainingDate] = useState(null);
+  const [forTrainingDate, setForTrainingDate] = useState(null);
+
   const [schoolName, setSchoolName] = useState('');
+  const [traingSchoolId, setTrainingSchoolId] = useState(null);
+
   const [city, setCity] = useState('');
-  const [trainingDuration, setTrainingDuration] = useState('Training Duration');
+  const [traingCityId, setTrainingCityId] = useState(null);
+
+  const [trainingDuration, setTrainingDuration] = useState('');
+
   const [trainingCount, setTrainingCount] = useState(0);
   const [atttValue, setAttValue] = useState(true);
   const [atttachValue, setAttachValue] = useState(false);
 
   const [trainingTitleModal, setTrainingTitleModal] = useState(false);
   const [pdCategoriesModal, setPDCategoriesModal] = useState(false);
+
   const [schoolNameModal, setSchoolNameModal] = useState(false);
-  const [trainingDateModal, setTrainingDateModal] = useState(false);
+
   const [cityModal, setCityModal] = useState(false);
+
+  const [trainingDurationModal, setTrainingDurationModal] = useState(false);
+
+  // datePicker start
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const onPressShowDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+  const handleConfirm = date => {
+    const formattedFromDate = date.toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: '2-digit',
+      year: 'numeric',
+    });
+
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+
+    const fromDateForTotalDays = day + '-' + month + '-' + year;
+    setForTrainingDate(fromDateForTotalDays);
+    setTrainingDate(formattedFromDate);
+    hideDatePicker();
+  };
+  const currentDate = new Date();
+  const maxDate = new Date();
+  maxDate.setDate(currentDate.getDate() + 90);
+
+  console.log('trainingDate', trainingDate);
+  console.log('forTrainingDate', forTrainingDate);
+
+  // datepicker end
 
   const onPressMinus = () => {
     if (trainingCount > 0) {
@@ -80,10 +163,6 @@ const ChallengeFormFill = props => {
     setPDCategoriesModal(!pdCategoriesModal);
   };
 
-  const onPressShowDatePicker = () => {
-    // setDatePickerVisibility(true);
-  };
-
   const onPressSchoolNameModal = () => {
     setSchoolNameModal(!schoolNameModal);
   };
@@ -92,57 +171,9 @@ const ChallengeFormFill = props => {
     setCityModal(!cityModal);
   };
 
-  const trainingTitleList = [
-    {id: 1, trainingTitle: 'React Native Basics'},
-    {id: 2, trainingTitle: 'Advanced React Native'},
-    {id: 3, trainingTitle: 'State Management with Redux'},
-    {id: 4, trainingTitle: 'React Native Navigation'},
-    {id: 5, trainingTitle: 'Building UIs with React Native'},
-    {id: 6, trainingTitle: 'Native Modules in React Native'},
-    {id: 7, trainingTitle: 'Working with APIs in React Native'},
-    {id: 8, trainingTitle: 'React Native Performance Optimization'},
-    {id: 9, trainingTitle: 'React Native Testing'},
-    {id: 10, trainingTitle: 'Publishing Apps to App Stores'},
-  ];
-
-  const pdCategoriesList = [
-    {id: 1, pdCategory: 'Artificial Intelligence'},
-    {id: 2, pdCategory: 'Blockchain'},
-    {id: 3, pdCategory: 'Cloud Computing'},
-    {id: 4, pdCategory: 'Cybersecurity'},
-    {id: 5, pdCategory: 'Data Science'},
-    {id: 6, pdCategory: 'Internet of Things (IoT)'},
-    {id: 7, pdCategory: 'Machine Learning'},
-    {id: 8, pdCategory: 'Quantum Computing'},
-    {id: 9, pdCategory: 'Robotics'},
-    {id: 10, pdCategory: 'Virtual Reality'},
-  ];
-
-  const schoolNameList = [
-    {id: 1, schoolName: 'Beaconhouse Tech Academy'},
-    {id: 2, schoolName: 'Beaconhouse Innovation Hub'},
-    {id: 3, schoolName: 'Beaconhouse Digital Learning Center'},
-    {id: 4, schoolName: 'Beaconhouse Coding School'},
-    {id: 5, schoolName: 'Beaconhouse AI & Robotics Lab'},
-    {id: 6, schoolName: 'Beaconhouse Tech Solutions'},
-    {id: 7, schoolName: 'Beaconhouse Cyber Security Institute'},
-    {id: 8, schoolName: 'Beaconhouse Data Science Academy'},
-    {id: 9, schoolName: 'Beaconhouse Cloud Computing Center'},
-    {id: 10, schoolName: 'Beaconhouse VR & AR Development School'},
-  ];
-
-  const cityList = [
-    {id: 1, cityName: 'Karachi'},
-    {id: 2, cityName: 'Lahore'},
-    {id: 3, cityName: 'Islamabad'},
-    {id: 4, cityName: 'Rawalpindi'},
-    {id: 5, cityName: 'Faisalabad'},
-    {id: 6, cityName: 'Peshawar'},
-    {id: 7, cityName: 'Multan'},
-    {id: 8, cityName: 'Quetta'},
-    {id: 9, cityName: 'Sialkot'},
-    {id: 10, cityName: 'Hyderabad'},
-  ];
+  const onPressTrainingDurationModal = () => {
+    setTrainingDurationModal(!trainingDurationModal);
+  };
 
   const renderItemTrainingTitleList = ({item, index}) => {
     return (
@@ -155,7 +186,12 @@ const ChallengeFormFill = props => {
             justifyContent: 'center',
             marginVertical: hp('0.1'),
           }}>
-          <Text style={styles.trainingTitleText}>{item?.trainingTitle}</Text>
+          <Text
+            numberOfLines={1}
+            ellipsizeMode={'tail'}
+            style={styles.trainingTitleText}>
+            {item?.training_title}
+          </Text>
         </TouchableOpacity>
 
         <LineSeprator height={hp('0.05')} backgroundColor={'silver'} />
@@ -164,9 +200,12 @@ const ChallengeFormFill = props => {
   };
 
   const onPressTrainingTitle = ({item}) => {
-    setTrainingTitle(item?.trainingTitle);
+    setTrainingTitle(item?.training_title);
+    setTrainingTitleId(item?.training_id);
     setTrainingTitleModal(false);
   };
+
+  console.log('traingTitleId', traingTitleId);
 
   const renderItemPDCategoryList = ({item, index}) => {
     return (
@@ -179,7 +218,7 @@ const ChallengeFormFill = props => {
             justifyContent: 'center',
             marginVertical: hp('0.1'),
           }}>
-          <Text style={styles.trainingTitleText}>{item?.pdCategory}</Text>
+          <Text style={styles.trainingTitleText}>{item?.category_title}</Text>
         </TouchableOpacity>
 
         <LineSeprator height={hp('0.05')} backgroundColor={'silver'} />
@@ -188,7 +227,8 @@ const ChallengeFormFill = props => {
   };
 
   const onPressPDCategory = ({item}) => {
-    setPDCateories(item?.pdCategory);
+    setPDCateories(item?.category_title);
+    setTrainingCategoryId(item?.category_id);
     setPDCategoriesModal(false);
   };
 
@@ -203,7 +243,12 @@ const ChallengeFormFill = props => {
             justifyContent: 'center',
             marginVertical: hp('0.1'),
           }}>
-          <Text style={styles.trainingTitleText}>{item?.schoolName}</Text>
+          <Text
+            numberOfLines={1}
+            ellipsizeMode={'tail'}
+            style={styles.trainingTitleText}>
+            {item?.school_title}
+          </Text>
         </TouchableOpacity>
 
         <LineSeprator height={hp('0.05')} backgroundColor={'silver'} />
@@ -212,7 +257,8 @@ const ChallengeFormFill = props => {
   };
 
   const onPressSchoolName = ({item}) => {
-    setSchoolName(item?.schoolName);
+    setSchoolName(item?.school_title);
+    setTrainingSchoolId(item?.school_id);
     setSchoolNameModal(false);
   };
 
@@ -227,7 +273,7 @@ const ChallengeFormFill = props => {
             justifyContent: 'center',
             marginVertical: hp('0.1'),
           }}>
-          <Text style={styles.trainingTitleText}>{item?.cityName}</Text>
+          <Text style={styles.trainingTitleText}>{item?.city_title}</Text>
         </TouchableOpacity>
 
         <LineSeprator height={hp('0.05')} backgroundColor={'silver'} />
@@ -236,8 +282,37 @@ const ChallengeFormFill = props => {
   };
 
   const onPressCityName = ({item}) => {
-    setCity(item?.cityName);
+    setCity(item?.city_title);
+    setTrainingCityId(item?.city_id);
     setCityModal(false);
+  };
+
+  const renderItemTraingingDurationList = ({item, index}) => {
+    return (
+      <>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={() => onPressTrainingDuration({item})}
+          style={{
+            height: hp('5.5'),
+            justifyContent: 'center',
+            marginVertical: hp('0.1'),
+          }}>
+          <Text style={styles.trainingTitleText}>{item}</Text>
+        </TouchableOpacity>
+
+        <LineSeprator height={hp('0.05')} backgroundColor={'silver'} />
+      </>
+    );
+  };
+
+  const onPressTrainingDuration = ({item}) => {
+    setTrainingDuration(item);
+    setTrainingDurationModal(false);
+  };
+
+  const onPressAttendanceChoose = () => {
+    console.log('onPressAttendanceChoose');
   };
 
   return (
@@ -283,7 +358,7 @@ const ChallengeFormFill = props => {
             iconName={'calendar-days'}
             iconColor={'#363636'}
             iconSize={hp('2.5')}
-            // onPress={onPressShowDatePicker}
+            onPress={onPressShowDatePicker}
           />
 
           <I50TextInputModal
@@ -340,10 +415,17 @@ const ChallengeFormFill = props => {
           </View>
 
           <I50TextInputModal
-            textValue={trainingDuration}
+            textValue={
+              trainingDuration == '' || trainingDuration == null
+                ? 'Training Duration'
+                : `You Selected ${trainingDuration} ${
+                    trainingDuration > 1 ? 'hours' : 'hour'
+                  }`
+            }
             iconName={'angles-up-down'}
             iconColor={'#363636'}
             iconSize={hp('2.5')}
+            onPress={onPressTrainingDurationModal}
           />
 
           <View style={styles.attendenceAttachmentView}>
@@ -370,7 +452,9 @@ const ChallengeFormFill = props => {
 
           {atttValue && (
             <>
-              <View
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={onPressAttendanceChoose}
                 style={[
                   styles.atendUploadView,
                   {
@@ -399,7 +483,7 @@ const ChallengeFormFill = props => {
                     Upload the Training Attendance List
                   </Text>
                 </View>
-              </View>
+              </TouchableOpacity>
 
               <View
                 style={{
@@ -532,7 +616,7 @@ const ChallengeFormFill = props => {
             <TitleCategoriesListModal
               onPressOpacity={onPressTrainingTitleModal}
               text={'Select Training Title'}
-              leaveTypesData={trainingTitleList}
+              leaveTypesData={inspireAddTrainingTitleHere}
               renderItem={renderItemTrainingTitleList}
             />
           )}
@@ -541,23 +625,25 @@ const ChallengeFormFill = props => {
             <TitleCategoriesListModal
               onPressOpacity={onPressPDCategoryModal}
               text={'Select PD Categories'}
-              leaveTypesData={pdCategoriesList}
+              leaveTypesData={inspireAddTrainingCategiriesHere}
               renderItem={renderItemPDCategoryList}
             />
           )}
 
-          {/* <DateTimePickerModal
+          <DateTimePickerModal
             isVisible={isDatePickerVisible}
             mode="date"
-            onConfirm={handleDateConfirm}
+            onConfirm={handleConfirm}
             onCancel={hideDatePicker}
-          /> */}
+            minimumDate={new Date()}
+            maximumDate={maxDate}
+          />
 
           {schoolNameModal && (
             <TitleCategoriesListModal
               onPressOpacity={onPressSchoolNameModal}
               text={'Select School Name'}
-              leaveTypesData={schoolNameList}
+              leaveTypesData={inspireAddTrainingSchoolHere}
               renderItem={renderItemSchoolNameList}
             />
           )}
@@ -566,8 +652,17 @@ const ChallengeFormFill = props => {
             <TitleCategoriesListModal
               onPressOpacity={onPressCityModal}
               text={'Select City'}
-              leaveTypesData={cityList}
+              leaveTypesData={inspireAddTrainingCityHere}
               renderItem={renderItemCityList}
+            />
+          )}
+
+          {trainingDurationModal && (
+            <TitleCategoriesListModal
+              onPressOpacity={onPressCityModal}
+              text={'Select Training Duration'}
+              leaveTypesData={inspireAddTrainingDurationHere}
+              renderItem={renderItemTraingingDurationList}
             />
           )}
 

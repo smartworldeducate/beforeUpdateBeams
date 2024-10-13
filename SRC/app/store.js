@@ -123,6 +123,12 @@ import NotificationsMessagesSliceReducer from '../features/NotificationsMessages
 
 import InspireSignupSliceReducer from '../features/Inspire50/InspireSignUpHTMLSlice';
 
+import InspireSignupContinueSliceReducer from '../features/Inspire50/InspireSignupContinueSlice';
+
+import InspireTrainingsSliceReducer from '../features/Inspire50/InspireTrainingsSlice';
+
+import InspireAddTrainingSliceReducer from '../features/Inspire50/InspireAddTrainingSlice';
+
 export const store = configureStore({
   reducer: {
     register: authReducer,
@@ -243,6 +249,12 @@ export const store = configureStore({
     NotificationsMessagesStore: NotificationsMessagesSliceReducer,
 
     InspireSignupStore: InspireSignupSliceReducer,
+
+    InspireSignupContinueStore: InspireSignupContinueSliceReducer,
+
+    InspireTrainingsStore: InspireTrainingsSliceReducer,
+
+    InspireAddTrainingStore: InspireAddTrainingSliceReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

@@ -89,5 +89,11 @@ export const APIS = {
 
   NotificationsMessages: BASE_URL + 'notification_mesages',
 
-  InspireSignUp: BASE_INSPIRE_URL + 'inspire_signup',
+  InspireSignUp: BASE_INSPIRE_URL + 'inspire_home',
+
+  InspireSignUpContinue: BASE_INSPIRE_URL + 'inspire_signup',
+
+  InspireTrainings: BASE_INSPIRE_URL + 'inspire_trainings',
+
+  InspireAddTraining: BASE_INSPIRE_URL + 'inspire_add_training',
 };
