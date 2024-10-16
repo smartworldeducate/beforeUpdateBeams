@@ -42,42 +42,13 @@ const Attendance = props => {
 
   // const lastElement = totalYears[totalYears?.length - 1];
 
-  // blelow line from chat gpt logic
   const lastElement = totalYears ? totalYears[totalYears?.length - 1] : null;
-
-  // console.log('lastElement', lastElement);
 
   const [selectedYear, setSelectedYear] = useState(lastElement);
 
   const attendanceCalanderHere = useSelector(
     state => state.AttendanceCalanderStore,
   );
-
-  // const myArray = attendanceCalanderHere?.userData?.attendance;
-
-  // const removeDuplicates = array => {
-  //   if (!array) {
-  //     console.error('Array is undefined');
-  //     return [];
-  //   }
-
-  //   console.log('Original array:', array);
-
-  //   const seen = {};
-  //   const filteredArray = array.filter(item => {
-  //     if (!seen[item.fin_year_date]) {
-  //       seen[item.fin_year_date] = true;
-  //       return true;
-  //     }
-  //     return false;
-  //   });
-
-  //   console.log('Filtered array:', filteredArray);
-
-  //   return filteredArray;
-  // };
-
-  // const filteredArray = removeDuplicates(myArray);
 
   const onPressSelectYearModal = () => {
     // console.log('onPressSelectYearModal');
@@ -331,15 +302,18 @@ const Attendance = props => {
             activeOpacity={
               item?.late_minutes > 15 && item?.late_ded_run == 'N' ? 0.4 : 1
             }
-            onPress={
-              item?.late_minutes > 15 && item?.late_ded_run == 'N'
-                ? () =>
-                    navigation.navigate('LateArivel', {
-                      attenValue: item?.att_date,
-                      lateArrivalTime: item?.emp_in_time,
-                    })
-                : null
-            }>
+
+            // for Temp commented before Live aab
+            // onPress={
+            //   item?.late_minutes > 15 && item?.late_ded_run == 'N'
+            //     ? () =>
+            //         navigation.navigate('LateArivel', {
+            //           attenValue: item?.att_date,
+            //           lateArrivalTime: item?.emp_in_time,
+            //         })
+            //     : null
+            // }
+          >
             {item?.rec_status !== 'Toil' && (
               <Text
                 numberOfLines={2}
@@ -491,15 +465,19 @@ const Attendance = props => {
                         ? 0.4
                         : 1
                     }
-                    onPress={
-                      item?.early_minutes > 15 && item?.late_ded_run == 'N'
-                        ? () =>
-                            navigation.navigate('EarlyLeaving', {
-                              attenValue: item?.att_date,
-                              earlyLeavingTime: item?.emp_out_time,
-                            })
-                        : null
-                    }>
+
+                    // for Temp commented before Live aab
+
+                    // onPress={
+                    //   item?.early_minutes > 15 && item?.late_ded_run == 'N'
+                    //     ? () =>
+                    //         navigation.navigate('EarlyLeaving', {
+                    //           attenValue: item?.att_date,
+                    //           earlyLeavingTime: item?.emp_out_time,
+                    //         })
+                    //     : null
+                    // }
+                  >
                     {item?.holiday_desc == null ? (
                       <Text
                         style={{
@@ -615,11 +593,14 @@ const Attendance = props => {
               {item?.late_ded_run == 'N' && !showLeaveType && showApplyText && (
                 <TouchableOpacity
                   activeOpacity={0.7}
-                  onPress={() =>
-                    navigation.navigate('AttendanceDrawer', {
-                      screen: 'ApplicationTypeTab',
-                    })
-                  }
+                  // for Temp commented before Live aab
+
+                  // onPress={() =>
+                  //   navigation.navigate('AttendanceDrawer', {
+                  //     screen: 'ApplicationTypeTab',
+                  //   })
+                  // }
+
                   style={{justifyContent: 'center', alignItems: 'center'}}>
                   <Text
                     style={{

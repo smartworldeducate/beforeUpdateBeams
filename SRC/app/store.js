@@ -129,6 +129,8 @@ import InspireTrainingsSliceReducer from '../features/Inspire50/InspireTrainings
 
 import InspireAddTrainingSliceReducer from '../features/Inspire50/InspireAddTrainingSlice';
 
+import InspireAddTrainingSliceSubmitReducer from '../features/Inspire50/InspireAddTrainingSliceSubmit';
+
 export const store = configureStore({
   reducer: {
     register: authReducer,
@@ -255,6 +257,8 @@ export const store = configureStore({
     InspireTrainingsStore: InspireTrainingsSliceReducer,
 
     InspireAddTrainingStore: InspireAddTrainingSliceReducer,
+
+    InspireAddTrainingSubmitStore: InspireAddTrainingSliceSubmitReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

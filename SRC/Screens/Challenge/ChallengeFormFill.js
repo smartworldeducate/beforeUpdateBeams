@@ -15,6 +15,17 @@ import TitleCategoriesListModal from '../../Components/Modal/TitleCategoriesList
 import LineSeprator from '../../Components/LineSeprator/LineSeprator';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {InspireAddTrainingAction} from '../../features/Inspire50/InspireAddTrainingSlice';
+import DocumentPicker from 'react-native-document-picker';
+import {
+  clearAllStateFormSubmit,
+  InspireAddTrainingSubmitAction,
+} from '../../features/Inspire50/InspireAddTrainingSliceSubmit';
+import moment from 'moment';
+import MessageSuccessModal from '../../Components/Modal/MessageSuccessModal';
+import Loader from '../../Components/Loader/Loader';
+
+const MAX_FILE_SIZE_MB = 5;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
 const ChallengeFormFill = props => {
   const dispatch = useDispatch();
@@ -23,27 +34,51 @@ const ChallengeFormFill = props => {
     state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
   );
 
+  const submitTrainingFormHere = useSelector(
+    state => state.InspireAddTrainingSubmitStore,
+  );
+
+  const addFormSubmitResponseHere = useSelector(
+    state => state.InspireAddTrainingSubmitStore.success,
+  );
+
   const inspireAddTrainingTitleHere = useSelector(
     state => state.InspireAddTrainingStore?.userData?.trainings,
   );
 
+  const [searchValue, setSearchValue] = useState('');
+  const [filteredData, setFilteredData] = useState(inspireAddTrainingTitleHere);
+
   const inspireAddTrainingCategiriesHere = useSelector(
     state => state.InspireAddTrainingStore?.userData?.categories,
+  );
+
+  const [searchValuePD, setSearchValuePD] = useState('');
+  const [filteredDataPD, setFilteredDataPD] = useState(
+    inspireAddTrainingCategiriesHere,
   );
 
   const inspireAddTrainingSchoolHere = useSelector(
     state => state.InspireAddTrainingStore?.userData?.schools,
   );
 
+  const [searchValueSchool, setSearchValueSchool] = useState('');
+  const [filteredDataSchool, setFilteredDataSchool] = useState(
+    inspireAddTrainingSchoolHere,
+  );
+
   const inspireAddTrainingCityHere = useSelector(
     state => state.InspireAddTrainingStore?.userData?.cities,
+  );
+
+  const [searchValueCity, setSearchValueCity] = useState('');
+  const [filteredDataCity, setFilteredDataCity] = useState(
+    inspireAddTrainingCityHere || [],
   );
 
   const inspireAddTrainingDurationHere = useSelector(
     state => state.InspireAddTrainingStore?.userData?.durations,
   );
-
-  // console.log('inspireAddTrainingTitleHere', inspireAddTrainingTitleHere);
 
   useEffect(() => {
     dispatch(
@@ -52,6 +87,26 @@ const ChallengeFormFill = props => {
       }),
     );
   }, []);
+
+  useEffect(() => {
+    if (inspireAddTrainingTitleHere) {
+      setFilteredData(inspireAddTrainingTitleHere);
+    }
+    if (inspireAddTrainingCategiriesHere) {
+      setFilteredDataPD(inspireAddTrainingCategiriesHere);
+    }
+    if (inspireAddTrainingSchoolHere) {
+      setFilteredDataSchool(inspireAddTrainingSchoolHere);
+    }
+    if (inspireAddTrainingCityHere) {
+      setFilteredDataCity(inspireAddTrainingCityHere);
+    }
+  }, [
+    inspireAddTrainingTitleHere,
+    inspireAddTrainingCategiriesHere,
+    inspireAddTrainingSchoolHere,
+    inspireAddTrainingCityHere,
+  ]);
 
   const [traingTitle, setTrainingTitle] = useState('');
   const [traingTitleId, setTrainingTitleId] = useState(null);
@@ -71,6 +126,34 @@ const ChallengeFormFill = props => {
   const [trainingDuration, setTrainingDuration] = useState('');
 
   const [trainingCount, setTrainingCount] = useState(0);
+
+  useEffect(() => {
+    if (addFormSubmitResponseHere == 0) {
+      setShowErrorModal(true);
+    } else if (addFormSubmitResponseHere == 1) {
+      setShowSuccessModal(true);
+
+      setTrainingTitle('');
+      setTrainingTitleId(null);
+
+      setPDCateories('');
+      setTrainingCategoryId(null);
+
+      setTrainingDate(null);
+      setForTrainingDate(null);
+
+      setSchoolName('');
+      setTrainingSchoolId(null);
+
+      setCity('');
+      setTrainingCityId(null);
+
+      setTrainingDuration(null);
+
+      setTrainingCount(0);
+    }
+  }, [addFormSubmitResponseHere]);
+
   const [atttValue, setAttValue] = useState(true);
   const [atttachValue, setAttachValue] = useState(false);
 
@@ -143,10 +226,6 @@ const ChallengeFormFill = props => {
     setAttachValue(true);
   };
 
-  const onPressSubmitBtn = () => {
-    console.log('onPressSubmitBtn');
-  };
-
   const onPressVideoUpload = () => {
     console.log('onPressVideoUpload');
   };
@@ -156,23 +235,61 @@ const ChallengeFormFill = props => {
   };
 
   const onPressTrainingTitleModal = () => {
-    setTrainingTitleModal(!trainingTitleModal);
+    setTrainingTitleModal(true);
+  };
+
+  const onPressCloseTrainingTitleModal = () => {
+    setTrainingTitleModal(false);
+    setSearchValue('');
+    setFilteredData(inspireAddTrainingTitleHere);
   };
 
   const onPressPDCategoryModal = () => {
-    setPDCategoriesModal(!pdCategoriesModal);
+    setPDCategoriesModal(true);
+  };
+
+  const onPressClosePDCategoryModal = () => {
+    setPDCategoriesModal(false);
+    setSearchValuePD('');
+    setFilteredDataPD(inspireAddTrainingCategiriesHere);
   };
 
   const onPressSchoolNameModal = () => {
-    setSchoolNameModal(!schoolNameModal);
+    setSchoolNameModal(true);
+  };
+
+  const onPressCloseSchoolNameModal = () => {
+    setSchoolNameModal(false);
+
+    setSearchValueSchool(''); // Clear the search input for School Name
+    setFilteredDataSchool(inspireAddTrainingSchoolHere);
   };
 
   const onPressCityModal = () => {
-    setCityModal(!cityModal);
+    setCityModal(true);
+  };
+
+  const onPressCloseCityModal = () => {
+    setCityModal(false);
+
+    setSearchValueCity('');
+    setFilteredDataCity(inspireAddTrainingCityHere);
   };
 
   const onPressTrainingDurationModal = () => {
-    setTrainingDurationModal(!trainingDurationModal);
+    setTrainingDurationModal(true);
+  };
+
+  const onPressCloseTrainingDurationModal = () => {
+    setTrainingDurationModal(false);
+  };
+
+  const onChangeSearchValue = val => {
+    setSearchValue(val);
+    const filtered = inspireAddTrainingTitleHere?.filter(item =>
+      item?.training_title?.toLowerCase().includes(val.toLowerCase()),
+    );
+    setFilteredData(filtered);
   };
 
   const renderItemTrainingTitleList = ({item, index}) => {
@@ -203,9 +320,18 @@ const ChallengeFormFill = props => {
     setTrainingTitle(item?.training_title);
     setTrainingTitleId(item?.training_id);
     setTrainingTitleModal(false);
+
+    setSearchValue('');
+    setFilteredData(inspireAddTrainingTitleHere);
   };
 
-  console.log('traingTitleId', traingTitleId);
+  const onChangeSearchValuePD = val => {
+    setSearchValuePD(val);
+    const filteredPD = inspireAddTrainingCategiriesHere?.filter(item =>
+      item?.category_title?.toLowerCase().includes(val.toLowerCase()),
+    );
+    setFilteredDataPD(filteredPD);
+  };
 
   const renderItemPDCategoryList = ({item, index}) => {
     return (
@@ -230,6 +356,21 @@ const ChallengeFormFill = props => {
     setPDCateories(item?.category_title);
     setTrainingCategoryId(item?.category_id);
     setPDCategoriesModal(false);
+
+    setSearchValuePD('');
+    setFilteredDataPD(inspireAddTrainingCategiriesHere);
+  };
+
+  const onChangeSearchValueSchool = val => {
+    setSearchValueSchool(val);
+    if (val === '') {
+      setFilteredDataSchool(inspireAddTrainingSchoolHere);
+    } else {
+      const filteredSchool = inspireAddTrainingSchoolHere?.filter(item =>
+        item?.school_title?.toLowerCase().includes(val.toLowerCase()),
+      );
+      setFilteredDataSchool(filteredSchool);
+    }
   };
 
   const renderItemSchoolNameList = ({item, index}) => {
@@ -260,6 +401,17 @@ const ChallengeFormFill = props => {
     setSchoolName(item?.school_title);
     setTrainingSchoolId(item?.school_id);
     setSchoolNameModal(false);
+
+    setSearchValueSchool('');
+    setFilteredDataSchool(inspireAddTrainingSchoolHere);
+  };
+
+  const onChangeSearchValueCity = val => {
+    setSearchValueCity(val);
+    const filteredCity = inspireAddTrainingCityHere.filter(item =>
+      item?.city_title?.toLowerCase().includes(val.toLowerCase()),
+    );
+    setFilteredDataCity(filteredCity);
   };
 
   const renderItemCityList = ({item, index}) => {
@@ -285,6 +437,9 @@ const ChallengeFormFill = props => {
     setCity(item?.city_title);
     setTrainingCityId(item?.city_id);
     setCityModal(false);
+
+    setSearchValueCity('');
+    setFilteredDataCity(inspireAddTrainingCityHere);
   };
 
   const renderItemTraingingDurationList = ({item, index}) => {
@@ -311,9 +466,154 @@ const ChallengeFormFill = props => {
     setTrainingDurationModal(false);
   };
 
-  const onPressAttendanceChoose = () => {
-    console.log('onPressAttendanceChoose');
+  const [singleFile, setSingleFile] = useState('');
+  // const onPressAttendanceChoose = async () => {
+  //   try {
+  //     const res = await DocumentPicker.pick({
+  //       type: [DocumentPicker.types.pdf, DocumentPicker.types.images],
+  //     });
+
+  //     console.log('res : ' + JSON.stringify(res));
+  //     console.log('URI : ' + res.uri);
+  //     console.log('Type : ' + res.type);
+  //     console.log('File Name : ' + res.name);
+  //     console.log('File Size : ' + res.size);
+
+  //     setSingleFile(res);
+  //   } catch (err) {
+  //     if (DocumentPicker.isCancel(err)) {
+  //       alert('Canceled from single doc picker');
+  //     } else {
+  //       alert('Unknown Error: ' + JSON.stringify(err));
+  //       throw err;
+  //     }
+  //   }
+  // };
+
+  console.log('singleFile', singleFile);
+
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  const closeModal = () => {
+    dispatch(clearAllStateFormSubmit());
+    setShowSuccessModal(false);
+    setShowErrorModal(false);
   };
+
+  const onPressSubmitBtn = () => {
+    console.log('onPressSubmitBtn');
+
+    const formData = new FormData();
+    formData.append('employee_id', profileHereEmpId);
+    formData.append('training_id', traingTitleId);
+
+    formData.append('category_id', traingCategoryId);
+
+    formData.append('training_date', forTrainingDate);
+
+    formData.append('school_id', traingSchoolId);
+    formData.append('city_id', traingCityId);
+
+    formData.append('num_trainees', trainingCount);
+
+    formData.append('training_duration', trainingDuration);
+
+    dispatch(InspireAddTrainingSubmitAction(formData));
+  };
+
+  const onPressDeleteIcon = () => {
+    console.log('onPressDeleteIcon');
+    setSingleFile('');
+  };
+
+  const [numberOfFiles, setNumberOfFiles] = useState(1);
+  const [fileSize, setFileSize] = useState(MAX_FILE_SIZE_BYTES);
+
+  const [filesInAction, setFilesInAction] = useState([]);
+
+  const selectOneFile = async () => {
+    try {
+      const results = await DocumentPicker.pick({
+        copyTo: 'documentDirectory',
+        allowMultiSelection: true,
+
+        type: [DocumentPicker.types.pdf, DocumentPicker.types.images],
+      });
+      const docs = [...results, ...filesInAction];
+      console.log('docs', docs);
+      checkDocSize(docs);
+      // console.log('checkDocSize', checkDocSize(docs));
+
+      if (docs?.length <= numberOfFiles) {
+        if (checkDocSize(docs)) {
+          Alert.alert(
+            'Attachment',
+            `Maximum allowed file size is ${fileSize}MB`,
+            [
+              {
+                text: 'Change',
+                onPress: () => selectOneFile(),
+                style: 'cancel',
+              },
+            ],
+          );
+        } else {
+          const documents = [];
+          console.log('documents', documents);
+
+          for (let doc of docs) {
+            const base64 = await convertFileToBase64(doc?.uri);
+            console.log('base64TypeOf', base64);
+
+            documents.push({
+              type: doc?.type,
+              doc: base64,
+              uri: doc?.uri,
+              name: doc?.name,
+              size: doc?.size,
+            });
+          }
+
+          setFilesInAction(documents);
+        }
+      } else {
+        Alert.alert('Alert', `Please select ${numberOfFiles} files only.`, [
+          {
+            text: 'Change',
+            onPress: () => selectOneFile(),
+            style: 'cancel',
+          },
+          {
+            text: 'Cancel',
+            onPress: () => console.log('OK Pressed'),
+            style: 'cancel',
+          },
+        ]);
+      }
+    } catch (err) {
+      console.log('Not selected');
+    }
+  };
+
+  const myFilesHere = async () => {
+    let documents = [];
+
+    if (filesInAction?.length > numberOfFiles) {
+      Alert.alert('Alert', `Please select ${numberOfFiles} files only.`, [
+        {
+          text: 'Change',
+          onPress: () => selectOneFile(),
+          style: 'cancel',
+        },
+      ]);
+    } else {
+    }
+  };
+
+  useEffect(() => {
+    myFilesHere();
+  }, [filesInAction]);
 
   return (
     <>
@@ -322,6 +622,8 @@ const ChallengeFormFill = props => {
         iconName={'arrow-left'}
         onpressBtn={() => props.navigation.goBack()}
       />
+
+      {submitTrainingFormHere?.isLoading && <Loader></Loader>}
 
       <ScrollView style={{flex: 1, backgroundColor: '#F5F8FC'}}>
         <View style={{marginHorizontal: wp('6'), marginTop: hp('2.5')}}>
@@ -333,7 +635,7 @@ const ChallengeFormFill = props => {
             }
             iconName={'angles-up-down'}
             iconColor={'#363636'}
-            iconSize={hp('2.5')}
+            iconSize={hp('2.25')}
             onPress={onPressTrainingTitleModal}
           />
 
@@ -345,7 +647,7 @@ const ChallengeFormFill = props => {
             }
             iconName={'angles-up-down'}
             iconColor={'#363636'}
-            iconSize={hp('2.5')}
+            iconSize={hp('2.25')}
             onPress={onPressPDCategoryModal}
           />
 
@@ -357,7 +659,7 @@ const ChallengeFormFill = props => {
             }
             iconName={'calendar-days'}
             iconColor={'#363636'}
-            iconSize={hp('2.5')}
+            iconSize={hp('2.25')}
             onPress={onPressShowDatePicker}
           />
 
@@ -369,7 +671,7 @@ const ChallengeFormFill = props => {
             }
             iconName={'angles-up-down'}
             iconColor={'#363636'}
-            iconSize={hp('2.5')}
+            iconSize={hp('2.25')}
             onPress={onPressSchoolNameModal}
           />
 
@@ -377,7 +679,7 @@ const ChallengeFormFill = props => {
             textValue={city == '' || city == null ? 'City' : city}
             iconName={'angles-up-down'}
             iconColor={'#363636'}
-            iconSize={hp('2.5')}
+            iconSize={hp('2.25')}
             onPress={onPressCityModal}
           />
 
@@ -389,6 +691,7 @@ const ChallengeFormFill = props => {
                 flex: 0.25,
                 justifyContent: 'center',
                 alignItems: 'center',
+                height: hp('7'),
               }}>
               <Text style={styles.plusMinustext}>-</Text>
             </TouchableOpacity>
@@ -409,6 +712,8 @@ const ChallengeFormFill = props => {
                 flex: 0.25,
                 justifyContent: 'center',
                 alignItems: 'center',
+
+                height: hp('7'),
               }}>
               <Text style={styles.plusMinustext}>+</Text>
             </TouchableOpacity>
@@ -424,7 +729,7 @@ const ChallengeFormFill = props => {
             }
             iconName={'angles-up-down'}
             iconColor={'#363636'}
-            iconSize={hp('2.5')}
+            iconSize={hp('2.25')}
             onPress={onPressTrainingDurationModal}
           />
 
@@ -454,7 +759,7 @@ const ChallengeFormFill = props => {
             <>
               <TouchableOpacity
                 activeOpacity={0.5}
-                onPress={onPressAttendanceChoose}
+                onPress={selectOneFile}
                 style={[
                   styles.atendUploadView,
                   {
@@ -463,11 +768,11 @@ const ChallengeFormFill = props => {
                     shadowOpacity: 0.58,
                     shadowRadius: 16,
                     elevation: 7,
-                    margin: wp('1'),
                   },
                 ]}>
                 <View
                   style={{
+                    height: hp(12),
                     flex: 0.25,
                     justifyContent: 'center',
                     alignItems: 'flex-end',
@@ -478,10 +783,49 @@ const ChallengeFormFill = props => {
                     style={{color: 'red'}}
                   />
                 </View>
-                <View style={{flex: 0.75}}>
-                  <Text style={styles.attachmentText}>
-                    Upload the Training Attendance List
-                  </Text>
+                <View
+                  style={{
+                    height: hp(12),
+                    flex: 0.75,
+
+                    flexDirection: 'column',
+                  }}>
+                  <View style={{height: hp('5'), flexDirection: 'row'}}>
+                    <View style={{flex: 0.8}}></View>
+
+                    {singleFile == '' || singleFile == null ? (
+                      <></>
+                    ) : (
+                      <TouchableOpacity
+                        activeOpacity={0.5}
+                        onPress={onPressDeleteIcon}
+                        style={{
+                          flex: 0.2,
+
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <FontAwesomeIcon
+                          icon="fat fa-trash"
+                          size={hp('3')}
+                          style={{color: 'red'}}
+                        />
+                      </TouchableOpacity>
+                    )}
+                  </View>
+
+                  <TouchableOpacity
+                    activeOpacity={0.5}
+                    onPress={selectOneFile}
+                    style={{
+                      height: hp('7'),
+                    }}>
+                    <Text style={styles.attachmentText}>
+                      {singleFile == '' || singleFile == null
+                        ? 'Upload the Training Attendance List'
+                        : singleFile && singleFile[0]?.name}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </TouchableOpacity>
 
@@ -500,9 +844,7 @@ const ChallengeFormFill = props => {
 
           {atttachValue && (
             <>
-              <TouchableOpacity
-                activeOpacity={0.5}
-                onPress={onPressVideoUpload}
+              <View
                 style={[
                   styles.atendUploadView,
                   {
@@ -515,7 +857,9 @@ const ChallengeFormFill = props => {
                     height: hp('7.5'),
                   },
                 ]}>
-                <View
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  onPress={onPressVideoUpload}
                   style={{
                     flex: 0.2,
                     justifyContent: 'center',
@@ -526,13 +870,13 @@ const ChallengeFormFill = props => {
                     size={hp('3.5')}
                     style={{color: '#000000'}}
                   />
-                </View>
+                </TouchableOpacity>
                 <View style={{flex: 0.8}}>
                   <Text style={styles.attachmentText}>
                     Upload Your 60-Second Video (Optional)
                   </Text>
                 </View>
-              </TouchableOpacity>
+              </View>
 
               <View
                 style={{
@@ -578,7 +922,7 @@ const ChallengeFormFill = props => {
                 <View style={{flex: 0.03}}></View>
                 <TouchableOpacity
                   activeOpacity={0.5}
-                  onPress={onPressAddNew}
+                  onPress={onPressAttendanceChoose}
                   style={{
                     flex: 0.22,
                     backgroundColor: '#1C37A4',
@@ -614,19 +958,27 @@ const ChallengeFormFill = props => {
 
           {trainingTitleModal && (
             <TitleCategoriesListModal
-              onPressOpacity={onPressTrainingTitleModal}
+              onPressOpacity={onPressCloseTrainingTitleModal}
               text={'Select Training Title'}
-              leaveTypesData={inspireAddTrainingTitleHere}
+              leaveTypesData={filteredData}
               renderItem={renderItemTrainingTitleList}
+              keyExtractor={(item, index) => index.toString()}
+              searchValue={searchValue}
+              onChangeSearchValue={onChangeSearchValue}
+              isSearchAllow={true}
             />
           )}
 
           {pdCategoriesModal && (
             <TitleCategoriesListModal
-              onPressOpacity={onPressPDCategoryModal}
+              onPressOpacity={onPressClosePDCategoryModal}
               text={'Select PD Categories'}
-              leaveTypesData={inspireAddTrainingCategiriesHere}
+              leaveTypesData={filteredDataPD}
               renderItem={renderItemPDCategoryList}
+              keyExtractor={(item, index) => index.toString()}
+              searchValue={searchValuePD}
+              onChangeSearchValue={onChangeSearchValuePD}
+              isSearchAllow={true}
             />
           )}
 
@@ -636,33 +988,42 @@ const ChallengeFormFill = props => {
             onConfirm={handleConfirm}
             onCancel={hideDatePicker}
             minimumDate={new Date()}
-            maximumDate={maxDate}
+            // maximumDate={maxDate}
           />
 
           {schoolNameModal && (
             <TitleCategoriesListModal
-              onPressOpacity={onPressSchoolNameModal}
+              onPressOpacity={onPressCloseSchoolNameModal}
               text={'Select School Name'}
-              leaveTypesData={inspireAddTrainingSchoolHere}
+              leaveTypesData={filteredDataSchool}
               renderItem={renderItemSchoolNameList}
+              keyExtractor={(item, index) => index.toString()}
+              searchValue={searchValueSchool}
+              onChangeSearchValue={onChangeSearchValueSchool}
+              isSearchAllow={true}
             />
           )}
 
           {cityModal && (
             <TitleCategoriesListModal
-              onPressOpacity={onPressCityModal}
+              onPressOpacity={onPressCloseCityModal}
               text={'Select City'}
-              leaveTypesData={inspireAddTrainingCityHere}
+              leaveTypesData={filteredDataCity}
               renderItem={renderItemCityList}
+              keyExtractor={(item, index) => index.toString()}
+              searchValue={searchValueCity}
+              onChangeSearchValue={onChangeSearchValueCity}
+              isSearchAllow={true}
             />
           )}
 
           {trainingDurationModal && (
             <TitleCategoriesListModal
-              onPressOpacity={onPressCityModal}
+              onPressOpacity={onPressCloseTrainingDurationModal}
               text={'Select Training Duration'}
               leaveTypesData={inspireAddTrainingDurationHere}
               renderItem={renderItemTraingingDurationList}
+              isSearchAllow={false}
             />
           )}
 
@@ -672,6 +1033,24 @@ const ChallengeFormFill = props => {
             style={styles.submitBtn}>
             <Text style={{color: 'white'}}>Submit</Text>
           </TouchableOpacity>
+
+          {showErrorModal && (
+            <MessageSuccessModal
+              textUpper={'Request Status'}
+              textLower={submitTrainingFormHere?.message}
+              btnText={'OK'}
+              onPressOpacity={closeModal}
+            />
+          )}
+
+          {showSuccessModal && (
+            <MessageSuccessModal
+              textUpper={'Request Status'}
+              textLower={submitTrainingFormHere?.message}
+              btnText={'OK'}
+              onPressOpacity={closeModal}
+            />
+          )}
         </View>
       </ScrollView>
     </>

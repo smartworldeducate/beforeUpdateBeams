@@ -35,6 +35,7 @@ import {
   InspireSignupHTMLAction,
 } from '../../features/Inspire50/InspireSignUpHTMLSlice';
 import {InspireSignupContinueAction} from '../../features/Inspire50/InspireSignupContinueSlice';
+import Loader from '../../Components/Loader/Loader';
 
 const ChallengeSignUp = props => {
   const {width} = useWindowDimensions();
@@ -46,32 +47,19 @@ const ChallengeSignUp = props => {
   );
 
   const inspireSignupHTMLHere = useSelector(state => state.InspireSignupStore);
-  const inspireSignupStatusHTMLHere = useSelector(
-    state => state.InspireSignupStore.signupStatus,
-  );
-  // console.log('inspireSignupHTMLHere', inspireSignupHTMLHere);
-
-  const inspireSignupContinueHere = useSelector(
-    state => state.InspireSignupContinueStore,
-  );
-  // console.log('inspireSignupContinueHere', inspireSignupContinueHere);
-
-  // useEffect(() => {
-  //   dispatch(InspireSignupHTMLAction());
-  // }, [dispatch]);
 
   useFocusEffect(
     useCallback(() => {
-      dispatch(InspireSignupHTMLAction());
+      dispatch(InspireSignupHTMLAction({employee_id: profileHereEmpId}));
     }, [dispatch]),
   );
 
   const onPressSignup = () => {
-    // dispatch(
-    //   InspireSignupContinueAction({
-    //     employee_id: profileHereEmpId,
-    //   }),
-    // );
+    dispatch(
+      InspireSignupContinueAction({
+        employee_id: profileHereEmpId,
+      }),
+    );
     // dispatch(changesSignupStatus());
     navigation.navigate('ChallengeFormList');
   };
@@ -84,46 +72,54 @@ const ChallengeSignUp = props => {
         onpressBtn={() => props.navigation.goBack()}
       />
 
-      <ScrollView style={{flex: 1, backgroundColor: '#F5F8FC'}}>
-        <View style={{marginHorizontal: wp('6'), marginTop: hp('4')}}>
-          <View style={{marginBottom: hp('2.5'), flex: 1}}>
-            <RenderHtml
-              contentWidth={width}
-              source={{
-                html: inspireSignupHTMLHere?.userData?.description || '<p></p>',
-              }}
-              tagsStyles={tagsStyles}
-              // ignoredDomTags={["wb'<", 'customTag', 'center']}
-            />
-          </View>
-        </View>
-      </ScrollView>
+      {inspireSignupHTMLHere?.isLoading ? (
+        <Loader></Loader>
+      ) : (
+        <>
+          <ScrollView style={{flex: 1, backgroundColor: '#F5F8FC'}}>
+            <View style={{marginHorizontal: wp('6'), marginTop: hp('4')}}>
+              <View style={{marginBottom: hp('2.5'), flex: 1}}>
+                <RenderHtml
+                  contentWidth={width}
+                  source={{
+                    html:
+                      inspireSignupHTMLHere?.userData?.description || '<p></p>',
+                  }}
+                  tagsStyles={tagsStyles}
+                  // ignoredDomTags={["wb'<", 'customTag', 'center']}
+                />
+              </View>
+            </View>
+          </ScrollView>
 
-      <TouchableOpacity
-        activeOpacity={0.5}
-        onPress={onPressSignup}
-        style={{
-          height: hp('6'),
-          backgroundColor: '#1C37A4',
-          borderRadius: wp('50'),
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginVertical: hp('2'),
-          marginHorizontal: wp('6'),
-        }}>
-        <Text
-          style={{
-            fontSize: hp('1.95'),
-            color: '#FFFFFF',
-            fontFamily: fontFamily.ceraMedium,
-            fontWeight: '500',
-            lineHeight: hp('2.5'),
-            letterSpacing: 0.35,
-          }}>
-          {/* {inspireSignupStatusHTMLHere == 0 ? 'SIGN UP' : 'Continue'} */}
-          SIGN UP
-        </Text>
-      </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={onPressSignup}
+            style={{
+              height: hp('6'),
+              backgroundColor: '#1C37A4',
+              borderRadius: wp('50'),
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginVertical: hp('2'),
+              marginHorizontal: wp('6'),
+            }}>
+            <Text
+              style={{
+                fontSize: hp('1.95'),
+                color: '#FFFFFF',
+                fontFamily: fontFamily.ceraMedium,
+                fontWeight: '500',
+                lineHeight: hp('2.5'),
+                letterSpacing: 0.35,
+              }}>
+              {inspireSignupHTMLHere?.userData?.signup_status == 1
+                ? 'Register'
+                : 'SIGN UP'}
+            </Text>
+          </TouchableOpacity>
+        </>
+      )}
     </>
   );
 };

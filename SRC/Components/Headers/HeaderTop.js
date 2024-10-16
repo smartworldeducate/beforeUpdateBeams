@@ -49,7 +49,19 @@ const HeaderTop = ({
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
         colors={['#1C37A5', '#4D69DC']}
-        style={[styles.mainHeader]}>
+        style={[
+          styles.mainHeader,
+          {
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 12,
+            },
+            shadowOpacity: 0.58,
+            shadowRadius: 16.0,
+            elevation: 24,
+          },
+        ]}>
         <View
           style={[
             styles.headerChild,

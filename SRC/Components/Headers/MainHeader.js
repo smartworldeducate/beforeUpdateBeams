@@ -21,6 +21,7 @@ const MainHeader = ({
   iconName,
   onpressBtn,
   rightIcon,
+  onPressRightIcon,
   yearText,
   onPressRightText,
 }) => {
@@ -58,7 +59,9 @@ const MainHeader = ({
             <Text style={styles.textstyle}>{text}</Text>
           </View>
 
-          <View
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={onPressRightIcon}
             style={{
               flex: 0.2,
               justifyContent: 'center',
@@ -75,7 +78,7 @@ const MainHeader = ({
                 {yearText}
               </Text>
             )}
-          </View>
+          </TouchableOpacity>
         </View>
       </LinearGradient>
     </>

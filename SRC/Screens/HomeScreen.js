@@ -65,6 +65,7 @@ import {messageStatusLikeAction} from '../features/MessagesSlice/MessageStatusLi
 import ReporteeProfileModal from '../Components/Modal/ReporteeProfileModal';
 
 import RNPrint from 'react-native-print';
+import AttendanceTempModal from '../Components/Modal/AttendanceTempModal';
 
 const HomeScreen = props => {
   const width = Dimensions.get('window').width;
@@ -665,6 +666,15 @@ const HomeScreen = props => {
   const firstValueInWords = numberToWords(firstValue);
   console.log('firstValueInWords', firstValueInWords);
 
+  const [tempLeaveModal, setTempLeaveModal] = useState(false);
+  const onPressTempLeaveModal = () => {
+    setTempLeaveModal(true);
+  };
+
+  const onPressTempCloseLeaveModal = () => {
+    setTempLeaveModal(false);
+  };
+
   return (
     <SafeAreaView
       style={{
@@ -833,7 +843,7 @@ const HomeScreen = props => {
                             color: '#353535',
                             paddingTop: hp('0.65'),
                           }}>
-                          y
+                          years
                         </Text>
                       </View>
                     </View>
@@ -850,7 +860,7 @@ const HomeScreen = props => {
                           fontFamily: fontFamily.ceraMedium,
                           color: '#999696',
                         }}>
-                        {`Service \n Length`}
+                        {`Service`}
                       </Text>
                     </View>
                     <View
@@ -906,10 +916,10 @@ const HomeScreen = props => {
                               fontFamily: fontFamily.ceraBold,
                             },
                           ]}>
-                          {profileHere?.userData?.emp_result?.EMP_STATUS_DESCRIPTION.substring(
-                            0,
-                            3,
-                          )}
+                          {
+                            profileHere?.userData?.emp_result
+                              ?.EMP_STATUS_DESCRIPTION
+                          }
                         </Text>
                       </View>
                     </View>
@@ -926,7 +936,7 @@ const HomeScreen = props => {
                           fontFamily: fontFamily.ceraMedium,
                           color: '#999696',
                         }}>
-                        {`${profileHere?.userData?.emp_result?.EMP_STATUS_DESCRIPTION}\n Status`}
+                        {`Status`}
                       </Text>
                     </View>
                     <View
@@ -1005,7 +1015,7 @@ const HomeScreen = props => {
                           fontFamily: fontFamily.ceraMedium,
                           color: '#999696',
                         }}>
-                        {`Attendance \n Today`}
+                        {`Attendance`}
                       </Text>
                     </View>
                     <View
@@ -1038,7 +1048,7 @@ const HomeScreen = props => {
                 style={{marginHorizontal: wp('5'), marginVertical: hp('1')}}>
                 <Image
                   source={{
-                    uri: 'https://t4.ftcdn.net/jpg/08/07/08/49/360_F_807084954_zefPh3Yyj1jkgj5ETOfeGAounpUL5AUM.jpg',
+                    uri: 'ififty',
                   }}
                   style={{
                     height: hp('20'),
@@ -1196,7 +1206,9 @@ const HomeScreen = props => {
                     <View style={styles.LBBtnMainView}>
                       <TouchableOpacity
                         activeOpacity={0.5}
-                        onPress={() => navigation.navigate('ApplyLeave')}
+                        // for temp commented below line
+                        // onPress={() => navigation.navigate('ApplyLeave')}
+                        onPress={onPressTempLeaveModal}
                         style={styles.LBBtnView}>
                         <Text style={[styles.btnText, {color: '#1C37A4'}]}>
                           Apply Leave
@@ -1373,6 +1385,10 @@ const HomeScreen = props => {
             }
             inconType={msgLike == 'Y' ? 'solid' : 'light'}
           />
+        )}
+
+        {tempLeaveModal && (
+          <AttendanceTempModal closeModal={onPressTempCloseLeaveModal} />
         )}
 
         {reporteeModal ? (
