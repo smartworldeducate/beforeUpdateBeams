@@ -24,13 +24,9 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-import DocumentPicker from 'react-native-document-picker';
-
-import Icon from 'react-native-fontawesome-pro';
 import {useDispatch, useSelector} from 'react-redux';
 import MainHeader from '../../Components/Headers/MainHeader';
 import fontFamily from '../../Styles/fontFamily';
@@ -50,16 +46,6 @@ const ChallengeFormList = props => {
     state => state.InspireTrainingsStore,
   );
 
-  console.log('inspireTrainingsHere', inspireTrainingsHere);
-
-  // useEffect(() => {
-  //   dispatch(
-  //     InspireTrainingsAction({
-  //       employee_id: profileHereEmpId,
-  //     }),
-  //   );
-  // }, []);
-
   useFocusEffect(
     useCallback(() => {
       dispatch(
@@ -78,10 +64,9 @@ const ChallengeFormList = props => {
 
   const renderItem = ({item, index}) => {
     const filesLength = item?.training_files?.length - 1;
-    console.log('item', item?.training_files);
+
     const firstImage =
       item?.training_files && item?.training_files[0]?.file_path;
-    console.log('firstImage', firstImage);
     return (
       <>
         <TouchableOpacity
@@ -135,7 +120,6 @@ const ChallengeFormList = props => {
                 fontSize: hp('1.6'),
                 fontWeight: '500',
                 fontFamily: fontFamily.ceraMedium,
-                // paddingVertical: hp('0.35'),
               }}>
               {moment(item?.training_date, 'DD-MMM-YY').format('DD MMM, YYYY')}
             </Text>
@@ -206,9 +190,7 @@ const ChallengeFormList = props => {
 
               <Image
                 source={{
-                  uri: firstImage
-                    ? firstImage
-                    : 'https://cdn.pixabay.com/photo/2015/07/19/10/00/school-work-851328_640.jpg',
+                  uri: firstImage && firstImage,
                 }}
                 style={{
                   height: hp('16'),
@@ -258,243 +240,251 @@ const ChallengeFormList = props => {
         onPressRightIcon={() => navigation.navigate('HomeScreen')}
       />
 
-      {inspireTrainingsHere?.isLoading ? (
-        <Loader></Loader>
-      ) : (
-        <>
-          <ScrollView style={{flex: 1, backgroundColor: '#F5F8FC'}}>
-            <View style={{marginHorizontal: wp('6'), marginTop: hp('2.5')}}>
-              <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <LinearGradient
-                  useAngle={true}
-                  angle={180}
-                  angleCenter={{x: 0.5, y: 0.5}}
-                  start={{x: 0, y: 0}}
-                  end={{x: 1, y: 0}}
-                  colors={['#C07CD5', '#6D3FBD']}
-                  locations={[0, 1]}
-                  style={{
-                    flex: 0.23,
-                    justifyContent: 'center',
-                    height: hp('8.75'),
-                    borderRadius: wp('2'),
-                    shadowColor: 'rgba(0,0,0,0.5)',
-                    shadowOpacity: 0.5,
-                    shadowRadius: 16,
-                    elevation: 4,
-                  }}>
-                  <View
-                    style={{
-                      height: hp('10'),
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Text
-                      style={{
-                        fontSize: hp('3.25'),
-                        color: '#FFFFFF',
-                        fontFamily: fontFamily.ceraMedium,
-                        fontWeight: '500',
-                      }}>
-                      {
-                        inspireTrainingsHere?.userData?.training_hours
-                          ?.total_hours
-                      }
-                    </Text>
-                  </View>
-                </LinearGradient>
+      {inspireTrainingsHere?.isLoading && <Loader></Loader>}
 
-                <LinearGradient
-                  useAngle={true}
-                  angle={180}
-                  angleCenter={{x: 0.5, y: 0.5}}
-                  start={{x: 0, y: 0}}
-                  end={{x: 1, y: 0}}
-                  colors={['#7AE6E4', '#29D09F']}
-                  locations={[0, 1]}
-                  style={{
-                    flex: 0.23,
-                    justifyContent: 'center',
-                    height: hp('8.75'),
-                    borderRadius: wp('2'),
-                    shadowColor: 'rgba(0,0,0,0.5)',
-                    shadowOpacity: 0.5,
-                    shadowRadius: 16,
-                    elevation: 4,
-                  }}>
-                  <View
-                    style={{
-                      height: hp('10'),
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Text
-                      style={{
-                        fontSize: hp('3.25'),
-                        color: '#FFFFFF',
-                        fontFamily: fontFamily.ceraMedium,
-                        fontWeight: '500',
-                      }}>
-                      {
-                        inspireTrainingsHere?.userData?.training_hours
-                          ?.teachers_impacted
-                      }
-                    </Text>
-                  </View>
-                </LinearGradient>
-
-                <LinearGradient
-                  useAngle={true}
-                  angle={180}
-                  angleCenter={{x: 0.5, y: 0.5}}
-                  start={{x: 0, y: 0}}
-                  end={{x: 1, y: 0}}
-                  colors={['#FFA9AA', '#FF5255']}
-                  locations={[0, 1]}
-                  style={{
-                    flex: 0.23,
-                    justifyContent: 'center',
-                    height: hp('8.75'),
-                    borderRadius: wp('2'),
-                    shadowColor: 'rgba(0,0,0,0.5)',
-                    shadowOpacity: 0.5,
-                    shadowRadius: 16,
-                    elevation: 4,
-                  }}>
-                  <View
-                    style={{
-                      height: hp('10'),
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Text
-                      style={{
-                        fontSize: hp('3.25'),
-                        color: '#FFFFFF',
-                        fontFamily: fontFamily.ceraMedium,
-                        fontWeight: '500',
-                      }}>
-                      {
-                        inspireTrainingsHere?.userData?.training_hours
-                          ?.students_impacted
-                      }
-                    </Text>
-                  </View>
-                </LinearGradient>
-
-                <LinearGradient
-                  useAngle={true}
-                  angle={180}
-                  angleCenter={{x: 0.5, y: 0.5}}
-                  start={{x: 0, y: 0}}
-                  end={{x: 1, y: 0}}
-                  colors={['#FFC8A5', '#FE7E47']}
-                  locations={[0, 1]}
-                  style={{
-                    flex: 0.23,
-                    justifyContent: 'center',
-                    height: hp('8.75'),
-                    borderRadius: wp('2'),
-                    shadowColor: 'rgba(0,0,0,0.5)',
-                    shadowOpacity: 0.5,
-                    shadowRadius: 16,
-                    elevation: 4,
-                  }}>
-                  <View
-                    style={{
-                      height: hp('10'),
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Text
-                      numberOfLines={1}
-                      ellipsizeMode={'tail'}
-                      style={{
-                        fontSize: hp('3.25'),
-                        color: '#FFFFFF',
-                        fontFamily: fontFamily.ceraMedium,
-                        fontWeight: '500',
-                      }}>
-                      {
-                        inspireTrainingsHere?.userData?.training_hours
-                          ?.remaining_hours
-                      }
-                    </Text>
-                  </View>
-                </LinearGradient>
-              </View>
-
+      <ScrollView style={{flex: 1, backgroundColor: '#F5F8FC'}}>
+        <View style={{marginHorizontal: wp('6'), marginTop: hp('2.5')}}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <LinearGradient
+              useAngle={true}
+              angle={180}
+              angleCenter={{x: 0.5, y: 0.5}}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              colors={['#C07CD5', '#6D3FBD']}
+              locations={[0, 1]}
+              style={{
+                flex: 0.23,
+                justifyContent: 'center',
+                height: hp('8.75'),
+                borderRadius: wp('2'),
+                shadowColor: 'rgba(0,0,0,0.5)',
+                shadowOpacity: 0.5,
+                shadowRadius: 16,
+                elevation: 4,
+              }}>
               <View
                 style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginTop: hp('1.25'),
+                  height: hp('10'),
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}>
-                <View style={styles.boxTextView}>
-                  <Text style={styles.boxText}>{`Total\nHours`}</Text>
-                </View>
-                <View style={styles.boxTextView}>
-                  <Text style={styles.boxText}>{`Teacher\nImpacted`}</Text>
-                </View>
-                <View style={styles.boxTextView}>
-                  <Text style={styles.boxText}>{`Student\nImpacted`}</Text>
-                </View>
-                <View style={styles.boxTextView}>
-                  <Text style={styles.boxText}>{`Hours\nLeft`}</Text>
-                </View>
+                <Text
+                  style={{
+                    fontSize: hp('3.25'),
+                    color: '#FFFFFF',
+                    fontFamily: fontFamily.ceraMedium,
+                    fontWeight: '500',
+                  }}>
+                  {inspireTrainingsHere?.userData?.training_hours?.total_hours}
+                </Text>
               </View>
+            </LinearGradient>
 
-              <View style={{marginTop: hp('2')}}>
-                <FlatList
-                  data={inspireTrainingsHere?.userData?.trainings}
-                  renderItem={renderItem}
-                  keyExtractor={(item, index) => index.toString()}
-                />
-              </View>
-            </View>
-          </ScrollView>
-
-          <TouchableOpacity
-            activeOpacity={0.5}
-            onPress={() => navigation.navigate('ChallengeFormFill')}
-            style={{
-              height: hp('8'),
-              width: hp('8'),
-              borderRadius: wp('50'),
-              backgroundColor: '#1C37A4',
-              marginBottom: hp('2'),
-              justifyContent: 'center',
-              alignItems: 'center',
-              position: 'absolute',
-              bottom: hp('5'),
-              right: wp('8'),
-            }}>
-            <Text
+            <LinearGradient
+              useAngle={true}
+              angle={180}
+              angleCenter={{x: 0.5, y: 0.5}}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              colors={['#7AE6E4', '#29D09F']}
+              locations={[0, 1]}
               style={{
-                fontSize: hp('5'),
-                fontWeight: '500',
-                fontFamily: fontFamily.ceraLight,
-                color: 'white',
+                flex: 0.23,
+                justifyContent: 'center',
+                height: hp('8.75'),
+                borderRadius: wp('2'),
+                shadowColor: 'rgba(0,0,0,0.5)',
+                shadowOpacity: 0.5,
+                shadowRadius: 16,
+                elevation: 4,
               }}>
-              +
-            </Text>
-          </TouchableOpacity>
+              <View
+                style={{
+                  height: hp('10'),
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontSize: hp('3.25'),
+                    color: '#FFFFFF',
+                    fontFamily: fontFamily.ceraMedium,
+                    fontWeight: '500',
+                  }}>
+                  {
+                    inspireTrainingsHere?.userData?.training_hours
+                      ?.teachers_impacted
+                  }
+                </Text>
+              </View>
+            </LinearGradient>
 
-          <ChallengeListOpen
-            modalVisible={openListModal}
-            onpressBtn={onPressClose}
-            textHeader={header}
-            imagesListData={imagesArray}
-            text1={firstText}
-            text2={secondText}
-            date={moment(date, 'DD-MMM-YY').format('DD MMM, YYYY')}
-            dayTime={dayTime}
-            campus={campus}
-            city={city}
-          />
-        </>
-      )}
+            <LinearGradient
+              useAngle={true}
+              angle={180}
+              angleCenter={{x: 0.5, y: 0.5}}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              colors={['#FFA9AA', '#FF5255']}
+              locations={[0, 1]}
+              style={{
+                flex: 0.23,
+                justifyContent: 'center',
+                height: hp('8.75'),
+                borderRadius: wp('2'),
+                shadowColor: 'rgba(0,0,0,0.5)',
+                shadowOpacity: 0.5,
+                shadowRadius: 16,
+                elevation: 4,
+              }}>
+              <View
+                style={{
+                  height: hp('10'),
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontSize: hp('3.25'),
+                    color: '#FFFFFF',
+                    fontFamily: fontFamily.ceraMedium,
+                    fontWeight: '500',
+                  }}>
+                  {
+                    inspireTrainingsHere?.userData?.training_hours
+                      ?.students_impacted
+                  }
+                </Text>
+              </View>
+            </LinearGradient>
+
+            <LinearGradient
+              useAngle={true}
+              angle={180}
+              angleCenter={{x: 0.5, y: 0.5}}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              colors={['#FFC8A5', '#FE7E47']}
+              locations={[0, 1]}
+              style={{
+                flex: 0.23,
+                justifyContent: 'center',
+                height: hp('8.75'),
+                borderRadius: wp('2'),
+                shadowColor: 'rgba(0,0,0,0.5)',
+                shadowOpacity: 0.5,
+                shadowRadius: 16,
+                elevation: 4,
+              }}>
+              <View
+                style={{
+                  height: hp('10'),
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode={'tail'}
+                  style={{
+                    fontSize: hp('3.25'),
+                    color: '#FFFFFF',
+                    fontFamily: fontFamily.ceraMedium,
+                    fontWeight: '500',
+                  }}>
+                  {
+                    inspireTrainingsHere?.userData?.training_hours
+                      ?.remaining_hours
+                  }
+                </Text>
+              </View>
+            </LinearGradient>
+          </View>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginTop: hp('1.25'),
+            }}>
+            <View style={styles.boxTextView}>
+              <Text style={styles.boxText}>{`Total\nHours`}</Text>
+            </View>
+            <View style={styles.boxTextView}>
+              <Text style={styles.boxText}>{`Teacher\nImpacted`}</Text>
+            </View>
+            <View style={styles.boxTextView}>
+              <Text style={styles.boxText}>{`Student\nImpacted`}</Text>
+            </View>
+            <View style={styles.boxTextView}>
+              <Text style={styles.boxText}>{`Hours\nLeft`}</Text>
+            </View>
+          </View>
+
+          <View style={{marginTop: hp('2')}}>
+            <FlatList
+              data={inspireTrainingsHere?.userData?.trainings}
+              renderItem={renderItem}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          </View>
+        </View>
+      </ScrollView>
+
+      {/* <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text
+            style={{
+              fontSize: hp('2.25'),
+              fontFamily: fontFamily.ceraMedium,
+              color: 'black',
+            }}>
+            Right now you have not any training
+          </Text>
+        </View> */}
+
+      <TouchableOpacity
+        activeOpacity={0.5}
+        onPress={() => navigation.navigate('ChallengeFormFill')}
+        style={{
+          height: hp('8'),
+          width: hp('8'),
+          borderRadius: wp('50'),
+          backgroundColor: '#1C37A4',
+          marginBottom: hp('2'),
+          justifyContent: 'center',
+          alignItems: 'center',
+          position: 'absolute',
+          bottom: hp('5'),
+          right: wp('8'),
+        }}>
+        <Text
+          style={{
+            fontSize: hp('5'),
+            fontWeight: '500',
+            fontFamily: fontFamily.ceraLight,
+            color: 'white',
+          }}>
+          +
+        </Text>
+      </TouchableOpacity>
+
+      <ChallengeListOpen
+        modalVisible={openListModal}
+        onpressBtn={onPressClose}
+        textHeader={header}
+        imagesListData={imagesArray}
+        text1={firstText}
+        text2={secondText}
+        date={moment(date, 'DD-MMM-YY').format('DD MMM, YYYY')}
+        dayTime={dayTime}
+        campus={campus}
+        city={city}
+      />
     </>
   );
 };

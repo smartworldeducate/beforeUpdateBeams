@@ -61,6 +61,7 @@
     "react-native-exit-app": "2.0.0",
     "react-native-extended-stylesheet": "0.12.0",
     "react-native-fontawesome-pro": "2.1.0",
+    "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "2.12.0",
     "react-native-get-random-values": "1.11.0",
     "react-native-gifted-charts": "1.3.2",

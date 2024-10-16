@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
+import {View, Text, TouchableOpacity, ScrollView, Alert} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {
   widthPercentageToDP as wp,
@@ -24,8 +24,10 @@ import moment from 'moment';
 import MessageSuccessModal from '../../Components/Modal/MessageSuccessModal';
 import Loader from '../../Components/Loader/Loader';
 
+import RNFS from 'react-native-fs';
+
 const MAX_FILE_SIZE_MB = 5;
-const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1000 * 1000;
 
 const ChallengeFormFill = props => {
   const dispatch = useDispatch();
@@ -151,6 +153,10 @@ const ChallengeFormFill = props => {
       setTrainingDuration(null);
 
       setTrainingCount(0);
+
+      setFilesInAction([]);
+
+      setVideoFilesInAction([]);
     }
   }, [addFormSubmitResponseHere]);
 
@@ -466,32 +472,6 @@ const ChallengeFormFill = props => {
     setTrainingDurationModal(false);
   };
 
-  const [singleFile, setSingleFile] = useState('');
-  // const onPressAttendanceChoose = async () => {
-  //   try {
-  //     const res = await DocumentPicker.pick({
-  //       type: [DocumentPicker.types.pdf, DocumentPicker.types.images],
-  //     });
-
-  //     console.log('res : ' + JSON.stringify(res));
-  //     console.log('URI : ' + res.uri);
-  //     console.log('Type : ' + res.type);
-  //     console.log('File Name : ' + res.name);
-  //     console.log('File Size : ' + res.size);
-
-  //     setSingleFile(res);
-  //   } catch (err) {
-  //     if (DocumentPicker.isCancel(err)) {
-  //       alert('Canceled from single doc picker');
-  //     } else {
-  //       alert('Unknown Error: ' + JSON.stringify(err));
-  //       throw err;
-  //     }
-  //   }
-  // };
-
-  console.log('singleFile', singleFile);
-
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
@@ -502,8 +482,6 @@ const ChallengeFormFill = props => {
   };
 
   const onPressSubmitBtn = () => {
-    console.log('onPressSubmitBtn');
-
     const formData = new FormData();
     formData.append('employee_id', profileHereEmpId);
     formData.append('training_id', traingTitleId);
@@ -519,31 +497,46 @@ const ChallengeFormFill = props => {
 
     formData.append('training_duration', trainingDuration);
 
+    const docValues = filesInAction.map(file => file.doc);
+    docValues.forEach((doc, index) => {
+      formData.append(`attendance`, doc);
+    });
+
+    const videoValues = videoFilesInAction.map(file => file.doc);
+    videoValues.forEach((doc, index) => {
+      formData.append(`training_video`, doc);
+    });
+
     dispatch(InspireAddTrainingSubmitAction(formData));
   };
 
   const onPressDeleteIcon = () => {
-    console.log('onPressDeleteIcon');
-    setSingleFile('');
+    setFilesInAction([]);
   };
 
   const [numberOfFiles, setNumberOfFiles] = useState(1);
-  const [fileSize, setFileSize] = useState(MAX_FILE_SIZE_BYTES);
-
+  const [fileSize, setFileSize] = useState(5);
   const [filesInAction, setFilesInAction] = useState([]);
+
+  console.log('filesInAction', filesInAction?.length);
+
+  const onPressAttendanceChoose = () => {
+    console.log('onPressAttendanceChoose');
+  };
 
   const selectOneFile = async () => {
     try {
       const results = await DocumentPicker.pick({
         copyTo: 'documentDirectory',
-        allowMultiSelection: true,
-
-        type: [DocumentPicker.types.pdf, DocumentPicker.types.images],
+        type: [
+          DocumentPicker.types.pdf,
+          DocumentPicker.types.images,
+          // DocumentPicker.types.video,
+        ],
       });
-      const docs = [...results, ...filesInAction];
-      console.log('docs', docs);
+
+      const docs = [...results];
       checkDocSize(docs);
-      // console.log('checkDocSize', checkDocSize(docs));
 
       if (docs?.length <= numberOfFiles) {
         if (checkDocSize(docs)) {
@@ -560,11 +553,8 @@ const ChallengeFormFill = props => {
           );
         } else {
           const documents = [];
-          console.log('documents', documents);
-
           for (let doc of docs) {
             const base64 = await convertFileToBase64(doc?.uri);
-            console.log('base64TypeOf', base64);
 
             documents.push({
               type: doc?.type,
@@ -597,8 +587,6 @@ const ChallengeFormFill = props => {
   };
 
   const myFilesHere = async () => {
-    let documents = [];
-
     if (filesInAction?.length > numberOfFiles) {
       Alert.alert('Alert', `Please select ${numberOfFiles} files only.`, [
         {
@@ -611,9 +599,114 @@ const ChallengeFormFill = props => {
     }
   };
 
+  const myVideoFilesHere = async () => {
+    if (videoFilesInAction?.length > numberOfFiles) {
+      Alert.alert('Alert', `Please select ${numberOfFiles} files only.`, [
+        {
+          text: 'Change',
+          onPress: () => selectOneFile(),
+          style: 'cancel',
+        },
+      ]);
+    } else {
+    }
+  };
+
+  const checkDocSize = docs => {
+    const isGreaterSize = docs.findIndex(({size}) => {
+      const fileSizeInMBs = size / (1024 * 1024);
+      return fileSizeInMBs >= fileSize;
+    });
+    return isGreaterSize > -1;
+  };
+
   useEffect(() => {
     myFilesHere();
   }, [filesInAction]);
+
+  useEffect(() => {
+    myVideoFilesHere();
+  }, [videoFilesInAction]);
+
+  const convertFileToBase64 = async filePath => {
+    try {
+      const fileContent = await RNFS.readFile(filePath, 'base64');
+      return fileContent;
+    } catch (error) {
+      console.log('error', error);
+      return null;
+    }
+  };
+
+  const [videoFilesInAction, setVideoFilesInAction] = useState([]);
+
+  const selectVideoFile = async () => {
+    try {
+      const results = await DocumentPicker.pick({
+        copyTo: 'documentDirectory',
+        type: [DocumentPicker.types.video],
+      });
+
+      const docs = [...results];
+
+      if (docs?.length <= numberOfFiles) {
+        const documents = [];
+
+        for (let doc of docs) {
+          const base64 = await convertFileToBase64(doc?.uri);
+
+          // const duration = await getVideoDuration(doc?.uri);
+
+          // if (duration > MAX_VIDEO_DURATION) {
+          //   Alert.alert(
+          //     'Attachment',
+          //     `Video exceeds the maximum allowed duration of ${MAX_VIDEO_DURATION} seconds`,
+          //     [
+          //       {
+          //         text: 'Change',
+          //         onPress: () => selectVideoFile(),
+          //         style: 'cancel',
+          //       },
+          //     ],
+          //   );
+          //   return;
+          // }
+
+          documents.push({
+            type: doc?.type,
+            doc: base64,
+            uri: doc?.uri,
+            name: doc?.name,
+            size: doc?.size,
+          });
+        }
+
+        setVideoFilesInAction(documents);
+      } else {
+        Alert.alert('Alert', `Please select ${numberOfFiles} files only.`, [
+          {
+            text: 'Change',
+            onPress: () => selectVideoFile(),
+            style: 'cancel',
+          },
+          {
+            text: 'Cancel',
+            onPress: () => console.log('OK Pressed'),
+            style: 'cancel',
+          },
+        ]);
+      }
+    } catch (err) {
+      console.log('Not selected');
+    }
+  };
+
+  console.log('videoFilesInAction', videoFilesInAction);
+
+  const onPressVideoDelete = () => {
+    console.log('onPressVideoDelete');
+    setVideoFilesInAction([]);
+  };
 
   return (
     <>
@@ -793,7 +886,8 @@ const ChallengeFormFill = props => {
                   <View style={{height: hp('5'), flexDirection: 'row'}}>
                     <View style={{flex: 0.8}}></View>
 
-                    {singleFile == '' || singleFile == null ? (
+                    {filesInAction?.length == 0 ||
+                    filesInAction == undefined ? (
                       <></>
                     ) : (
                       <TouchableOpacity
@@ -821,9 +915,9 @@ const ChallengeFormFill = props => {
                       height: hp('7'),
                     }}>
                     <Text style={styles.attachmentText}>
-                      {singleFile == '' || singleFile == null
-                        ? 'Upload the Training Attendance List'
-                        : singleFile && singleFile[0]?.name}
+                      {filesInAction?.length > 0
+                        ? filesInAction[0]?.name
+                        : 'Upload the Training Attendance List'}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -859,7 +953,7 @@ const ChallengeFormFill = props => {
                 ]}>
                 <TouchableOpacity
                   activeOpacity={0.5}
-                  onPress={onPressVideoUpload}
+                  onPress={selectVideoFile}
                   style={{
                     flex: 0.2,
                     justifyContent: 'center',
@@ -871,11 +965,39 @@ const ChallengeFormFill = props => {
                     style={{color: '#000000'}}
                   />
                 </TouchableOpacity>
-                <View style={{flex: 0.8}}>
-                  <Text style={styles.attachmentText}>
-                    Upload Your 60-Second Video (Optional)
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  onPress={selectVideoFile}
+                  style={{flex: 0.65}}>
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode={'tail'}
+                    style={[styles.attachmentText, {fontSize: hp('1.5')}]}>
+                    {videoFilesInAction[0]?.name
+                      ? videoFilesInAction[0]?.name
+                      : 'Upload Your 60-Second Video (Optional)'}
                   </Text>
-                </View>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  onPress={onPressVideoDelete}
+                  style={{
+                    flex: 0.15,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  {videoFilesInAction?.length == 0 ||
+                  videoFilesInAction == undefined ? (
+                    <></>
+                  ) : (
+                    <FontAwesomeIcon
+                      icon="fat fa-trash"
+                      size={hp('3')}
+                      style={{color: 'red'}}
+                    />
+                  )}
+                </TouchableOpacity>
               </View>
 
               <View
