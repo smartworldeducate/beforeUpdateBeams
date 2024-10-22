@@ -103,15 +103,6 @@ const Login = props => {
     setDeviceApiLevel(apiLevel);
   });
 
-  // console.log('deviceType', deviceType);
-  // console.log('getDeviceId', getDeviceId);
-  // console.log('getDeviceBrand', getDeviceBrand);
-  // console.log('getDeviceVersion', getDeviceVersion);
-  // console.log('getUserAppInstallVersion', getUserAppInstallVersion);
-  // console.log('deviceName', deviceName);
-  // console.log('deviceApiLevel', deviceApiLevel);
-  // console.log('deviceToken', deviceToken);
-
   const onPressLoginBtn = () => {
     try {
       AsyncStorage.setItem('deviceTypeAsyncStorage', deviceType);
@@ -192,33 +183,33 @@ const Login = props => {
 
   const onPressLoginWithGoogle = async () => {
     console.log('onPressLoginWithGoogle');
-    try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      console.log(userInfo);
-      // handleNavigate('HomeScreen');
-      const {id, name, email, givenName, photo} = userInfo?.user;
-      //  console.log("google data",glData.payload.data)
-      await storeData({google_id: id, photo: photo});
-      const glData = await dispatch(loginUser({email: email, google_id: id}));
-      // console.log("google data",glData.payload.data)
-      // glData.payload.data ? props.navigation.navigate('Home') : props.navigation.navigate('Register')
-      // setAnimodal(false)
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        console.log('cancelled');
-        // user cancelled the login flow
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        console.log('in progress');
-        // operation (e.g. sign in) is in progress already
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        console.log('service not available');
-        // play services not available or outdated
-      } else {
-        console.log('at last else');
-        // some other error happened
-      }
-    }
+    // try {
+    //   await GoogleSignin.hasPlayServices();
+    //   const userInfo = await GoogleSignin.signIn();
+    //   console.log(userInfo);
+    //   // handleNavigate('HomeScreen');
+    //   const {id, name, email, givenName, photo} = userInfo?.user;
+    //   //  console.log("google data",glData.payload.data)
+    //   await storeData({google_id: id, photo: photo});
+    //   const glData = await dispatch(loginUser({email: email, google_id: id}));
+    //   // console.log("google data",glData.payload.data)
+    //   // glData.payload.data ? props.navigation.navigate('Home') : props.navigation.navigate('Register')
+    //   // setAnimodal(false)
+    // } catch (error) {
+    //   if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+    //     console.log('cancelled');
+    //     // user cancelled the login flow
+    //   } else if (error.code === statusCodes.IN_PROGRESS) {
+    //     console.log('in progress');
+    //     // operation (e.g. sign in) is in progress already
+    //   } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+    //     console.log('service not available');
+    //     // play services not available or outdated
+    //   } else {
+    //     console.log('at last else');
+    //     // some other error happened
+    //   }
+    // }
   };
 
   useFocusEffect(
@@ -279,8 +270,8 @@ const Login = props => {
                 <TextInputCustom
                   value={employeeId}
                   onChangeText={onChangeEmpId}
-                  keyboardType={'numeric'}
-                  maxLength={12}
+                  keyboardType={'default'}
+                  maxLength={40}
                   returnKeyType={'done'}
                   iconName={'user-tie'}
                   placeholder={'Employee ID'}
@@ -295,7 +286,7 @@ const Login = props => {
                   value={employeePassword}
                   onChangeText={onChangeEmpPassword}
                   keyboardType={'default'}
-                  maxLength={35}
+                  maxLength={50}
                   returnKeyType={'done'}
                   iconName={'key'}
                   iconRight={eyeType == true ? 'eye' : 'eye-slash'}
@@ -322,9 +313,9 @@ const Login = props => {
               </TouchableOpacity>
             </View>
 
-            {/* <Text style={styles.orbtn}>OR</Text> */}
+            {/* <Text style={styles.orbtn}>OR</Text>
 
-            {/* <TouchableOpacity
+            <TouchableOpacity
               activeOpacity={0.8}
               onPress={onPressLoginWithGoogle}
               style={styles.loginWithGoogle}>
@@ -385,7 +376,9 @@ const styles = StyleSheet.create({
   orbtn: {
     textAlign: 'center',
     fontSize: hp('2'),
-    marginVertical: hp('2'),
+    marginTop: hp('3.5'),
+
+    marginBottom: hp('2.75'),
     color: colors.greyColor,
     fontStyle: 'normal',
     fontWeight: '500',

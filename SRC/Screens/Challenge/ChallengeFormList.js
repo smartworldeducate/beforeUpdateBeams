@@ -5,11 +5,13 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  RefreshControl,
   Image,
   ImageBackground,
   Modal,
   Alert,
   FlatList,
+  Linking,
 } from 'react-native';
 import Ficon from 'react-native-fontawesome-pro';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
@@ -18,7 +20,6 @@ import moment from 'moment';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
 import React, {useEffect, useState, useCallback} from 'react';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import {
   widthPercentageToDP as wp,
@@ -30,7 +31,6 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {useDispatch, useSelector} from 'react-redux';
 import MainHeader from '../../Components/Headers/MainHeader';
 import fontFamily from '../../Styles/fontFamily';
-import ChallengeListOpen from '../../Components/Modal/ChallengeListOpen';
 import {InspireTrainingsAction} from '../../features/Inspire50/InspireTrainingsSlice';
 import Loader from '../../Components/Loader/Loader';
 
@@ -46,6 +46,20 @@ const ChallengeFormList = props => {
     state => state.InspireTrainingsStore,
   );
 
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    try {
+      dispatch(
+        InspireTrainingsAction({
+          employee_id: profileHereEmpId,
+        }),
+      );
+    } catch (error) {}
+    setRefreshing(false);
+  };
+
   useFocusEffect(
     useCallback(() => {
       dispatch(
@@ -56,12 +70,6 @@ const ChallengeFormList = props => {
     }, [dispatch]),
   );
 
-  const [openListModal, setOpenListModal] = useState(false);
-
-  const onPressClose = () => {
-    setOpenListModal(false);
-  };
-
   const renderItem = ({item, index}) => {
     const filesLength = item?.training_files?.length - 1;
 
@@ -71,7 +79,11 @@ const ChallengeFormList = props => {
       <>
         <TouchableOpacity
           activeOpacity={0.5}
-          onPress={() => onPressItem({item})}
+          onPress={() =>
+            navigation.navigate('ChallengeListOpenData', {
+              sendingItemParam: item,
+            })
+          }
           style={{
             flexDirection: 'row',
             backgroundColor: 'white',
@@ -207,43 +219,32 @@ const ChallengeFormList = props => {
     );
   };
 
-  const [header, setHeader] = useState(null);
-  const [imagesArray, setImagesArray] = useState([]);
-  const [firstText, setFirstText] = useState(null);
-  const [secondText, setSecondText] = useState(null);
-
-  const [date, setDate] = useState(null);
-  const [dayTime, setDayTime] = useState(null);
-
-  const [campus, setCampus] = useState(null);
-  const [city, setCity] = useState(null);
-
-  const onPressItem = item => {
-    setOpenListModal(true);
-    setHeader('I50 (Inspire 50)');
-    setImagesArray(item?.item?.training_files);
-    setFirstText(item?.item?.category_title);
-    setSecondText(item?.item?.training_title);
-    setDate(item?.item?.training_date);
-    setDayTime(item?.item?.training_duration);
-    setCampus(item?.item?.school_name);
-    setCity(item?.item?.city_name);
-  };
+  console.log('list', inspireTrainingsHere?.userData?.user_city);
 
   return (
     <>
       <MainHeader
-        text={'I50 (Inspire 50)'}
+        text={'I20 - Impact 20M'}
         iconName={'arrow-left'}
         onpressBtn={() => props.navigation.goBack()}
         rightIcon={'person-from-portal'}
-        onPressRightIcon={() => navigation.navigate('HomeScreen')}
+        onPressRightIcon={() => props.navigation.pop(2)}
       />
 
       {inspireTrainingsHere?.isLoading && <Loader></Loader>}
 
-      <ScrollView style={{flex: 1, backgroundColor: '#F5F8FC'}}>
-        <View style={{marginHorizontal: wp('6'), marginTop: hp('2.5')}}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={['#2A72B6', '#203B88']}
+            progressBackgroundColor={'#fcfcfc'}
+            tintColor={'#1C37A4'}
+          />
+        }
+        style={{flex: 1, backgroundColor: '#F5F8FC'}}>
+        <View style={{marginHorizontal: wp('6'), marginTop: hp('1')}}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <LinearGradient
               useAngle={true}
@@ -276,7 +277,13 @@ const ChallengeFormList = props => {
                     fontFamily: fontFamily.ceraMedium,
                     fontWeight: '500',
                   }}>
-                  {inspireTrainingsHere?.userData?.training_hours?.total_hours}
+                  {inspireTrainingsHere?.userData?.training_hours
+                    ?.conducted_hours == '' ||
+                  inspireTrainingsHere?.userData?.training_hours
+                    ?.conducted_hours == undefined
+                    ? 0
+                    : inspireTrainingsHere?.userData?.training_hours
+                        ?.conducted_hours}
                 </Text>
               </View>
             </LinearGradient>
@@ -312,10 +319,13 @@ const ChallengeFormList = props => {
                     fontFamily: fontFamily.ceraMedium,
                     fontWeight: '500',
                   }}>
-                  {
-                    inspireTrainingsHere?.userData?.training_hours
-                      ?.teachers_impacted
-                  }
+                  {inspireTrainingsHere?.userData?.training_hours
+                    ?.teachers_impacted == '' ||
+                  inspireTrainingsHere?.userData?.training_hours
+                    ?.teachers_impacted == undefined
+                    ? 0
+                    : inspireTrainingsHere?.userData?.training_hours
+                        ?.teachers_impacted}
                 </Text>
               </View>
             </LinearGradient>
@@ -351,10 +361,13 @@ const ChallengeFormList = props => {
                     fontFamily: fontFamily.ceraMedium,
                     fontWeight: '500',
                   }}>
-                  {
-                    inspireTrainingsHere?.userData?.training_hours
-                      ?.students_impacted
-                  }
+                  {inspireTrainingsHere?.userData?.training_hours
+                    ?.students_impacted == '' ||
+                  inspireTrainingsHere?.userData?.training_hours
+                    ?.students_impacted == undefined
+                    ? 0
+                    : inspireTrainingsHere?.userData?.training_hours
+                        ?.students_impacted}
                 </Text>
               </View>
             </LinearGradient>
@@ -392,10 +405,13 @@ const ChallengeFormList = props => {
                     fontFamily: fontFamily.ceraMedium,
                     fontWeight: '500',
                   }}>
-                  {
-                    inspireTrainingsHere?.userData?.training_hours
-                      ?.remaining_hours
-                  }
+                  {inspireTrainingsHere?.userData?.training_hours
+                    ?.remaining_hours == '' ||
+                  inspireTrainingsHere?.userData?.training_hours
+                    ?.remaining_hours == undefined
+                    ? 0
+                    : inspireTrainingsHere?.userData?.training_hours
+                        ?.remaining_hours}
                 </Text>
               </View>
             </LinearGradient>
@@ -408,7 +424,7 @@ const ChallengeFormList = props => {
               marginTop: hp('1.25'),
             }}>
             <View style={styles.boxTextView}>
-              <Text style={styles.boxText}>{`Total\nHours`}</Text>
+              <Text style={styles.boxText}>{`Hours\nConducted`}</Text>
             </View>
             <View style={styles.boxTextView}>
               <Text style={styles.boxText}>{`Teacher\nImpacted`}</Text>
@@ -421,35 +437,75 @@ const ChallengeFormList = props => {
             </View>
           </View>
 
-          <View style={{marginTop: hp('2')}}>
-            <FlatList
-              data={inspireTrainingsHere?.userData?.trainings}
-              renderItem={renderItem}
-              keyExtractor={(item, index) => index.toString()}
-            />
-          </View>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() =>
+              Linking.openURL(
+                inspireTrainingsHere?.userData?.low_cost_schools_link,
+              )
+            }
+            style={{
+              height: hp('6'),
+              backgroundColor: '#1C37A4',
+              borderRadius: wp('50'),
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginVertical: hp('2'),
+              marginHorizontal: wp('2'),
+            }}>
+            <Text
+              style={{
+                fontSize: hp('1.95'),
+                color: '#FFFFFF',
+                fontFamily: fontFamily.ceraMedium,
+                fontWeight: '500',
+                lineHeight: hp('2.5'),
+                letterSpacing: 0.35,
+              }}>
+              {'Find a Low-Cost School'}
+            </Text>
+          </TouchableOpacity>
+
+          {inspireTrainingsHere &&
+          inspireTrainingsHere?.userData?.trainings?.length > 0 ? (
+            <View style={{marginTop: hp('1')}}>
+              <FlatList
+                data={inspireTrainingsHere?.userData?.trainings}
+                renderItem={renderItem}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            </View>
+          ) : (
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                marginTop: hp('2'),
+              }}>
+              <Text
+                style={{
+                  fontSize: hp('1.85'),
+                  fontFamily: fontFamily.ceraMedium,
+                  color: 'black',
+                  fontWeight: '500',
+                  fontStyle: 'italic',
+                  textAlign: 'center',
+                }}>
+                Let's get started! Your journey to I20 begins here. Every hour
+                makes a difference.
+              </Text>
+            </View>
+          )}
         </View>
       </ScrollView>
 
-      {/* <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text
-            style={{
-              fontSize: hp('2.25'),
-              fontFamily: fontFamily.ceraMedium,
-              color: 'black',
-            }}>
-            Right now you have not any training
-          </Text>
-        </View> */}
-
       <TouchableOpacity
         activeOpacity={0.5}
-        onPress={() => navigation.navigate('ChallengeFormFill')}
+        onPress={() =>
+          navigation.navigate('ChallengeFormFill', {
+            cityDetailsparam: inspireTrainingsHere?.userData?.user_city,
+          })
+        }
         style={{
           height: hp('8'),
           width: hp('8'),
@@ -472,19 +528,6 @@ const ChallengeFormList = props => {
           +
         </Text>
       </TouchableOpacity>
-
-      <ChallengeListOpen
-        modalVisible={openListModal}
-        onpressBtn={onPressClose}
-        textHeader={header}
-        imagesListData={imagesArray}
-        text1={firstText}
-        text2={secondText}
-        date={moment(date, 'DD-MMM-YY').format('DD MMM, YYYY')}
-        dayTime={dayTime}
-        campus={campus}
-        city={city}
-      />
     </>
   );
 };

@@ -67,7 +67,7 @@ const ChallengeSignUp = props => {
   return (
     <>
       <MainHeader
-        text={'I50 (Inspire 50)'}
+        text={'I20 - Impact 20M'}
         iconName={'arrow-left'}
         onpressBtn={() => props.navigation.goBack()}
       />
@@ -114,7 +114,7 @@ const ChallengeSignUp = props => {
                 letterSpacing: 0.35,
               }}>
               {inspireSignupHTMLHere?.userData?.signup_status == 1
-                ? 'Register'
+                ? 'CONTINUE'
                 : 'SIGN UP'}
             </Text>
           </TouchableOpacity>
@@ -130,12 +130,11 @@ const styles = EStyleSheet.create({});
 
 const tagsStyles = {
   body: {
-    fontSize: hp('1.65'),
+    // fontSize: hp('1.65'),
     color: '#343434',
-    letterSpacing: 0.65,
-    fontFamily: fontFamily.ceraLight,
-    whiteSpace: 'normal',
-
+    // letterSpacing: 0.65,
+    // fontFamily: fontFamily.ceraLight,
+    // whiteSpace: 'normal',
     padding: 0,
     margin: 0,
   },

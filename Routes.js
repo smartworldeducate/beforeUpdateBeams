@@ -71,6 +71,7 @@ import ChatScreen from './SRC/Screens/ChatScreen';
 import ChallengeSignUp from './SRC/Screens/Challenge/ChallengeSignUp';
 import ChallengeFormList from './SRC/Screens/Challenge/ChallengeFormList';
 import ChallengeFormFill from './SRC/Screens/Challenge/ChallengeFormFill';
+import ChallengeListOpenData from './SRC/Screens/Challenge/ChallengeListOpenData';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -166,7 +167,10 @@ const Routes = () => {
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={'Splash'}
-        screenOptions={{headerShown: false}}>
+        screenOptions={{
+          headerShown: false,
+          // unmountOnBlur: true
+        }}>
         <Stack.Screen name="Splash" component={Splash} />
         <Stack.Screen name="Skip1" component={Skip1} />
         <Stack.Screen name="Login" component={Login} />
@@ -201,6 +205,10 @@ const Routes = () => {
 
         <Stack.Screen name="ChallengeFormList" component={ChallengeFormList} />
         <Stack.Screen name="ChallengeFormFill" component={ChallengeFormFill} />
+        <Stack.Screen
+          name="ChallengeListOpenData"
+          component={ChallengeListOpenData}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

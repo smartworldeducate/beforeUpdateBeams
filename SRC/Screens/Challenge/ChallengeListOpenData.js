@@ -1,89 +1,38 @@
-import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Modal,
-  FlatList,
-  ScrollView,
-  Image,
-} from 'react-native';
+import React, {useEffect} from 'react';
+import {FlatList, Text, TouchableOpacity, View, Image} from 'react-native';
+import MainHeader from '../../Components/Headers/MainHeader';
+import moment from 'moment';
+import Swiper from 'react-native-swiper';
+
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-fontawesome-pro';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import colors from '../../Styles/colors';
 import fontFamily from '../../Styles/fontFamily';
-import Swiper from 'react-native-swiper';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
 
-const ChallengeListOpen = ({
-  modalVisible,
-  onpressBtn,
-  textHeader,
+const ChallengeListOpen = ({route}) => {
+  console.log('route', route?.params?.sendingItemParam);
+  const navigation = useNavigation();
 
-  imagesListData,
-
-  text1,
-  text2,
-  date,
-  dayTime,
-  campus,
-  city,
-}) => {
-  // console.log('imagesListData', imagesListData);
+  const inspireTrainingsHere = useSelector(
+    state => state.InspireTrainingsStore,
+  );
 
   return (
-    <Modal
-      animationType="fade"
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={onpressBtn}>
+    <>
+      <MainHeader
+        text={'Impact 20M'}
+        iconName={'arrow-left'}
+        onpressBtn={() => navigation.goBack()}
+      />
+
       <>
-        <LinearGradient
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-          colors={['#1C37A5', '#4D69DC']}
-          style={styles.mainHeader}>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginHorizontal: wp('2'),
-
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: hp(7),
-            }}>
-            <TouchableOpacity
-              onPress={onpressBtn}
-              style={{
-                flex: 0.15,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Icon
-                type="light"
-                name={'arrow-left'}
-                size={hp(2.5)}
-                color="#fff"
-              />
-            </TouchableOpacity>
-            <View
-              style={{
-                flex: 0.7,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text style={styles.textstyle}>{textHeader}</Text>
-            </View>
-            <View style={{flex: 0.15}}></View>
-          </View>
-        </LinearGradient>
-
         <View
           style={{
             flex: 1,
@@ -92,7 +41,8 @@ const ChallengeListOpen = ({
           }}>
           <View style={styles.infoMainView}>
             <Swiper
-              //   loop={true}
+              // loop={true}
+              autoplay
               style={styles.wrapper}
               showsPagination={true}
               paginationStyle={styles.paginationDotStyle}
@@ -102,33 +52,35 @@ const ChallengeListOpen = ({
               activeDotStyle={{height: hp('1'), width: hp('1')}}
               showsButtons={false}
               scrollEnabled={true}>
-              {imagesListData?.map((item, index) => (
-                <View
-                  style={{
-                    borderRadius: wp('3'),
-                    paddingHorizontal: wp('1'),
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderRadius: wp('3'),
-                    borderWidth: wp('0.15'),
-                    borderColor: 'silver',
-                    paddingVertical: hp('0'),
-                    height: hp('35'),
-                  }}
-                  key={index}>
-                  <Image
-                    source={{
-                      uri: item?.file_path,
-                    }}
+              {route?.params?.sendingItemParam?.training_files?.map(
+                (item, index) => (
+                  <View
                     style={{
-                      height: hp('35'),
-                      width: wp('89.5'),
                       borderRadius: wp('3'),
+                      paddingHorizontal: wp('1'),
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      borderRadius: wp('3'),
+                      borderWidth: wp('0.15'),
+                      borderColor: 'silver',
+                      paddingVertical: hp('0'),
+                      height: hp('35'),
                     }}
-                    resizeMode="cover"
-                  />
-                </View>
-              ))}
+                    key={index}>
+                    <Image
+                      source={{
+                        uri: item?.file_path,
+                      }}
+                      style={{
+                        height: hp('34.8'),
+                        width: wp('89.5'),
+                        borderRadius: wp('3'),
+                      }}
+                      resizeMode="cover"
+                    />
+                  </View>
+                ),
+              )}
             </Swiper>
           </View>
 
@@ -140,7 +92,7 @@ const ChallengeListOpen = ({
                 fontWeight: '500',
                 fontFamily: fontFamily.ceraMedium,
               }}>
-              {text1}
+              {route?.params?.sendingItemParam?.category_title}
             </Text>
 
             <Text
@@ -151,7 +103,7 @@ const ChallengeListOpen = ({
                 fontFamily: fontFamily.ceraBold,
                 paddingVertical: hp('1'),
               }}>
-              {text2}
+              {route?.params?.sendingItemParam?.training_title}
             </Text>
 
             <View style={{flexDirection: 'row', marginTop: hp('2')}}>
@@ -184,7 +136,10 @@ const ChallengeListOpen = ({
                     fontWeight: '700',
                     fontFamily: fontFamily.ceraBold,
                   }}>
-                  {date}
+                  {moment(
+                    route?.params?.sendingItemParam?.training_date,
+                    'DD-MMM-YY',
+                  ).format('DD MMM, YYYY')}
                 </Text>
                 <Text
                   style={{
@@ -193,7 +148,9 @@ const ChallengeListOpen = ({
                     fontWeight: '500',
                     fontFamily: fontFamily.ceraMedium,
                   }}>
-                  {dayTime}
+                  {route?.params?.sendingItemParam?.training_duration == 1
+                    ? `${route?.params?.sendingItemParam?.training_duration} hour`
+                    : `${route?.params?.sendingItemParam?.training_duration} hours`}
                 </Text>
               </View>
             </View>
@@ -228,7 +185,7 @@ const ChallengeListOpen = ({
                     fontWeight: '700',
                     fontFamily: fontFamily.ceraBold,
                   }}>
-                  {campus}
+                  {route?.params?.sendingItemParam?.school_name}
                 </Text>
                 <Text
                   style={{
@@ -237,7 +194,7 @@ const ChallengeListOpen = ({
                     fontWeight: '500',
                     fontFamily: fontFamily.ceraMedium,
                   }}>
-                  {city}
+                  {route?.params?.sendingItemParam?.city_name}
                 </Text>
               </View>
             </View>
@@ -252,7 +209,7 @@ const ChallengeListOpen = ({
             <LinearGradient
               start={{x: 0, y: 0}}
               end={{x: 1, y: 0}}
-              colors={['#7AE6E4', '#29D09F']}
+              colors={['#29D09F', '#7AE6E4']}
               style={{
                 flex: 0.45,
                 flexDirection: 'row',
@@ -270,8 +227,8 @@ const ChallengeListOpen = ({
                 <Text
                   style={{
                     fontSize: hp('2'),
-                    fontFamily: fontFamily.ceraBold,
-                    fontWeight: '700',
+                    fontFamily: fontFamily.ceraMedium,
+                    fontWeight: '500',
                     color: '#FFFFFF',
                   }}>
                   {`Teacher\nImpacted`}
@@ -282,16 +239,18 @@ const ChallengeListOpen = ({
                 style={{
                   flex: 0.3,
                   justifyContent: 'center',
-                  alignItems: 'center',
                 }}>
                 <Text
                   style={{
-                    fontSize: hp('3.25'),
+                    fontSize: hp('2.75'),
                     fontFamily: fontFamily.ceraBold,
                     fontWeight: '700',
                     color: '#FFFFFF',
                   }}>
-                  {`7`}
+                  {
+                    inspireTrainingsHere?.userData?.training_hours
+                      ?.teachers_impacted
+                  }
                 </Text>
               </View>
             </LinearGradient>
@@ -301,7 +260,7 @@ const ChallengeListOpen = ({
             <LinearGradient
               start={{x: 0, y: 0}}
               end={{x: 1, y: 0}}
-              colors={['#FFA9AA', '#FF5255']}
+              colors={['#FF5255', '#FFA9AA']}
               style={{
                 flex: 0.45,
                 flexDirection: 'row',
@@ -319,8 +278,8 @@ const ChallengeListOpen = ({
                 <Text
                   style={{
                     fontSize: hp('2'),
-                    fontFamily: fontFamily.ceraBold,
-                    fontWeight: '700',
+                    fontFamily: fontFamily.ceraMedium,
+                    fontWeight: '500',
                     color: '#FFFFFF',
                   }}>
                   {`Student\nImpacted`}
@@ -331,23 +290,25 @@ const ChallengeListOpen = ({
                 style={{
                   flex: 0.3,
                   justifyContent: 'center',
-                  alignItems: 'center',
                 }}>
                 <Text
                   style={{
-                    fontSize: hp('3.25'),
+                    fontSize: hp('2.75'),
                     fontFamily: fontFamily.ceraBold,
                     fontWeight: '700',
                     color: '#FFFFFF',
                   }}>
-                  {`70`}
+                  {
+                    inspireTrainingsHere?.userData?.training_hours
+                      ?.students_impacted
+                  }
                 </Text>
               </View>
             </LinearGradient>
           </View>
         </View>
       </>
-    </Modal>
+    </>
   );
 };
 
@@ -390,4 +351,5 @@ const styles = EStyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0)',
   },
 });
+
 export default ChallengeListOpen;

@@ -1,4 +1,11 @@
-import {View, Text, TouchableOpacity, ScrollView, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  TextInput,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {
   widthPercentageToDP as wp,
@@ -20,17 +27,19 @@ import {
   clearAllStateFormSubmit,
   InspireAddTrainingSubmitAction,
 } from '../../features/Inspire50/InspireAddTrainingSliceSubmit';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+
 import moment from 'moment';
 import MessageSuccessModal from '../../Components/Modal/MessageSuccessModal';
 import Loader from '../../Components/Loader/Loader';
 
 import RNFS from 'react-native-fs';
+import InspireSuccessModal from '../../Components/Modal/InspireSuccessModal';
 
-const MAX_FILE_SIZE_MB = 5;
-const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1000 * 1000;
-
-const ChallengeFormFill = props => {
+const ChallengeFormFill = ({route}) => {
+  console.log('cityDetailsparam', route?.params?.cityDetailsparam?.city_name);
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const profileHereEmpId = useSelector(
     state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
@@ -39,6 +48,8 @@ const ChallengeFormFill = props => {
   const submitTrainingFormHere = useSelector(
     state => state.InspireAddTrainingSubmitStore,
   );
+
+  console.log('submitTrainingFormHere', submitTrainingFormHere);
 
   const addFormSubmitResponseHere = useSelector(
     state => state.InspireAddTrainingSubmitStore.success,
@@ -122,12 +133,22 @@ const ChallengeFormFill = props => {
   const [schoolName, setSchoolName] = useState('');
   const [traingSchoolId, setTrainingSchoolId] = useState(null);
 
-  const [city, setCity] = useState('');
-  const [traingCityId, setTrainingCityId] = useState(null);
+  const [traingOtherSchoolName, setTrainingOtherSchoolName] = useState('');
+
+  const [city, setCity] = useState(
+    route && route?.params?.cityDetailsparam?.city_name,
+  );
+  const [traingCityId, setTrainingCityId] = useState(
+    route && route?.params?.cityDetailsparam?.city_id,
+  );
+
+  console.log('traingCityId', traingCityId);
 
   const [trainingDuration, setTrainingDuration] = useState('');
 
   const [trainingCount, setTrainingCount] = useState(0);
+
+  console.log('addFormSubmitResponseHere', addFormSubmitResponseHere);
 
   useEffect(() => {
     if (addFormSubmitResponseHere == 0) {
@@ -147,6 +168,8 @@ const ChallengeFormFill = props => {
       setSchoolName('');
       setTrainingSchoolId(null);
 
+      setTrainingOtherSchoolName('');
+
       setCity('');
       setTrainingCityId(null);
 
@@ -157,6 +180,11 @@ const ChallengeFormFill = props => {
       setFilesInAction([]);
 
       setVideoFilesInAction([]);
+
+      setFilesInAttachmentImages([]);
+
+      setAttValue(true);
+      setAttachValue(false);
     }
   }, [addFormSubmitResponseHere]);
 
@@ -232,14 +260,6 @@ const ChallengeFormFill = props => {
     setAttachValue(true);
   };
 
-  const onPressVideoUpload = () => {
-    console.log('onPressVideoUpload');
-  };
-
-  const onPressAddNew = () => {
-    console.log('onPressAddNew');
-  };
-
   const onPressTrainingTitleModal = () => {
     setTrainingTitleModal(true);
   };
@@ -267,7 +287,7 @@ const ChallengeFormFill = props => {
   const onPressCloseSchoolNameModal = () => {
     setSchoolNameModal(false);
 
-    setSearchValueSchool(''); // Clear the search input for School Name
+    setSearchValueSchool('');
     setFilteredDataSchool(inspireAddTrainingSchoolHere);
   };
 
@@ -323,6 +343,7 @@ const ChallengeFormFill = props => {
   };
 
   const onPressTrainingTitle = ({item}) => {
+    console.log('item', item);
     setTrainingTitle(item?.training_title);
     setTrainingTitleId(item?.training_id);
     setTrainingTitleModal(false);
@@ -330,6 +351,8 @@ const ChallengeFormFill = props => {
     setSearchValue('');
     setFilteredData(inspireAddTrainingTitleHere);
   };
+
+  console.log('traingTitle', traingTitle);
 
   const onChangeSearchValuePD = val => {
     setSearchValuePD(val);
@@ -459,7 +482,9 @@ const ChallengeFormFill = props => {
             justifyContent: 'center',
             marginVertical: hp('0.1'),
           }}>
-          <Text style={styles.trainingTitleText}>{item}</Text>
+          <Text style={styles.trainingTitleText}>
+            {item <= 1 ? `${item} hour` : `${item} hours`}
+          </Text>
         </TouchableOpacity>
 
         <LineSeprator height={hp('0.05')} backgroundColor={'silver'} />
@@ -481,58 +506,111 @@ const ChallengeFormFill = props => {
     setShowErrorModal(false);
   };
 
-  const onPressSubmitBtn = () => {
-    const formData = new FormData();
-    formData.append('employee_id', profileHereEmpId);
-    formData.append('training_id', traingTitleId);
-
-    formData.append('category_id', traingCategoryId);
-
-    formData.append('training_date', forTrainingDate);
-
-    formData.append('school_id', traingSchoolId);
-    formData.append('city_id', traingCityId);
-
-    formData.append('num_trainees', trainingCount);
-
-    formData.append('training_duration', trainingDuration);
-
-    const docValues = filesInAction.map(file => file.doc);
-    docValues.forEach((doc, index) => {
-      formData.append(`attendance`, doc);
-    });
-
-    const videoValues = videoFilesInAction.map(file => file.doc);
-    videoValues.forEach((doc, index) => {
-      formData.append(`training_video`, doc);
-    });
-
-    dispatch(InspireAddTrainingSubmitAction(formData));
+  const closeModalforSuccess = () => {
+    dispatch(clearAllStateFormSubmit());
+    setShowSuccessModal(false);
+    setShowErrorModal(false);
+    navigation.navigate('ChallengeFormList');
   };
+
+  const onPressSubmitBtn = () => {
+    if (filesInAction?.length > 0 && filesInAttachmentImages?.length >= 3) {
+      const formData = new FormData();
+      formData.append('employee_id', profileHereEmpId);
+      formData.append('training_id', traingTitleId);
+      formData.append('category_id', traingCategoryId);
+      formData.append('training_date', forTrainingDate);
+      // formData.append('school_id', traingSchoolId);
+
+      formData.append('school_name', traingOtherSchoolName);
+
+      // if (traingSchoolId == 99999) {
+      //   formData.append('other_school_name', traingOtherSchoolName);
+      // }
+
+      formData.append('city_id', traingCityId);
+      formData.append('num_trainees', trainingCount);
+      formData.append('training_duration', trainingDuration);
+
+      // Append attendance files
+      const docValues = filesInAction.map(file => file.doc);
+      docValues.forEach(doc => {
+        formData.append('attendance', doc);
+      });
+
+      // Append image files
+      const imagesValues = filesInAttachmentImages.map(file => file.doc);
+      imagesValues.forEach(doc => {
+        formData.append('training_images[]', doc);
+      });
+
+      // Dispatch the action
+      dispatch(InspireAddTrainingSubmitAction(formData));
+    } else {
+      if (filesInAction?.length === 0) {
+        alert('Please upload attendance sheet.');
+      }
+      if (filesInAttachmentImages?.length < 3) {
+        alert('You need to upload at least 3 images.');
+      }
+    }
+  };
+
+  // const onPressSubmitBtn = () => {
+
+  //   const formData = new FormData();
+  //   formData.append('employee_id', profileHereEmpId);
+  //   formData.append('training_id', traingTitleId);
+
+  //   formData.append('category_id', traingCategoryId);
+
+  //   formData.append('training_date', forTrainingDate);
+
+  //   formData.append('school_id', traingSchoolId);
+
+  //   if (traingSchoolId == 99999) {
+  //     formData.append('other_school_name', traingOtherSchoolName);
+  //   }
+
+  //   formData.append('city_id', traingCityId);
+
+  //   formData.append('num_trainees', trainingCount);
+
+  //   formData.append('training_duration', trainingDuration);
+
+  //   const docValues = filesInAction.map(file => file.doc);
+  //   docValues.forEach((doc, index) => {
+  //     formData.append(`attendance`, doc);
+  //   });
+
+  //   // const videoValues = videoFilesInAction.map(file => file.doc);
+  //   // videoValues.forEach((doc, index) => {
+  //   //   formData.append(`training_video`, doc);
+  //   // });
+
+  //   const imagesValues = filesInAttachmentImages.map(file => file.doc);
+  //   imagesValues.forEach((doc, index) => {
+  //     formData.append(`training_images[]`, doc);
+  //   });
+
+  //   dispatch(InspireAddTrainingSubmitAction(formData));
+  // };
 
   const onPressDeleteIcon = () => {
     setFilesInAction([]);
   };
 
+  console.log('traingOtherSchoolName', traingOtherSchoolName);
+
   const [numberOfFiles, setNumberOfFiles] = useState(1);
   const [fileSize, setFileSize] = useState(5);
   const [filesInAction, setFilesInAction] = useState([]);
-
-  console.log('filesInAction', filesInAction?.length);
-
-  const onPressAttendanceChoose = () => {
-    console.log('onPressAttendanceChoose');
-  };
 
   const selectOneFile = async () => {
     try {
       const results = await DocumentPicker.pick({
         copyTo: 'documentDirectory',
-        type: [
-          DocumentPicker.types.pdf,
-          DocumentPicker.types.images,
-          // DocumentPicker.types.video,
-        ],
+        type: [DocumentPicker.types.pdf, DocumentPicker.types.images],
       });
 
       const docs = [...results];
@@ -588,20 +666,7 @@ const ChallengeFormFill = props => {
 
   const myFilesHere = async () => {
     if (filesInAction?.length > numberOfFiles) {
-      Alert.alert('Alert', `Please select ${numberOfFiles} files only.`, [
-        {
-          text: 'Change',
-          onPress: () => selectOneFile(),
-          style: 'cancel',
-        },
-      ]);
-    } else {
-    }
-  };
-
-  const myVideoFilesHere = async () => {
-    if (videoFilesInAction?.length > numberOfFiles) {
-      Alert.alert('Alert', `Please select ${numberOfFiles} files only.`, [
+      Alert.alert('Alert', `Please select ${numberOfFiles} file only.`, [
         {
           text: 'Change',
           onPress: () => selectOneFile(),
@@ -623,10 +688,6 @@ const ChallengeFormFill = props => {
   useEffect(() => {
     myFilesHere();
   }, [filesInAction]);
-
-  useEffect(() => {
-    myVideoFilesHere();
-  }, [videoFilesInAction]);
 
   const convertFileToBase64 = async filePath => {
     try {
@@ -655,23 +716,6 @@ const ChallengeFormFill = props => {
         for (let doc of docs) {
           const base64 = await convertFileToBase64(doc?.uri);
 
-          // const duration = await getVideoDuration(doc?.uri);
-
-          // if (duration > MAX_VIDEO_DURATION) {
-          //   Alert.alert(
-          //     'Attachment',
-          //     `Video exceeds the maximum allowed duration of ${MAX_VIDEO_DURATION} seconds`,
-          //     [
-          //       {
-          //         text: 'Change',
-          //         onPress: () => selectVideoFile(),
-          //         style: 'cancel',
-          //       },
-          //     ],
-          //   );
-          //   return;
-          // }
-
           documents.push({
             type: doc?.type,
             doc: base64,
@@ -683,7 +727,7 @@ const ChallengeFormFill = props => {
 
         setVideoFilesInAction(documents);
       } else {
-        Alert.alert('Alert', `Please select ${numberOfFiles} files only.`, [
+        Alert.alert('Alert', `Please select ${numberOfFiles} video only.`, [
           {
             text: 'Change',
             onPress: () => selectVideoFile(),
@@ -701,19 +745,77 @@ const ChallengeFormFill = props => {
     }
   };
 
-  console.log('videoFilesInAction', videoFilesInAction);
+  const myVideoFilesHere = async () => {
+    if (videoFilesInAction?.length > numberOfFiles) {
+      Alert.alert('Alert', `Please select ${numberOfFiles} files only.`, [
+        {
+          text: 'Change',
+          onPress: () => selectOneFile(),
+          style: 'cancel',
+        },
+      ]);
+    } else {
+    }
+  };
 
   const onPressVideoDelete = () => {
-    console.log('onPressVideoDelete');
     setVideoFilesInAction([]);
   };
+
+  useEffect(() => {
+    myVideoFilesHere();
+  }, [videoFilesInAction]);
+
+  const [filesInAttachmentImages, setFilesInAttachmentImages] = useState([]);
+  const maxFiles = 5;
+  const minFiles = 3;
+
+  const onPressAttachmentImages = async () => {
+    try {
+      const result = await DocumentPicker.pick({
+        type: [DocumentPicker.types.images],
+      });
+
+      if (filesInAttachmentImages.length >= 5) {
+        Alert.alert('Maximum Selection', 'You can only select up to 5 images.');
+        return;
+      }
+
+      for (const file of result) {
+        const base64String = await convertFileToBase64(file.uri);
+        if (base64String) {
+          setFilesInAttachmentImages(prevFiles => [
+            ...prevFiles,
+            {name: file.name, uri: file.uri, doc: base64String},
+          ]);
+        }
+      }
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        console.log('User canceled the picker');
+      } else {
+        console.log('Unknown error: ', err);
+      }
+    }
+  };
+
+  const handleDeleteImage = index => {
+    const updatedFiles = filesInAttachmentImages.filter((_, i) => i !== index);
+    setFilesInAttachmentImages(updatedFiles);
+  };
+
+  const onChangeOtherSchoolName = val => {
+    setTrainingOtherSchoolName(val);
+  };
+
+  console.log('traingSchoolId', traingSchoolId);
 
   return (
     <>
       <MainHeader
-        text={'I50 (Inspire 50) Form'}
+        text={'Upload Evidence'}
         iconName={'arrow-left'}
-        onpressBtn={() => props.navigation.goBack()}
+        onpressBtn={() => navigation.goBack()}
       />
 
       {submitTrainingFormHere?.isLoading && <Loader></Loader>}
@@ -756,7 +858,7 @@ const ChallengeFormFill = props => {
             onPress={onPressShowDatePicker}
           />
 
-          <I50TextInputModal
+          {/* <I50TextInputModal
             textValue={
               schoolName == '' || schoolName == null
                 ? 'School Name'
@@ -766,6 +868,66 @@ const ChallengeFormFill = props => {
             iconColor={'#363636'}
             iconSize={hp('2.25')}
             onPress={onPressSchoolNameModal}
+          /> */}
+
+          {/* {traingSchoolId == 99999 && (
+            <TextInput
+              value={traingOtherSchoolName}
+              onChangeText={onChangeOtherSchoolName}
+              multiline={true}
+              numberOfLines={4}
+              maxLength={500}
+              style={{
+                height: hp('7'),
+                width: wp('85'),
+                backgroundColor: 'white',
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: wp('50'),
+                shadowColor: '#000',
+                shadowOffset: {width: 0, height: 12},
+                shadowOpacity: 0.58,
+                shadowRadius: 16,
+                elevation: 7,
+                paddingLeft: wp('5'),
+                marginVertical: hp('0.5'),
+
+                fontSize: hp('2'),
+                fontFamily: fontFamily.ceraMedium,
+                color: '#363636',
+              }}
+              placeholder="Enter other school name..."
+              placeholderTextColor={'#363636'}
+            />
+          )} */}
+
+          <TextInput
+            value={traingOtherSchoolName}
+            onChangeText={onChangeOtherSchoolName}
+            multiline={true}
+            numberOfLines={4}
+            maxLength={500}
+            style={{
+              height: hp('7'),
+              width: wp('85'),
+              backgroundColor: 'white',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: wp('50'),
+              shadowColor: '#000',
+              shadowOffset: {width: 0, height: 12},
+              shadowOpacity: 0.58,
+              shadowRadius: 16,
+              elevation: 7,
+              paddingLeft: wp('5'),
+              marginVertical: hp('0.5'),
+
+              fontSize: hp('2'),
+              fontFamily: fontFamily.ceraMedium,
+              color: '#363636',
+            }}
+            placeholder="Low-Cost School Name"
+            placeholderTextColor={'#363636'}
           />
 
           <I50TextInputModal
@@ -815,7 +977,7 @@ const ChallengeFormFill = props => {
           <I50TextInputModal
             textValue={
               trainingDuration == '' || trainingDuration == null
-                ? 'Training Duration'
+                ? 'Training Duration (hours)'
                 : `You Selected ${trainingDuration} ${
                     trainingDuration > 1 ? 'hours' : 'hour'
                   }`
@@ -834,7 +996,7 @@ const ChallengeFormFill = props => {
                 styles.btnsStyle,
                 {backgroundColor: atttValue ? 'white' : 'silver'},
               ]}>
-              <Text style={styles.attenAttachText}>Attendance</Text>
+              <Text style={styles.attenAttachText}>Attendance Sheet</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -844,7 +1006,7 @@ const ChallengeFormFill = props => {
                 styles.btnsStyle,
                 {backgroundColor: atttachValue ? 'white' : 'silver'},
               ]}>
-              <Text style={styles.attenAttachText}>Attachments</Text>
+              <Text style={styles.attenAttachText}>Photos</Text>
             </TouchableOpacity>
           </View>
 
@@ -900,7 +1062,7 @@ const ChallengeFormFill = props => {
                           alignItems: 'center',
                         }}>
                         <FontAwesomeIcon
-                          icon="fat fa-trash"
+                          icon="fat fa-trash-alt"
                           size={hp('3')}
                           style={{color: 'red'}}
                         />
@@ -917,7 +1079,7 @@ const ChallengeFormFill = props => {
                     <Text style={styles.attachmentText}>
                       {filesInAction?.length > 0
                         ? filesInAction[0]?.name
-                        : 'Upload the Training Attendance List'}
+                        : 'Upload a photo of attendance sheet'}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -929,7 +1091,12 @@ const ChallengeFormFill = props => {
                   alignItems: 'flex-end',
                   marginRight: wp('3'),
                 }}>
-                <Text style={styles.attachmentText}>
+                <Text
+                  style={{
+                    fontStyle: 'italic',
+                    color: '#78829D',
+                    fontSize: hp('1.35'),
+                  }}>
                   For Example: Max file size: 5MB, .jpg, png and pdf
                 </Text>
               </View>
@@ -938,7 +1105,7 @@ const ChallengeFormFill = props => {
 
           {atttachValue && (
             <>
-              <View
+              {/* <View
                 style={[
                   styles.atendUploadView,
                   {
@@ -992,87 +1159,207 @@ const ChallengeFormFill = props => {
                     <></>
                   ) : (
                     <FontAwesomeIcon
-                      icon="fat fa-trash"
+                      icon="fat fa-trash-alt"
                       size={hp('3')}
                       style={{color: 'red'}}
                     />
                   )}
                 </TouchableOpacity>
-              </View>
+              </View> */}
 
-              <View
-                style={{
-                  flexDirection: 'row',
-                  marginVertical: hp('2'),
-                  height: hp('7.5'),
-                }}>
-                <View
-                  style={{
-                    flex: 0.75,
-                    flexDirection: 'row',
-                    backgroundColor: 'white',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderRadius: wp('2.5'),
-                    shadowColor: '#000',
-                    shadowOffset: {width: 0, height: 12},
-                    shadowOpacity: 0.58,
-                    shadowRadius: 16,
-                    elevation: 7,
-                  }}>
+              <View style={{marginVertical: hp('0.25')}}>
+                {filesInAttachmentImages.map((file, index) => (
+                  <View
+                    key={index}
+                    style={{
+                      flexDirection: 'row',
+                      height: hp('7.5'),
+                      marginVertical: hp('0.5'),
+                    }}>
+                    <View
+                      style={{
+                        flex: 0.75,
+                        flexDirection: 'row',
+                        backgroundColor: 'white',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: wp('2.5'),
+                        shadowColor: '#000',
+                        shadowOffset: {width: 0, height: 12},
+                        shadowOpacity: 0.58,
+                        shadowRadius: 16,
+                        elevation: 7,
+                      }}>
+                      <View
+                        style={{
+                          flex: 0.2,
+                          justifyContent: 'center',
+                          alignItems: 'flex-end',
+                        }}>
+                        <FontAwesomeIcon
+                          icon="fat fa-image"
+                          size={hp('3.5')}
+                          style={{color: '#000000'}}
+                        />
+                      </View>
+                      <View
+                        style={{
+                          flex: 0.8,
+                        }}>
+                        <Text style={styles.attachmentText}>{file?.name}</Text>
+                      </View>
+                    </View>
+
+                    <View style={{flex: 0.03}}></View>
+
+                    <TouchableOpacity
+                      activeOpacity={0.5}
+                      onPress={() => handleDeleteImage(index)} // Delete this specific image
+                      style={{
+                        flex: 0.22,
+                        flexDirection: 'column',
+                        height: hp('7.5'),
+                        backgroundColor: '#FF6347',
+                        borderRadius: wp('1.25'),
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <View
+                        style={{
+                          height: hp('4.5'),
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <FontAwesomeIcon
+                          icon="fat fa-trash-alt"
+                          size={hp('3')}
+                          style={{color: 'white'}}
+                        />
+                      </View>
+
+                      <View
+                        style={{
+                          height: hp('3'),
+                          alignItems: 'center',
+                        }}>
+                        <Text
+                          style={{
+                            color: 'white',
+                            fontFamily: fontFamily.ceraMedium,
+                            fontWeight: '500',
+                            fontSize: hp('1.55'),
+                          }}>
+                          Delete
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                ))}
+
+                {/* Add New Button - shown only if less than 5 images are selected */}
+                {filesInAttachmentImages.length < 5 && (
                   <View
                     style={{
-                      flex: 0.2,
-                      justifyContent: 'center',
-                      alignItems: 'flex-end',
+                      flexDirection: 'row',
+                      marginVertical: hp('1'),
+                      height: hp('7.5'),
                     }}>
-                    <FontAwesomeIcon
-                      icon="fat fa-image"
-                      size={hp('3.5')}
-                      style={{color: '#000000'}}
-                    />
+                    <View
+                      style={{
+                        flex: 0.75,
+                        flexDirection: 'row',
+                        backgroundColor: 'white',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: wp('2.5'),
+                        shadowColor: '#000',
+                        shadowOffset: {width: 0, height: 12},
+                        shadowOpacity: 0.58,
+                        shadowRadius: 16,
+                        elevation: 7,
+                      }}>
+                      <View
+                        style={{
+                          flex: 0.2,
+                          justifyContent: 'center',
+                          alignItems: 'flex-end',
+                        }}>
+                        <FontAwesomeIcon
+                          icon="fat fa-image"
+                          size={hp('3.5')}
+                          style={{color: '#000000'}}
+                        />
+                      </View>
+                      <View
+                        style={{
+                          flex: 0.8,
+                        }}>
+                        <Text style={styles.attachmentText}>
+                          Select photos to upload
+                        </Text>
+                      </View>
+                    </View>
+
+                    <View style={{flex: 0.03}}></View>
+
+                    <TouchableOpacity
+                      activeOpacity={0.5}
+                      onPress={onPressAttachmentImages}
+                      style={{
+                        flex: 0.22,
+                        flexDirection: 'column',
+                        backgroundColor: '#1C37A4',
+                        borderRadius: wp('1.25'),
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: hp('7.5'),
+                      }}>
+                      <View
+                        style={{
+                          height: hp('4.5'),
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <FontAwesomeIcon
+                          icon="fat fa-image"
+                          size={hp('3')}
+                          style={{color: 'white'}}
+                        />
+                      </View>
+                      <View
+                        style={{
+                          height: hp('3'),
+                          alignItems: 'center',
+                        }}>
+                        <Text
+                          style={{
+                            color: 'white',
+                            fontFamily: fontFamily.ceraMedium,
+                            fontWeight: '500',
+                            fontSize: hp('1.55'),
+                          }}>
+                          Add New
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
                   </View>
-                  <View
-                    style={{
-                      flex: 0.8,
-                    }}>
-                    <Text style={styles.attachmentText}>
-                      Minimum of 3 and a Maximum of 5
-                    </Text>
-                  </View>
-                </View>
-                <View style={{flex: 0.03}}></View>
-                <TouchableOpacity
-                  activeOpacity={0.5}
-                  onPress={onPressAttendanceChoose}
-                  style={{
-                    flex: 0.22,
-                    backgroundColor: '#1C37A4',
-                    borderRadius: wp('1.25'),
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontFamily: fontFamily.ceraMedium,
-                      fontWeight: '500',
-                      fontSize: hp('1.55'),
-                    }}>
-                    Add New
-                  </Text>
-                </TouchableOpacity>
+                )}
               </View>
 
               <View
                 style={{
                   justifyContent: 'center',
-                  marginTop: hp('-1.25'),
+                  marginTop: hp('0'),
                 }}>
-                <Text style={[styles.attachmentText, {fontSize: hp('1.55')}]}>
+                <Text
+                  style={{
+                    fontStyle: 'italic',
+                    color: '#78829D',
+                    fontSize: hp('1.35'),
+                  }}>
                   Teachers must upload 3 to 5 images of training from various
-                  angles, covering all participants and an optional 60-second
-                  video
+                  angles, covering all participants. These photo maybe uploaded
+                  on social media or project website
                 </Text>
               </View>
             </>
@@ -1109,11 +1396,13 @@ const ChallengeFormFill = props => {
             mode="date"
             onConfirm={handleConfirm}
             onCancel={hideDatePicker}
-            minimumDate={new Date()}
+            minimumDate={new Date(2024, 9, 1)}
+            // minimumDate={new Date()}
             // maximumDate={maxDate}
+            maximumDate={new Date()}
           />
 
-          {schoolNameModal && (
+          {/* {schoolNameModal && (
             <TitleCategoriesListModal
               onPressOpacity={onPressCloseSchoolNameModal}
               text={'Select School Name'}
@@ -1124,7 +1413,7 @@ const ChallengeFormFill = props => {
               onChangeSearchValue={onChangeSearchValueSchool}
               isSearchAllow={true}
             />
-          )}
+          )} */}
 
           {cityModal && (
             <TitleCategoriesListModal
@@ -1152,25 +1441,31 @@ const ChallengeFormFill = props => {
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={onPressSubmitBtn}
-            style={styles.submitBtn}>
-            <Text style={{color: 'white'}}>Submit</Text>
+            disabled={submitTrainingFormHere?.isLoading}
+            style={[
+              styles.submitBtn,
+              submitTrainingFormHere?.isLoading && styles.disabledBtn,
+            ]}>
+            <Text style={{color: 'white'}}>
+              {submitTrainingFormHere?.isLoading ? 'Loading...' : 'SUBMIT'}
+            </Text>
           </TouchableOpacity>
 
           {showErrorModal && (
-            <MessageSuccessModal
-              textUpper={'Request Status'}
+            <InspireSuccessModal
+              textUpper={'Error'}
               textLower={submitTrainingFormHere?.message}
-              btnText={'OK'}
+              btnText={'DONE'}
               onPressOpacity={closeModal}
             />
           )}
 
           {showSuccessModal && (
-            <MessageSuccessModal
-              textUpper={'Request Status'}
+            <InspireSuccessModal
+              textUpper={'Successfully Added'}
               textLower={submitTrainingFormHere?.message}
-              btnText={'OK'}
-              onPressOpacity={closeModal}
+              btnText={'DONE'}
+              onPressOpacity={closeModalforSuccess}
             />
           )}
         </View>
@@ -1223,7 +1518,7 @@ const styles = EStyleSheet.create({
   },
   attenAttachText: {
     color: '#363636',
-    fontSize: hp('2'),
+    fontSize: hp('1.85'),
     fontFamily: fontFamily.ceraMedium,
     fontWeight: '400',
   },
@@ -1266,5 +1561,8 @@ const styles = EStyleSheet.create({
     fontFamily: fontFamily.ceraMedium,
     fontStyle: 'normal',
     fontWeight: '500',
+  },
+  disabledBtn: {
+    backgroundColor: '#A9A9A9',
   },
 });

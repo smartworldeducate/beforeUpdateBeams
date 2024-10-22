@@ -37,10 +37,10 @@ const TitleCategoriesListModal = ({
       <View style={{flex: 1, backgroundColor: colors.transparentBlack}}>
         <TouchableOpacity
           onPress={onPressOpacity}
-          style={{flex: 0.25}}></TouchableOpacity>
+          style={{flex: 0.2}}></TouchableOpacity>
         <View
           style={{
-            flex: 0.75,
+            flex: 0.8,
             borderTopLeftRadius: wp('7'),
             borderTopRightRadius: wp('7'),
             paddingHorizontal: wp('6'),

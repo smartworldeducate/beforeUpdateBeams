@@ -74,6 +74,11 @@ const HomeScreen = props => {
 
   const profileHere = useSelector(state => state.profileStore);
 
+  console.log(
+    'bannerDetails>>>',
+    profileHere?.userData?.inspire?.inspire_banner,
+  );
+
   const profileHereEmpId = useSelector(
     state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
   );
@@ -675,6 +680,8 @@ const HomeScreen = props => {
     setTempLeaveModal(false);
   };
 
+  console.log('show_banner', profileHere?.userData?.inspire?.show_banner);
+
   return (
     <SafeAreaView
       style={{
@@ -1042,23 +1049,25 @@ const HomeScreen = props => {
                 </LinearGradient>
               </View>
 
-              <TouchableOpacity
-                activeOpacity={0.5}
-                onPress={() => navigation.navigate('ChallengeSignUp')}
-                style={{marginHorizontal: wp('5'), marginVertical: hp('1')}}>
-                <Image
-                  source={{
-                    uri: 'ififty',
-                  }}
-                  style={{
-                    height: hp('20'),
-                    width: wp('90'),
+              {profileHere?.userData?.inspire?.show_banner == 1 && (
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  onPress={() => navigation.navigate('ChallengeSignUp')}
+                  style={{marginHorizontal: wp('5'), marginVertical: hp('1')}}>
+                  <Image
+                    source={{
+                      uri: profileHere?.userData?.inspire?.inspire_banner,
+                    }}
+                    style={{
+                      height: hp('20'),
+                      width: wp('90'),
 
-                    borderRadius: wp('5'),
-                  }}
-                  resizeMode={'cover'}
-                />
-              </TouchableOpacity>
+                      borderRadius: wp('5'),
+                    }}
+                    resizeMode={'cover'}
+                  />
+                </TouchableOpacity>
+              )}
 
               <View style={{marginHorizontal: wp('5.5')}}>
                 <View
@@ -1388,7 +1397,10 @@ const HomeScreen = props => {
         )}
 
         {tempLeaveModal && (
-          <AttendanceTempModal closeModal={onPressTempCloseLeaveModal} />
+          <AttendanceTempModal
+            btnText={'CLOSE'}
+            closeModal={onPressTempCloseLeaveModal}
+          />
         )}
 
         {reporteeModal ? (

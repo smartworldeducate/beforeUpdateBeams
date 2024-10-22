@@ -17,6 +17,8 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {LeaveTypeAction} from '../features/LeaveTypeSlice/LeaveTypeSlice';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
+import AttendanceTempModal from '../Components/Modal/AttendanceTempModal';
+
 const ApplicationType = props => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -24,6 +26,15 @@ const ApplicationType = props => {
   const leaveTypeHere = useSelector(state => state.LeaveTypeStore);
 
   console.log('leaveTypeHere', leaveTypeHere?.userData?.leave_types);
+
+  const [tempLeaveModal, setTempLeaveModal] = useState(true);
+  const onPressTempLeaveModal = () => {
+    setTempLeaveModal(true);
+  };
+
+  const onPressTempCloseLeaveModal = () => {
+    setTempLeaveModal(false);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -326,6 +337,13 @@ const ApplicationType = props => {
             </View>
           </TouchableOpacity>
         </View>
+
+        {tempLeaveModal && (
+          <AttendanceTempModal
+            btnText={'GO BACK'}
+            closeModal={() => navigation.goBack()}
+          />
+        )}
       </View>
     </View>
   );

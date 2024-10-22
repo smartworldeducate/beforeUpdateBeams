@@ -300,7 +300,7 @@ const Attendance = props => {
           }}>
           <TouchableOpacity
             activeOpacity={
-              item?.late_minutes > 15 && item?.late_ded_run == 'N' ? 0.4 : 1
+              item?.late_minutes > 15 && item?.late_ded_run == 'N' ? 1 : 1
             }
 
             // for Temp commented before Live aab
@@ -462,7 +462,7 @@ const Attendance = props => {
                     style={{paddingTop: hp('1.25')}}
                     activeOpacity={
                       item?.early_minutes > 15 && item?.late_ded_run == 'N'
-                        ? 0.4
+                        ? 1
                         : 1
                     }
 
@@ -592,7 +592,7 @@ const Attendance = props => {
             <>
               {item?.late_ded_run == 'N' && !showLeaveType && showApplyText && (
                 <TouchableOpacity
-                  activeOpacity={0.7}
+                  activeOpacity={1}
                   // for Temp commented before Live aab
 
                   // onPress={() =>
@@ -729,6 +729,7 @@ const Attendance = props => {
                           ? hp('1.75')
                           : hp('1.5'),
                       fontFamily: fontFamily.ceraMedium,
+                      paddingTop: hp('1.25'),
                     }}>
                     {item?.holiday_desc == null
                       ? item?.emp_in_time != null && item?.emp_out_time != null

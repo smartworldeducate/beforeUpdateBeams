@@ -50,10 +50,10 @@ const I50TextInputModal = ({
           paddingLeft: wp('5'),
         }}>
         <Text
-          numberOfLines={1}
+          numberOfLines={2}
           ellipsizeMode={'tail'}
           style={{
-            fontSize: hp('2'),
+            fontSize: hp('1.85'),
             fontFamily: fontFamily.ceraMedium,
             color: '#363636',
           }}>

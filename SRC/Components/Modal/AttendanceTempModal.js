@@ -23,7 +23,7 @@ import colors from '../../Styles/colors';
 import fontFamily from '../../Styles/fontFamily';
 import RenderHtml from 'react-native-render-html';
 
-const AttendanceTempModal = ({modalVisible, closeModal}) => {
+const AttendanceTempModal = ({modalVisible, closeModal, btnText}) => {
   const {width} = useWindowDimensions();
 
   return (
@@ -93,7 +93,7 @@ const AttendanceTempModal = ({modalVisible, closeModal}) => {
                 fontSize: hp('2'),
                 fontWeight: '500',
               }}>
-              Close
+              {btnText}
             </Text>
           </TouchableOpacity>
         </View>
