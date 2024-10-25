@@ -77,7 +77,7 @@ const ChallengeSignUp = props => {
       ) : (
         <>
           <ScrollView style={{flex: 1, backgroundColor: '#F5F8FC'}}>
-            <View style={{marginHorizontal: wp('6'), marginTop: hp('4')}}>
+            <View style={{marginHorizontal: wp('6'), marginTop: hp('2')}}>
               <View style={{marginBottom: hp('2.5'), flex: 1}}>
                 <RenderHtml
                   contentWidth={width}

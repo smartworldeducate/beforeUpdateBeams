@@ -160,7 +160,8 @@ const Skip1 = () => {
                   marginHorizontal: wp('10'),
                 }}>
                 <Text style={[styles.textSkip, {textAlign: 'center'}]}>
-                  We're so excited to have you on board.
+                  Welcome to the future of efficiency with our newly enhanced
+                  platform.
                 </Text>
               </View>
             </View>
@@ -219,8 +220,8 @@ const Skip1 = () => {
                   marginBottom: hp(5),
                 }}>
                 <Text style={styles.welcomeTextSkip}>
-                  We
-                  <Text style={styles.welcomeText2}> Redesigned!</Text>
+                  <Text style={styles.welcomeText2}> Redesigned</Text>
+                  {`${' for You!'}`}
                 </Text>
               </View>
               <View
@@ -245,8 +246,9 @@ const Skip1 = () => {
                   marginHorizontal: wp('10'),
                 }}>
                 <Text style={[styles.textSkip, {textAlign: 'center'}]}>
-                  The app to add new features that our users have been
-                  requesting
+                  Our enhanced app brings you the features you've been asking
+                  for—designed to make your experience smoother and more
+                  productive.
                 </Text>
               </View>
             </View>
@@ -300,14 +302,11 @@ const Skip1 = () => {
             <View style={{width: wp(100), marginTop: hp(8)}}>
               <View
                 style={{
-                  marginLeft: hp(16),
+                  alignItems: 'center',
                   width: wp(100),
                   marginBottom: hp(5),
                 }}>
-                <Text style={styles.welcomeTextSkip}>
-                  Explore
-                  <Text style={styles.welcomeText2}> the app!</Text>
-                </Text>
+                <Text style={styles.welcomeTextSkip}>Discover What's New!</Text>
               </View>
               <View
                 style={{
@@ -331,7 +330,8 @@ const Skip1 = () => {
                   marginHorizontal: wp('10'),
                 }}>
                 <Text style={[styles.textSkip, {textAlign: 'center'}]}>
-                  Take some time to explore the app and learn how it works.
+                  Take a moment to explore the app and experience the powerful
+                  new features designed just for you.
                 </Text>
               </View>
             </View>

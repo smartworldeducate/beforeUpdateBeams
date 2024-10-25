@@ -12,7 +12,7 @@ const initialState = {
 export const InspireAddTrainingSubmitAction = createAsyncThunk(
   'InspireAddTrainingSubmit',
   async values => {
-    console.log('valuesInspireAddTrainingSubmit', values);
+    // console.log('valuesInspireAddTrainingSubmit', values);
     return axios
       .post(`${APIS.InspireAddTrainingOnForm}`, values, {
         headers: {

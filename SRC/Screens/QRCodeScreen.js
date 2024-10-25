@@ -28,6 +28,7 @@ import colors from '../Styles/colors';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {QRScanAction} from '../features/QRScan/QRScan';
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import AttendanceTempModal from '../Components/Modal/AttendanceTempModal';
 
 const QRCodeScreen = props => {
   const dispatch = useDispatch();
@@ -37,116 +38,114 @@ const QRCodeScreen = props => {
     state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
   );
 
-  const QRCodeScanHere = useSelector(state => state.QRScanStore);
-  console.log('QRCodeScanHere', QRCodeScanHere);
+  // const QRCodeScanHere = useSelector(state => state.QRScanStore);
+  // console.log('QRCodeScanHere', QRCodeScanHere);
 
-  const [scanning, setScanning] = useState(true);
-  const scannerRef = useRef(null);
+  // const [scanning, setScanning] = useState(true);
+  // const scannerRef = useRef(null);
 
-  const [scanData, setScanData] = useState('Start Scanning ...');
+  // const [scanData, setScanData] = useState('Start Scanning ...');
 
-  const onSuccess = e => {
-    // console.log('Scanned QR code data:', e.data);
-    // console.log('all e', e);
-    dispatch(
-      QRScanAction({
-        employee_id: profileHereEmpId,
-        tag_text: e.data,
-      }),
-    );
-    setScanData(e.data);
-    setScanning(false);
-    scannerRef.current.reactivate();
-  };
+  // const onSuccess = e => {
+  //   dispatch(
+  //     QRScanAction({
+  //       employee_id: profileHereEmpId,
+  //       tag_text: e.data,
+  //     }),
+  //   );
+  //   setScanData(e.data);
+  //   setScanning(false);
+  //   scannerRef.current.reactivate();
+  // };
 
-  const handleScanAgain = () => {
-    setScanning(true);
-    setScanData('');
-  };
+  // const handleScanAgain = () => {
+  //   setScanning(true);
+  //   setScanData('');
+  // };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setScanning(true);
-      setScanData('Start Scanning ...');
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     setScanning(true);
+  //     setScanData('Start Scanning ...');
 
-      return () => {
-        console.log('QRCodeScreen is unfocused');
-        // dispatch(clearViewAllMessagesState());
-      };
-    }, []),
-  );
+  //     return () => {
+  //       console.log('QRCodeScreen is unfocused');
+  //       // dispatch(clearViewAllMessagesState());
+  //     };
+  //   }, []),
+  // );
 
-  const [hasCameraPermission, setHasCameraPermission] = useState(null);
-  const [permissionDeniedCount, setPermissionDeniedCount] = useState(0);
-  const MAX_DENIALS = 3; // Maximum number of times permission can be denied before showing a message
+  // const [hasCameraPermission, setHasCameraPermission] = useState(null);
+  // const [permissionDeniedCount, setPermissionDeniedCount] = useState(0);
+  // const MAX_DENIALS = 3;
 
-  useEffect(() => {
-    if (Platform.OS === 'android') {
-      checkCameraPermission();
-    } else {
-      setHasCameraPermission(true); // Assume permission granted for iOS or handle iOS permissions separately
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (Platform.OS === 'android') {
+  //     checkCameraPermission();
+  //   } else {
+  //     setHasCameraPermission(true);
+  //   }
+  // }, []);
 
-  const checkCameraPermission = async () => {
-    const result = await check(PERMISSIONS.ANDROID.CAMERA);
-    handlePermissionResult(result);
-  };
+  // const checkCameraPermission = async () => {
+  //   const result = await check(PERMISSIONS.ANDROID.CAMERA);
+  //   handlePermissionResult(result);
+  // };
 
-  const requestCameraPermission = async () => {
-    const result = await request(PERMISSIONS.ANDROID.CAMERA);
-    handlePermissionResult(result);
-  };
+  // const requestCameraPermission = async () => {
+  //   const result = await request(PERMISSIONS.ANDROID.CAMERA);
+  //   handlePermissionResult(result);
+  // };
 
-  const handlePermissionResult = result => {
-    if (result === RESULTS.GRANTED) {
-      setHasCameraPermission(true);
-      setPermissionDeniedCount(0);
-    } else {
-      setHasCameraPermission(false);
-      setPermissionDeniedCount(prevCount => prevCount + 1);
-    }
-  };
+  // const handlePermissionResult = result => {
+  //   if (result === RESULTS.GRANTED) {
+  //     setHasCameraPermission(true);
+  //     setPermissionDeniedCount(0);
+  //   } else {
+  //     setHasCameraPermission(false);
+  //     setPermissionDeniedCount(prevCount => prevCount + 1);
+  //   }
+  // };
 
-  if (hasCameraPermission === null) {
-    return (
-      <Text style={{color: 'black', textAlign: 'center'}}>
-        Checking camera permission...
-      </Text>
-    );
-  }
+  // if (hasCameraPermission === null) {
+  //   return (
+  //     <Text style={{color: 'black', textAlign: 'center'}}>
+  //       Checking camera permission...
+  //     </Text>
+  //   );
+  // }
 
-  if (hasCameraPermission === false) {
-    return (
-      <>
-        <View>
-          <MainHeader
-            text={'QR Scanner'}
-            iconName={'arrow-left'}
-            onpressBtn={() => props.navigation.goBack()}
-          />
-        </View>
-        <View style={styles.container}>
-          <Text style={styles.permissionText}>
-            Camera permission is required to scan QR codes.
-          </Text>
-          <TouchableOpacity
-            style={styles.permissionButton}
-            onPress={requestCameraPermission}>
-            <Text style={styles.permissionButtonText}>
-              Grant Camera Permission
-            </Text>
-          </TouchableOpacity>
-          {permissionDeniedCount >= MAX_DENIALS && (
-            <Text style={styles.permissionDeniedText}>
-              You have denied camera permission multiple times. Please enable it
-              in the settings.
-            </Text>
-          )}
-        </View>
-      </>
-    );
-  }
+  // if (hasCameraPermission === false) {
+  //   return (
+  //     <>
+  //       <View>
+  //         <MainHeader
+  //           text={'QR Scanner'}
+  //           iconName={'arrow-left'}
+  //           onpressBtn={() => props.navigation.goBack()}
+  //         />
+  //       </View>
+  //       <View style={styles.container}>
+  //         <Text style={styles.permissionText}>
+  //           Camera permission is required to scan QR codes.
+  //         </Text>
+  //         <TouchableOpacity
+  //           style={styles.permissionButton}
+  //           onPress={requestCameraPermission}>
+  //           <Text style={styles.permissionButtonText}>
+  //             Grant Camera Permission
+  //           </Text>
+  //         </TouchableOpacity>
+  //         {permissionDeniedCount >= MAX_DENIALS && (
+  //           <Text style={styles.permissionDeniedText}>
+  //             You have denied camera permission multiple times. Please enable it
+  //             in the settings.
+  //           </Text>
+  //         )}
+  //       </View>
+  //     </>
+  //   );
+  // }
 
   return (
     <>
@@ -161,11 +160,83 @@ const QRCodeScreen = props => {
       <View
         style={{
           flex: 1,
-          backgroundColor: colors.appBackGroundColor,
+
           justifyContent: 'center',
           alignItems: 'center',
+          paddingHorizontal: wp('10'),
         }}>
-        {scanning ? (
+        <TouchableOpacity
+          activeOpacity={1}
+          style={{
+            flex: 0.35,
+          }}></TouchableOpacity>
+
+        <View
+          style={{
+            flex: 0.3,
+            borderRadius: wp('3'),
+
+            backgroundColor: colors.whiteColor,
+            flexDirection: 'column',
+          }}>
+          <View
+            style={{
+              flex: 0.8,
+              paddingHorizontal: wp('4'),
+
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text style={{color: 'black', fontSize: hp('2.5')}}>
+              Feature Unavailable
+            </Text>
+
+            <Text
+              style={{
+                color: 'black',
+                fontSize: hp('1.65'),
+                marginTop: hp('2.5'),
+                textAlign: 'center',
+              }}>
+              This feature is currently disabled, but will be live soon. Stay
+              tuned for updates!
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() => navigation.goBack()}
+            style={{
+              flex: 0.2,
+              paddingHorizontal: wp('4'),
+              backgroundColor: '#1C37A4',
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingHorizontal: wp('3'),
+              borderRadius: wp('50'),
+              marginHorizontal: wp('5'),
+              marginBottom: hp('1.5'),
+            }}>
+            <Text
+              style={{
+                color: 'white',
+                textAlign: 'center',
+
+                fontSize: hp('1.85'),
+                fontWeight: '500',
+              }}>
+              {'GO BACK'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity
+          activeOpacity={1}
+          style={{
+            flex: 0.35,
+          }}></TouchableOpacity>
+
+        {/* {scanning ? (
           <QRCodeScanner
             ref={scannerRef}
             cameraStyle={{height: hp('60')}}
@@ -327,7 +398,7 @@ const QRCodeScreen = props => {
               </>
             )}
           </View>
-        )}
+        )} */}
       </View>
     </>
   );

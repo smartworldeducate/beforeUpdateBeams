@@ -173,7 +173,7 @@ const ViewMessageDetailModal = ({
 
         <ScrollView>
           <ScrollView
-            horizontal
+            horizontal={false}
             contentContainerStyle={{
               flexGrow: 1,
             }}>

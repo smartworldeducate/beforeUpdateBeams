@@ -62,12 +62,18 @@ const AttendanceTempModal = ({modalVisible, closeModal, btnText}) => {
               alignItems: 'center',
             }}>
             <Text style={{color: 'black', fontSize: hp('2.5')}}>
-              Coming soon
+              Feature Unavailable
             </Text>
 
-            <Text style={{color: 'black', fontSize: hp('1.65')}}>
-              Our leave application feature is coming soon to simplify your
-              time-off requests. Stay tuned for updates!
+            <Text
+              style={{
+                color: 'black',
+                fontSize: hp('1.65'),
+                marginTop: hp('2.5'),
+                textAlign: 'center',
+              }}>
+              This feature is currently disabled, but will be live soon. Stay
+              tuned for updates!
             </Text>
           </View>
 
@@ -83,14 +89,14 @@ const AttendanceTempModal = ({modalVisible, closeModal, btnText}) => {
               paddingHorizontal: wp('3'),
               borderRadius: wp('50'),
               marginHorizontal: wp('5'),
-              marginBottom: hp('1'),
+              marginBottom: hp('1.5'),
             }}>
             <Text
               style={{
                 color: 'white',
                 textAlign: 'center',
-                paddingVertical: hp('0'),
-                fontSize: hp('2'),
+
+                fontSize: hp('1.85'),
                 fontWeight: '500',
               }}>
               {btnText}

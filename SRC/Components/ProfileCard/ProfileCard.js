@@ -40,6 +40,8 @@ const ProfileCard = ({
   empCostToSchool,
   empAccounTitle,
   empEOBI,
+  empHouseRent,
+  empUtilities,
   empMobilePrimary,
   empMobileSecondary,
   empEmail,
@@ -128,7 +130,7 @@ const ProfileCard = ({
                 />
                 <ProfileCardBody leftText={'Branch'} rightText={empBranch} />
                 <ProfileCardBody
-                  leftText={'Employeement Status'}
+                  leftText={'Employment Status'}
                   rightText={empStatus}
                 />
                 <ProfileCardBody
@@ -187,7 +189,7 @@ const ProfileCard = ({
                   rightText={empAllowance}
                 />
 
-                <ProfileCardBody
+                {/* <ProfileCardBody
                   leftText={'Take Home'}
                   rightText={empTakeHomeSalary}
                 />
@@ -199,7 +201,16 @@ const ProfileCard = ({
                   leftText={'Account Title'}
                   rightText={empAccounTitle}
                 />
-                <ProfileCardBody leftText={'EOBI'} rightText={empEOBI} />
+                <ProfileCardBody leftText={'EOBI'} rightText={empEOBI} /> */}
+
+                <ProfileCardBody
+                  leftText={'House Rent'}
+                  rightText={empHouseRent}
+                />
+                <ProfileCardBody
+                  leftText={'Utilities'}
+                  rightText={empUtilities}
+                />
               </CollapseBody>
             </Collapse>
           </View>
@@ -276,7 +287,7 @@ const ProfileCard = ({
         )
       }
 
-      {profileHere?.userData?.dependents?.length > 0 && (
+      {/* {profileHere?.userData?.dependents?.length > 0 && (
         <View style={{marginTop: hp(1.5), marginBottom: hp('1.5')}}>
           <TouchableOpacity
             onPress={onPressDependents}
@@ -292,7 +303,7 @@ const ProfileCard = ({
             />
           </TouchableOpacity>
         </View>
-      )}
+      )} */}
     </View>
   );
 };

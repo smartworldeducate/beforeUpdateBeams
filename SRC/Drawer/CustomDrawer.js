@@ -227,20 +227,28 @@ const CustomDrawer = ({navigation}) => {
             </View>
             <View style={styles.listnameStyle}>
               <TouchableOpacity
-                onPress={() => navigation.navigate('FinancialDrawer')}>
+                activeOpacity={0.85}
+                // onPress={() => navigation.navigate('FinancialDrawer')}
+              >
                 <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
                   <View style={styles.homeleft}>
-                    <Text style={styles.textlistStyle}>Financials</Text>
+                    <Text style={[styles.textlistStyle, {color: 'silver'}]}>
+                      Financials
+                    </Text>
                   </View>
                 </View>
               </TouchableOpacity>
             </View>
             <View style={styles.listnameStyle}>
               <TouchableOpacity
-                onPress={() => navigation.navigate('TimeLineDrawer')}>
+                activeOpacity={0.85}
+                // onPress={() => navigation.navigate('TimeLineDrawer')}
+              >
                 <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
                   <View style={styles.homeleft}>
-                    <Text style={styles.textlistStyle}>Timeline</Text>
+                    <Text style={[styles.textlistStyle, {color: 'silver'}]}>
+                      Timeline
+                    </Text>
                   </View>
                 </View>
               </TouchableOpacity>
@@ -249,10 +257,14 @@ const CustomDrawer = ({navigation}) => {
             {profileHere?.userData?.reporting_result?.reportee_length > 0 && (
               <View style={styles.listnameStyle}>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('ReporteeDrawer')}>
+                  activeOpacity={0.85}
+                  // onPress={() => navigation.navigate('ReporteeDrawer')}
+                >
                   <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
                     <View style={styles.homeleft}>
-                      <Text style={styles.textlistStyle}>Reportees</Text>
+                      <Text style={[styles.textlistStyle, {color: 'silver'}]}>
+                        Reportees
+                      </Text>
                     </View>
                   </View>
                 </TouchableOpacity>
@@ -261,10 +273,14 @@ const CustomDrawer = ({navigation}) => {
 
             <View style={styles.listnameStyle}>
               <TouchableOpacity
-                onPress={() => navigation.navigate('ApprocialDrawer')}>
+                activeOpacity={0.85}
+                // onPress={() => navigation.navigate('ApprocialDrawer')}
+              >
                 <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
                   <View style={styles.homeleft}>
-                    <Text style={styles.textlistStyle}>Appraisal</Text>
+                    <Text style={[styles.textlistStyle, {color: 'silver'}]}>
+                      Appraisal
+                    </Text>
                   </View>
                 </View>
               </TouchableOpacity>
@@ -275,10 +291,12 @@ const CustomDrawer = ({navigation}) => {
               profileHere?.userData?.bsschildResult_result?.length > 0 && (
                 <View style={styles.listnameStyle}>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('ChildBSSDrawer')}>
+                    activeOpacity={0.85}
+                    // onPress={() => navigation.navigate('ChildBSSDrawer')}
+                  >
                     <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
                       <View style={styles.homeleft}>
-                        <Text style={styles.textlistStyle}>
+                        <Text style={[styles.textlistStyle, {color: 'silver'}]}>
                           Children in BSS
                         </Text>
                       </View>
@@ -302,20 +320,28 @@ const CustomDrawer = ({navigation}) => {
             </View>
             <View style={styles.listnameStyle}>
               <TouchableOpacity
-                onPress={() => navigation.navigate('FeedBackDrawer')}>
+                activeOpacity={0.85}
+                // onPress={() => navigation.navigate('FeedBackDrawer')}
+              >
                 <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
                   <View style={styles.homeleft}>
-                    <Text style={styles.textlistStyle}>Feedback</Text>
+                    <Text style={[styles.textlistStyle, {color: 'silver'}]}>
+                      Feedback
+                    </Text>
                   </View>
                 </View>
               </TouchableOpacity>
             </View>
             <View style={styles.listnameStyle}>
               <TouchableOpacity
-                onPress={() => navigation.navigate('UtilityDrawer')}>
+                activeOpacity={0.85}
+                // onPress={() => navigation.navigate('UtilityDrawer')}
+              >
                 <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
                   <View style={styles.homeleft}>
-                    <Text style={styles.textlistStyle}>Miscellaneous</Text>
+                    <Text style={[styles.textlistStyle, {color: 'silver'}]}>
+                      Miscellaneous
+                    </Text>
                   </View>
                 </View>
               </TouchableOpacity>
@@ -323,10 +349,14 @@ const CustomDrawer = ({navigation}) => {
 
             <View style={styles.listnameStyle}>
               <TouchableOpacity
-                onPress={() => navigation.navigate('QRScannerListDrawer')}>
+                activeOpacity={0.85}
+                // onPress={() => navigation.navigate('QRScannerListDrawer')}
+              >
                 <View style={{flexDirection: 'row', marginLeft: hp(2)}}>
                   <View style={styles.homeleft}>
-                    <Text style={styles.textlistStyle}>QR Scanner List</Text>
+                    <Text style={[styles.textlistStyle, {color: 'silver'}]}>
+                      QR Scanner List
+                    </Text>
                   </View>
                 </View>
               </TouchableOpacity>
@@ -377,7 +407,7 @@ const CustomDrawer = ({navigation}) => {
                 fontFamily: fontFamily.ceraMedium,
                 fontStyle: 'italic',
               }}>
-              {`App Version: ${
+              {`Version: ${
                 versionName !== null && versionName !== undefined
                   ? `${versionName}.01`
                   : ''

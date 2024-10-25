@@ -507,10 +507,10 @@ const ChallengeFormFill = ({route}) => {
   };
 
   const closeModalforSuccess = () => {
+    navigation.navigate('ChallengeFormList');
     dispatch(clearAllStateFormSubmit());
     setShowSuccessModal(false);
     setShowErrorModal(false);
-    navigation.navigate('ChallengeFormList');
   };
 
   const onPressSubmitBtn = () => {
@@ -551,7 +551,7 @@ const ChallengeFormFill = ({route}) => {
         alert('Please upload attendance sheet.');
       }
       if (filesInAttachmentImages?.length < 3) {
-        alert('You need to upload at least 3 images.');
+        alert('Please upload at least 3 photos.');
       }
     }
   };
@@ -906,7 +906,7 @@ const ChallengeFormFill = ({route}) => {
             onChangeText={onChangeOtherSchoolName}
             multiline={true}
             numberOfLines={4}
-            maxLength={500}
+            maxLength={100}
             style={{
               height: hp('7'),
               width: wp('85'),
@@ -1453,16 +1453,16 @@ const ChallengeFormFill = ({route}) => {
 
           {showErrorModal && (
             <InspireSuccessModal
-              textUpper={'Error'}
+              textUpper={'Oops!'}
               textLower={submitTrainingFormHere?.message}
-              btnText={'DONE'}
+              btnText={'OK'}
               onPressOpacity={closeModal}
             />
           )}
 
           {showSuccessModal && (
             <InspireSuccessModal
-              textUpper={'Successfully Added'}
+              textUpper={'Great Job!'}
               textLower={submitTrainingFormHere?.message}
               btnText={'DONE'}
               onPressOpacity={closeModalforSuccess}

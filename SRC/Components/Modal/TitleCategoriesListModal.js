@@ -114,8 +114,8 @@ const TitleCategoriesListModal = ({
 
 const styles = EStyleSheet.create({
   textInputCustomStyle: {
-    fontSize: hp('1.65'),
-    height: hp('7'),
+    fontSize: hp('1.6'),
+    height: hp('6'),
     letterSpacing: -0.05,
     paddingLeft: wp('6'),
     color: colors.loginIconColor,

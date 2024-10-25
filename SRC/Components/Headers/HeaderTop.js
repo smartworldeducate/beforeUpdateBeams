@@ -36,6 +36,7 @@ const HeaderTop = ({
   welcomeText,
   userName,
   onPressNotificationIcon,
+  // secondIcon,
   onPressIcon,
 }) => {
   const navigation = useNavigation();
@@ -136,11 +137,11 @@ const HeaderTop = ({
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <FontAwesomeIcon
-              icon="fat fa-bell"
+            {/* <FontAwesomeIcon
+              icon={secondIcon}
               size={hp(3.3)}
               style={{color: 'white'}}
-            />
+            /> */}
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.7}
@@ -158,7 +159,7 @@ const HeaderTop = ({
           </TouchableOpacity>
         </View>
 
-        {profileHere?.userSearchAccess == 1 ? (
+        {/* {profileHere?.userSearchAccess == 1 ? (
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => navigation.navigate('Search')}
@@ -210,9 +211,9 @@ const HeaderTop = ({
           </TouchableOpacity>
         ) : (
           <></>
-        )}
+        )} */}
 
-        {profileHere?.userData?.reporting_result?.events?.length > 1 ? (
+        {/* {profileHere?.userData?.reporting_result?.events?.length > 1 ? (
           <View
             style={{
               marginHorizontal: wp('5'),
@@ -261,7 +262,7 @@ const HeaderTop = ({
           </View>
         ) : (
           <></>
-        )}
+        )} */}
       </LinearGradient>
     </>
   );

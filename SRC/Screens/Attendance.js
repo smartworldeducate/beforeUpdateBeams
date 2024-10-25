@@ -459,7 +459,7 @@ const Attendance = props => {
               {item?.rec_status !== 'Toil' && (
                 <>
                   <TouchableOpacity
-                    style={{paddingTop: hp('1.25')}}
+                    style={{}}
                     activeOpacity={
                       item?.early_minutes > 15 && item?.late_ded_run == 'N'
                         ? 1
@@ -729,7 +729,7 @@ const Attendance = props => {
                           ? hp('1.75')
                           : hp('1.5'),
                       fontFamily: fontFamily.ceraMedium,
-                      paddingTop: hp('1.25'),
+                      paddingTop: hp('0.5'),
                     }}>
                     {item?.holiday_desc == null
                       ? item?.emp_in_time != null && item?.emp_out_time != null
@@ -826,6 +826,31 @@ const Attendance = props => {
 
       <View
         style={{
+          marginBottom: hp('1.5'),
+          height: hp('6'),
+          backgroundColor: '#ffe6e6',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginHorizontal: wp('5'),
+          borderRadius: wp('2'),
+          borderWidth: wp('0.1'),
+          borderColor: 'red',
+        }}>
+        <Text
+          style={{
+            color: '#FF0000',
+            fontSize: hp('1.55'),
+            fontFamily: fontFamily.ceraMedium,
+            fontStyle: 'italic',
+            fontWeight: '600',
+            paddingHorizontal: wp('2'),
+          }}>
+          {`The "Apply Leave" option is currently unavailable. It will be included in the next major release.`}
+        </Text>
+      </View>
+
+      <View
+        style={{
           marginVertical: hp('1'),
           justifyContent: 'center',
           alignItems: 'flex-end',
@@ -898,7 +923,7 @@ const Attendance = props => {
           style={{
             marginHorizontal: wp('5'),
             marginVertical: hp('1'),
-            marginBottom: hp('32'),
+            marginBottom: hp('39'),
           }}
           ListEmptyComponent={
             <Text

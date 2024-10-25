@@ -98,4 +98,6 @@ export const APIS = {
   InspireAddTraining: BASE_INSPIRE_URL + 'inspire_add_training',
 
   InspireAddTrainingOnForm: BASE_INSPIRE_URL + 'inspire_save_training',
+
+  InspireRemoveTraining: BASE_INSPIRE_URL + 'inspire_remove_training',
 };

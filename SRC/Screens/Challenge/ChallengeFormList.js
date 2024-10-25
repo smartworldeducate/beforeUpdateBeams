@@ -31,8 +31,13 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {useDispatch, useSelector} from 'react-redux';
 import MainHeader from '../../Components/Headers/MainHeader';
 import fontFamily from '../../Styles/fontFamily';
-import {InspireTrainingsAction} from '../../features/Inspire50/InspireTrainingsSlice';
+import {
+  InspireTrainingsAction,
+  removeFromTraining,
+} from '../../features/Inspire50/InspireTrainingsSlice';
 import Loader from '../../Components/Loader/Loader';
+import InspireDeleteModal from '../../Components/Modal/InspireDeleteModal';
+import {InspireRemoveTrainingAction} from '../../features/Inspire50/InspireRemoveTraining';
 
 const ChallengeFormList = props => {
   const dispatch = useDispatch();
@@ -44,6 +49,10 @@ const ChallengeFormList = props => {
 
   const inspireTrainingsHere = useSelector(
     state => state.InspireTrainingsStore,
+  );
+
+  const inspireTrainingsArrayHere = useSelector(
+    state => state.InspireTrainingsStore.trainingsArray,
   );
 
   const [refreshing, setRefreshing] = useState(false);
@@ -77,13 +86,7 @@ const ChallengeFormList = props => {
       item?.training_files && item?.training_files[0]?.file_path;
     return (
       <>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          onPress={() =>
-            navigation.navigate('ChallengeListOpenData', {
-              sendingItemParam: item,
-            })
-          }
+        <View
           style={{
             flexDirection: 'row',
             backgroundColor: 'white',
@@ -93,7 +96,13 @@ const ChallengeFormList = props => {
             borderTopLeftRadius: wp('4'),
             borderBottomLeftRadius: wp('4'),
           }}>
-          <View
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() =>
+              navigation.navigate('ChallengeListOpenData', {
+                sendingItemParam: item,
+              })
+            }
             style={{
               flex: 0.7,
               paddingHorizontal: wp('2.5'),
@@ -171,7 +180,7 @@ const ChallengeFormList = props => {
                 </Text>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
 
           <View
             style={{
@@ -212,14 +221,61 @@ const ChallengeFormList = props => {
                 }}
                 resizeMode={'cover'}
               />
+
+              <TouchableOpacity
+                onPress={() =>
+                  onPressDeleteIcon({
+                    itemPD_ID: item.pd_id,
+                    itemTitle: item?.training_title,
+                  })
+                }
+                style={styles.deleteIconContainer}>
+                <FontAwesomeIcon
+                  icon="fas fa-trash-alt"
+                  size={hp(2)}
+                  style={styles.deleteIcon}
+                />
+              </TouchableOpacity>
             </View>
           </View>
-        </TouchableOpacity>
+        </View>
       </>
     );
   };
 
-  console.log('list', inspireTrainingsHere?.userData?.user_city);
+  // console.log('list', inspireTrainingsHere?.userData?.user_city);
+
+  const [deleteTrainingModal, setDeleteTrainingModal] = useState(false);
+  const [itemTrainingPDID, setItemTrainingPDID] = useState('');
+  const [itemTrainingTitle, setItemTrainingTitle] = useState('');
+
+  const onPressDeleteIcon = item => {
+    setItemTrainingPDID(item?.itemPD_ID);
+    setItemTrainingTitle(item?.itemTitle);
+    setDeleteTrainingModal(true);
+  };
+
+  const onPressCancel = () => {
+    setItemTrainingPDID('');
+    setItemTrainingTitle('');
+    setDeleteTrainingModal(false);
+  };
+
+  const onPressDelete = () => {
+    dispatch(removeFromTraining(itemTrainingPDID));
+    dispatch(
+      InspireRemoveTrainingAction({
+        employee_id: profileHereEmpId,
+        pd_id: itemTrainingPDID,
+      }),
+    );
+    setDeleteTrainingModal(false);
+    navigation.replace('ChallengeFormList');
+  };
+
+  const closeModalforSuccess = () => {
+    setDeleteTrainingModal(false);
+  };
 
   return (
     <>
@@ -470,7 +526,7 @@ const ChallengeFormList = props => {
           inspireTrainingsHere?.userData?.trainings?.length > 0 ? (
             <View style={{marginTop: hp('1')}}>
               <FlatList
-                data={inspireTrainingsHere?.userData?.trainings}
+                data={inspireTrainingsArrayHere}
                 renderItem={renderItem}
                 keyExtractor={(item, index) => index.toString()}
               />
@@ -480,7 +536,7 @@ const ChallengeFormList = props => {
               style={{
                 flex: 1,
                 alignItems: 'center',
-                marginTop: hp('2'),
+                marginTop: hp('4'),
               }}>
               <Text
                 style={{
@@ -491,13 +547,47 @@ const ChallengeFormList = props => {
                   fontStyle: 'italic',
                   textAlign: 'center',
                 }}>
-                Let's get started! Your journey to I20 begins here. Every hour
-                makes a difference.
+                Let's get started!
+              </Text>
+              <Text
+                style={{
+                  fontSize: hp('1.85'),
+                  fontFamily: fontFamily.ceraMedium,
+                  color: 'black',
+                  fontWeight: '500',
+                  fontStyle: 'italic',
+                  textAlign: 'center',
+                }}>
+                Your journey to I20 begins here.
+              </Text>
+              <Text
+                style={{
+                  fontSize: hp('1.85'),
+                  fontFamily: fontFamily.ceraMedium,
+                  color: 'black',
+                  fontWeight: '500',
+                  fontStyle: 'italic',
+                  textAlign: 'center',
+                  letterSpacing: -0.5,
+                }}>
+                Every hour makes a difference. Start by clicking the + icon.
               </Text>
             </View>
           )}
         </View>
       </ScrollView>
+
+      {deleteTrainingModal && (
+        <InspireDeleteModal
+          textUpper={'Are you sure!'}
+          textLower={`Do you really want to delete ${itemTrainingTitle}`}
+          btnText1={'CANCEL'}
+          btnText2={'DELETE'}
+          onPressBtn1={onPressCancel}
+          onPressBtn2={onPressDelete}
+          onPressOpacity={closeModalforSuccess}
+        />
+      )}
 
       <TouchableOpacity
         activeOpacity={0.5}
@@ -550,5 +640,16 @@ const styles = EStyleSheet.create({
     lineHeight: hp('2'),
     letterSpacing: 0.35,
     textAlign: 'center',
+  },
+  deleteIconContainer: {
+    position: 'absolute',
+    top: hp('1'),
+    right: wp('2'),
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    padding: wp('1'),
+    borderRadius: wp('1'),
+  },
+  deleteIcon: {
+    color: 'white',
   },
 });

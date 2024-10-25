@@ -58,7 +58,7 @@ const Splash = props => {
         backgroundColor="transparent"
       />
       <ImageBackground
-        source={{uri: 'splash'}}
+        source={{uri: 'splashnewbeta'}}
         style={{flex: 1}}
         resizeMode={'cover'}></ImageBackground>
     </SafeAreaView>

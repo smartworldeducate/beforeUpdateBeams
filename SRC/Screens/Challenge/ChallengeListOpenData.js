@@ -76,7 +76,7 @@ const ChallengeListOpen = ({route}) => {
                         width: wp('89.5'),
                         borderRadius: wp('3'),
                       }}
-                      resizeMode="cover"
+                      resizeMode="center"
                     />
                   </View>
                 ),
@@ -247,10 +247,7 @@ const ChallengeListOpen = ({route}) => {
                     fontWeight: '700',
                     color: '#FFFFFF',
                   }}>
-                  {
-                    inspireTrainingsHere?.userData?.training_hours
-                      ?.teachers_impacted
-                  }
+                  {route?.params?.sendingItemParam?.teachers_impacted}
                 </Text>
               </View>
             </LinearGradient>
@@ -298,10 +295,7 @@ const ChallengeListOpen = ({route}) => {
                     fontWeight: '700',
                     color: '#FFFFFF',
                   }}>
-                  {
-                    inspireTrainingsHere?.userData?.training_hours
-                      ?.students_impacted
-                  }
+                  {route?.params?.sendingItemParam?.students_impacted}
                 </Text>
               </View>
             </LinearGradient>

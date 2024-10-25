@@ -894,6 +894,7 @@ const ChildBss = props => {
           style={{
             marginHorizontal: wp('2'),
             paddingHorizontal: wp('1'),
+            marginBottom: hp('4'),
           }}>
           <FlatList
             data={profileHere?.userData?.bsschildResult_result}

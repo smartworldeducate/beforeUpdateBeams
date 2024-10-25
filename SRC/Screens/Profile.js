@@ -238,14 +238,21 @@ const Profile = props => {
             empAllowance={Number(
               profileHere?.userData?.profile_result?.ALLOWANCES,
             ).toLocaleString()}
-            empTakeHomeSalary={Number(
-              profileHere?.userData?.profile_result?.TAKE_HOME,
+            // empTakeHomeSalary={Number(
+            //   profileHere?.userData?.profile_result?.TAKE_HOME,
+            // ).toLocaleString()}
+            // empCostToSchool={Number(
+            //   profileHere?.userData?.profile_result?.CTS,
+            // ).toLocaleString()}
+            // empAccounTitle={profileHere?.userData?.profile_result?.AC_TITLE}
+            // empEOBI={profileHere?.userData?.profile_result?.EOBI_NUMBER}
+
+            empHouseRent={Number(
+              profileHere?.userData?.profile_result?.HOUSE_RENT,
             ).toLocaleString()}
-            empCostToSchool={Number(
-              profileHere?.userData?.profile_result?.CTS,
+            empUtilities={Number(
+              profileHere?.userData?.profile_result?.UTILITIES,
             ).toLocaleString()}
-            empAccounTitle={profileHere?.userData?.profile_result?.AC_TITLE}
-            empEOBI={profileHere?.userData?.profile_result?.EOBI_NUMBER}
             empMobilePrimary={profileHere?.userData?.profile_result?.MOB_PHONE}
             empMobileSecondary={profileHere?.userData?.profile_result?.PHONE_NO}
             empEmail={profileHere?.userData?.profile_result?.E_MAIL}

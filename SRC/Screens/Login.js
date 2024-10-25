@@ -42,6 +42,7 @@ import fontFamily from '../Styles/fontFamily';
 import MessageSuccessModal from '../Components/Modal/MessageSuccessModal';
 import Loader from '../Components/Loader/Loader';
 import DeviceInfo from 'react-native-device-info';
+import InspireSuccessModal from '../Components/Modal/InspireSuccessModal';
 
 const Login = props => {
   const dispatch = useDispatch();
@@ -252,7 +253,7 @@ const Login = props => {
                 alignItems: 'center',
               }}>
               <Image
-                source={{uri: 'logonew'}}
+                source={{uri: 'loginlogobeta'}}
                 style={{height: hp('25'), width: wp('50')}}
                 resizeMode={'contain'}
               />
@@ -359,8 +360,8 @@ const Login = props => {
           </View>
 
           {showErrorModal && (
-            <MessageSuccessModal
-              textUpper={'Error'}
+            <InspireSuccessModal
+              textUpper={'Login Failed'}
               textLower={loginHere?.message}
               btnText={'OK'}
               onPressOpacity={closeModal}

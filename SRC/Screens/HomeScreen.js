@@ -710,9 +710,10 @@ const HomeScreen = props => {
             userImg={profileHere?.userData?.emp_result?.EMP_PHOTO}
             welcomeText={'Welcome'}
             userName={profileHere?.userData?.emp_result?.EMP_NAME}
-            onPressNotificationIcon={() =>
-              navigation.navigate('NotificationDrawer')
-            }
+            // secondIcon={'fat fa-bell'}
+            // onPressNotificationIcon={() =>
+            //   navigation.navigate('NotificationDrawer')
+            // }
             onPressIcon={() => navigation.openDrawer()}
             iconName={'arrowleft'}
           />
@@ -795,7 +796,7 @@ const HomeScreen = props => {
                     justifyContent: 'space-between',
                     height: hp('21'),
                     alignItems: 'center',
-                    marginTop: hp('2'),
+                    marginTop: hp('0'),
                     marginBottom: hp('0.25'),
                   },
                 ]}>
@@ -808,10 +809,10 @@ const HomeScreen = props => {
                   colors={['#FEEBD8', '#FFFBF7']}
                   locations={[0, 1]}
                   style={{
-                    flex: 0.3,
+                    flex: 0.31,
                     justifyContent: 'center',
-                    height: hp('17'),
-                    borderRadius: wp('5'),
+                    height: hp('14'),
+                    borderRadius: wp('3'),
                     shadowColor: 'rgba(0,0,0,0.5)',
                     shadowOpacity: 0.5,
                     shadowRadius: 16,
@@ -820,70 +821,59 @@ const HomeScreen = props => {
                   <View
                     style={{
                       height: hp('7'),
-                      justifyContent: 'flex-end',
                       paddingLeft: wp('3'),
+                      justifyContent: 'center',
                     }}>
-                    <View style={{flexDirection: 'row'}}>
-                      <View>
-                        <Text
-                          style={[
-                            styles.serviceSection,
-                            {
-                              textAlign: 'left',
-                              fontSize: hp('2.35'),
-                              letterSpacing: -1.5,
-                              fontFamily: fontFamily.ceraBold,
-                            },
-                          ]}>
+                    <View style={{justifyContent: 'center'}}>
+                      <Text
+                        style={[
+                          styles.serviceSection,
                           {
-                            profileHere?.userData?.emp_result?.SERVICE_LENGTH.match(
-                              /[\d.]+/,
-                            )[0]
-                          }
-                        </Text>
-                      </View>
-                      <View style={{marginLeft: wp('1')}}>
+                            textAlign: 'left',
+                            fontSize: hp('2.5'),
+                            letterSpacing: -1.5,
+                            fontFamily: fontFamily.ceraBold,
+                          },
+                        ]}>
+                        {
+                          profileHere?.userData?.emp_result?.SERVICE_LENGTH.match(
+                            /[\d.]+/,
+                          )[0]
+                        }
                         <Text
                           style={{
                             fontSize: hp('2.15'),
+                            letterSpacing: -0.5,
                             fontFamily: fontFamily.ceraMedium,
-                            color: '#353535',
-                            paddingTop: hp('0.65'),
+                            color: '#999696',
                           }}>
-                          years
+                          {`  years`}
                         </Text>
-                      </View>
-                    </View>
-                  </View>
-                  <View style={{height: hp('10'), paddingHorizontal: wp('3')}}>
-                    <View
-                      style={{
-                        height: hp('5'),
-                        justifyContent: 'center',
-                      }}>
+                      </Text>
                       <Text
                         style={{
                           fontSize: hp('1.65'),
-                          fontFamily: fontFamily.ceraMedium,
                           color: '#999696',
+                          fontFamily: fontFamily.ceraMedium,
+                          fontWeight: '300',
+                          letterSpacing: 0.05,
                         }}>
                         {`Service`}
                       </Text>
                     </View>
-                    <View
-                      style={{
-                        height: hp('6'),
-                        justifyContent: 'center',
-                        alignItems: 'flex-end',
-                        marginTop: hp('-1.5'),
-                        marginHorizontal: wp('-1.15'),
-                      }}>
-                      <FontAwesomeIcon
-                        icon="fat fa-calendar-range"
-                        size={hp('3.75')}
-                        style={{color: '#999696'}}
-                      />
-                    </View>
+                  </View>
+                  <View
+                    style={{
+                      height: hp('7'),
+                      justifyContent: 'center',
+                      alignItems: 'flex-end',
+                      paddingRight: wp('2'),
+                    }}>
+                    <FontAwesomeIcon
+                      icon="fat fa-calendar-range"
+                      size={hp('5')}
+                      style={{color: '#999696'}}
+                    />
                   </View>
                 </LinearGradient>
 
@@ -896,11 +886,10 @@ const HomeScreen = props => {
                   colors={['#DAFFE6', '#F6FFF7']}
                   locations={[0, 1]}
                   style={{
-                    flex: 0.3,
+                    flex: 0.31,
                     justifyContent: 'center',
-                    height: hp('17'),
-                    borderRadius: wp('5'),
-
+                    height: hp('14'),
+                    borderRadius: wp('3'),
                     shadowColor: 'rgba(0,0,0,0.5)',
                     shadowOpacity: 0.5,
                     shadowRadius: 16,
@@ -909,57 +898,51 @@ const HomeScreen = props => {
                   <View
                     style={{
                       height: hp('7'),
-                      justifyContent: 'flex-end',
                       paddingLeft: wp('3'),
+                      justifyContent: 'center',
                     }}>
-                    <View style={{}}>
-                      <View>
-                        <Text
-                          style={[
-                            styles.serviceSection,
-                            {
-                              textAlign: 'left',
-                              fontSize: hp('2.25'),
-                              fontFamily: fontFamily.ceraBold,
-                            },
-                          ]}>
+                    <View style={{justifyContent: 'center'}}>
+                      <Text
+                        numberOfLines={1}
+                        ellipsizeMode={'tail'}
+                        style={[
+                          styles.serviceSection,
                           {
-                            profileHere?.userData?.emp_result
-                              ?.EMP_STATUS_DESCRIPTION
-                          }
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                  <View style={{height: hp('10'), paddingHorizontal: wp('3')}}>
-                    <View
-                      style={{
-                        height: hp('5'),
-                        justifyContent: 'center',
-                      }}>
+                            textAlign: 'left',
+                            fontSize: hp('2.35'),
+
+                            fontFamily: fontFamily.ceraBold,
+                          },
+                        ]}>
+                        {
+                          profileHere?.userData?.emp_result
+                            ?.EMP_STATUS_DESCRIPTION
+                        }
+                      </Text>
                       <Text
                         style={{
                           fontSize: hp('1.65'),
-                          fontFamily: fontFamily.ceraMedium,
                           color: '#999696',
+                          fontFamily: fontFamily.ceraMedium,
+                          fontWeight: '300',
+                          letterSpacing: 0.05,
                         }}>
                         {`Status`}
                       </Text>
                     </View>
-                    <View
-                      style={{
-                        height: hp('6'),
-                        justifyContent: 'center',
-                        alignItems: 'flex-end',
-                        marginTop: hp('-1'),
-                        marginHorizontal: wp('-1.5'),
-                      }}>
-                      <FontAwesomeIcon
-                        icon="fat fa-badge-check"
-                        size={hp('4')}
-                        style={{color: '#999696'}}
-                      />
-                    </View>
+                  </View>
+                  <View
+                    style={{
+                      height: hp('7'),
+                      justifyContent: 'center',
+                      alignItems: 'flex-end',
+                      paddingRight: wp('2'),
+                    }}>
+                    <FontAwesomeIcon
+                      icon="fat fa-badge-check"
+                      size={hp('5')}
+                      style={{color: '#999696'}}
+                    />
                   </View>
                 </LinearGradient>
 
@@ -972,10 +955,84 @@ const HomeScreen = props => {
                   colors={['#DAEBFF', '#F6FDFF']}
                   locations={[0, 1]}
                   style={{
-                    flex: 0.3,
+                    flex: 0.31,
+                    justifyContent: 'center',
+                    height: hp('14'),
+                    borderRadius: wp('3'),
+                    shadowColor: 'rgba(0,0,0,0.5)',
+                    shadowOpacity: 0.5,
+                    shadowRadius: 16,
+                    elevation: 4,
+                  }}>
+                  <View
+                    style={{
+                      height: hp('7'),
+                      paddingLeft: wp('3'),
+                      justifyContent: 'center',
+                    }}>
+                    <View style={{justifyContent: 'center'}}>
+                      <Text
+                        style={[
+                          styles.serviceSection,
+                          {
+                            textAlign: 'left',
+                            fontSize: hp('2.35'),
+                            letterSpacing: -0.5,
+                            fontFamily: fontFamily.ceraBold,
+                          },
+                        ]}>
+                        {profileHere?.empTimeIn == null ||
+                        profileHere?.empTimeIn == undefined ||
+                        profileHere?.empTimeIn == ''
+                          ? '--:--:--'
+                          : profileHere?.empTimeIn}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: hp('1.65'),
+                          color: '#999696',
+                          fontFamily: fontFamily.ceraMedium,
+                          fontWeight: '300',
+                          letterSpacing: 0.05,
+                        }}>
+                        {`Attendance`}
+                      </Text>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      height: hp('7'),
+                      justifyContent: 'center',
+                      alignItems: 'flex-end',
+                      paddingRight: wp('2'),
+                    }}>
+                    <FontAwesomeIcon
+                      icon={`fat fa-clock-${
+                        profileHere?.empTimeIn == null ||
+                        profileHere?.empTimeIn == undefined ||
+                        profileHere?.empTimeIn == ''
+                          ? 'nine'
+                          : firstValueInWords
+                      }`}
+                      size={hp('5')}
+                      style={{color: '#999696'}}
+                    />
+                  </View>
+                </LinearGradient>
+
+                {/* <LinearGradient
+                  useAngle={true}
+                  angle={180}
+                  angleCenter={{x: 0.5, y: 0.5}}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  colors={['#DAEBFF', '#F6FDFF']}
+                  locations={[0, 1]}
+                  style={{
+                    flex: 0.31,
                     justifyContent: 'center',
 
-                    height: hp('17'),
+                    height: hp('15'),
                     borderRadius: wp('5'),
 
                     shadowColor: 'rgba(0,0,0,0.5)',
@@ -985,9 +1042,10 @@ const HomeScreen = props => {
                   }}>
                   <View
                     style={{
-                      height: hp('7'),
+                      height: hp('8'),
                       justifyContent: 'flex-end',
                       paddingLeft: wp('3'),
+                      backgroundColor: 'red',
                     }}>
                     <View style={{flexDirection: 'row'}}>
                       <View>
@@ -1010,50 +1068,29 @@ const HomeScreen = props => {
                       </View>
                     </View>
                   </View>
-                  <View style={{height: hp('10'), paddingHorizontal: wp('3')}}>
-                    <View
-                      style={{
-                        height: hp('5'),
-                        justifyContent: 'center',
-                      }}>
-                      <Text
-                        style={{
-                          fontSize: hp('1.65'),
-                          fontFamily: fontFamily.ceraMedium,
-                          color: '#999696',
-                        }}>
-                        {`Attendance`}
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        height: hp('6'),
-                        justifyContent: 'center',
-                        alignItems: 'flex-end',
-                        marginTop: hp('-1'),
-                        marginHorizontal: wp('-1.5'),
-                      }}>
-                      <FontAwesomeIcon
-                        icon={`fat fa-clock-${
-                          profileHere?.empTimeIn == null ||
-                          profileHere?.empTimeIn == undefined ||
-                          profileHere?.empTimeIn == ''
-                            ? 'nine'
-                            : firstValueInWords
-                        }`}
-                        size={hp('4')}
-                        style={{color: '#999696'}}
-                      />
-                    </View>
-                  </View>
-                </LinearGradient>
+                  <View
+                    style={{
+                      height: hp('8'),
+                      paddingHorizontal: wp('3'),
+                      backgroundColor: 'green',
+                    }}></View>
+                </LinearGradient> */}
               </View>
 
               {profileHere?.userData?.inspire?.show_banner == 1 && (
                 <TouchableOpacity
                   activeOpacity={0.5}
                   onPress={() => navigation.navigate('ChallengeSignUp')}
-                  style={{marginHorizontal: wp('5'), marginVertical: hp('1')}}>
+                  style={{
+                    marginHorizontal: wp('5'),
+                    marginVertical: hp('1'),
+                    borderRadius: wp('5'),
+
+                    shadowColor: 'rgba(0,0,0,0.5)',
+                    shadowOpacity: 0.5,
+                    shadowRadius: 16,
+                    elevation: 4,
+                  }}>
                   <Image
                     source={{
                       uri: profileHere?.userData?.inspire?.inspire_banner,
@@ -1240,7 +1277,7 @@ const HomeScreen = props => {
                 </View>
               )}
 
-              {profileHere?.userData?.reporting_result?.reportee_length > 0 && (
+              {/* {profileHere?.userData?.reporting_result?.reportee_length > 0 && (
                 <>
                   <View
                     style={{
@@ -1279,16 +1316,14 @@ const HomeScreen = props => {
                       horizontal={true}
                       showsHorizontalScrollIndicator={false}
                       style={{
-                        // paddingHorizontal: wp('1'),
                         marginLeft: wp('2'),
-                        // marginRight: wp('2.85'),
                       }}
                     />
                   </LinearGradient>
                 </>
-              )}
+              )} */}
 
-              {profileHere?.userData?.wfh_result == 1 && (
+              {/* {profileHere?.userData?.wfh_result == 1 && (
                 <>
                   <View
                     style={{
@@ -1320,9 +1355,9 @@ const HomeScreen = props => {
                     </Text>
                   </TouchableOpacity>
                 </>
-              )}
+              )} */}
 
-              {profileHereEmpBirthday == 1 ? (
+              {/* {profileHereEmpBirthday == 1 ? (
                 <>
                   {playAnimation ? (
                     <View style={styles.animationContainer}>
@@ -1374,7 +1409,7 @@ const HomeScreen = props => {
                 </>
               ) : (
                 <></>
-              )}
+              )} */}
             </ScrollView>
           )}
         </>

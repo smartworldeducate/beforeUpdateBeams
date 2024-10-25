@@ -6,6 +6,7 @@ const initialState = {
   success: null,
   message: '',
   userData: [],
+  trainingsArray: [],
   isLoading: true,
 };
 
@@ -30,6 +31,19 @@ const InspireTrainingsSlice = createSlice({
   initialState,
   reducers: {
     clearAllState: (state, action) => {},
+    removeFromTraining: (state, action) => {
+      // console.log('payLoadMsgId', action.payload);
+      const listAll = state.trainingsArray;
+      // console.log('listAll', listAll);
+      const indexToRemove = listAll?.findIndex(
+        item => item?.pd_id == action?.payload,
+      );
+
+      if (indexToRemove !== -1) {
+        // console.log('payLoadValue', action.payload);
+        state.trainingsArray.splice(indexToRemove, 1);
+      }
+    },
   },
 
   extraReducers: builder => {
@@ -44,10 +58,12 @@ const InspireTrainingsSlice = createSlice({
       state.success = action.payload.success;
       state.message = action.payload.message;
       state.userData = action.payload.data;
+      state.trainingsArray = action.payload.data.trainings;
     });
   },
 });
 
-export const {clearAllState} = InspireTrainingsSlice.actions;
+export const {clearAllState, removeFromTraining} =
+  InspireTrainingsSlice.actions;
 
 export default InspireTrainingsSlice.reducer;
