@@ -146,7 +146,7 @@ const LeaveHistory = props => {
             <Text
               style={{
                 fontSize: hp('1.75'),
-                fontFamily: fontFamily.ceraMedium,
+                // fontFamily: fontFamily.ceraMedium,
                 color: index == getIndex ? 'white' : '#1C37A4',
                 fontWeight: '500',
               }}>
@@ -202,8 +202,8 @@ const LeaveHistory = props => {
                 expandedHeader === item ? wp('0') : wp('3'),
 
               shadowColor: '#000',
-              shadowOpacity: 0.5,
-              shadowRadius: 4,
+              shadowOpacity: 0.15,
+              shadowRadius: 1,
               elevation: 1,
               marginVertical: hp('1'),
               marginHorizontal: wp('3'),
@@ -258,13 +258,15 @@ const LeaveHistory = props => {
                             key={index}
                             style={{
                               color: 'black',
-                              fontFamily: fontFamily.ceraMedium,
+                              // fontFamily: fontFamily.ceraMedium,
+                              fontWeight: '500',
                               fontSize: hp('1.9'),
                             }}>
                             {matchedItem?.leave_type_desc}
                             <Text
                               style={{
-                                fontFamily: fontFamily.ceraLight,
+                                // fontFamily: fontFamily.ceraLight,
+                                fontWeight: '300',
                                 fontSize: hp('1.75'),
                               }}>
                               {' '}
@@ -282,7 +284,8 @@ const LeaveHistory = props => {
                           <Text
                             numberOfLines={1}
                             style={{
-                              fontFamily: fontFamily.ceraLight,
+                              // fontFamily: fontFamily.ceraLight,
+                              fontWeight: '300',
                               fontSize: hp('1.85'),
                               color: 'black',
                               paddingBottom:
@@ -322,7 +325,8 @@ const LeaveHistory = props => {
                       color: 'black',
                       paddingLeft: wp('3'),
                       fontSize: hp('1.75'),
-                      fontFamily: fontFamily.ceraLight,
+                      // fontFamily: fontFamily.ceraLight,
+                      fontWeight: '300',
                       textAlign: 'center',
                       paddingBottom: hp('1.5'),
                     }}>

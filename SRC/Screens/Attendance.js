@@ -135,7 +135,7 @@ const Attendance = props => {
         <Text
           style={{
             fontSize: hp('2.5'),
-            fontFamily: fontFamily.ceraMedium,
+            // fontFamily: fontFamily.ceraMedium,
             color: 'black',
             fontWeight: '500',
             paddingLeft: wp('2'),
@@ -272,8 +272,9 @@ const Attendance = props => {
               style={{
                 color: 'black',
                 textAlign: 'center',
-                fontSize: hp('2.25'),
-                fontFamily: fontFamily.ceraBold,
+                fontSize: hp('2'),
+                // fontFamily: fontFamily.ceraBold,
+                fontWeight: '700',
                 letterSpacing: 1,
               }}>
               {day}
@@ -284,7 +285,8 @@ const Attendance = props => {
                 textAlign: 'center',
                 fontSize: hp('1.6'),
                 marginTop: hp('-0.7'),
-                fontFamily: fontFamily.ceraLight,
+                // fontFamily: fontFamily.ceraLight,
+                fontWeight: '300',
               }}>
               {item?.fin_year_day}
             </Text>
@@ -321,7 +323,8 @@ const Attendance = props => {
                 style={{
                   textAlign: 'center',
                   fontSize: item?.holiday_desc == null ? hp('1.75') : hp('1.5'),
-                  fontFamily: fontFamily.ceraMedium,
+                  // fontFamily: fontFamily.ceraMedium,
+                  fontWeight: '500',
 
                   paddingVertical: hp('0.5'),
                   paddingHorizontal: wp('2'),
@@ -343,7 +346,7 @@ const Attendance = props => {
                     item?.late_exempt == 'Y'
                       ? null
                       : item?.is_late == 'Y'
-                      ? wp('5')
+                      ? wp('0')
                       : null,
                   borderWidth:
                     item?.late_exempt == 'Y'
@@ -376,7 +379,8 @@ const Attendance = props => {
                 style={{
                   textAlign: 'center',
                   fontSize: hp('1.65'),
-                  fontFamily: fontFamily.ceraMedium,
+                  // fontFamily: fontFamily.ceraMedium,
+                  fontWeight: '500',
 
                   paddingVertical: hp('0.5'),
                   paddingHorizontal: wp('2'),
@@ -396,7 +400,8 @@ const Attendance = props => {
                 style={{
                   color: '#1C37A4',
                   fontSize: hp('1'),
-                  fontFamily: fontFamily.ceraMedium,
+                  // fontFamily: fontFamily.ceraMedium,
+                  fontWeight: '500',
                   textAlign: 'center',
                 }}>
                 {item?.late_exempt == 'Y' ? item?.status : ''}
@@ -410,7 +415,8 @@ const Attendance = props => {
                 style={{
                   color: '#1C37A4',
                   fontSize: hp('1'),
-                  fontFamily: fontFamily.ceraMedium,
+                  // fontFamily: fontFamily.ceraMedium,
+                  fontWeight: '500',
                   textAlign: 'center',
                 }}>
                 {item?.hd_pending == 'Y' ? item?.link : ''}
@@ -424,7 +430,8 @@ const Attendance = props => {
                 style={{
                   color: '#1C37A4',
                   fontSize: hp('1'),
-                  fontFamily: fontFamily.ceraMedium,
+                  // fontFamily: fontFamily.ceraMedium,
+                  fontWeight: '500',
                   textAlign: 'center',
                 }}>
                 {item?.late_minutes > 15 && item?.late_ded_run == 'N'
@@ -448,7 +455,8 @@ const Attendance = props => {
                 style={{
                   textAlign: 'center',
                   fontSize: hp('1.75'),
-                  fontFamily: fontFamily.ceraMedium,
+                  // fontFamily: fontFamily.ceraMedium,
+                  fontWeight: '500',
                   color: 'black',
                 }}>
                 {'--:--:--'}
@@ -483,7 +491,8 @@ const Attendance = props => {
                         style={{
                           textAlign: 'center',
                           fontSize: hp('1.75'),
-                          fontFamily: fontFamily.ceraMedium,
+                          // fontFamily: fontFamily.ceraMedium,
+                          fontWeight: '500',
 
                           paddingVertical: hp('0.5'),
                           paddingHorizontal: wp('2'),
@@ -507,7 +516,8 @@ const Attendance = props => {
                         style={{
                           color: '#1C37A4',
                           fontSize: hp('1'),
-                          fontFamily: fontFamily.ceraMedium,
+                          // fontFamily: fontFamily.ceraMedium,
+                          fontWeight: '500',
                         }}>
                         {item?.early_exempt == 'Y' ? item?.status : ''}
                       </Text>
@@ -540,7 +550,8 @@ const Attendance = props => {
                     style={{
                       textAlign: 'center',
                       fontSize: hp('1.65'),
-                      fontFamily: fontFamily.ceraMedium,
+                      // fontFamily: fontFamily.ceraMedium,
+                      fontWeight: '500',
 
                       paddingVertical: hp('0.5'),
                       paddingHorizontal: wp('2'),
@@ -559,7 +570,8 @@ const Attendance = props => {
                   style={{
                     color: '#1C37A4',
                     fontSize: hp('1'),
-                    fontFamily: fontFamily.ceraMedium,
+                    // fontFamily: fontFamily.ceraMedium,
+                    fontWeight: '500',
                     textAlign: 'center',
                   }}>
                   {item?.is_early_applied == 'Y' ? item?.link : ''}
@@ -571,7 +583,8 @@ const Attendance = props => {
                       style={{
                         color: '#1C37A4',
                         fontSize: hp('1'),
-                        fontFamily: fontFamily.ceraMedium,
+                        // fontFamily: fontFamily.ceraMedium,
+                        fontWeight: '500',
                         textAlign: 'center',
                       }}>
                       {item?.late_minutes > 15 && item?.late_ded_run == 'N'
@@ -728,7 +741,8 @@ const Attendance = props => {
                           : displayedText
                           ? hp('1.75')
                           : hp('1.5'),
-                      fontFamily: fontFamily.ceraMedium,
+                      // fontFamily: fontFamily.ceraMedium,
+                      fontWeight: '500',
                       paddingTop: hp('0.5'),
                     }}>
                     {item?.holiday_desc == null
@@ -749,7 +763,7 @@ const Attendance = props => {
                       color: 'black',
                       textAlign: 'center',
                       fontSize: hp('1.75'),
-                      fontFamily: fontFamily.ceraMedium,
+                      // fontFamily: fontFamily.ceraMedium,
                     }}>
                     {item?.link}
                   </Text>
@@ -808,19 +822,25 @@ const Attendance = props => {
           keyExtractor={(item, index) => index.toString()}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
+
           ref={yourRef}
-          onContentSizeChange={() =>
-            yourRef.current.scrollToIndex({
-              animated: true,
-              index: selectedMonth,
-            })
-          }
-          onLayout={() =>
-            yourRef.current.scrollToIndex({
-              animated: true,
-              index: selectedMonth,
-            })
-          }
+          onContentSizeChange={() => yourRef.current.scrollToEnd()}
+          onLayout={() => yourRef.current.scrollToEnd()}
+
+
+          // ref={yourRef}
+          // onContentSizeChange={() =>
+          //   yourRef.current.scrollToIndex({
+          //     animated: true,
+          //     index: selectedMonth,
+          //   })
+          // }
+          // onLayout={() =>
+          //   yourRef.current.scrollToIndex({
+          //     animated: true,
+          //     index: selectedMonth? selectedMonth : 11,
+          //   })
+          // }
         />
       </View>
 
@@ -840,7 +860,7 @@ const Attendance = props => {
           style={{
             color: '#FF0000',
             fontSize: hp('1.55'),
-            fontFamily: fontFamily.ceraMedium,
+            // fontFamily: fontFamily.ceraMedium,
             fontStyle: 'italic',
             fontWeight: '600',
             paddingHorizontal: wp('2'),
@@ -957,14 +977,14 @@ const styles = EStyleSheet.create({
   smalltext: {
     fontWeight: '500',
     fontSize: '0.9rem',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     color: '#363636',
     fontStyle: 'normal',
   },
   smalltext1: {
     fontWeight: '500',
     fontSize: '0.5rem',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     color: '#353535',
     fontStyle: 'normal',
     alignItems: 'center',
@@ -976,7 +996,7 @@ const styles = EStyleSheet.create({
   },
   headertext: {
     fontSize: '0.75rem',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontStyle: 'normal',
     color: '#363636',
     fontWeight: '500',
@@ -984,7 +1004,7 @@ const styles = EStyleSheet.create({
   duction: {
     color: '#363636',
     fontSize: '0.6rem',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontStyle: 'normal',
     fontWeight: '500',
   },
@@ -992,21 +1012,21 @@ const styles = EStyleSheet.create({
   lateminut: {
     color: 'gray',
     fontSize: '0.7rem',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontStyle: 'normal',
     fontWeight: '500',
   },
   testname: {
     color: '#343434',
     fontSize: '0.55rem',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontStyle: 'normal',
     fontWeight: '500',
   },
   textnum: {
     color: '#343434',
     fontSize: '0.6rem',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontStyle: 'normal',
     fontWeight: '500',
   },
@@ -1014,14 +1034,14 @@ const styles = EStyleSheet.create({
     fontSize: '0.75rem',
     color: '#646464',
     fontWeight: '700',
-    fontFamily: fontFamily.ceraBold,
+    // fontFamily: fontFamily.ceraBold,
     fontStyle: 'normal',
   },
   circularText1: {
     fontSize: '0.5rem',
     color: '#979797',
     fontWeight: '500',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontStyle: 'normal',
     marginHorizontal: hp(0.9),
     textTransform: 'uppercase',
@@ -1030,7 +1050,7 @@ const styles = EStyleSheet.create({
     color: '#353535',
     fontSize: '0.7rem',
     fontWeight: '700',
-    fontFamily: fontFamily.ceraBold,
+    // fontFamily: fontFamily.ceraBold,
     fontStyle: 'normal',
     textTransform: 'uppercase',
   },
@@ -1038,35 +1058,35 @@ const styles = EStyleSheet.create({
     color: '#979797',
     fontSize: '0.5rem',
     fontWeight: '500',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontStyle: 'normal',
     textTransform: 'uppercase',
   },
   testname1: {
     color: '#343434',
     fontSize: '0.5rem',
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
     fontStyle: 'normal',
     fontWeight: '100',
   },
   btncloor: {
     color: '#FF0000',
     fontSize: '0.5rem',
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
     fontStyle: 'normal',
     fontWeight: '300',
   },
   timein: {
     color: '#979797',
     fontSize: '0.6rem',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontStyle: 'normal',
     fontWeight: '500',
   },
   apply: {
     color: '#FFF',
     fontSize: '0.5rem',
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
     fontStyle: 'normal',
     fontWeight: '300',
   },

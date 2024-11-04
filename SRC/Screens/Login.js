@@ -175,12 +175,12 @@ const Login = props => {
     setShowErrorModal(false);
   };
 
-  useEffect(() => {
-    GoogleSignin.configure({
-      webClientId:
-        '941654580803-tnhgibub7blprfh09c6a1fa9v144nssi.apps.googleusercontent.com',
-    });
-  }, []);
+  // useEffect(() => {
+  //   GoogleSignin.configure({
+  //     webClientId:
+  //       '941654580803-tnhgibub7blprfh09c6a1fa9v144nssi.apps.googleusercontent.com',
+  //   });
+  // }, []);
 
   const onPressLoginWithGoogle = async () => {
     console.log('onPressLoginWithGoogle');
@@ -273,7 +273,7 @@ const Login = props => {
                   onChangeText={onChangeEmpId}
                   keyboardType={'default'}
                   maxLength={40}
-                  returnKeyType={'done'}
+                  returnKeyType={'next'}
                   iconName={'user-tie'}
                   placeholder={'Employee ID'}
                   placeholderColor={colors.loginTextColor}
@@ -418,11 +418,11 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 8,
+      height: 4,
     },
-    shadowOpacity: wp('10'),
-    shadowRadius: wp('10'),
-    elevation: 10,
+    shadowOpacity: wp('4'),
+    shadowRadius: wp('4'),
+    elevation: 5,
   },
   textInputCustomStyle: {
     fontSize: hp('1.65'),

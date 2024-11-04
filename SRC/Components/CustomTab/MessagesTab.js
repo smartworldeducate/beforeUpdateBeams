@@ -233,21 +233,24 @@ const styles = EStyleSheet.create({
   textStyle: {
     alignItems: 'center',
     fontSize: '0.53rem',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     color: 'grey',
     letterSpacing: 0.5,
+    fontWeight:"500",
   },
   centralText: {
     alignItems: 'center',
     fontSize: '0.53rem',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     color: 'grey',
     letterSpacing: wp('0.1'),
+    fontWeight:"500",
   },
   tabText: {
     color: '#1C37A4',
     fontSize: '0.6rem',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
+    fontWeight:"500",
     paddingLeft: wp('1'),
   },
 });

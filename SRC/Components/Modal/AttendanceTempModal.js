@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -23,8 +23,8 @@ import colors from '../../Styles/colors';
 import fontFamily from '../../Styles/fontFamily';
 import RenderHtml from 'react-native-render-html';
 
-const AttendanceTempModal = ({modalVisible, closeModal, btnText}) => {
-  const {width} = useWindowDimensions();
+const AttendanceTempModal = ({ modalVisible, closeModal, btnText }) => {
+  const { width } = useWindowDimensions();
 
   return (
     <Modal
@@ -61,7 +61,7 @@ const AttendanceTempModal = ({modalVisible, closeModal, btnText}) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Text style={{color: 'black', fontSize: hp('2.5')}}>
+            <Text style={{ color: 'black', fontSize: hp('2.5') }}>
               Feature Unavailable
             </Text>
 
@@ -127,21 +127,21 @@ const styles = EStyleSheet.create({
     marginTop: hp(0),
     fontSize: '0.9rem',
     fontWeight: '500',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontStyle: 'normal',
     letterSpacing: 0.35,
   },
 
   topText: {
     color: 'white',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
     fontSize: '0.75rem',
     letterSpacing: 1,
   },
   messageCardEmpName: {
     color: '#201F24',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
     fontSize: '0.69rem',
     letterSpacing: 0.25,
@@ -149,7 +149,7 @@ const styles = EStyleSheet.create({
   },
   messageCardDate: {
     color: '#979797',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
     fontSize: '0.52rem',
   },
@@ -161,8 +161,9 @@ const tagsStyles = {
     fontSize: hp('1.65'),
     color: '#343434',
     letterSpacing: 0.65,
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
     whiteSpace: 'normal',
+    fontWeight: '300',
 
     padding: 0,
     margin: 0,

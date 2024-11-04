@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -37,7 +37,7 @@ const ViewMessageDetailModal = ({
   inconType,
   renderers,
 }) => {
-  const {width} = useWindowDimensions();
+  const { width } = useWindowDimensions();
 
   return (
     <Modal
@@ -45,158 +45,170 @@ const ViewMessageDetailModal = ({
       transparent={true}
       visible={modalVisible}
       onRequestClose={closeModal}>
-      <View
+
+      <SafeAreaView
         style={{
           flex: 1,
-          backgroundColor: colors.appBackGroundColor,
+          backgroundColor:
+            Platform.OS === 'android'
+              ? colors.appBackGroundColor
+              : colors.appBackGroundColor,
         }}>
-        <LinearGradient
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-          colors={['#1C37A5', '#4D69DC']}
-          style={styles.mainHeader}>
+
+
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: colors.appBackGroundColor,
+          }}>
+          <LinearGradient
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            colors={['#1C37A5', '#4D69DC']}
+            style={styles.mainHeader}>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: hp(2.5),
+                height: hp('5'),
+                marginHorizontal: wp('2'),
+              }}>
+              <TouchableOpacity
+                onPress={closeModal}
+                style={{
+                  flex: 0.15,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Icon
+                  type="light"
+                  name={'arrow-left'}
+                  size={hp(2.5)}
+                  color="#fff"
+                />
+              </TouchableOpacity>
+              <View
+                style={{
+                  flex: 0.7,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text style={styles.textstyle}>{headTitleText}</Text>
+              </View>
+              <View style={{ flex: 0.15 }}></View>
+            </View>
+          </LinearGradient>
+
           <View
             style={{
               flexDirection: 'row',
-              marginTop: hp(2.5),
-              height: hp('5'),
-              marginHorizontal: wp('2'),
+              marginHorizontal: wp('6'),
+              marginTop: hp('5'),
             }}>
+            <View
+              style={{
+                flex: 0.85,
+                justifyContent: 'center',
+              }}>
+              <Text
+                numberOfLines={2}
+                letterSpacing={'tail'}
+                style={[styles.messageCardEmpName, { fontSize: hp('2.5') }]}>
+                {msgSubject}
+              </Text>
+            </View>
+            <View
+              style={{
+                flex: 0.15,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}></View>
+          </View>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              marginHorizontal: wp('6'),
+              marginTop: hp('3'),
+            }}>
+            <View
+              style={{
+                flex: 0.15,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={{ uri: empPhoto }}
+                style={{
+                  height: hp('6'),
+                  width: wp('12'),
+                  borderRadius: wp('50'),
+                }}
+                resizeMode={'contain'}
+              />
+            </View>
+
+            <View
+              style={{
+                flex: 0.7,
+                justifyContent: 'center',
+                marginLeft: wp('2'),
+              }}>
+              <Text
+                numberOfLines={1}
+                letterSpacing={'tail'}
+                style={styles.messageCardEmpName}>
+                {empName}
+              </Text>
+              <Text style={styles.messageCardDate}>{msgDate}</Text>
+            </View>
+
+            {/* <View style={{flex: 0.15}}></View> */}
+
             <TouchableOpacity
-              onPress={closeModal}
+              activeOpacity={activeOpacityLikeIcon}
+              onPress={onPressLikeIcon}
               style={{
                 flex: 0.15,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
               <Icon
-                type="light"
-                name={'arrow-left'}
-                size={hp(2.5)}
-                color="#fff"
+                type={inconType}
+                name="thumbs-up"
+                color="#1C37A4"
+                size={hp(3.5)}
               />
             </TouchableOpacity>
-            <View
-              style={{
-                flex: 0.7,
-                justifyContent: 'center',
-                alignItems: 'center',
+          </View>
+
+          <ScrollView>
+            <ScrollView
+              horizontal={false}
+              contentContainerStyle={{
+                flexGrow: 1,
               }}>
-              <Text style={styles.textstyle}>{headTitleText}</Text>
-            </View>
-            <View style={{flex: 0.15}}></View>
-          </View>
-        </LinearGradient>
-
-        <View
-          style={{
-            flexDirection: 'row',
-            marginHorizontal: wp('6'),
-            marginTop: hp('5'),
-          }}>
-          <View
-            style={{
-              flex: 0.85,
-              justifyContent: 'center',
-            }}>
-            <Text
-              numberOfLines={2}
-              letterSpacing={'tail'}
-              style={[styles.messageCardEmpName, {fontSize: hp('2.5')}]}>
-              {msgSubject}
-            </Text>
-          </View>
-          <View
-            style={{
-              flex: 0.15,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}></View>
-        </View>
-
-        <View
-          style={{
-            flexDirection: 'row',
-            marginHorizontal: wp('6'),
-            marginTop: hp('3'),
-          }}>
-          <View
-            style={{
-              flex: 0.15,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Image
-              source={{uri: empPhoto}}
-              style={{
-                height: hp('6'),
-                width: wp('12'),
-                borderRadius: wp('50'),
-              }}
-              resizeMode={'contain'}
-            />
-          </View>
-
-          <View
-            style={{
-              flex: 0.7,
-              justifyContent: 'center',
-              marginLeft: wp('2'),
-            }}>
-            <Text
-              numberOfLines={1}
-              letterSpacing={'tail'}
-              style={styles.messageCardEmpName}>
-              {empName}
-            </Text>
-            <Text style={styles.messageCardDate}>{msgDate}</Text>
-          </View>
-
-          {/* <View style={{flex: 0.15}}></View> */}
-
-          <TouchableOpacity
-            activeOpacity={activeOpacityLikeIcon}
-            onPress={onPressLikeIcon}
-            style={{
-              flex: 0.15,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Icon
-              type={inconType}
-              name="thumbs-up"
-              color="#1C37A4"
-              size={hp(3.5)}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <ScrollView>
-          <ScrollView
-            horizontal={false}
-            contentContainerStyle={{
-              flexGrow: 1,
-            }}>
-            <View style={{marginHorizontal: wp('6')}}>
-              <View style={{paddingBottom: hp('2')}}>
-                <RenderHtml
-                  contentWidth={width}
-                  source={{
-                    html: htmlSource || '<p></p>',
-                  }}
-                  tagsStyles={tagsStyles}
-                  // renderersProps={{
-                  //   renderers: renderersProps,
-                  //   text: defaultTextProps,
-                  // }}
-                  renderers={renderers}
-                  ignoredDomTags={["wb'<", 'customTag', 'center']}
-                />
+              <View style={{ marginHorizontal: wp('6') }}>
+                <View style={{ paddingBottom: hp('2') }}>
+                  <RenderHtml
+                    contentWidth={width}
+                    source={{
+                      html: htmlSource || '<p></p>',
+                    }}
+                    tagsStyles={tagsStyles}
+                    // renderersProps={{
+                    //   renderers: renderersProps,
+                    //   text: defaultTextProps,
+                    // }}
+                    renderers={renderers}
+                    ignoredDomTags={["wb'<", 'customTag', 'center']}
+                  />
+                </View>
               </View>
-            </View>
+            </ScrollView>
           </ScrollView>
-        </ScrollView>
-      </View>
+        </View>
+      </SafeAreaView>
     </Modal>
   );
 };
@@ -214,21 +226,21 @@ const styles = EStyleSheet.create({
     marginTop: hp(0),
     fontSize: '0.9rem',
     fontWeight: '500',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontStyle: 'normal',
     letterSpacing: 0.35,
   },
 
   topText: {
     color: 'white',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
     fontSize: '0.75rem',
     letterSpacing: 1,
   },
   messageCardEmpName: {
     color: '#201F24',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
     fontSize: '0.69rem',
     letterSpacing: 0.25,
@@ -236,7 +248,7 @@ const styles = EStyleSheet.create({
   },
   messageCardDate: {
     color: '#979797',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
     fontSize: '0.52rem',
   },
@@ -248,7 +260,8 @@ const tagsStyles = {
     fontSize: hp('1.65'),
     color: '#343434',
     letterSpacing: 0.65,
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
+    fontWeight: '300',
     whiteSpace: 'normal',
 
     padding: 0,

@@ -54,7 +54,7 @@ const ProfileCardHeader = ({userIcon, headerText}) => {
 const styles = EStyleSheet.create({
   header: {
     fontSize: '0.62rem',
-    fontFamily: fontFamily.ceraBold,
+    // fontFamily: fontFamily.ceraBold,
     color: '#363636',
     fontWeight: '700',
   },

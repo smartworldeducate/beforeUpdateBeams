@@ -237,14 +237,14 @@ const styles = EStyleSheet.create({
   },
   topText: {
     color: 'white',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
     fontSize: '0.75rem',
     letterSpacing: 1,
   },
   messageCardEmpName: {
     color: '#201F24',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
     fontSize: '0.69rem',
     letterSpacing: 0.25,
@@ -252,7 +252,7 @@ const styles = EStyleSheet.create({
   },
   messageCardDate: {
     color: '#979797',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
     fontSize: '0.52rem',
   },
@@ -264,7 +264,7 @@ const tagsStyles = {
     fontSize: hp('1.65'),
     color: '#343434',
     letterSpacing: 0.65,
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
     whiteSpace: 'normal',
 
     padding: 0,

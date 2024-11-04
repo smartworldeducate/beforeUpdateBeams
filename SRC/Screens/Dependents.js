@@ -55,7 +55,8 @@ const DeviceInfo = props => {
             <Text
               style={{
                 fontSize: hp('3.5'),
-                fontFamily: fontFamily.ceraBold,
+                // fontFamily: fontFamily.ceraBold,
+                fontWeight: '700',
                 color: '#1C37A4',
               }}>
               {item?.NAME != null
@@ -139,7 +140,11 @@ const DeviceInfo = props => {
                       style={[
                         styles.stdStdIdText,
                         ,
-                        {fontFamily: fontFamily.ceraMedium},
+                        {
+                          // fontFamily: fontFamily.ceraMedium
+                          fontWeight: '500',
+
+                        },
                       ]}>
                       Name
                     </Text>
@@ -167,7 +172,10 @@ const DeviceInfo = props => {
                     <Text
                       style={[
                         styles.stdStdIdText,
-                        {fontFamily: fontFamily.ceraMedium},
+                        {
+                          // fontFamily: fontFamily.ceraMedium
+                          fontWeight: '500',
+                        },
                       ]}>
                       Birth Date
                     </Text>
@@ -198,7 +206,11 @@ const DeviceInfo = props => {
                     <Text
                       style={[
                         styles.stdStdIdText,
-                        {fontFamily: fontFamily.ceraMedium},
+                        {
+                          // fontFamily: fontFamily.ceraMedium
+                          fontWeight: '500',
+
+                        },
                       ]}>
                       Gender
                     </Text>
@@ -225,7 +237,10 @@ const DeviceInfo = props => {
                     <Text
                       style={[
                         styles.stdStdIdText,
-                        {fontFamily: fontFamily.ceraMedium},
+                        {
+                          // fontFamily: fontFamily.ceraMedium
+                          fontWeight: '500',
+                        },
                       ]}>
                       Relationship
                     </Text>
@@ -255,7 +270,11 @@ const DeviceInfo = props => {
                     <Text
                       style={[
                         styles.stdStdIdText,
-                        {fontFamily: fontFamily.ceraMedium},
+                        {
+                          // fontFamily: fontFamily.ceraMedium
+                          fontWeight: '500',
+
+                        },
                       ]}>
                       Start Date
                     </Text>
@@ -287,7 +306,11 @@ const DeviceInfo = props => {
                     <Text
                       style={[
                         styles.stdStdIdText,
-                        {fontFamily: fontFamily.ceraMedium},
+                        {
+                          // fontFamily: fontFamily.ceraMedium
+                          fontWeight: '500',
+
+                        },
                       ]}>
                       End Date
                     </Text>
@@ -315,7 +338,11 @@ const DeviceInfo = props => {
                     <Text
                       style={[
                         styles.stdStdIdText,
-                        {fontFamily: fontFamily.ceraMedium},
+                        {
+                          // fontFamily: fontFamily.ceraMedium
+                          fontWeight: '500',
+
+                        },
                       ]}>
                       Marital Status
                     </Text>
@@ -344,7 +371,11 @@ const DeviceInfo = props => {
                     <Text
                       style={[
                         styles.stdStdIdText,
-                        {fontFamily: fontFamily.ceraMedium},
+                        { 
+                          // fontFamily: fontFamily.ceraMedium
+                          fontWeight: '500',
+
+                        },
                       ]}>
                       Premium
                     </Text>
@@ -705,7 +736,7 @@ export default DeviceInfo;
 const styles = EStyleSheet.create({
   stdNameText: {
     color: '#353535',
-    fontFamily: fontFamily.ceraBold,
+    // fontFamily: fontFamily.ceraBold,
     fontWeight: '700',
     fontSize: '0.69rem',
   },
@@ -718,7 +749,7 @@ const styles = EStyleSheet.create({
 
   empName: {
     fontSize: '0.73rem',
-    fontFamily: fontFamily.ceraBold,
+    // fontFamily: fontFamily.ceraBold,
     color: '#363636',
     fontWeight: '700',
     paddingVertical: hp('0.35'),
@@ -726,7 +757,7 @@ const styles = EStyleSheet.create({
 
   empDesignation: {
     fontSize: '0.6rem',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     color: '#979797',
     fontWeight: '500',
   },

@@ -149,7 +149,8 @@ const ChildBss = props => {
                           styles.stdStdIdText,
                           {
                             textAlign: 'right',
-                            fontFamily: fontFamily.ceraMedium,
+                            // fontFamily: fontFamily.ceraMedium,
+                            fontWeight: '500',
                             color: '#2D8E00',
                           },
                         ]}>
@@ -171,7 +172,10 @@ const ChildBss = props => {
                     style={[
                       styles.stdStdIdText,
                       ,
-                      {fontFamily: fontFamily.ceraMedium},
+                      {
+                        // fontFamily: fontFamily.ceraMedium
+                        fontWeight: '500',
+                      },
                     ]}>
                     ID
                   </Text>
@@ -199,7 +203,10 @@ const ChildBss = props => {
                   <Text
                     style={[
                       styles.stdStdIdText,
-                      {fontFamily: fontFamily.ceraMedium},
+                      {
+                        // fontFamily: fontFamily.ceraMedium
+                        fontWeight: '500',
+                      },
                     ]}>
                     School
                   </Text>
@@ -226,7 +233,10 @@ const ChildBss = props => {
                   <Text
                     style={[
                       styles.stdStdIdText,
-                      {fontFamily: fontFamily.ceraMedium},
+                      {
+                        // fontFamily: fontFamily.ceraMedium
+                        fontWeight: '500',
+                      },
                     ]}>
                     Class
                   </Text>
@@ -253,7 +263,11 @@ const ChildBss = props => {
                   <Text
                     style={[
                       styles.stdStdIdText,
-                      {fontFamily: fontFamily.ceraMedium},
+                      {
+                        // fontFamily: fontFamily.ceraMedium
+                        fontWeight: '500',
+
+                      },
                     ]}>
                     DOB
                   </Text>
@@ -285,7 +299,11 @@ const ChildBss = props => {
                       <Text
                         style={[
                           styles.stdStdIdText,
-                          {fontFamily: fontFamily.ceraMedium},
+                          {
+                            // fontFamily: fontFamily.ceraMedium
+                            fontWeight: '500',
+
+                          },
                         ]}>
                         Fee Due
                       </Text>
@@ -315,7 +333,11 @@ const ChildBss = props => {
                       <Text
                         style={[
                           styles.stdStdIdText,
-                          {fontFamily: fontFamily.ceraMedium},
+                          {
+                            // fontFamily: fontFamily.ceraMedium
+                            fontWeight: '500',
+
+                          },
                         ]}>
                         Fee Period
                       </Text>
@@ -343,7 +365,11 @@ const ChildBss = props => {
                       <Text
                         style={[
                           styles.stdStdIdText,
-                          {fontFamily: fontFamily.ceraMedium},
+                          {
+                            // fontFamily: fontFamily.ceraMedium
+
+                            fontWeight: '500',
+                          },
                         ]}>
                         Due Date
                       </Text>
@@ -374,7 +400,10 @@ const ChildBss = props => {
                       <Text
                         style={[
                           styles.stdStdIdText,
-                          {fontFamily: fontFamily.ceraMedium},
+                          {
+                            // fontFamily: fontFamily.ceraMedium
+                            fontWeight: '500',
+                          },
                         ]}>
                         Invoice Number
                       </Text>
@@ -430,7 +459,8 @@ const ChildBss = props => {
                             styles.stdStdIdText,
                             {
                               textAlign: 'right',
-                              fontFamily: fontFamily.ceraMedium,
+                              // fontFamily: fontFamily.ceraMedium,
+                              fontWeight: '500',
                             },
                           ]}>
                           Pay now
@@ -1033,7 +1063,7 @@ export default ChildBss;
 const styles = EStyleSheet.create({
   stdNameText: {
     color: '#353535',
-    fontFamily: fontFamily.ceraBold,
+    // fontFamily: fontFamily.ceraBold,
     fontWeight: '700',
     fontSize: '0.65rem',
   },
@@ -1045,19 +1075,19 @@ const styles = EStyleSheet.create({
   },
   stdDetails: {
     color: '#363636',
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
     fontWeight: '300',
     fontSize: '0.6rem',
   },
   stdValueDetails: {
     color: '#353535',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
     fontSize: '0.6rem',
   },
   noDataText: {
     fontSize: '0.5rem',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     color: colors.drakGrey,
     fontWeight: '300',
     letterSpacing: 0.25,
@@ -1068,7 +1098,7 @@ const styles = EStyleSheet.create({
 
   empName: {
     fontSize: '0.73rem',
-    fontFamily: fontFamily.ceraBold,
+    // fontFamily: fontFamily.ceraBold,
     color: '#363636',
     fontWeight: '700',
     paddingVertical: hp('0.35'),
@@ -1076,7 +1106,7 @@ const styles = EStyleSheet.create({
 
   empDesignation: {
     fontSize: '0.6rem',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     color: '#979797',
     fontWeight: '500',
   },

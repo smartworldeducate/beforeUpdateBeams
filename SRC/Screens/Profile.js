@@ -45,7 +45,7 @@ const Profile = props => {
         <View
           style={{
             flexDirection: 'row',
-            marginTop: hp('7'),
+            marginTop: hp('3'),
             marginHorizontal: wp('2'),
             height: hp('5'),
           }}>
@@ -62,7 +62,7 @@ const Profile = props => {
           <View
             style={{
               position: 'absolute',
-              marginTop: hp('11.65'),
+              marginTop: hp('7.65'),
               left: wp('37.25'),
               zIndex: 1,
 
@@ -74,7 +74,7 @@ const Profile = props => {
               source={{uri: profileHere?.userData?.emp_result?.EMP_PHOTO}}
               style={{
                 height: hp('12.5'),
-                width: wp('25'),
+                width: wp('27'),
                 borderRadius: wp('50'),
                 borderWidth: wp('0.25'),
                 borderColor: '#cfdbfa',
@@ -281,33 +281,33 @@ const styles = EStyleSheet.create({
   },
   empName: {
     fontSize: '0.73rem',
-    fontFamily: fontFamily.ceraBold,
+    // fontFamily: fontFamily.ceraBold,
     color: '#363636',
     fontWeight: '700',
     paddingVertical: hp('0.35'),
   },
   empId: {
     fontSize: '0.5rem',
-    fontFamily: fontFamily.ceraBold,
+    // fontFamily: fontFamily.ceraBold,
     color: '#2D8E00',
     fontWeight: '700',
     textAlign: 'center',
   },
   empDesignation: {
     fontSize: '0.6rem',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     color: '#979797',
     fontWeight: '500',
   },
   firstText: {
     fontSize: '0.62rem',
-    fontFamily: fontFamily.ceraBold,
+    // fontFamily: fontFamily.ceraBold,
     color: '#353535',
     fontWeight: '700',
   },
   secondText: {
     fontSize: '0.55rem',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     color: '#979797',
     fontWeight: '500',
   },

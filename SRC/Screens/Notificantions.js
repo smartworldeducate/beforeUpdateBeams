@@ -163,7 +163,8 @@ const Notificantions = props => {
                   <Text
                     style={{
                       color: 'black',
-                      fontFamily: fontFamily.ceraMedium,
+                      // fontFamily: fontFamily.ceraMedium,
+                      fontWeight:"500",
                       fontSize: hp('2.75'),
                       textAlign: 'center',
                     }}>
@@ -180,10 +181,12 @@ const Notificantions = props => {
                 <View style={{}}>
                   <Text
                     style={{
-                      fontFamily:
-                        item?.IS_READ_STATUS == 'Y'
-                          ? fontFamily.ceraMedium
-                          : fontFamily.ceraBold,
+                      // fontFamily:
+                      //   item?.IS_READ_STATUS == 'Y'
+                      //     ? fontFamily.ceraMedium
+                      //     : fontFamily.ceraBold,
+                      fontWeight: '500',
+                      
 
                       color:
                         item?.IS_READ_STATUS == 'Y' ? '#666666' : '#000000',
@@ -195,7 +198,8 @@ const Notificantions = props => {
                 <View style={{}}>
                   <Text
                     style={{
-                      fontFamily: fontFamily.ceraMedium,
+                      // fontFamily: fontFamily.ceraMedium,
+                      fontWeight: '500',
 
                       color:
                         item?.IS_READ_STATUS == 'Y' ? '#666666' : '#000000',
@@ -212,7 +216,8 @@ const Notificantions = props => {
               <Text
                 numberOfLines={2}
                 style={{
-                  fontFamily: fontFamily.ceraMedium,
+                  // fontFamily: fontFamily.ceraMedium,
+                  fontWeight:"500",
 
                   color: item?.IS_READ_STATUS == 'Y' ? '#666666' : '#000000',
                   fontSize: hp('1.65'),
@@ -442,14 +447,14 @@ const styles = EStyleSheet.create({
   },
   msgSubject: {
     color: '#86868a',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontWeight: '300',
     fontSize: '0.62rem',
     letterSpacing: 0.15,
   },
   messageCardDate: {
     color: '#201F24',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
     fontSize: '0.52rem',
   },

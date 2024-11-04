@@ -289,7 +289,7 @@ const HomeScreen = props => {
               ellipsizeMode={'tail'}
               style={{
                 color: '#343434',
-                fontFamily: fontFamily.ceraLight,
+                // fontFamily: fontFamily.ceraLight,
                 fontWeight: '300',
                 fontSize: hp('1.8'),
                 letterSpacing: 0.5,
@@ -310,7 +310,7 @@ const HomeScreen = props => {
               ellipsizeMode={'tail'}
               style={{
                 color: 'black',
-                fontFamily: fontFamily.ceraLight,
+                // fontFamily: fontFamily.ceraLight,
                 fontWeight: '300',
                 fontSize: hp('1.7'),
                 letterSpacing: 0.5,
@@ -321,7 +321,7 @@ const HomeScreen = props => {
               <Text style={styles.messageCardDate}>
                 <Text
                   style={{
-                    fontFamily: fontFamily.ceraMedium,
+                    // fontFamily: fontFamily.ceraMedium,
                     color: 'black',
                     fontSize: hp('1.5'),
                   }}>
@@ -695,11 +695,11 @@ const HomeScreen = props => {
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
         colors={['#1C37A5', '#4D69DC']}
-        style={{height: hp('5')}}>
+        style={{height: hp('0')}}>
         <StatusBar
           translucent
           backgroundColor="transparent"
-          barStyle={'light-content'}
+          barStyle={'dark-content'}
         />
       </LinearGradient>
 
@@ -832,7 +832,8 @@ const HomeScreen = props => {
                             textAlign: 'left',
                             fontSize: hp('2.5'),
                             letterSpacing: -1.5,
-                            fontFamily: fontFamily.ceraBold,
+                            // fontFamily: fontFamily.ceraBold,
+                            fontWeight: '300',
                           },
                         ]}>
                         {
@@ -844,7 +845,8 @@ const HomeScreen = props => {
                           style={{
                             fontSize: hp('2.15'),
                             letterSpacing: -0.5,
-                            fontFamily: fontFamily.ceraMedium,
+                            // fontFamily: fontFamily.ceraMedium,
+                            fontWeight: '300',
                             color: '#999696',
                           }}>
                           {`  years`}
@@ -854,7 +856,7 @@ const HomeScreen = props => {
                         style={{
                           fontSize: hp('1.65'),
                           color: '#999696',
-                          fontFamily: fontFamily.ceraMedium,
+                          // fontFamily: fontFamily.ceraMedium,
                           fontWeight: '300',
                           letterSpacing: 0.05,
                         }}>
@@ -911,7 +913,8 @@ const HomeScreen = props => {
                             textAlign: 'left',
                             fontSize: hp('2.35'),
 
-                            fontFamily: fontFamily.ceraBold,
+                            // fontFamily: fontFamily.ceraBold,
+                            fontWeight: '600',
                           },
                         ]}>
                         {
@@ -923,7 +926,7 @@ const HomeScreen = props => {
                         style={{
                           fontSize: hp('1.65'),
                           color: '#999696',
-                          fontFamily: fontFamily.ceraMedium,
+                          // fontFamily: fontFamily.ceraMedium,
                           fontWeight: '300',
                           letterSpacing: 0.05,
                         }}>
@@ -978,7 +981,8 @@ const HomeScreen = props => {
                             textAlign: 'left',
                             fontSize: hp('2.35'),
                             letterSpacing: -0.5,
-                            fontFamily: fontFamily.ceraBold,
+                            // fontFamily: fontFamily.ceraBold,
+                            fontWeight: '600',
                           },
                         ]}>
                         {profileHere?.empTimeIn == null ||
@@ -991,7 +995,7 @@ const HomeScreen = props => {
                         style={{
                           fontSize: hp('1.65'),
                           color: '#999696',
-                          fontFamily: fontFamily.ceraMedium,
+                          // fontFamily: fontFamily.ceraMedium,
                           fontWeight: '300',
                           letterSpacing: 0.05,
                         }}>
@@ -1542,12 +1546,12 @@ const styles = EStyleSheet.create({
     color: '#fff',
     fontSize: fontSize.small,
     fontWeight: '100',
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
   },
   bootContText: {
     fontSize: '0.5rem',
     fontWeight: '900',
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
     paddingHorizontal: hp(3),
     color: '#979797',
   },
@@ -1574,7 +1578,7 @@ const styles = EStyleSheet.create({
     color: '#fff',
     fontSize: '1rem',
     fontWeight: '100',
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
   },
 
   textInputCustomStyle: {
@@ -1615,20 +1619,20 @@ const styles = EStyleSheet.create({
 
   messageText: {
     fontSize: hp('2.1'),
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
     color: '#646464',
     letterSpacing: 0.1,
   },
   messageCardEmpName: {
     color: '#6A6A6A',
-    fontFamily: fontFamily.ceraBold,
+    // fontFamily: fontFamily.ceraBold,
     fontWeight: '700',
     fontSize: '0.67rem',
   },
   messageCardDate: {
     color: '#979797',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
     fontSize: '0.52rem',
   },
@@ -1649,13 +1653,13 @@ const styles = EStyleSheet.create({
   LBCountText: {
     fontSize: '1.15rem',
     color: '#646464',
-    fontFamily: fontFamily.ceraBold,
+    // fontFamily: fontFamily.ceraBold,
     fontWeight: '700',
   },
   LBText: {
     fontSize: '0.45rem',
     color: '#979797',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
     letterSpacing: 0.15,
   },
@@ -1669,14 +1673,14 @@ const styles = EStyleSheet.create({
     justifyContent: 'center',
   },
   countText: {
-    fontFamily: fontFamily.ceraBold,
+    // fontFamily: fontFamily.ceraBold,
     fontWeight: '700',
     color: '#353535',
     fontSize: '0.78rem',
     letterSpacing: 0.2,
   },
   titleText: {
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
     color: '#747474',
     fontSize: '0.45rem',
@@ -1698,7 +1702,7 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
   },
   btnText: {
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontSize: '0.5rem',
     fontWeight: '500',
     letterSpacing: 0.2,

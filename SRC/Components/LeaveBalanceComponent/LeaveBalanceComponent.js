@@ -65,28 +65,28 @@ const LeaveBalanceComponent = ({
 const styles = EStyleSheet.create({
   upperText: {
     fontSize: '0.8rem',
-    fontFamily: fontFamily.ceraBold,
+    // fontFamily: fontFamily.ceraBold,
     fontWeight: '700',
     color: '#343434',
     letterSpacing: 0.5,
   },
   lowerText: {
     fontSize: '0.66rem',
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
     fontWeight: '300',
     color: '#343434',
     letterSpacing: 0.25,
   },
   availedLeaves: {
     fontSize: '1.15rem',
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
     fontWeight: '500',
     color: '#363636',
     letterSpacing: 0.5,
   },
   totalProvidedLeaves: {
     fontSize: '0.7rem',
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
     fontWeight: '300',
     color: '#363636',
     letterSpacing: 0.5,

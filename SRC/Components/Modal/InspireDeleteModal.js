@@ -81,7 +81,7 @@ const InspireDeleteModal = ({
                 <Text
                   style={{
                     fontSize: hp('2.5'),
-                    fontFamily: fontFamily.ceraMedium,
+                    // fontFamily: fontFamily.ceraMedium,
                     color: 'white',
                     fontWeight: '500',
                     paddingVertical: hp(1),
@@ -96,7 +96,7 @@ const InspireDeleteModal = ({
               <Text
                 style={{
                   fontSize: hp('1.75'),
-                  fontFamily: fontFamily.ceraMedium,
+                  // fontFamily: fontFamily.ceraMedium,
                   color: 'black',
                   letterSpacing: 0.5,
                   paddingTop: hp('1.5'),
@@ -130,7 +130,7 @@ const InspireDeleteModal = ({
               <Text
                 style={{
                   fontSize: hp('1.9'),
-                  fontFamily: fontFamily.ceraMedium,
+                  // fontFamily: fontFamily.ceraMedium,
                   color: 'white',
                 }}>
                 {btnText1}
@@ -151,7 +151,7 @@ const InspireDeleteModal = ({
               <Text
                 style={{
                   fontSize: hp('1.9'),
-                  fontFamily: fontFamily.ceraMedium,
+                  // fontFamily: fontFamily.ceraMedium,
                   color: 'white',
                 }}>
                 {btnText2}

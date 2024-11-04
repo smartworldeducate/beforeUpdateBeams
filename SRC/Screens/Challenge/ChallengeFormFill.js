@@ -122,13 +122,13 @@ const ChallengeFormFill = ({route}) => {
   ]);
 
   const [traingTitle, setTrainingTitle] = useState('');
-  const [traingTitleId, setTrainingTitleId] = useState(null);
+  const [traingTitleId, setTrainingTitleId] = useState('');
 
   const [pdCategories, setPDCateories] = useState('');
-  const [traingCategoryId, setTrainingCategoryId] = useState(null);
+  const [traingCategoryId, setTrainingCategoryId] = useState('');
 
   const [trainingDate, setTrainingDate] = useState(null);
-  const [forTrainingDate, setForTrainingDate] = useState(null);
+  const [forTrainingDate, setForTrainingDate] = useState('');
 
   const [schoolName, setSchoolName] = useState('');
   const [traingSchoolId, setTrainingSchoolId] = useState(null);
@@ -821,7 +821,7 @@ const ChallengeFormFill = ({route}) => {
       {submitTrainingFormHere?.isLoading && <Loader></Loader>}
 
       <ScrollView style={{flex: 1, backgroundColor: '#F5F8FC'}}>
-        <View style={{marginHorizontal: wp('6'), marginTop: hp('2.5')}}>
+        <View style={{marginHorizontal: wp('4'), marginTop: hp('2.5')}}>
           <I50TextInputModal
             textValue={
               traingTitle == '' || traingTitle == null
@@ -900,7 +900,8 @@ const ChallengeFormFill = ({route}) => {
               placeholderTextColor={'#363636'}
             />
           )} */}
-
+          
+      
           <TextInput
             value={traingOtherSchoolName}
             onChangeText={onChangeOtherSchoolName}
@@ -909,7 +910,8 @@ const ChallengeFormFill = ({route}) => {
             maxLength={100}
             style={{
               height: hp('7'),
-              width: wp('85'),
+              width: wp('92'),
+              paddingTop:hp('2.25'),
               backgroundColor: 'white',
               justifyContent: 'center',
               alignItems: 'center',
@@ -922,8 +924,9 @@ const ChallengeFormFill = ({route}) => {
               paddingLeft: wp('5'),
               marginVertical: hp('0.5'),
 
-              fontSize: hp('2'),
-              fontFamily: fontFamily.ceraMedium,
+              fontSize: hp('1.85'),
+              // fontFamily: fontFamily.ceraMedium,
+              fontWeight:"500",
               color: '#363636',
             }}
             placeholder="Low-Cost School Name"
@@ -1019,10 +1022,10 @@ const ChallengeFormFill = ({route}) => {
                   styles.atendUploadView,
                   {
                     shadowColor: '#000',
-                    shadowOffset: {width: 0, height: 12},
+                    shadowOffset: {width: 0, height: 8},
                     shadowOpacity: 0.58,
-                    shadowRadius: 16,
-                    elevation: 7,
+                    shadowRadius: 10,
+                    elevation: 3,
                   },
                 ]}>
                 <View
@@ -1245,7 +1248,7 @@ const ChallengeFormFill = ({route}) => {
                         <Text
                           style={{
                             color: 'white',
-                            fontFamily: fontFamily.ceraMedium,
+                            // fontFamily: fontFamily.ceraMedium,
                             fontWeight: '500',
                             fontSize: hp('1.55'),
                           }}>
@@ -1334,7 +1337,7 @@ const ChallengeFormFill = ({route}) => {
                         <Text
                           style={{
                             color: 'white',
-                            fontFamily: fontFamily.ceraMedium,
+                            // fontFamily: fontFamily.ceraMedium,
                             fontWeight: '500',
                             fontSize: hp('1.55'),
                           }}>
@@ -1481,7 +1484,7 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     marginVertical: hp('1'),
     height: hp('7'),
-    width: wp('85'),
+    width: wp('92'),
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
@@ -1495,14 +1498,14 @@ const styles = EStyleSheet.create({
   plusMinustext: {
     color: '#363636',
     fontSize: hp('2.5'),
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontWeight: '400',
   },
   attendenceAttachmentView: {
     flexDirection: 'row',
     marginVertical: hp('1'),
     height: hp('8'),
-    width: wp('85'),
+    width: wp('92'),
     backgroundColor: 'silver',
     justifyContent: 'center',
     alignItems: 'center',
@@ -1519,7 +1522,7 @@ const styles = EStyleSheet.create({
   attenAttachText: {
     color: '#363636',
     fontSize: hp('1.85'),
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontWeight: '400',
   },
   atendUploadView: {
@@ -1527,7 +1530,7 @@ const styles = EStyleSheet.create({
     marginTop: hp('2'),
     marginVertical: hp('0.5'),
     height: hp('12'),
-    width: wp('85'),
+    width: wp('92'),
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
@@ -1537,17 +1540,17 @@ const styles = EStyleSheet.create({
     paddingLeft: wp('2'),
     color: '#000000',
     fontSize: hp('1.65'),
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
     fontWeight: '300',
   },
   submitBtn: {
     marginVertical: hp('4'),
     height: hp('7'),
-    width: wp('85'),
+    width: wp('92'),
     backgroundColor: '#1C37A4',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: wp(10),
+    borderRadius: wp(50),
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 12},
     shadowOpacity: 0.58,
@@ -1558,7 +1561,7 @@ const styles = EStyleSheet.create({
   trainingTitleText: {
     color: '#343434',
     fontSize: '0.65rem',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontStyle: 'normal',
     fontWeight: '500',
   },

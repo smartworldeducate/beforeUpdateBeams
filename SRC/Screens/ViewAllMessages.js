@@ -354,7 +354,8 @@ const ViewAllMessages = props => {
             <Text
               style={{
                 color: 'black',
-                fontFamily: fontFamily.ceraMedium,
+                // fontFamily: fontFamily.ceraMedium,
+                fontWeight:"500",
                 fontSize: hp('2.75'),
                 textAlign: 'center',
               }}>
@@ -404,10 +405,10 @@ const ViewAllMessages = props => {
               styles.msgSubject,
               {
                 color: item?.IS_READ_STATUS === 'Y' ? '#66656A' : '#201F24',
-                fontFamily:
-                  item?.IS_READ_STATUS === 'Y'
-                    ? fontFamily.ceraMedium
-                    : fontFamily.ceraBold,
+                // fontFamily:
+                //   item?.IS_READ_STATUS === 'Y'
+                //     ? fontFamily.ceraMedium
+                //     : fontFamily.ceraBold,
                 fontWeight: item?.IS_READ_STATUS === 'Y' ? '500' : 'bold',
               },
             ]}>
@@ -423,10 +424,10 @@ const ViewAllMessages = props => {
               style={[
                 styles.messageCardDate,
                 {
-                  fontFamily:
-                    item?.IS_READ_STATUS === 'Y'
-                      ? fontFamily.ceraMedium
-                      : fontFamily.ceraBold,
+                  // fontFamily:
+                  //   item?.IS_READ_STATUS === 'Y'
+                  //     ? fontFamily.ceraMedium
+                  //     : fontFamily.ceraBold,
 
                   fontWeight: item?.IS_READ_STATUS === 'Y' ? '500' : 'bold',
                 },
@@ -746,7 +747,8 @@ const ViewAllMessages = props => {
             <Text
               style={{
                 color: 'black',
-                fontFamily: fontFamily.ceraMedium,
+                // fontFamily: fontFamily.ceraMedium,
+                fontWeight:"500",
                 fontSize: hp('3'),
               }}>
               {firstChar}
@@ -795,10 +797,10 @@ const ViewAllMessages = props => {
               styles.msgSubject,
               {
                 color: item?.IS_READ_STATUS === 'Y' ? '#66656A' : '#201F24',
-                fontFamily:
-                  item?.IS_READ_STATUS === 'Y'
-                    ? fontFamily.ceraMedium
-                    : fontFamily.ceraBold,
+                // fontFamily:
+                //   item?.IS_READ_STATUS === 'Y'
+                //     ? fontFamily.ceraMedium
+                //     : fontFamily.ceraBold,
                 fontWeight: item?.IS_READ_STATUS === 'Y' ? '500' : 'bold',
               },
             ]}>
@@ -814,10 +816,10 @@ const ViewAllMessages = props => {
               style={[
                 styles.messageCardDate,
                 {
-                  fontFamily:
-                    item?.IS_READ_STATUS === 'Y'
-                      ? fontFamily.ceraMedium
-                      : fontFamily.ceraBold,
+                  // fontFamily:
+                  //   item?.IS_READ_STATUS === 'Y'
+                  //     ? fontFamily.ceraMedium
+                  //     : fontFamily.ceraBold,
 
                   fontWeight: item?.IS_READ_STATUS === 'Y' ? '500' : 'bold',
                 },
@@ -1165,7 +1167,7 @@ const styles = EStyleSheet.create({
     marginTop: hp(0),
     fontSize: '0.9rem',
     fontWeight: '500',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontStyle: 'normal',
     letterSpacing: 0.35,
   },
@@ -1174,7 +1176,7 @@ const styles = EStyleSheet.create({
     color: 'silver',
     fontSize: '0.65rem',
     fontWeight: '300',
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
   },
 
   textInputCustomStyle: {
@@ -1183,7 +1185,7 @@ const styles = EStyleSheet.create({
     color: '#292D32',
     fontSize: '0.7rem',
     fontWeight: '300',
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
     paddingLeft: wp('2'),
   },
   searchicon: {
@@ -1195,20 +1197,20 @@ const styles = EStyleSheet.create({
 
   messageCardEmpName: {
     color: '#201F24',
-    fontFamily: fontFamily.ceraBold,
+    // fontFamily: fontFamily.ceraBold,
     fontWeight: '700',
     fontSize: '0.66rem',
   },
   msgSubject: {
     color: '#86868a',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontWeight: '300',
     fontSize: '0.62rem',
     letterSpacing: 0.15,
   },
   messageCardDate: {
     color: '#201F24',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
     fontSize: '0.52rem',
   },

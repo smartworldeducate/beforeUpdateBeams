@@ -341,7 +341,7 @@ const ApplicationType = props => {
         {tempLeaveModal && (
           <AttendanceTempModal
             btnText={'GO BACK'}
-            closeModal={() => navigation.goBack()}
+            closeModal={() => navigation.navigate("CalanderAttendanceTab")}
           />
         )}
       </View>
@@ -370,7 +370,7 @@ const styles = EStyleSheet.create({
   zetext1: {
     fontSize: '0.67rem',
     fontWeight: '700',
-    fontFamily: fontFamily.ceraBold,
+    // fontFamily: fontFamily.ceraBold,
     color: '#343434',
     fontStyle: 'normal',
   },
@@ -378,7 +378,7 @@ const styles = EStyleSheet.create({
     fontSize: hp(1.5),
     fontWeight: '600',
     marginTop: hp(1),
-    fontFamily: fontFamily.ceraBlack,
+    // fontFamily: fontFamily.ceraBlack,
   },
   textInputCustomStyle: {
     fontSize: hp('1.65'),
@@ -391,6 +391,6 @@ const styles = EStyleSheet.create({
     paddingLeft: hp(0.5),
     fontSize: hp(2),
     fontWeight: '700',
-    fontFamily: fontFamily.ceraBlack,
+    // fontFamily: fontFamily.ceraBlack,
   },
 });

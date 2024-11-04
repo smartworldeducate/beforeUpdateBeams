@@ -28,7 +28,7 @@ import {
   clearAllStateUpdateRating,
   UpdateRatingAction,
 } from '../features/RatingAndFeedbackSlice/UpdateRatingSlice';
-import Toast from 'react-native-simple-toast';
+
 import {
   clearAllStateSuggestionFeedback,
   SuggestionFeedbackAction,

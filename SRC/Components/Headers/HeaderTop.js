@@ -78,14 +78,14 @@ const HeaderTop = ({
               flex: 0.15,
               justifyContent: 'center',
               alignItems: 'center',
-              borderRadius: hp(5),
+              borderRadius: hp(50),
               borderColor: 'white',
               borderWidth: wp('0.25'),
               width: wp(13),
-              height: hp(7),
+              height: hp(6.5),
             }}>
             <Image
-              style={{width: wp(13), height: hp(6.5), borderRadius: hp(5)}}
+              style={{width: wp(13), height: hp(6.45), borderRadius: hp(50)}}
               source={{uri: userImg}}
               resizeMode="cover"
             />
@@ -295,19 +295,19 @@ const styles = EStyleSheet.create({
     color: '#fff',
     fontSize: fontSize.small,
     fontWeight: '100',
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
   },
   bootContText: {
     fontSize: '0.5rem',
     fontWeight: '900',
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
     paddingHorizontal: hp(3),
     color: '#979797',
   },
   bootContText2: {
     fontSize: '0.5rem',
     fontWeight: '500',
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
     paddingHorizontal: hp(2),
     color: '#979797',
     textTransform: 'uppercase',
@@ -315,7 +315,7 @@ const styles = EStyleSheet.create({
   bootContText1: {
     fontSize: '0.7rem',
     fontWeight: '700',
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
     fontStyle: 'normal',
     paddingHorizontal: hp(2),
     color: '#353535',
@@ -324,7 +324,7 @@ const styles = EStyleSheet.create({
     color: '#FFFFFF',
     fontSize: '0.77rem',
     fontWeight: '500',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontStyle: 'normal',
     lineHeight: hp('2.5'),
     letterSpacing: 0.15,
@@ -334,7 +334,7 @@ const styles = EStyleSheet.create({
     color: '#FFFFFF',
     fontSize: '0.56rem',
     fontWeight: '300',
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
     fontStyle: 'normal',
     paddingBottom: hp(0.2),
     letterSpacing: 1,
@@ -347,7 +347,7 @@ const styles = EStyleSheet.create({
     color: '#292D32',
     fontSize: '0.7rem',
     fontWeight: '300',
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
   },
   firstRow: {
     flexDirection: 'row',
@@ -412,7 +412,7 @@ const styles = EStyleSheet.create({
   placeholderStyle: {
     fontSize: '0.575rem',
     fontWeight: '300',
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
     fontStyle: 'normal',
   },
   overlyImage: {
@@ -424,7 +424,7 @@ const styles = EStyleSheet.create({
     color: '#FFFFFF',
     fontSize: '0.56rem',
     fontWeight: '300',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontStyle: 'normal',
     textAlign: 'center',
   },

@@ -58,7 +58,7 @@ const YearSelectionModal = ({
             <Text
               style={{
                 fontSize: hp('2.85'),
-                fontFamily: fontFamily.ceraMedium,
+                // fontFamily: fontFamily.ceraMedium,
                 color: 'black',
                 fontWeight: '500',
                 paddingVertical: hp(1),
@@ -84,13 +84,13 @@ const YearSelectionModal = ({
 const styles = EStyleSheet.create({
   text: {
     fontSize: '0.75rem',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     color: 'black',
     fontWeight: '500',
   },
   reporteeName: {
     fontSize: '0.6rem',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
     color: '#343434',
   },

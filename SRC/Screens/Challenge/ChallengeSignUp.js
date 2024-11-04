@@ -67,7 +67,7 @@ const ChallengeSignUp = props => {
   return (
     <>
       <MainHeader
-        text={'I20 - Impact 20M'}
+        text={'I20 - Impact 20'}
         iconName={'arrow-left'}
         onpressBtn={() => props.navigation.goBack()}
       />
@@ -108,7 +108,7 @@ const ChallengeSignUp = props => {
               style={{
                 fontSize: hp('1.95'),
                 color: '#FFFFFF',
-                fontFamily: fontFamily.ceraMedium,
+                // fontFamily: fontFamily.ceraMedium,
                 fontWeight: '500',
                 lineHeight: hp('2.5'),
                 letterSpacing: 0.35,

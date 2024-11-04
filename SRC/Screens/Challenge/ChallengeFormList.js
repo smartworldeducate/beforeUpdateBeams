@@ -117,7 +117,7 @@ const ChallengeFormList = props => {
                 color: '#09101D',
                 fontSize: hp('1.95'),
                 fontWeight: '700',
-                fontFamily: fontFamily.ceraBold,
+                // fontFamily: fontFamily.ceraBold,
               }}>
               {item?.training_title}
             </Text>
@@ -128,7 +128,7 @@ const ChallengeFormList = props => {
                 color: '#1C37A4',
                 fontSize: hp('1.5'),
                 fontWeight: '500',
-                fontFamily: fontFamily.ceraMedium,
+                // fontFamily: fontFamily.ceraMedium,
               }}>
               {item?.category_title}
             </Text>
@@ -140,7 +140,7 @@ const ChallengeFormList = props => {
                 color: '#363636',
                 fontSize: hp('1.6'),
                 fontWeight: '500',
-                fontFamily: fontFamily.ceraMedium,
+                // fontFamily: fontFamily.ceraMedium,
               }}>
               {moment(item?.training_date, 'DD-MMM-YY').format('DD MMM, YYYY')}
             </Text>
@@ -152,7 +152,7 @@ const ChallengeFormList = props => {
                 color: '#363636',
                 fontSize: hp('1.6'),
                 fontWeight: '500',
-                fontFamily: fontFamily.ceraMedium,
+                // fontFamily: fontFamily.ceraMedium,
               }}>
               {item?.school_name}
             </Text>
@@ -174,7 +174,7 @@ const ChallengeFormList = props => {
                     color: '#363636',
                     fontSize: hp('1.6'),
                     fontWeight: '500',
-                    fontFamily: fontFamily.ceraMedium,
+                    // fontFamily: fontFamily.ceraMedium,
                   }}>
                   {`${item?.city_name ? item?.city_name : ''}`}
                 </Text>
@@ -197,7 +197,7 @@ const ChallengeFormList = props => {
                     left: wp('2'),
                     fontSize: hp('1.75'),
                     fontWeight: '500',
-                    fontFamily: fontFamily.ceraLight,
+                    // fontFamily: fontFamily.ceraLight,
                     color: 'white',
                     zIndex: 1,
                     backgroundColor: 'grey',
@@ -280,7 +280,7 @@ const ChallengeFormList = props => {
   return (
     <>
       <MainHeader
-        text={'I20 - Impact 20M'}
+        text={'I20 - Impact 20'}
         iconName={'arrow-left'}
         onpressBtn={() => props.navigation.goBack()}
         rightIcon={'person-from-portal'}
@@ -330,7 +330,7 @@ const ChallengeFormList = props => {
                   style={{
                     fontSize: hp('3.25'),
                     color: '#FFFFFF',
-                    fontFamily: fontFamily.ceraMedium,
+                    // fontFamily: fontFamily.ceraMedium,
                     fontWeight: '500',
                   }}>
                   {inspireTrainingsHere?.userData?.training_hours
@@ -372,7 +372,7 @@ const ChallengeFormList = props => {
                   style={{
                     fontSize: hp('3.25'),
                     color: '#FFFFFF',
-                    fontFamily: fontFamily.ceraMedium,
+                    // fontFamily: fontFamily.ceraMedium,
                     fontWeight: '500',
                   }}>
                   {inspireTrainingsHere?.userData?.training_hours
@@ -414,7 +414,7 @@ const ChallengeFormList = props => {
                   style={{
                     fontSize: hp('3.25'),
                     color: '#FFFFFF',
-                    fontFamily: fontFamily.ceraMedium,
+                    // fontFamily: fontFamily.ceraMedium,
                     fontWeight: '500',
                   }}>
                   {inspireTrainingsHere?.userData?.training_hours
@@ -458,7 +458,7 @@ const ChallengeFormList = props => {
                   style={{
                     fontSize: hp('3.25'),
                     color: '#FFFFFF',
-                    fontFamily: fontFamily.ceraMedium,
+                    // fontFamily: fontFamily.ceraMedium,
                     fontWeight: '500',
                   }}>
                   {inspireTrainingsHere?.userData?.training_hours
@@ -506,19 +506,49 @@ const ChallengeFormList = props => {
               borderRadius: wp('50'),
               justifyContent: 'center',
               alignItems: 'center',
-              marginVertical: hp('2'),
+              marginBottom: hp('1'),
+              marginTop: hp('2'),
               marginHorizontal: wp('2'),
             }}>
             <Text
               style={{
                 fontSize: hp('1.95'),
                 color: '#FFFFFF',
-                fontFamily: fontFamily.ceraMedium,
+                // fontFamily: fontFamily.ceraMedium,
                 fontWeight: '500',
                 lineHeight: hp('2.5'),
                 letterSpacing: 0.35,
               }}>
               {'Find a Low-Cost School'}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() =>
+              Linking.openURL(
+                inspireTrainingsHere?.userData?.training_material_link,
+              )
+            }
+            style={{
+              height: hp('6'),
+              backgroundColor: '#1C37A4',
+              borderRadius: wp('50'),
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: hp('1'),
+              marginHorizontal: wp('2'),
+            }}>
+            <Text
+              style={{
+                fontSize: hp('1.95'),
+                color: '#FFFFFF',
+                // fontFamily: fontFamily.ceraMedium,
+                fontWeight: '500',
+                lineHeight: hp('2.5'),
+                letterSpacing: 0.35,
+              }}>
+              {'Select the Training Material'}
             </Text>
           </TouchableOpacity>
 
@@ -541,7 +571,7 @@ const ChallengeFormList = props => {
               <Text
                 style={{
                   fontSize: hp('1.85'),
-                  fontFamily: fontFamily.ceraMedium,
+                  // fontFamily: fontFamily.ceraMedium,
                   color: 'black',
                   fontWeight: '500',
                   fontStyle: 'italic',
@@ -552,7 +582,7 @@ const ChallengeFormList = props => {
               <Text
                 style={{
                   fontSize: hp('1.85'),
-                  fontFamily: fontFamily.ceraMedium,
+                  // fontFamily: fontFamily.ceraMedium,
                   color: 'black',
                   fontWeight: '500',
                   fontStyle: 'italic',
@@ -563,7 +593,7 @@ const ChallengeFormList = props => {
               <Text
                 style={{
                   fontSize: hp('1.85'),
-                  fontFamily: fontFamily.ceraMedium,
+                  // fontFamily: fontFamily.ceraMedium,
                   color: 'black',
                   fontWeight: '500',
                   fontStyle: 'italic',
@@ -611,8 +641,8 @@ const ChallengeFormList = props => {
         <Text
           style={{
             fontSize: hp('5'),
-            fontWeight: '500',
-            fontFamily: fontFamily.ceraLight,
+            fontWeight: '300',
+            // fontFamily: fontFamily.ceraLight,
             color: 'white',
           }}>
           +
@@ -635,7 +665,7 @@ const styles = EStyleSheet.create({
   boxText: {
     fontSize: hp('1.75'),
     color: '#66656A',
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
     fontWeight: '300',
     lineHeight: hp('2'),
     letterSpacing: 0.35,

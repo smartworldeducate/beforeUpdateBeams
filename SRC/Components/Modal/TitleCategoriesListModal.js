@@ -52,7 +52,7 @@ const TitleCategoriesListModal = ({
               ellipsizeMode={'tail'}
               style={{
                 fontSize: hp('2.85'),
-                fontFamily: fontFamily.ceraMedium,
+                // fontFamily: fontFamily.ceraMedium,
                 color: 'black',
                 fontWeight: '500',
                 paddingVertical: hp(1),

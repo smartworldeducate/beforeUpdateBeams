@@ -47,7 +47,7 @@ const TextInputCustom = ({
       }}>
       <View
         style={{
-          flex: 0.14,
+          flex: 0.16,
           justifyContent: 'center',
           alignItems: 'center',
           paddingHorizontal: wp('1'),
@@ -57,7 +57,7 @@ const TextInputCustom = ({
         <Icon type="light" name={iconName} color={iconColor} size={25} />
       </View>
 
-      <View style={{flex: 0.72, justifyContent: 'center'}}>
+      <View style={{flex: 0.7, justifyContent: 'center'}}>
         <TextInput
           style={style}
           onChangeText={onChangeText}

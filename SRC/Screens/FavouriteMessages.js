@@ -136,7 +136,8 @@ const FavouriteMessages = props => {
               <Text
                 style={{
                   color: 'black',
-                  fontFamily: fontFamily.ceraMedium,
+                  // fontFamily: fontFamily.ceraMedium,
+                  fontWeight:"500",
                   fontSize: hp('2.75'),
                   textAlign: 'center',
                 }}>
@@ -419,7 +420,7 @@ const styles = EStyleSheet.create({
     marginTop: hp(0),
     fontSize: '0.9rem',
     fontWeight: '500',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontStyle: 'normal',
     letterSpacing: 0.35,
   },
@@ -428,7 +429,7 @@ const styles = EStyleSheet.create({
     color: 'silver',
     fontSize: '0.65rem',
     fontWeight: '300',
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
   },
 
   textInputCustomStyle: {
@@ -437,7 +438,7 @@ const styles = EStyleSheet.create({
     color: '#292D32',
     fontSize: '0.7rem',
     fontWeight: '300',
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
     paddingLeft: wp('2'),
   },
   searchicon: {
@@ -449,20 +450,20 @@ const styles = EStyleSheet.create({
 
   messageCardEmpName: {
     color: '#201F24',
-    fontFamily: fontFamily.ceraBold,
+    // fontFamily: fontFamily.ceraBold,
     fontWeight: '700',
     fontSize: '0.66rem',
   },
   msgSubject: {
     color: '#201F24',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontWeight: '300',
     fontSize: '0.57rem',
     letterSpacing: 0.15,
   },
   messageCardDate: {
     color: '#201F24',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
     fontSize: '0.52rem',
   },

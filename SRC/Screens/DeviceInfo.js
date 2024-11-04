@@ -242,7 +242,7 @@ const DeviceInfo = props => {
                 </View>
               </View>
 
-              <View style={{margin: hp('3')}}>
+              {/* <View style={{margin: hp('3')}}>
                 <TouchableOpacity
                   activeOpacity={0.7}
                   onPress={onPressGetInfoViaEmail}
@@ -257,7 +257,7 @@ const DeviceInfo = props => {
                     Submit
                   </Text>
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </>
           )}
         </View>
@@ -279,12 +279,14 @@ const styles = EStyleSheet.create({
   },
   textStyle: {
     fontSize: hp('1.85'),
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
+    fontWeight: '500',
     color: '#1C37A4',
   },
   btnText: {
     color: 'white',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
+    fontWeight: '500',
     fontSize: '0.65rem',
     letterSpacing: 0.6,
   },

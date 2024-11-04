@@ -415,7 +415,7 @@ const styles = EStyleSheet.create({
     color: 'black',
     textAlign: 'center',
     marginBottom: hp('2'),
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
   },
   permissionButton: {
     height: hp('5.5'),
@@ -431,7 +431,8 @@ const styles = EStyleSheet.create({
   permissionButtonText: {
     fontSize: hp('1.75'),
     color: 'white',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
+    fontWeight:'500',
     paddingHorizontal: wp('3'),
   },
   permissionDeniedText: {
@@ -439,7 +440,8 @@ const styles = EStyleSheet.create({
     color: 'red',
     textAlign: 'center',
     marginTop: hp('2'),
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
+    fontWeight:'500',
     marginHorizontal: wp('5'),
   },
 });

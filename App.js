@@ -7,10 +7,7 @@ const rem = width > 767 ? 16 : 20;
 import {store} from './SRC/app/store';
 import {Provider} from 'react-redux';
 import {configureFontAwesomePro} from 'react-native-fontawesome-pro';
-import {
-  notificationListener,
-  requestNotificationPermission,
-} from './SRC/NotificationHandler/NotificationHandler';
+
 import InterConnectionDesign from './SRC/Components/InternetCheck/InterConnectionDesign';
 import InternetCheck from './SRC/Components/InternetCheck/InternetCheck';
 
@@ -23,10 +20,6 @@ EStyleSheet.build({
 const App = () => {
   const [isConnected, setIsConnected] = useState(null);
 
-  useEffect(() => {
-    requestNotificationPermission();
-    notificationListener();
-  }, []);
   return (
     <>
       <Provider store={store}>

@@ -37,7 +37,7 @@ const MainHeader = ({
         <View
           style={{
             flexDirection: 'row',
-            marginTop: hp(4),
+            marginTop: hp('2.5'),
             height: hp('5'),
             marginHorizontal: wp('2'),
           }}>
@@ -107,7 +107,7 @@ const styles = EStyleSheet.create({
     marginTop: hp(0),
     fontSize: '0.8rem',
     fontWeight: '500',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontStyle: 'normal',
     letterSpacing: 0.35,
   },

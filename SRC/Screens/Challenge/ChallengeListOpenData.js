@@ -27,7 +27,7 @@ const ChallengeListOpen = ({route}) => {
   return (
     <>
       <MainHeader
-        text={'Impact 20M'}
+        text={'I20 - Impact 20'}
         iconName={'arrow-left'}
         onpressBtn={() => navigation.goBack()}
       />
@@ -90,7 +90,7 @@ const ChallengeListOpen = ({route}) => {
                 color: '#363636',
                 fontSize: hp('1.85'),
                 fontWeight: '500',
-                fontFamily: fontFamily.ceraMedium,
+                // fontFamily: fontFamily.ceraMedium,
               }}>
               {route?.params?.sendingItemParam?.category_title}
             </Text>
@@ -100,7 +100,7 @@ const ChallengeListOpen = ({route}) => {
                 color: '#363636',
                 fontSize: hp('2.5'),
                 fontWeight: '700',
-                fontFamily: fontFamily.ceraBold,
+                // fontFamily: fontFamily.ceraBold,
                 paddingVertical: hp('1'),
               }}>
               {route?.params?.sendingItemParam?.training_title}
@@ -134,7 +134,7 @@ const ChallengeListOpen = ({route}) => {
                     color: '#09101D',
                     fontSize: hp('2'),
                     fontWeight: '700',
-                    fontFamily: fontFamily.ceraBold,
+                    // fontFamily: fontFamily.ceraBold,
                   }}>
                   {moment(
                     route?.params?.sendingItemParam?.training_date,
@@ -146,7 +146,7 @@ const ChallengeListOpen = ({route}) => {
                     color: '#363636',
                     fontSize: hp('1.75'),
                     fontWeight: '500',
-                    fontFamily: fontFamily.ceraMedium,
+                    // fontFamily: fontFamily.ceraMedium,
                   }}>
                   {route?.params?.sendingItemParam?.training_duration == 1
                     ? `${route?.params?.sendingItemParam?.training_duration} hour`
@@ -183,7 +183,7 @@ const ChallengeListOpen = ({route}) => {
                     color: '#09101D',
                     fontSize: hp('2'),
                     fontWeight: '700',
-                    fontFamily: fontFamily.ceraBold,
+                    // fontFamily: fontFamily.ceraBold,
                   }}>
                   {route?.params?.sendingItemParam?.school_name}
                 </Text>
@@ -192,7 +192,7 @@ const ChallengeListOpen = ({route}) => {
                     color: '#363636',
                     fontSize: hp('1.75'),
                     fontWeight: '500',
-                    fontFamily: fontFamily.ceraMedium,
+                    // fontFamily: fontFamily.ceraMedium,
                   }}>
                   {route?.params?.sendingItemParam?.city_name}
                 </Text>
@@ -227,7 +227,7 @@ const ChallengeListOpen = ({route}) => {
                 <Text
                   style={{
                     fontSize: hp('2'),
-                    fontFamily: fontFamily.ceraMedium,
+                    // fontFamily: fontFamily.ceraMedium,
                     fontWeight: '500',
                     color: '#FFFFFF',
                   }}>
@@ -243,7 +243,7 @@ const ChallengeListOpen = ({route}) => {
                 <Text
                   style={{
                     fontSize: hp('2.75'),
-                    fontFamily: fontFamily.ceraBold,
+                    // fontFamily: fontFamily.ceraBold,
                     fontWeight: '700',
                     color: '#FFFFFF',
                   }}>
@@ -275,7 +275,7 @@ const ChallengeListOpen = ({route}) => {
                 <Text
                   style={{
                     fontSize: hp('2'),
-                    fontFamily: fontFamily.ceraMedium,
+                    // fontFamily: fontFamily.ceraMedium,
                     fontWeight: '500',
                     color: '#FFFFFF',
                   }}>
@@ -291,7 +291,7 @@ const ChallengeListOpen = ({route}) => {
                 <Text
                   style={{
                     fontSize: hp('2.75'),
-                    fontFamily: fontFamily.ceraBold,
+                    // fontFamily: fontFamily.ceraBold,
                     fontWeight: '700',
                     color: '#FFFFFF',
                   }}>
@@ -326,7 +326,7 @@ const styles = EStyleSheet.create({
     marginTop: hp(0),
     fontSize: '0.8rem',
     fontWeight: '500',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     fontStyle: 'normal',
     letterSpacing: 0.35,
   },

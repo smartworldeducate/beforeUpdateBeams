@@ -32,16 +32,16 @@ const I50TextInputModal = ({
         flexDirection: 'row',
         marginVertical: hp('1'),
         height: hp('7'),
-        width: wp('85'),
+        // width: wp('85'),
         backgroundColor: 'white',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: wp(50),
         shadowColor: '#000',
-        shadowOffset: {width: 0, height: 12},
+        shadowOffset: {width: 0, height: 5},
         shadowOpacity: 0.58,
-        shadowRadius: 16,
-        elevation: 7,
+        shadowRadius: 10,
+        elevation: 5,
       }}>
       <View
         style={{
@@ -54,7 +54,8 @@ const I50TextInputModal = ({
           ellipsizeMode={'tail'}
           style={{
             fontSize: hp('1.85'),
-            fontFamily: fontFamily.ceraMedium,
+            // fontFamily: fontFamily.ceraMedium,
+            fontWeight: '500',
             color: '#363636',
           }}>
           {textValue}

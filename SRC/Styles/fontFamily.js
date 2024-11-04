@@ -23,19 +23,19 @@ const fontFamily = {
 
   //sans pro start
 
-  ceraBlack:
-    Platform.OS === 'android' ? 'SourceSansPro-Black' : 'SourceSansPro-Black',
+  // ceraBlack:
+  //   Platform.OS === 'android' ? 'Cera-Pro-Black' : 'Cera-Pro-Black',
 
-  ceraBold:
-    Platform.OS === 'android' ? 'SourceSansPro-Bold' : 'SourceSansPro-Bold',
+  // ceraBold:
+  //   Platform.OS === 'android' ? 'Cera-Pro-Bold' : 'Cera-Pro-Bold',
 
-  ceraLight:
-    Platform.OS === 'android' ? 'SourceSansPro-Light' : 'SourceSansPro-Light',
+  // ceraLight:
+  //   Platform.OS === 'android' ? 'CeraProLight' : 'CeraProLight',
 
-  ceraMedium:
-    Platform.OS === 'android'
-      ? 'SourceSansPro-Semibold'
-      : 'SourceSansPro-Semibold',
+  // ceraMedium:
+  //   Platform.OS === 'android'
+  //     ? 'Cera-Pro-Medium'
+  //     : 'Cera-Pro-Medium',
 
   //sans pro end
 

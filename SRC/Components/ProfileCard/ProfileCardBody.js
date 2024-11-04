@@ -43,13 +43,13 @@ const ProfileCardBody = ({leftText, rightText}) => {
 const styles = EStyleSheet.create({
   leftText: {
     fontSize: '0.57rem',
-    fontFamily: fontFamily.ceraBold,
+    // fontFamily: fontFamily.ceraBold,
     color: '#363636',
     fontWeight: '700',
   },
   rightText: {
     fontSize: '0.5rem',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     color: '#353535',
     fontWeight: '500',
   },

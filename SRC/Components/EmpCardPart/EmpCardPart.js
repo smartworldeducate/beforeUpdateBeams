@@ -102,13 +102,13 @@ const EmpCardPart = ({
 const styles = EStyleSheet.create({
   firstText: {
     fontSize: '0.6rem',
-    fontFamily: fontFamily.ceraBold,
+    // fontFamily: fontFamily.ceraBold,
     color: '#353535',
     fontWeight: '700',
   },
   secondText: {
     fontSize: '0.45rem',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
     color: '#979797',
     fontWeight: '500',
   },

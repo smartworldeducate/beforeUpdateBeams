@@ -61,11 +61,24 @@ const BottomTab = ({state, descriptors, navigation, props}) => {
                         paddingTop: hp('0.5'),
                       }}>
                       {isFocused ? (
-                        <Menu
+                        // <Menu
+                        //   name="fat fa-home"
+                        //   size={hp(3)}
+                        //   color={'#1C37A4'}
+                        //   style={{}}
+                        // />
+
+                        // <FontAwesomeIcon
+                        //   icon="fat fa-home"
+                        //   size={hp(3)}
+                        //   style={{color: '#1C37A4'}}
+                        // />
+
+                        <Ficon
+                          type="light"
                           name="home"
                           size={hp(3)}
                           color={'#1C37A4'}
-                          style={{}}
                         />
                       ) : (
                         <FontAwesomeIcon
@@ -275,14 +288,16 @@ const styles = EStyleSheet.create({
   textStyle: {
     alignItems: 'center',
     fontSize: '0.53rem',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
+    fontWeight: '300',
     color: 'grey',
     letterSpacing: 0.5,
   },
   centralText: {
     alignItems: 'center',
     fontSize: '0.53rem',
-    fontFamily: fontFamily.ceraMedium,
+    // fontFamily: fontFamily.ceraMedium,
+    fontWeight: '300',
     color: 'grey',
     letterSpacing: wp('0.1'),
   },

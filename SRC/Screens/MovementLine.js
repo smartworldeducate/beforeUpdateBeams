@@ -42,7 +42,7 @@ const MovementLine = props => {
             <Image
               style={{height: hp(2.5), width: wp(5)}}
               source={{uri: 'timelinecircle'}}
-              resizeMode="cover"
+              resizeMode="contain"
             />
           </View>
           <View
@@ -134,7 +134,9 @@ const MovementLine = props => {
               ellipsizeMode={'tail'}
               style={[
                 styles.textDesc,
-                {fontSize: hp('1.5'), fontFamily: fontFamily.ceraBold},
+                {fontSize: hp('1.5'), 
+                  // fontFamily: fontFamily.ceraBold
+                },
               ]}>
               {item?.DESIGNATION}
             </Text>
@@ -143,7 +145,9 @@ const MovementLine = props => {
               ellipsizeMode={'tail'}
               style={[
                 styles.textDesc,
-                {fontSize: hp('1.4'), fontFamily: fontFamily.ceraMedium},
+                {fontSize: hp('1.4'), 
+                  // fontFamily: fontFamily.ceraMedium
+                },
               ]}>
               {item?.BR_NAME}
             </Text>
@@ -219,14 +223,14 @@ export default MovementLine;
 const styles = EStyleSheet.create({
   cardText: {
     color: '#353535',
-    fontFamily: fontFamily.ceraBold,
+    // fontFamily: fontFamily.ceraBold,
     fontSize: '0.57rem',
     fontWeight: '700',
   },
 
   textDesc: {
     color: '#353535',
-    fontFamily: fontFamily.ceraLight,
+    // fontFamily: fontFamily.ceraLight,
     fontWeight: '500',
     fontSize: '0.58rem',
     // textAlign: 'justify',
