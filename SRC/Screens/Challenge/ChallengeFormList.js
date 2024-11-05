@@ -280,7 +280,7 @@ const ChallengeFormList = props => {
   return (
     <>
       <MainHeader
-        text={'I20 - Impact 20M'}
+        text={'I20 - Impact 20'}
         iconName={'arrow-left'}
         onpressBtn={() => props.navigation.goBack()}
         rightIcon={'person-from-portal'}
@@ -506,7 +506,8 @@ const ChallengeFormList = props => {
               borderRadius: wp('50'),
               justifyContent: 'center',
               alignItems: 'center',
-              marginVertical: hp('2'),
+              marginBottom: hp('1'),
+              marginTop: hp('2'),
               marginHorizontal: wp('2'),
             }}>
             <Text
@@ -519,6 +520,35 @@ const ChallengeFormList = props => {
                 letterSpacing: 0.35,
               }}>
               {'Find a Low-Cost School'}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() =>
+              Linking.openURL(
+                inspireTrainingsHere?.userData?.training_material_link,
+              )
+            }
+            style={{
+              height: hp('6'),
+              backgroundColor: '#1C37A4',
+              borderRadius: wp('50'),
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: hp('1'),
+              marginHorizontal: wp('2'),
+            }}>
+            <Text
+              style={{
+                fontSize: hp('1.95'),
+                color: '#FFFFFF',
+                fontFamily: fontFamily.ceraMedium,
+                fontWeight: '500',
+                lineHeight: hp('2.5'),
+                letterSpacing: 0.35,
+              }}>
+              {'Select the Training Material'}
             </Text>
           </TouchableOpacity>
 
@@ -537,36 +567,37 @@ const ChallengeFormList = props => {
                 flex: 1,
                 alignItems: 'center',
                 marginTop: hp('4'),
+                marginHorizontal: wp('2'),
               }}>
               <Text
                 style={{
-                  fontSize: hp('1.85'),
+                  fontSize: hp('2.21'),
                   fontFamily: fontFamily.ceraMedium,
                   color: 'black',
                   fontWeight: '500',
-                  fontStyle: 'italic',
+                  // fontStyle: 'italic',
                   textAlign: 'center',
                 }}>
                 Let's get started!
               </Text>
               <Text
                 style={{
-                  fontSize: hp('1.85'),
+                  fontSize: hp('2.21'),
                   fontFamily: fontFamily.ceraMedium,
                   color: 'black',
                   fontWeight: '500',
-                  fontStyle: 'italic',
+                  // fontStyle: 'italic',
                   textAlign: 'center',
                 }}>
                 Your journey to I20 begins here.
               </Text>
               <Text
                 style={{
-                  fontSize: hp('1.85'),
+                  fontSize: hp('2.21'),
                   fontFamily: fontFamily.ceraMedium,
                   color: 'black',
                   fontWeight: '500',
-                  fontStyle: 'italic',
+                  // fontStyle: 'italic',
                   textAlign: 'center',
                   letterSpacing: -0.5,
                 }}>

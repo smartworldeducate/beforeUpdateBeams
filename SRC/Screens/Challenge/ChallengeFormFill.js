@@ -122,13 +122,13 @@ const ChallengeFormFill = ({route}) => {
   ]);
 
   const [traingTitle, setTrainingTitle] = useState('');
-  const [traingTitleId, setTrainingTitleId] = useState(null);
+  const [traingTitleId, setTrainingTitleId] = useState('');
 
   const [pdCategories, setPDCateories] = useState('');
-  const [traingCategoryId, setTrainingCategoryId] = useState(null);
+  const [traingCategoryId, setTrainingCategoryId] = useState('');
 
   const [trainingDate, setTrainingDate] = useState(null);
-  const [forTrainingDate, setForTrainingDate] = useState(null);
+  const [forTrainingDate, setForTrainingDate] = useState('');
 
   const [schoolName, setSchoolName] = useState('');
   const [traingSchoolId, setTrainingSchoolId] = useState(null);
@@ -922,7 +922,7 @@ const ChallengeFormFill = ({route}) => {
               paddingLeft: wp('5'),
               marginVertical: hp('0.5'),
 
-              fontSize: hp('2'),
+              fontSize: hp('1.85'),
               fontFamily: fontFamily.ceraMedium,
               color: '#363636',
             }}

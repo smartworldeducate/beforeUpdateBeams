@@ -27,7 +27,7 @@ const ChallengeListOpen = ({route}) => {
   return (
     <>
       <MainHeader
-        text={'Impact 20M'}
+        text={'I20 - Impact 20'}
         iconName={'arrow-left'}
         onpressBtn={() => navigation.goBack()}
       />

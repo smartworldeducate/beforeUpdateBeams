@@ -81,11 +81,11 @@ const HeaderTop = ({
               borderRadius: hp(5),
               borderColor: 'white',
               borderWidth: wp('0.25'),
-              width: wp(13),
+              width: wp(14.25),
               height: hp(7),
             }}>
             <Image
-              style={{width: wp(13), height: hp(6.5), borderRadius: hp(5)}}
+              style={{width: wp(13.75), height: hp(6.5), borderRadius: hp(5)}}
               source={{uri: userImg}}
               resizeMode="cover"
             />

@@ -74,7 +74,7 @@ const Profile = props => {
               source={{uri: profileHere?.userData?.emp_result?.EMP_PHOTO}}
               style={{
                 height: hp('12.5'),
-                width: wp('25'),
+                width: wp('25.75'),
                 borderRadius: wp('50'),
                 borderWidth: wp('0.25'),
                 borderColor: '#cfdbfa',
@@ -232,11 +232,17 @@ const Profile = props => {
             empBasicSalary={Number(
               profileHere?.userData?.profile_result?.BASIC_SAL,
             ).toLocaleString()}
-            empGrossSalary={Number(
-              profileHere?.userData?.profile_result?.GROSS_SAL,
+            empHouseRent={Number(
+              profileHere?.userData?.profile_result?.HOUSE_RENT,
+            ).toLocaleString()}
+            empUtilities={Number(
+              profileHere?.userData?.profile_result?.UTILITIES,
             ).toLocaleString()}
             empAllowance={Number(
               profileHere?.userData?.profile_result?.ALLOWANCES,
+            ).toLocaleString()}
+            empGrossSalary={Number(
+              profileHere?.userData?.profile_result?.GROSS_SAL,
             ).toLocaleString()}
             // empTakeHomeSalary={Number(
             //   profileHere?.userData?.profile_result?.TAKE_HOME,
@@ -247,12 +253,13 @@ const Profile = props => {
             // empAccounTitle={profileHere?.userData?.profile_result?.AC_TITLE}
             // empEOBI={profileHere?.userData?.profile_result?.EOBI_NUMBER}
 
-            empHouseRent={Number(
-              profileHere?.userData?.profile_result?.HOUSE_RENT,
-            ).toLocaleString()}
-            empUtilities={Number(
-              profileHere?.userData?.profile_result?.UTILITIES,
-            ).toLocaleString()}
+            // empHouseRent={Number(
+            //   profileHere?.userData?.profile_result?.HOUSE_RENT,
+            // ).toLocaleString()}
+            // empUtilities={Number(
+            //   profileHere?.userData?.profile_result?.UTILITIES,
+            // ).toLocaleString()}
+
             empMobilePrimary={profileHere?.userData?.profile_result?.MOB_PHONE}
             empMobileSecondary={profileHere?.userData?.profile_result?.PHONE_NO}
             empEmail={profileHere?.userData?.profile_result?.E_MAIL}

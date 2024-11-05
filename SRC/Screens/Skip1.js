@@ -85,13 +85,12 @@ const Skip1 = () => {
             resizeMode={'cover'}>
             <View
               style={{
-                width: wp(100),
                 flexDirection: 'row',
                 marginTop: hp(5),
               }}>
-              <View style={{width: wp(78)}}></View>
+              <View style={{flex: 0.65}}></View>
               <TouchableOpacity
-                style={{flex: 20}}
+                style={{flex: 0.35}}
                 activeOpacity={0.4}
                 onPress={onPressLogin}>
                 <View
@@ -103,19 +102,19 @@ const Skip1 = () => {
                   }}>
                   <View
                     style={{
-                      flex: 0.5,
+                      flex: 0.65,
                       alignItems: 'flex-end',
                     }}>
                     <Text
                       style={{
-                        fontSize: hp(2),
+                        fontSize: 13,
                         color: 'black',
                         justifyContent: 'center',
                       }}>
-                      SKIP
+                      {`SKIP `}
                     </Text>
                   </View>
-                  <View style={{flex: 0.5}}>
+                  <View style={{flex: 0.35}}>
                     <Ficon
                       type="light"
                       name="angles-right"
@@ -174,13 +173,12 @@ const Skip1 = () => {
             resizeMode={'cover'}>
             <View
               style={{
-                width: wp(100),
                 flexDirection: 'row',
                 marginTop: hp(5),
               }}>
-              <View style={{width: wp(78)}}></View>
+              <View style={{flex: 0.65}}></View>
               <TouchableOpacity
-                style={{flex: 20}}
+                style={{flex: 0.35}}
                 activeOpacity={0.4}
                 onPress={onPressLogin}>
                 <View
@@ -190,17 +188,22 @@ const Skip1 = () => {
                     marginTop: hp('2'),
                     marginRight: wp('2'),
                   }}>
-                  <View style={{flex: 0.5, alignItems: 'flex-end'}}>
+                  <View
+                    style={{
+                      flex: 0.65,
+                      justifyContent: 'center',
+                      alignItems: 'flex-end',
+                    }}>
                     <Text
                       style={{
-                        fontSize: hp(2),
+                        fontSize: 13,
                         color: 'black',
                         justifyContent: 'center',
                       }}>
-                      SKIP
+                      {`SKIP `}
                     </Text>
                   </View>
-                  <View style={{flex: 0.5}}>
+                  <View style={{flex: 0.35}}>
                     <Ficon
                       type="light"
                       name="angles-right"
@@ -261,13 +264,13 @@ const Skip1 = () => {
             resizeMode={'cover'}>
             <View
               style={{
-                width: wp(100),
+                // width: wp(100),
                 flexDirection: 'row',
                 marginTop: hp(5),
               }}>
-              <View style={{width: wp(78)}}></View>
+              <View style={{flex: 0.65}}></View>
               <TouchableOpacity
-                style={{flex: 20}}
+                style={{flex: 0.35}}
                 activeOpacity={0.4}
                 onPress={onPressLogin}>
                 <View
@@ -277,17 +280,21 @@ const Skip1 = () => {
                     marginTop: hp('2'),
                     marginRight: wp('2'),
                   }}>
-                  <View style={{flex: 0.5, alignItems: 'flex-end'}}>
+                  <View
+                    style={{
+                      flex: 0.65,
+                      alignItems: 'flex-end',
+                    }}>
                     <Text
                       style={{
-                        fontSize: hp(2),
+                        fontSize: 13,
                         color: 'black',
                         justifyContent: 'center',
                       }}>
-                      SKIP
+                      {`SKIP `}
                     </Text>
                   </View>
-                  <View style={{flex: 0.5}}>
+                  <View style={{flex: 0.35}}>
                     <Ficon
                       type="light"
                       name="angles-right"
@@ -306,7 +313,9 @@ const Skip1 = () => {
                   width: wp(100),
                   marginBottom: hp(5),
                 }}>
-                <Text style={styles.welcomeTextSkip}>Discover What's New!</Text>
+                <Text style={styles.welcomeTextSkip}>
+                  Discover <Text style={{color: '#061D7A'}}>What's New!</Text>
+                </Text>
               </View>
               <View
                 style={{

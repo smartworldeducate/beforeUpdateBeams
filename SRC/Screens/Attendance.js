@@ -34,6 +34,8 @@ const Attendance = props => {
     state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
   );
 
+  console.log('attend>>>>', attendanceCalanderHere?.userData?.attendance);
+
   const leaveHistoryHere = useSelector(state => state.salaryYearsStore);
 
   const totalYears = leaveHistoryHere?.userData?.total_years;
@@ -809,18 +811,22 @@ const Attendance = props => {
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           ref={yourRef}
-          onContentSizeChange={() =>
-            yourRef.current.scrollToIndex({
-              animated: true,
-              index: selectedMonth,
-            })
-          }
-          onLayout={() =>
-            yourRef.current.scrollToIndex({
-              animated: true,
-              index: selectedMonth,
-            })
-          }
+          onContentSizeChange={() => yourRef.current.scrollToEnd()}
+          onLayout={() => yourRef.current.scrollToEnd()}
+
+          // ref={yourRef}
+          // onContentSizeChange={() =>
+          //   yourRef.current.scrollToIndex({
+          //     animated: true,
+          //     index: selectedMonth,
+          //   })
+          // }
+          // onLayout={() =>
+          //   yourRef.current.scrollToIndex({
+          //     animated: true,
+          //     index: selectedMonth,
+          //   })
+          // }
         />
       </View>
 

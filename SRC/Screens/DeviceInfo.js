@@ -242,7 +242,7 @@ const DeviceInfo = props => {
                 </View>
               </View>
 
-              <View style={{margin: hp('3')}}>
+              {/* <View style={{margin: hp('3')}}>
                 <TouchableOpacity
                   activeOpacity={0.7}
                   onPress={onPressGetInfoViaEmail}
@@ -257,7 +257,7 @@ const DeviceInfo = props => {
                     Submit
                   </Text>
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </>
           )}
         </View>

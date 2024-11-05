@@ -221,7 +221,7 @@ const HomeScreen = props => {
         colors={['#FFFFFF', '#d9f3fa']}
         locations={[0, 1]}
         style={{
-          height: hp('16.5'),
+          // height: hp('16.5'),
           width: wp('70'),
           marginRight: wp('3'),
           marginLeft: wp('2'),
@@ -281,7 +281,7 @@ const HomeScreen = props => {
 
           <View
             style={{
-              height: hp('10.5'),
+              // height: hp('10.5'),
               marginTop: hp('-1'),
             }}>
             <Text
@@ -302,7 +302,7 @@ const HomeScreen = props => {
 
           <View
             style={{
-              height: hp('3'),
+              // height: hp('3'),
               justifyContent: 'flex-start',
             }}>
             <Text
@@ -317,6 +317,7 @@ const HomeScreen = props => {
                 lineHeight: hp('2.5'),
                 paddingHorizontal: wp('1'),
                 paddingTop: hp('0.25'),
+                marginBottom: hp('1'),
               }}>
               <Text style={styles.messageCardDate}>
                 <Text
@@ -590,7 +591,7 @@ const HomeScreen = props => {
                   ? 0
                   : item?.BALANCE}
               </Text>
-              <Text style={styles.titleText}>Annual Leavess</Text>
+              <Text style={styles.titleText}>Annual Leaves</Text>
             </View>
           </View>
         )}
@@ -796,8 +797,8 @@ const HomeScreen = props => {
                     justifyContent: 'space-between',
                     height: hp('21'),
                     alignItems: 'center',
-                    marginTop: hp('0'),
                     marginBottom: hp('0.25'),
+                    marginTop: hp('-0.5'),
                   },
                 ]}>
                 <LinearGradient
@@ -826,12 +827,15 @@ const HomeScreen = props => {
                     }}>
                     <View style={{justifyContent: 'center'}}>
                       <Text
+                        numberOfLines={1}
+                        ellipsizeMode={'tail'}
                         style={[
                           styles.serviceSection,
                           {
                             textAlign: 'left',
-                            fontSize: hp('2.5'),
-                            letterSpacing: -1.5,
+                            // fontSize: hp('2.25'),
+                            fontSize: 16,
+                            letterSpacing: -0.5,
                             fontFamily: fontFamily.ceraBold,
                           },
                         ]}>
@@ -842,21 +846,22 @@ const HomeScreen = props => {
                         }
                         <Text
                           style={{
-                            fontSize: hp('2.15'),
-                            letterSpacing: -0.5,
+                            // fontSize: hp('1.85'),
+                            fontSize: 12,
+                            letterSpacing: -0.65,
                             fontFamily: fontFamily.ceraMedium,
-                            color: '#999696',
+                            color: 'black',
                           }}>
                           {`  years`}
                         </Text>
                       </Text>
                       <Text
                         style={{
-                          fontSize: hp('1.65'),
+                          // fontSize: hp('1.5'),
+                          fontSize: 10,
                           color: '#999696',
                           fontFamily: fontFamily.ceraMedium,
                           fontWeight: '300',
-                          letterSpacing: 0.05,
                         }}>
                         {`Service`}
                       </Text>
@@ -871,7 +876,7 @@ const HomeScreen = props => {
                     }}>
                     <FontAwesomeIcon
                       icon="fat fa-calendar-range"
-                      size={hp('5')}
+                      size={hp('4.65')}
                       style={{color: '#999696'}}
                     />
                   </View>
@@ -909,7 +914,9 @@ const HomeScreen = props => {
                           styles.serviceSection,
                           {
                             textAlign: 'left',
-                            fontSize: hp('2.35'),
+                            letterSpacing: -0.5,
+                            // fontSize: hp('2.25'),
+                            fontSize: 14,
 
                             fontFamily: fontFamily.ceraBold,
                           },
@@ -921,11 +928,11 @@ const HomeScreen = props => {
                       </Text>
                       <Text
                         style={{
-                          fontSize: hp('1.65'),
+                          // fontSize: hp('1.5'),
+                          fontSize: 10,
                           color: '#999696',
                           fontFamily: fontFamily.ceraMedium,
                           fontWeight: '300',
-                          letterSpacing: 0.05,
                         }}>
                         {`Status`}
                       </Text>
@@ -940,7 +947,7 @@ const HomeScreen = props => {
                     }}>
                     <FontAwesomeIcon
                       icon="fat fa-badge-check"
-                      size={hp('5')}
+                      size={hp('4.65')}
                       style={{color: '#999696'}}
                     />
                   </View>
@@ -972,12 +979,15 @@ const HomeScreen = props => {
                     }}>
                     <View style={{justifyContent: 'center'}}>
                       <Text
+                        numberOfLines={1}
+                        ellipsizeMode={'tail'}
                         style={[
                           styles.serviceSection,
                           {
                             textAlign: 'left',
-                            fontSize: hp('2.35'),
-                            letterSpacing: -0.5,
+                            // fontSize: hp('2.15'),
+                            fontSize: 15,
+                            letterSpacing: -0.65,
                             fontFamily: fontFamily.ceraBold,
                           },
                         ]}>
@@ -989,11 +999,11 @@ const HomeScreen = props => {
                       </Text>
                       <Text
                         style={{
-                          fontSize: hp('1.65'),
+                          // fontSize: hp('1.5'),
+                          fontSize: 10,
                           color: '#999696',
                           fontFamily: fontFamily.ceraMedium,
                           fontWeight: '300',
-                          letterSpacing: 0.05,
                         }}>
                         {`Attendance`}
                       </Text>
@@ -1014,7 +1024,7 @@ const HomeScreen = props => {
                           ? 'nine'
                           : firstValueInWords
                       }`}
-                      size={hp('5')}
+                      size={hp('4.65')}
                       style={{color: '#999696'}}
                     />
                   </View>
@@ -1083,7 +1093,8 @@ const HomeScreen = props => {
                   onPress={() => navigation.navigate('ChallengeSignUp')}
                   style={{
                     marginHorizontal: wp('5'),
-                    marginVertical: hp('1'),
+                    marginTop: hp('-0.5'),
+                    marginBottom: hp('1'),
                     borderRadius: wp('5'),
 
                     shadowColor: 'rgba(0,0,0,0.5)',

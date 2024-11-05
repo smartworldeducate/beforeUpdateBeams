@@ -271,7 +271,7 @@ const Login = props => {
                 <TextInputCustom
                   value={employeeId}
                   onChangeText={onChangeEmpId}
-                  keyboardType={'default'}
+                  keyboardType={'number-pad'}
                   maxLength={40}
                   returnKeyType={'done'}
                   iconName={'user-tie'}
@@ -300,19 +300,27 @@ const Login = props => {
                 />
               </View>
             </View>
-            <View
-              style={{
-                marginTop: hp('5'),
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={onPressLoginBtn}
-                style={styles.loginbtn}>
-                <Text style={{color: '#061D7A'}}>LOGIN</Text>
-              </TouchableOpacity>
-            </View>
+
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={onPressLoginBtn}
+              style={[
+                styles.loginbtn,
+                {
+                  marginTop: hp('5'),
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginHorizontal: wp('2'),
+                },
+              ]}>
+              <Text
+                style={{
+                  color: '#061D7A',
+                  fontSize: 14,
+                }}>
+                LOGIN
+              </Text>
+            </TouchableOpacity>
 
             {/* <Text style={styles.orbtn}>OR</Text>
 
@@ -386,7 +394,7 @@ const styles = StyleSheet.create({
   },
   loginbtn: {
     height: hp('7'),
-    width: wp('85'),
+    // width: wp('85'),
     backgroundColor: colors.whiteColor,
     justifyContent: 'center',
     alignItems: 'center',

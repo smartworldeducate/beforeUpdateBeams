@@ -128,7 +128,7 @@ const CustomDrawer = ({navigation}) => {
               }}>
               <View
                 style={{
-                  width: wp(16),
+                  width: wp(16.65),
                   height: hp(8),
 
                   borderRadius: wp('50'),
@@ -137,7 +137,7 @@ const CustomDrawer = ({navigation}) => {
                 }}>
                 <Image
                   style={{
-                    width: wp(15),
+                    width: wp(15.65),
                     height: hp(7.5),
 
                     borderRadius: wp('50'),
