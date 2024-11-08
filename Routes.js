@@ -72,6 +72,9 @@ import ChallengeSignUp from './SRC/Screens/Challenge/ChallengeSignUp';
 import ChallengeFormList from './SRC/Screens/Challenge/ChallengeFormList';
 import ChallengeFormFill from './SRC/Screens/Challenge/ChallengeFormFill';
 import ChallengeListOpenData from './SRC/Screens/Challenge/ChallengeListOpenData';
+import MarkAttendance from './SRC/Screens/MarkAttendance/MarkAttendance';
+import AddAdditionalStudent from './SRC/Screens/MarkAttendance/AddAdditionalStudent';
+import AttendanceSummary from './SRC/Screens/MarkAttendance/AttendanceSummary';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -209,6 +212,15 @@ const Routes = () => {
           name="ChallengeListOpenData"
           component={ChallengeListOpenData}
         />
+
+        <Stack.Screen name="MarkAttendance" component={MarkAttendance} />
+
+        <Stack.Screen
+          name="AddAdditionalStudent"
+          component={AddAdditionalStudent}
+        />
+
+        <Stack.Screen name="AttendanceSummary" component={AttendanceSummary} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -683,6 +683,200 @@ const HomeScreen = props => {
 
   console.log('show_banner', profileHere?.userData?.inspire?.show_banner);
 
+  const classArray = [
+    {
+      className: 'Class 2 Daffodils',
+      schoolAddress: 'LMA 11-FCC Gulberg III, Lahore',
+      color1: '#FFFFFF',
+      color2: '#FFDDEB',
+      colorBG: '#DF719F',
+    },
+    {
+      className: 'Class 2 Lilly',
+      schoolAddress: 'LMA 11-FCC Gulberg III, Lahore',
+      color1: '#FFFFFF',
+      color2: '#D7FFD1',
+      colorBG: '#7EDF71',
+    },
+  ];
+
+  const renderItemClasses = ({item, index}) => {
+    return (
+      <LinearGradient
+        useAngle={true}
+        angle={180}
+        angleCenter={{x: 0.5, y: 0.5}}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 0}}
+        // colors={[item?.color1, item?.color2]}
+        colors={[item.color1, item.color2]}
+        locations={[0, 1]}
+        style={{
+          height: hp('18'),
+          width: wp('88'),
+          borderRadius: wp('4'),
+          marginVertical: hp('1'),
+          shadowColor: 'rgba(0,0,0,0.5)',
+          shadowOpacity: 0.5,
+          shadowRadius: 16,
+          elevation: 4,
+        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            height: hp('18'),
+            paddingVertical: hp('2'),
+          }}>
+          <View
+            style={{
+              flex: 0.025,
+              backgroundColor: item?.colorBG,
+              paddingVertical: hp('1.5'),
+              borderTopRightRadius: wp('50'),
+              borderBottomRightRadius: wp('50'),
+            }}></View>
+
+          <View
+            style={{
+              flex: 0.22,
+              alignItems: 'center',
+              flexDirection: 'column',
+            }}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <FontAwesomeIcon
+                icon="fat fa-user-graduate"
+                size={hp('5')}
+                style={{color: item?.colorBG}}
+              />
+            </View>
+
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}></View>
+          </View>
+          <View
+            style={{
+              flex: 0.73,
+              flexDirection: 'column',
+            }}>
+            <View
+              style={{
+                flex: 1.2,
+                justifyContent: 'center',
+              }}>
+              <View>
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode={'tail'}
+                  style={{
+                    color: '#353535',
+                    fontFamily: fontFamily.ceraMedium,
+                    fontWeight: '900',
+                    fontSize: 18,
+                  }}>
+                  {item?.className}
+                </Text>
+              </View>
+              <View>
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode={'tail'}
+                  style={{
+                    color: '#747474',
+                    fontFamily: fontFamily.ceraMedium,
+                    fontWeight: '400',
+                    fontSize: 12,
+                  }}>
+                  {item?.schoolAddress}
+                </Text>
+              </View>
+            </View>
+
+            <View
+              style={{
+                flex: 0.8,
+                flexDirection: 'row',
+              }}>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  flex: 0.55,
+                }}>
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  onPress={() =>
+                    navigation.navigate(
+                      index == 0 ? 'MarkAttendance' : 'AttendanceSummary',
+                    )
+                  }
+                  style={{
+                    backgroundColor: item?.colorBG,
+                    paddingVertical: hp('0.5'),
+                    borderRadius: wp('50'),
+                  }}>
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode={'tail'}
+                    style={{
+                      color: '#FFFFFF',
+                      fontFamily: fontFamily.ceraMedium,
+                      fontWeight: '500',
+                      fontSize: 13,
+                      paddingHorizontal: wp('2'),
+                      paddingVertical: hp('0.3'),
+                      textAlign: 'center',
+                    }}>
+                    {'Mark Attendance'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{flex: 0.05}}></View>
+
+              <View
+                activeOpacity={0.5}
+                style={{
+                  flex: 0.4,
+                  justifyContent: 'center',
+                }}>
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  style={{
+                    backgroundColor: '#C9C9C9',
+                    paddingVertical: hp('0.5'),
+                    borderRadius: wp('50'),
+                  }}>
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode={'tail'}
+                    style={{
+                      color: '#575757',
+                      fontFamily: fontFamily.ceraMedium,
+                      fontWeight: '500',
+                      fontSize: 13,
+                      paddingHorizontal: wp('2'),
+                      paddingVertical: hp('0.3'),
+                      textAlign: 'center',
+                    }}>
+                    {'Summary'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View>
+      </LinearGradient>
+    );
+  };
+
   return (
     <SafeAreaView
       style={{
@@ -1091,6 +1285,7 @@ const HomeScreen = props => {
                 <TouchableOpacity
                   activeOpacity={0.5}
                   onPress={() => navigation.navigate('ChallengeSignUp')}
+                  // onPress={() => navigation.navigate('MarkAttendance')}
                   style={{
                     marginHorizontal: wp('5'),
                     marginTop: hp('-0.5'),
@@ -1421,6 +1616,13 @@ const HomeScreen = props => {
               ) : (
                 <></>
               )} */}
+
+              <FlatList
+                data={classArray}
+                renderItem={renderItemClasses}
+                keyExtractor={(item, index) => index.toString()}
+                style={{marginTop: hp('1.5'), marginHorizontal: wp('6')}}
+              />
             </ScrollView>
           )}
         </>

@@ -75,6 +75,9 @@ const CustomDrawer = ({navigation}) => {
   const versionName = DeviceInfo.getVersion();
   console.log('versionName', versionName);
 
+  const buildNumber = DeviceInfo.getBuildNumber();
+  console.log('buildNumber', buildNumber);
+
   return (
     <>
       <ImageBackground
@@ -407,9 +410,15 @@ const CustomDrawer = ({navigation}) => {
                 fontFamily: fontFamily.ceraMedium,
                 fontStyle: 'italic',
               }}>
-              {`Version: ${
+              {/* {`Version: ${
                 versionName !== null && versionName !== undefined
                   ? `${versionName}.01`
+                  : ''
+              }`} */}
+
+              {`Version: ${
+                buildNumber !== null && buildNumber !== undefined
+                  ? `${buildNumber}`
                   : ''
               }`}
             </Text>
