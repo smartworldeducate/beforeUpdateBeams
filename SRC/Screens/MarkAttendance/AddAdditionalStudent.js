@@ -39,6 +39,7 @@ import {
 } from '../../features/Inspire50/InspireTrainingsSlice';
 
 import Icon from 'react-native-fontawesome-pro';
+import AttendanceCardTextInput from '../../Components/Headers/AttendanceCardTextInput';
 
 const AddAdditionalStudent = props => {
   const dispatch = useDispatch();
@@ -48,16 +49,59 @@ const AddAdditionalStudent = props => {
     state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
   );
 
+  const [stdName, setStdName] = useState('');
+  const [stdID, setStdID] = useState('');
+  const [autoWithdrawalValue, setAutoWithdrawalValue] = useState('');
+
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [isTransfered, setIsTransfered] = useState(false);
+  const [isAutoWithdrawal, setIsAutoWithdrawal] = useState(false);
+
+  console.log('stdName', stdName);
+  console.log('stdID', stdName);
+  console.log('autoWithdrawalValue', autoWithdrawalValue);
+
+  const onChangeStdName = val => {
+    setStdName(val);
+  };
+  const onPressRegisteredRightImg = () => {
+    setIsRegistered(!isRegistered);
+    setIsTransfered(false);
+    setIsAutoWithdrawal(false);
+
+    setStdID('');
+    setAutoWithdrawalValue('');
+  };
+
+  const onChangeStdID = val => {
+    setStdID(val);
+  };
+  const onPressTransferredRightImg = () => {
+    setIsTransfered(!isTransfered);
+    setIsRegistered(false);
+    setIsAutoWithdrawal(false);
+
+    setStdName('');
+    setAutoWithdrawalValue('');
+  };
+
+  const onChangeAutowithdrawalValue = val => {
+    setAutoWithdrawalValue(val);
+  };
+  const onPressAutoWithdrawal = () => {
+    setIsAutoWithdrawal(!isAutoWithdrawal);
+    setIsRegistered(false);
+    setIsTransfered(false);
+
+    setStdName('');
+    setStdID('');
+  };
+
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = () => {
     setRefreshing(true);
     try {
-      //   dispatch(
-      //     InspireTrainingsAction({
-      //       employee_id: profileHereEmpId,
-      //     }),
-      //   );
     } catch (error) {}
     setRefreshing(false);
   };
@@ -80,8 +124,49 @@ const AddAdditionalStudent = props => {
             tintColor={'#1C37A4'}
           />
         }
-        style={{flex: 1, backgroundColor: '#F5F8FC'}}>
-        <View style={{marginHorizontal: wp('5'), marginTop: hp('1.5')}}></View>
+        style={{
+          flex: 1,
+          backgroundColor: '#F5F8FC',
+          paddingHorizontal: wp('5'),
+        }}>
+        <View style={styles.cardViewStyle}>
+          <AttendanceCardTextInput
+            leftText={'Not Registered'}
+            rightImg={isRegistered ? 'attencheck' : 'circelgrey'}
+            isChecked={isRegistered}
+            onPressRightImg={onPressRegisteredRightImg}
+            placeholder={'Enter Student Name*'}
+            placeholderColor={'#363636'}
+            value={stdName}
+            onChangeText={onChangeStdName}
+          />
+        </View>
+
+        <View style={styles.cardViewStyle}>
+          <AttendanceCardTextInput
+            leftText={'Transferred'}
+            rightImg={isTransfered ? 'attencheck' : 'circelgrey'}
+            isChecked={isTransfered}
+            onPressRightImg={onPressTransferredRightImg}
+            placeholder={'Student ID*'}
+            placeholderColor={'#363636'}
+            value={stdID}
+            onChangeText={onChangeStdID}
+          />
+        </View>
+
+        <View style={styles.cardViewStyle}>
+          <AttendanceCardTextInput
+            leftText={'Auto-withdrawal'}
+            rightImg={isAutoWithdrawal ? 'attencheck' : 'circelgrey'}
+            isChecked={isAutoWithdrawal}
+            onPressRightImg={onPressAutoWithdrawal}
+            placeholder={'Auto-withdrawal'}
+            placeholderColor={'#363636'}
+            value={autoWithdrawalValue}
+            onChangeText={onChangeAutowithdrawalValue}
+          />
+        </View>
       </ScrollView>
     </>
   );
@@ -90,49 +175,12 @@ const AddAdditionalStudent = props => {
 export default AddAdditionalStudent;
 
 const styles = EStyleSheet.create({
-  linearGradiantStyle: {
-    flex: 0.153,
-    justifyContent: 'center',
-    height: hp('7'),
-    borderRadius: wp('2'),
-    shadowColor: 'rgba(0,0,0,0.5)',
-    shadowOpacity: 0.5,
-    shadowRadius: 16,
-    elevation: 4,
-  },
-  linearGradiantText: {
-    fontSize: 26,
-    color: '#FFFFFF',
-    fontFamily: fontFamily.ceraMedium,
-    fontWeight: '500',
-  },
-  boxTextView: {
-    flex: 0.15,
-    justifyContent: 'center',
-
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  boxText: {
-    fontSize: 15,
-    color: '#66656A',
-    fontFamily: fontFamily.ceraLight,
-    fontWeight: '500',
-    lineHeight: hp('2'),
-    letterSpacing: 0.35,
-    textAlign: 'center',
-  },
-  linearGradiantFlatlist: {
-    flex: 0.153,
-    justifyContent: 'center',
-    height: hp('4.25'),
-    width: wp('12'),
-    borderRadius: wp('2'),
-    shadowColor: 'rgba(0,0,0,0.5)',
-    shadowOpacity: 0.5,
-    shadowRadius: 16,
-    elevation: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
+  cardViewStyle: {
+    marginTop: hp('2'),
+    backgroundColor: 'white',
+    paddingHorizontal: wp('3'),
+    paddingTop: hp('2'),
+    paddingBottom: hp('1'),
+    borderRadius: wp('5'),
   },
 });

@@ -36,7 +36,9 @@ const Splash = props => {
     const isSkipped = await AsyncStorage.getItem('skipStartupScreen');
     console.log('isSkipped', isSkipped);
     const token = await AsyncStorage.getItem('loginData');
+    const authKey = await AsyncStorage.getItem('authKey');
     console.log(token, 'token');
+    console.log('authKey', authKey);
     if (token != undefined) {
       setIntialRoute('HomeScreen');
     } else if (isSkipped) {

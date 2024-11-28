@@ -5,11 +5,16 @@ import {
   RefreshControl,
   FlatList,
   TouchableOpacity,
+  Button,
+  Alert,
 } from 'react-native';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useEffect, useState, useCallback} from 'react';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+
+import MonthPicker from 'react-native-month-year-picker';
 
 import {
   widthPercentageToDP as wp,
@@ -22,166 +27,119 @@ import {useDispatch, useSelector} from 'react-redux';
 import MainHeader from '../../Components/Headers/MainHeader';
 import fontFamily from '../../Styles/fontFamily';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {
+  AttendanceSummaryAction,
+  clearAllStateAttendanceSummary,
+} from '../../features/TeacherAttendance/AttendanceSummary';
+import Loader from '../../Components/Loader/Loader';
 
-const AttendanceSummary = props => {
+const formatDateToMonthYear = date => {
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Add 1 to month
+  const year = date.getFullYear();
+  return `${month}/${year}`;
+};
+
+const AttendanceSummary = ({route, ...props}) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const profileHereEmpId = useSelector(
-    state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
+  const authKeyParam = route?.params?.authKeyParamForSummary;
+
+  const branchId = route?.params?.classDataParam?.branch_id;
+  const classId = route?.params?.classDataParam?.class_id;
+  const sectionId = route?.params?.classDataParam?.section_id;
+
+  const AttendanceSummaryHere = useSelector(
+    state => state.AttendanceSummaryStore?.userData?.summary,
   );
 
-  const [refreshing, setRefreshing] = useState(false);
+  console.log('AttendanceSummaryHere', AttendanceSummaryHere);
 
+  const attendanceSummaryLoading = useSelector(
+    state => state.AttendanceSummaryStore?.isLoading,
+  );
+
+  const [showPicker, setShowPicker] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [formattedMonthYear, setFormattedMonthYear] = useState(
+    formatDateToMonthYear(new Date()),
+  );
+
+  useEffect(() => {
+    console.log('inUseEffect');
+    const fetchData = async () => {
+      try {
+        const authKey = await AsyncStorage.getItem('authKey');
+        console.log('authKey', authKey);
+
+        dispatch(
+          AttendanceSummaryAction({
+            values: {
+              branch_id: route?.params?.classDataParam?.branch_id,
+              class_id: route?.params?.classDataParam?.class_id,
+              section_id: route?.params?.classDataParam?.section_id,
+              att_month: formattedMonthYear,
+            },
+            authKeyParam,
+          }),
+        );
+      } catch (error) {
+        console.error('Error retrieving values from AsyncStorage:', error);
+      }
+    };
+
+    fetchData();
+  }, [dispatch]);
+
+  const onPressMonthYear = () => {
+    setShowPicker(true);
+  };
+
+  const onValueChange = (event, newDate) => {
+    if (event === 'dismissedAction') {
+      setShowPicker(false);
+      return;
+    }
+    setShowPicker(false);
+    if (newDate) {
+      const onlyMonthYear = new Date(
+        newDate.getFullYear(),
+        newDate.getMonth(),
+        1,
+      );
+
+      setSelectedDate(onlyMonthYear);
+      const formattedDate = formatDateToMonthYear(onlyMonthYear);
+      setFormattedMonthYear(formattedDate);
+
+      dispatch(
+        AttendanceSummaryAction({
+          values: {
+            branch_id: route?.params?.classDataParam?.branch_id,
+            class_id: route?.params?.classDataParam?.class_id,
+            section_id: route?.params?.classDataParam?.section_id,
+            att_month: formattedDate,
+          },
+          authKeyParam,
+        }),
+      );
+    }
+  };
+
+  const formatMonthYear = date => {
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'long',
+      year: 'numeric',
+    }).format(date);
+  };
+
+  const [refreshing, setRefreshing] = useState(false);
   const onRefresh = () => {
     setRefreshing(true);
     try {
-      //   dispatch(
-      //     InspireTrainingsAction({
-      //       employee_id: profileHereEmpId,
-      //     }),
-      //   );
     } catch (error) {}
     setRefreshing(false);
   };
-
-  const attendanceSummaryList = [
-    {
-      date: '01, Fri',
-      PP: 15,
-      PO: 2,
-      L: 1,
-      T: 1,
-      A: 5,
-      E: 1,
-    },
-    {
-      date: '02, Sat',
-      PP: 18,
-      PO: 1,
-      L: 0,
-      T: 2,
-      A: 4,
-      E: 2,
-    },
-    {
-      date: '03, Sun',
-      PP: 16,
-      PO: 3,
-      L: 1,
-      T: 1,
-      A: 3,
-      E: 1,
-    },
-    {
-      date: '04, Mon',
-      PP: 20,
-      PO: 0,
-      L: 0,
-      T: 1,
-      A: 2,
-      E: 3,
-    },
-    {
-      date: '05, Tue',
-      PP: 17,
-      PO: 2,
-      L: 1,
-      T: 0,
-      A: 5,
-      E: 1,
-    },
-    {
-      date: '06, Wed',
-      PP: 14,
-      PO: 3,
-      L: 2,
-      T: 1,
-      A: 4,
-      E: 1,
-    },
-    {
-      date: '07, Thu',
-      PP: 19,
-      PO: 1,
-      L: 0,
-      T: 1,
-      A: 3,
-      E: 2,
-    },
-    {
-      date: '08, Fri',
-      PP: 15,
-      PO: 3,
-      L: 1,
-      T: 0,
-      A: 6,
-      E: 0,
-    },
-    {
-      date: '09, Sat',
-      PP: 18,
-      PO: 2,
-      L: 1,
-      T: 1,
-      A: 2,
-      E: 3,
-    },
-    {
-      date: '10, Sun',
-      PP: 16,
-      PO: 4,
-      L: 0,
-      T: 1,
-      A: 4,
-      E: 1,
-    },
-    {
-      date: '11, Mon',
-      PP: 14,
-      PO: 2,
-      L: 2,
-      T: 1,
-      A: 5,
-      E: 2,
-    },
-    {
-      date: '12, Tue',
-      PP: 19,
-      PO: 1,
-      L: 1,
-      T: 0,
-      A: 3,
-      E: 1,
-    },
-    {
-      date: '13, Wed',
-      PP: 20,
-      PO: 0,
-      L: 0,
-      T: 1,
-      A: 2,
-      E: 2,
-    },
-    {
-      date: '14, Thu',
-      PP: 17,
-      PO: 3,
-      L: 1,
-      T: 0,
-      A: 4,
-      E: 1,
-    },
-    {
-      date: '15, Fri',
-      PP: 16,
-      PO: 2,
-      L: 0,
-      T: 1,
-      A: 5,
-      E: 0,
-    },
-  ];
 
   const renderItem = ({item, index}) => {
     return (
@@ -189,6 +147,8 @@ const AttendanceSummary = props => {
         style={{
           flexDirection: 'row',
           justifyContent: 'center',
+
+          marginBottom: hp('-0.5'),
         }}>
         <View
           style={{
@@ -198,7 +158,7 @@ const AttendanceSummary = props => {
             numberOfLines={1}
             ellipsizeMode={'tail'}
             style={[styles.listHeadText, {color: '#606162'}]}>
-            {item?.date}
+            {item?.att_date}
           </Text>
         </View>
 
@@ -207,7 +167,7 @@ const AttendanceSummary = props => {
             numberOfLines={1}
             ellipsizeMode={'tail'}
             style={styles.listHeadText}>
-            {item?.PP}
+            {item?.presents}
           </Text>
         </View>
         <View style={{flex: 0.135}}>
@@ -215,7 +175,16 @@ const AttendanceSummary = props => {
             numberOfLines={1}
             ellipsizeMode={'tail'}
             style={styles.listHeadText}>
-            {item?.PO}
+            {item?.online_presents}
+          </Text>
+        </View>
+
+        <View style={{flex: 0.135}}>
+          <Text
+            numberOfLines={1}
+            ellipsizeMode={'tail'}
+            style={styles.listHeadText}>
+            {item?.tardiness}
           </Text>
         </View>
         <View style={{flex: 0.135}}>
@@ -223,36 +192,93 @@ const AttendanceSummary = props => {
             numberOfLines={1}
             ellipsizeMode={'tail'}
             style={styles.listHeadText}>
-            {item?.L}
+            {item?.absents}
           </Text>
         </View>
+
         <View style={{flex: 0.135}}>
           <Text
             numberOfLines={1}
             ellipsizeMode={'tail'}
             style={styles.listHeadText}>
-            {item?.T}
+            {item?.leave}
           </Text>
         </View>
+
         <View style={{flex: 0.135}}>
           <Text
             numberOfLines={1}
             ellipsizeMode={'tail'}
             style={styles.listHeadText}>
-            {item?.A}
-          </Text>
-        </View>
-        <View style={{flex: 0.135}}>
-          <Text
-            numberOfLines={1}
-            ellipsizeMode={'tail'}
-            style={styles.listHeadText}>
-            {item?.E}
+            {item?.exempted}
           </Text>
         </View>
       </View>
     );
   };
+
+  const onPressLeftArrow = () => {
+    const newDate = new Date(selectedDate);
+    newDate.setMonth(newDate.getMonth() - 1);
+    setSelectedDate(newDate);
+    setFormattedMonthYear(formatDateToMonthYear(newDate));
+
+    dispatch(
+      AttendanceSummaryAction({
+        values: {
+          branch_id: branchId,
+          class_id: classId,
+          section_id: sectionId,
+          att_month: formattedMonthYear,
+        },
+        authKeyParam,
+      }),
+    );
+  };
+
+  const onPressRightArrow = () => {
+    const newDate = new Date(selectedDate);
+    newDate.setMonth(newDate.getMonth() + 1);
+    setSelectedDate(newDate);
+    setFormattedMonthYear(formatDateToMonthYear(newDate));
+
+    dispatch(
+      AttendanceSummaryAction({
+        values: {
+          branch_id: branchId,
+          class_id: classId,
+          section_id: sectionId,
+          att_month: formattedMonthYear,
+        },
+        authKeyParam,
+      }),
+    );
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Clear previous attendance summary data when screen is focused
+      dispatch(clearAllStateAttendanceSummary());
+
+      // Dispatch the action with the required parameters
+      dispatch(
+        AttendanceSummaryAction({
+          values: {
+            branch_id: branchId,
+            class_id: classId,
+            section_id: sectionId,
+            att_month: formattedMonthYear,
+          },
+          authKeyParam,
+        }),
+      );
+
+      // Cleanup function runs when the screen loses focus
+      return () => {
+        dispatch(clearAllStateAttendanceSummary());
+      };
+    }, [branchId, classId, sectionId, formattedMonthYear, dispatch]),
+  );
 
   return (
     <>
@@ -261,6 +287,8 @@ const AttendanceSummary = props => {
         iconName={'arrow-left'}
         onpressBtn={() => props.navigation.goBack()}
       />
+
+      {attendanceSummaryLoading && <Loader></Loader>}
 
       <ScrollView
         refreshControl={
@@ -314,26 +342,7 @@ const AttendanceSummary = props => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Text style={styles.linearGradiantText}>{'P0'}</Text>
-              </View>
-            </LinearGradient>
-
-            <LinearGradient
-              useAngle={true}
-              angle={180}
-              angleCenter={{x: 0.5, y: 0.5}}
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 0}}
-              colors={['#C07CD5', '#6D3FBD']}
-              locations={[0, 1]}
-              style={styles.linearGradiantStyle}>
-              <View
-                style={{
-                  height: hp('10'),
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text style={styles.linearGradiantText}>{'L'}</Text>
+                <Text style={styles.linearGradiantText}>{'PO'}</Text>
               </View>
             </LinearGradient>
 
@@ -391,6 +400,25 @@ const AttendanceSummary = props => {
               angleCenter={{x: 0.5, y: 0.5}}
               start={{x: 0, y: 0}}
               end={{x: 1, y: 0}}
+              colors={['#C07CD5', '#6D3FBD']}
+              locations={[0, 1]}
+              style={styles.linearGradiantStyle}>
+              <View
+                style={{
+                  height: hp('10'),
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text style={styles.linearGradiantText}>{'L'}</Text>
+              </View>
+            </LinearGradient>
+
+            <LinearGradient
+              useAngle={true}
+              angle={180}
+              angleCenter={{x: 0.5, y: 0.5}}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
               colors={['#8EFF47', '#188D00']}
               locations={[0, 1]}
               style={styles.linearGradiantStyle}>
@@ -420,16 +448,16 @@ const AttendanceSummary = props => {
               <Text style={styles.boxText}>{`Physical\nPresent`}</Text>
             </View>
             <View style={styles.boxTextView}>
-              <Text style={styles.boxText}>{`Physical\nOnline`}</Text>
-            </View>
-            <View style={styles.boxTextView}>
-              <Text style={styles.boxText}>{`Leave`}</Text>
+              <Text style={styles.boxText}>{`Present\nOnline`}</Text>
             </View>
             <View style={styles.boxTextView}>
               <Text style={styles.boxText}>{`Tardy`}</Text>
             </View>
             <View style={styles.boxTextView}>
               <Text style={styles.boxText}>{`Absent`}</Text>
+            </View>
+            <View style={styles.boxTextView}>
+              <Text style={styles.boxText}>{`Leave`}</Text>
             </View>
             <View style={styles.boxTextView}>
               <Text style={styles.boxText}>{`Exempted`}</Text>
@@ -444,6 +472,7 @@ const AttendanceSummary = props => {
             }}>
             <TouchableOpacity
               activeOpacity={0.5}
+              onPress={onPressLeftArrow}
               style={{
                 flex: 0.175,
                 backgroundColor: '#FFFFFF',
@@ -458,7 +487,9 @@ const AttendanceSummary = props => {
               />
             </TouchableOpacity>
             <View style={{flex: 0.05}}></View>
-            <View
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={onPressMonthYear}
               style={{
                 flex: 0.55,
                 backgroundColor: '#FFFFFF',
@@ -487,7 +518,7 @@ const AttendanceSummary = props => {
                   numberOfLines={1}
                   ellipsizeMode={'tail'}
                   style={styles.calanderText}>
-                  {'September 2024'}
+                  {formatMonthYear(selectedDate)}
                 </Text>
               </View>
               <View
@@ -502,10 +533,11 @@ const AttendanceSummary = props => {
                   style={{color: '#000000'}}
                 />
               </View>
-            </View>
+            </TouchableOpacity>
             <View style={{flex: 0.05}}></View>
             <TouchableOpacity
               activeOpacity={0.5}
+              onPress={onPressRightArrow}
               style={{
                 flex: 0.175,
                 backgroundColor: '#FFFFFF',
@@ -557,14 +589,7 @@ const AttendanceSummary = props => {
                 {'PO'}
               </Text>
             </View>
-            <View style={{flex: 0.135}}>
-              <Text
-                numberOfLines={1}
-                ellipsizeMode={'tail'}
-                style={styles.listHeadText}>
-                {'L'}
-              </Text>
-            </View>
+
             <View style={{flex: 0.135}}>
               <Text
                 numberOfLines={1}
@@ -586,19 +611,48 @@ const AttendanceSummary = props => {
                 numberOfLines={1}
                 ellipsizeMode={'tail'}
                 style={styles.listHeadText}>
+                {'L'}
+              </Text>
+            </View>
+            <View style={{flex: 0.135}}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode={'tail'}
+                style={styles.listHeadText}>
                 {'E'}
               </Text>
             </View>
           </View>
 
           <FlatList
-            data={attendanceSummaryList}
+            data={AttendanceSummaryHere}
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
             style={{marginTop: hp('2')}}
+            ListEmptyComponent={
+              <Text
+                style={{
+                  fontSize: hp('1.75'),
+                  color: 'black',
+                  textAlign: 'center',
+                  fontStyle: 'italic',
+                }}>
+                Attendance data updation could take one day.
+              </Text>
+            }
           />
         </View>
       </ScrollView>
+
+      {showPicker && (
+        <MonthPicker
+          onChange={onValueChange}
+          value={selectedDate}
+          minimumDate={new Date(2000, 0)}
+          maximumDate={new Date(2030, 11)}
+          locale="en"
+        />
+      )}
     </>
   );
 };
@@ -617,7 +671,7 @@ const styles = EStyleSheet.create({
     elevation: 4,
   },
   linearGradiantText: {
-    fontSize: 24,
+    fontSize: 20,
     color: '#FFFFFF',
     fontFamily: fontFamily.ceraMedium,
     fontWeight: '500',
@@ -637,6 +691,7 @@ const styles = EStyleSheet.create({
     lineHeight: hp('2'),
     letterSpacing: 0.35,
     textAlign: 'center',
+    lineHeight: 11,
   },
   listHeadText: {
     textAlign: 'center',

@@ -133,6 +133,14 @@ import InspireAddTrainingSliceSubmitReducer from '../features/Inspire50/InspireA
 
 import InspireRemoveTrainingSliceSubmitReducer from '../features/Inspire50/InspireRemoveTraining';
 
+import TeacherClassesSliceReducer from '../features/TeacherAttendance/TeacherClassesSlice';
+
+import TeacherStudentsListSliceReducer from '../features/TeacherAttendance/TeacherStudentsList';
+
+import AttendanceSummarySliceReducer from '../features/TeacherAttendance/AttendanceSummary';
+
+import UploadStdAttendanceSliceReducer from '../features/TeacherAttendance/UploadAttendanceSlice';
+
 export const store = configureStore({
   reducer: {
     register: authReducer,
@@ -263,6 +271,14 @@ export const store = configureStore({
     InspireAddTrainingSubmitStore: InspireAddTrainingSliceSubmitReducer,
 
     InspireRemoveTrainingStore: InspireRemoveTrainingSliceSubmitReducer,
+
+    TeacherClassesStore: TeacherClassesSliceReducer,
+
+    AttendanceSummaryStore: AttendanceSummarySliceReducer,
+
+    TeacherStudentsListStore: TeacherStudentsListSliceReducer,
+
+    UploadStdAttendanceStore: UploadStdAttendanceSliceReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

@@ -155,6 +155,10 @@ const Login = props => {
           'deptId',
           loginHere?.userData[0]?.DEPARTMENT_ID,
         );
+        await AsyncStorage.setItem(
+          'authKey',
+          loginHere?.userData[0]?.s_auth_key,
+        );
         setEmployeeId(null);
         setEmployeePassword(null);
 

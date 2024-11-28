@@ -51,7 +51,7 @@ const MessageSuccessModal = ({
           <View style={{flex: 0.78, paddingHorizontal: wp('4')}}>
             <Text
               style={{
-                fontSize: hp('2.85'),
+                fontSize: hp('2.75'),
                 fontFamily: fontFamily.ceraMedium,
                 color: 'black',
                 fontWeight: '500',
@@ -61,7 +61,7 @@ const MessageSuccessModal = ({
             </Text>
             <Text
               style={{
-                fontSize: hp('1.75'),
+                fontSize: hp('1.95'),
                 fontFamily: fontFamily.ceraLight,
                 color: 'black',
                 letterSpacing: 0.5,

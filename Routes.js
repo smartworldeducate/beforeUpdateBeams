@@ -75,6 +75,7 @@ import ChallengeListOpenData from './SRC/Screens/Challenge/ChallengeListOpenData
 import MarkAttendance from './SRC/Screens/MarkAttendance/MarkAttendance';
 import AddAdditionalStudent from './SRC/Screens/MarkAttendance/AddAdditionalStudent';
 import AttendanceSummary from './SRC/Screens/MarkAttendance/AttendanceSummary';
+import MarkAttendacePopScreen from './SRC/Screens/MarkAttendance/MarkAttendacePopScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -214,6 +215,11 @@ const Routes = () => {
         />
 
         <Stack.Screen name="MarkAttendance" component={MarkAttendance} />
+
+        <Stack.Screen
+          name="MarkAttendacePopScreen"
+          component={MarkAttendacePopScreen}
+        />
 
         <Stack.Screen
           name="AddAdditionalStudent"

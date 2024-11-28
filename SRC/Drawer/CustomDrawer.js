@@ -47,6 +47,8 @@ const CustomDrawer = ({navigation}) => {
     await AsyncStorage.removeItem('loginData');
     await AsyncStorage.removeItem('branchId');
     await AsyncStorage.removeItem('deptId');
+    await AsyncStorage.removeItem('authKey');
+
     //  dispatch({ type: 'RESET_APP_STATE' });
 
     dispatch(clearUserProfileState());

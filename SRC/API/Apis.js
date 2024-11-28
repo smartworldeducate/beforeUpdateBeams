@@ -4,6 +4,9 @@ export const BASE_URL = 'https://ws.beaconhouse.net/beams_ci/index.php/api/';
 export const BASE_INSPIRE_URL =
   'https://ws.beaconhouse.net/beams_ci/index.php/inspire/';
 
+export const BASE_STD_ATTD_URL =
+  'https://wstest.beaconhouse.net/beams/index.php/api/';
+
 export const config = {
   headers: {
     api_key: 'X5Ne0km78x2Q1ykny9FfcIK',
@@ -100,4 +103,12 @@ export const APIS = {
   InspireAddTrainingOnForm: BASE_INSPIRE_URL + 'inspire_save_training',
 
   InspireRemoveTraining: BASE_INSPIRE_URL + 'inspire_remove_training',
+
+  TeacherClasses: BASE_STD_ATTD_URL + 'teacher_classes',
+
+  TeacherStudentsListAPI: BASE_STD_ATTD_URL + 'teacher_class_students',
+
+  AttendanceSummary: BASE_STD_ATTD_URL + 'class_attendance_summary',
+
+  UploadAttendance: BASE_STD_ATTD_URL + 'save_class_attendance',
 };

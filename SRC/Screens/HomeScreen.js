@@ -66,6 +66,7 @@ import ReporteeProfileModal from '../Components/Modal/ReporteeProfileModal';
 
 import RNPrint from 'react-native-print';
 import AttendanceTempModal from '../Components/Modal/AttendanceTempModal';
+import {TeacherClassesAction} from '../features/TeacherAttendance/TeacherClassesSlice';
 
 const HomeScreen = props => {
   const width = Dimensions.get('window').width;
@@ -74,10 +75,16 @@ const HomeScreen = props => {
 
   const profileHere = useSelector(state => state.profileStore);
 
-  console.log(
-    'bannerDetails>>>',
-    profileHere?.userData?.inspire?.inspire_banner,
-  );
+  const authKeyFromHomeAPIHere = profileHere?.userData?.s_auth_key;
+  console.log('authKeyFromHomeAPIHere', authKeyFromHomeAPIHere);
+
+  console.log('bannerDetails', profileHere?.userData?.inspire?.inspire_banner);
+
+  const teacherClassesHere = useSelector(state => state.TeacherClassesStore);
+
+  const teacherClassesArray = teacherClassesHere?.userData?.classes;
+
+  console.log('teacherClassesArray', teacherClassesArray);
 
   const profileHereEmpId = useSelector(
     state => state.profileStore?.userData?.emp_result?.EMPLOYEE_ID,
@@ -87,6 +94,8 @@ const HomeScreen = props => {
   const messagesHere = useSelector(state => state.MessageSliceHomePageStore);
 
   const messagesSlicedData = messagesHere?.userData?.slice(0, 6);
+  // console.log('messagesSlicedData', messagesSlicedData);
+  // console.log('messagesSlicedDataLength', messagesSlicedData?.length);
 
   const leaveBalanceHere = useSelector(state => state.leaveBalanceStore);
 
@@ -169,6 +178,8 @@ const HomeScreen = props => {
               employee_id: parsedLoginDataId,
             }),
           );
+
+          // dispatch(TeacherClassesAction());
         }
       } catch (error) {
         console.error('Error retrieving values from AsyncStorage:', error);
@@ -203,12 +214,32 @@ const HomeScreen = props => {
             employee_id: parsedLoginDataId,
           }),
         );
+
+        // dispatch(TeacherClassesAction());
+        dispatch(TeacherClassesAction({values: {}, authKeyFromHomeAPIHere}));
       }
     } catch (error) {
       console.error('Error retrieving values from AsyncStorage:', error);
     }
     setRefreshing(false);
   };
+
+  // const getAuthToken = async () => {
+  //   const authKey = await AsyncStorage.getItem('authKey');
+  //   console.log('authKey', authKey);
+  // };
+
+  // useEffect(() => {
+  //   getAuthToken();
+  // }, []);
+
+  useEffect(() => {
+    console.log('insideUseEffect');
+    if (authKeyFromHomeAPIHere != null || authKeyFromHomeAPIHere != undefined) {
+      console.log('insideUseEffectIf');
+      dispatch(TeacherClassesAction({values: {}, authKeyFromHomeAPIHere}));
+    }
+  }, [authKeyFromHomeAPIHere]);
 
   const renderItem = ({item, index}) => {
     return (
@@ -683,24 +714,209 @@ const HomeScreen = props => {
 
   console.log('show_banner', profileHere?.userData?.inspire?.show_banner);
 
-  const classArray = [
-    {
-      className: 'Class 2 Daffodils',
-      schoolAddress: 'LMA 11-FCC Gulberg III, Lahore',
-      color1: '#FFFFFF',
-      color2: '#FFDDEB',
-      colorBG: '#DF719F',
-    },
-    {
-      className: 'Class 2 Lilly',
-      schoolAddress: 'LMA 11-FCC Gulberg III, Lahore',
-      color1: '#FFFFFF',
-      color2: '#D7FFD1',
-      colorBG: '#7EDF71',
-    },
+  // const classArray = [
+  //   {
+  //     className: 'Class 2 Daffodils',
+  //     schoolAddress: 'LMA 11-FCC Gulberg III, Lahore',
+  //     color1: '#FFFFFF',
+  //     color2: '#FFDDEB',
+  //     colorBG: '#DF719F',
+  //   },
+  //   {
+  //     className: 'Class 2 Lilly',
+  //     schoolAddress: 'LMA 11-FCC Gulberg III, Lahore',
+  //     color1: '#FFFFFF',
+  //     color2: '#D7FFD1',
+  //     colorBG: '#7EDF71',
+  //   },
+  // ];
+
+  const colorArray = [
+    {color1: '#FFFFFF', color2: '#D7FFD1', colorBG: '#7EDF71'}, // Light green gradient
+    {color1: '#FFF3E0', color2: '#FFCCBC', colorBG: '#FF8A65'}, // Warm orange gradient
+    {color1: '#E3F2FD', color2: '#BBDEFB', colorBG: '#2196F3'}, // Cool blue gradient
+    {color1: '#F3E5F5', color2: '#CE93D8', colorBG: '#9C27B0'}, // Soft purple gradient
+    {color1: '#F9FBE7', color2: '#DCEDC8', colorBG: '#8BC34A'}, // Fresh lime gradient
   ];
 
+  // const renderItemClasses = ({item, index}) => {
+  //   return (
+  //     <LinearGradient
+  //       useAngle={true}
+  //       angle={180}
+  //       angleCenter={{x: 0.5, y: 0.5}}
+  //       start={{x: 0, y: 0}}
+  //       end={{x: 1, y: 0}}
+  //       // colors={[item?.color1, item?.color2]}
+  //       colors={[item.color1, item.color2]}
+  //       locations={[0, 1]}
+  //       style={{
+  //         height: hp('18'),
+  //         width: wp('88'),
+  //         borderRadius: wp('4'),
+  //         marginVertical: hp('1'),
+  //         shadowColor: 'rgba(0,0,0,0.5)',
+  //         shadowOpacity: 0.5,
+  //         shadowRadius: 16,
+  //         elevation: 4,
+  //       }}>
+  //       <View
+  //         style={{
+  //           flexDirection: 'row',
+  //           height: hp('18'),
+  //           paddingVertical: hp('2'),
+  //         }}>
+  //         <View
+  //           style={{
+  //             flex: 0.025,
+  //             backgroundColor: item?.colorBG,
+  //             paddingVertical: hp('1.5'),
+  //             borderTopRightRadius: wp('50'),
+  //             borderBottomRightRadius: wp('50'),
+  //           }}></View>
+
+  //         <View
+  //           style={{
+  //             flex: 0.22,
+  //             alignItems: 'center',
+  //             flexDirection: 'column',
+  //           }}>
+  //           <View
+  //             style={{
+  //               flex: 1,
+  //               justifyContent: 'center',
+  //               alignItems: 'center',
+  //             }}>
+  //             <FontAwesomeIcon
+  //               icon="fat fa-user-graduate"
+  //               size={hp('5')}
+  //               style={{color: item?.colorBG}}
+  //             />
+  //           </View>
+
+  //           <View
+  //             style={{
+  //               flex: 1,
+  //               justifyContent: 'center',
+  //               alignItems: 'center',
+  //             }}></View>
+  //         </View>
+  //         <View
+  //           style={{
+  //             flex: 0.73,
+  //             flexDirection: 'column',
+  //           }}>
+  //           <View
+  //             style={{
+  //               flex: 1.2,
+  //               justifyContent: 'center',
+  //             }}>
+  //             <View>
+  //               <Text
+  //                 numberOfLines={1}
+  //                 ellipsizeMode={'tail'}
+  //                 style={{
+  //                   color: '#353535',
+  //                   fontFamily: fontFamily.ceraMedium,
+  //                   fontWeight: '900',
+  //                   fontSize: 18,
+  //                 }}>
+  //                 {item?.class_name}
+  //               </Text>
+  //             </View>
+  //             <View>
+  //               <Text
+  //                 numberOfLines={1}
+  //                 ellipsizeMode={'tail'}
+  //                 style={{
+  //                   color: '#747474',
+  //                   fontFamily: fontFamily.ceraMedium,
+  //                   fontWeight: '400',
+  //                   fontSize: 12,
+  //                 }}>
+  //                 {item?.branch_name}
+  //               </Text>
+  //             </View>
+  //           </View>
+
+  //           <View
+  //             style={{
+  //               flex: 0.8,
+  //               flexDirection: 'row',
+  //             }}>
+  //             <View
+  //               style={{
+  //                 justifyContent: 'center',
+  //                 flex: 0.55,
+  //               }}>
+  //               <TouchableOpacity
+  //                 activeOpacity={0.6}
+  //                 onPress={() => navigation.navigate('MarkAttendance')}
+  //                 style={{
+  //                   backgroundColor: item?.colorBG,
+  //                   paddingVertical: hp('0.5'),
+  //                   borderRadius: wp('50'),
+  //                 }}>
+  //                 <Text
+  //                   numberOfLines={1}
+  //                   ellipsizeMode={'tail'}
+  //                   style={{
+  //                     color: '#FFFFFF',
+  //                     fontFamily: fontFamily.ceraMedium,
+  //                     fontWeight: '500',
+  //                     fontSize: 13,
+  //                     paddingHorizontal: wp('2'),
+  //                     paddingVertical: hp('0.3'),
+  //                     textAlign: 'center',
+  //                   }}>
+  //                   {'Mark Attendance'}
+  //                 </Text>
+  //               </TouchableOpacity>
+  //             </View>
+
+  //             <View style={{flex: 0.05}}></View>
+
+  //             <View
+  //               activeOpacity={0.5}
+  //               style={{
+  //                 flex: 0.4,
+  //                 justifyContent: 'center',
+  //               }}>
+  //               <TouchableOpacity
+  //                 activeOpacity={0.6}
+  //                 onPress={() => navigation.navigate('AttendanceSummary')}
+  //                 style={{
+  //                   backgroundColor: '#C9C9C9',
+  //                   paddingVertical: hp('0.5'),
+  //                   borderRadius: wp('50'),
+  //                 }}>
+  //                 <Text
+  //                   numberOfLines={1}
+  //                   ellipsizeMode={'tail'}
+  //                   style={{
+  //                     color: '#575757',
+  //                     fontFamily: fontFamily.ceraMedium,
+  //                     fontWeight: '500',
+  //                     fontSize: 13,
+  //                     paddingHorizontal: wp('2'),
+  //                     paddingVertical: hp('0.3'),
+  //                     textAlign: 'center',
+  //                   }}>
+  //                   {'Summary'}
+  //                 </Text>
+  //               </TouchableOpacity>
+  //             </View>
+  //           </View>
+  //         </View>
+  //       </View>
+  //     </LinearGradient>
+  //   );
+  // };
+
   const renderItemClasses = ({item, index}) => {
+    // Select colors based on index cycling through colorArray
+    const colors = colorArray[index % colorArray.length];
+
     return (
       <LinearGradient
         useAngle={true}
@@ -708,8 +924,7 @@ const HomeScreen = props => {
         angleCenter={{x: 0.5, y: 0.5}}
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
-        // colors={[item?.color1, item?.color2]}
-        colors={[item.color1, item.color2]}
+        colors={[colors.color1, colors.color2]}
         locations={[0, 1]}
         style={{
           height: hp('18'),
@@ -730,7 +945,7 @@ const HomeScreen = props => {
           <View
             style={{
               flex: 0.025,
-              backgroundColor: item?.colorBG,
+              backgroundColor: colors.colorBG,
               paddingVertical: hp('1.5'),
               borderTopRightRadius: wp('50'),
               borderBottomRightRadius: wp('50'),
@@ -751,7 +966,7 @@ const HomeScreen = props => {
               <FontAwesomeIcon
                 icon="fat fa-user-graduate"
                 size={hp('5')}
-                style={{color: item?.colorBG}}
+                style={{color: colors.colorBG}}
               />
             </View>
 
@@ -780,9 +995,9 @@ const HomeScreen = props => {
                     color: '#353535',
                     fontFamily: fontFamily.ceraMedium,
                     fontWeight: '900',
-                    fontSize: 18,
+                    fontSize: 15,
                   }}>
-                  {item?.className}
+                  {item?.class_name}
                 </Text>
               </View>
               <View>
@@ -793,9 +1008,9 @@ const HomeScreen = props => {
                     color: '#747474',
                     fontFamily: fontFamily.ceraMedium,
                     fontWeight: '400',
-                    fontSize: 12,
+                    fontSize: 11,
                   }}>
-                  {item?.schoolAddress}
+                  {item?.branch_name}
                 </Text>
               </View>
             </View>
@@ -813,12 +1028,13 @@ const HomeScreen = props => {
                 <TouchableOpacity
                   activeOpacity={0.6}
                   onPress={() =>
-                    navigation.navigate(
-                      index == 0 ? 'MarkAttendance' : 'AttendanceSummary',
-                    )
+                    navigation.navigate('MarkAttendance', {
+                      classDataParamForStudentsList: item,
+                      authKeyParam: authKeyFromHomeAPIHere,
+                    })
                   }
                   style={{
-                    backgroundColor: item?.colorBG,
+                    backgroundColor: colors.colorBG,
                     paddingVertical: hp('0.5'),
                     borderRadius: wp('50'),
                   }}>
@@ -849,6 +1065,12 @@ const HomeScreen = props => {
                 }}>
                 <TouchableOpacity
                   activeOpacity={0.6}
+                  onPress={() =>
+                    navigation.navigate('AttendanceSummary', {
+                      classDataParam: item,
+                      authKeyParamForSummary: authKeyFromHomeAPIHere,
+                    })
+                  }
                   style={{
                     backgroundColor: '#C9C9C9',
                     paddingVertical: hp('0.5'),
@@ -876,7 +1098,6 @@ const HomeScreen = props => {
       </LinearGradient>
     );
   };
-
   return (
     <SafeAreaView
       style={{
@@ -1312,45 +1533,49 @@ const HomeScreen = props => {
                 </TouchableOpacity>
               )}
 
-              <View style={{marginHorizontal: wp('5.5')}}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    marginBottom: hp('1'),
-                    height: hp('4'),
-                  }}>
+              {messagesSlicedData?.length > 0 && (
+                <View style={{marginHorizontal: wp('5.5')}}>
                   <View
                     style={{
-                      flex: 0.3,
-                      justifyContent: 'center',
+                      flexDirection: 'row',
+                      marginBottom: hp('1'),
+                      height: hp('4'),
                     }}>
-                    <Text style={styles.messageText}>Messages</Text>
+                    <View
+                      style={{
+                        flex: 0.3,
+                        justifyContent: 'center',
+                      }}>
+                      <Text style={styles.messageText}>Messages</Text>
+                    </View>
+                    <View style={{flex: 0.45}}></View>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      onPress={() => navigation.navigate('ViewAllMessages')}
+                      style={{
+                        flex: 0.25,
+                        justifyContent: 'center',
+                        alignItems: 'flex-end',
+                      }}>
+                      <Text
+                        style={[styles.messageText, {fontSize: hp('1.65')}]}>
+                        View All
+                      </Text>
+                    </TouchableOpacity>
                   </View>
-                  <View style={{flex: 0.45}}></View>
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => navigation.navigate('ViewAllMessages')}
-                    style={{
-                      flex: 0.25,
-                      justifyContent: 'center',
-                      alignItems: 'flex-end',
-                    }}>
-                    <Text style={[styles.messageText, {fontSize: hp('1.65')}]}>
-                      View All
-                    </Text>
-                  </TouchableOpacity>
-                </View>
 
-                <View style={{marginHorizontal: wp('-2'), marginTop: hp('-1')}}>
-                  <FlatList
-                    data={messagesSlicedData}
-                    renderItem={renderItem}
-                    keyExtractor={(item, index) => index.toString()}
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                  />
+                  <View
+                    style={{marginHorizontal: wp('-2'), marginTop: hp('-1')}}>
+                    <FlatList
+                      data={messagesSlicedData}
+                      renderItem={renderItem}
+                      keyExtractor={(item, index) => index.toString()}
+                      horizontal={true}
+                      showsHorizontalScrollIndicator={false}
+                    />
+                  </View>
                 </View>
-              </View>
+              )}
 
               <View
                 style={{
@@ -1618,7 +1843,7 @@ const HomeScreen = props => {
               )} */}
 
               <FlatList
-                data={classArray}
+                data={teacherClassesArray}
                 renderItem={renderItemClasses}
                 keyExtractor={(item, index) => index.toString()}
                 style={{marginTop: hp('1.5'), marginHorizontal: wp('6')}}
