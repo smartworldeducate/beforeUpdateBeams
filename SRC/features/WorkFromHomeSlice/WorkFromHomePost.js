@@ -14,7 +14,7 @@ const initialState = {
 export const WorkFromHomePostAction = createAsyncThunk(
   'WFHPost',
   async values => {
-    console.log('values', values);
+    console.log('valuesWFHPost', values);
 
     return axios
       .post(`${APIS.WorkFromHomePostAPI}`, values, {

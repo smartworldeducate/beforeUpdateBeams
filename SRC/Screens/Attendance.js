@@ -510,6 +510,7 @@ const Attendance = props => {
                           color: '#1C37A4',
                           fontSize: hp('1'),
                           fontFamily: fontFamily.ceraMedium,
+                          textAlign: 'center',
                         }}>
                         {item?.early_exempt == 'Y' ? item?.status : ''}
                       </Text>
@@ -576,9 +577,9 @@ const Attendance = props => {
                         fontFamily: fontFamily.ceraMedium,
                         textAlign: 'center',
                       }}>
-                      {item?.late_minutes > 15 && item?.late_ded_run == 'N'
-                        ? item?.link
-                        : ''}
+                      {item?.late_minutes > 15 &&
+                        item?.late_ded_run == 'N' &&
+                        item?.link}
                     </Text>
                   )}
                 </View>

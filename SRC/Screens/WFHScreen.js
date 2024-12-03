@@ -14,6 +14,7 @@ import {WorkFromHomePostAction} from '../features/WorkFromHomeSlice/WorkFromHome
 import {WorkFromHomeAction} from '../features/WorkFromHomeSlice/WorkFromHomeGet';
 import Time from '../Components/WFH/Time';
 import Loader from '../Components/Loader/Loader';
+
 const WFHScreen = props => {
   const dispatch = useDispatch();
 
@@ -49,15 +50,6 @@ const WFHScreen = props => {
     fetchData();
   }, [dispatch]);
 
-  const onPressTimeImg = () => {
-    console.log('onPressTimeImg');
-    dispatch(
-      WorkFromHomePostAction({
-        employee_id: profileHereEmpId,
-      }),
-    );
-  };
-
   useEffect(() => {
     if (WorkFromHomePostHere.success == 1) {
       console.log('useEffect WorkFromHomePostHere');
@@ -68,6 +60,15 @@ const WFHScreen = props => {
       );
     }
   }, [WorkFromHomePostHere]);
+
+  const onPressTimeImg = () => {
+    console.log('onPressTimeImg');
+    dispatch(
+      WorkFromHomePostAction({
+        employee_id: profileHereEmpId,
+      }),
+    );
+  };
 
   return (
     <>
@@ -80,107 +81,130 @@ const WFHScreen = props => {
       </View>
 
       <View style={{flex: 1}}>
-        {WorkFromHomeGetHere?.isLoading && <Loader></Loader>}
+        {WorkFromHomeGetHere?.isLoading ? (
+          <Loader></Loader>
+        ) : (
+          <>
+            <View
+              style={{
+                flex: 0.7,
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+              }}>
+              <Time />
+              <Text style={styles.timetext}>{`${moment().format(
+                'dddd, MMMM D',
+              )}`}</Text>
+            </View>
 
-        <View
-          style={{
-            flex: 0.7,
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-          }}>
-          <Time />
-          <Text style={styles.timetext}>{`${moment().format(
-            'dddd, MMMM D',
-          )}`}</Text>
-        </View>
+            <Text
+              style={{
+                fontFamily: fontFamily.ceraMedium,
+                fontStyle: 'italic',
+                color: 'grey',
+                fontSize: hp('1.55'),
+                textAlign: 'center',
+                marginTop: hp('1'),
+                fontWeight: '600',
+              }}>
+              {'Note: Attendance will be recorded as per BEAMS Server time.'}
+            </Text>
 
-        <View
-          style={{
-            flex: 1.8,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <TouchableOpacity
-            activeOpacity={0.6}
-            onPress={onPressTimeImg}
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Image
-              style={{width: wp(55), height: hp(27.5)}}
-              source={{
-                uri:
-                  WorkFromHomeGetHere?.userData?.count == 0
-                    ? 'timein'
-                    : 'outimg',
-              }}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-        </View>
+            <View
+              style={{
+                flex: 1.8,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={onPressTimeImg}
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  style={{width: wp(55), height: hp(27.5)}}
+                  source={{
+                    uri:
+                      WorkFromHomeGetHere?.userData &&
+                      WorkFromHomeGetHere?.userData?.count != 0
+                        ? 'outimg'
+                        : 'timein',
+                  }}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            </View>
 
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            marginHorizontal: wp('10'),
-          }}>
-          <View
-            style={{
-              flex: 0.334,
-              alignItems: 'center',
-              paddingVertical: wp('4'),
-            }}>
-            <Image
-              style={{width: wp(8), height: hp(4)}}
-              source={{uri: 'timeinoffice'}}
-              resizeMode="contain"
-            />
-            <Text style={[styles.serviceSection]}>
-              {WorkFromHomeGetHere?.userData?.count == 0
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                marginHorizontal: wp('10'),
+              }}>
+              <View
+                style={{
+                  flex: 0.334,
+                  alignItems: 'center',
+                  paddingVertical: wp('3'),
+                }}>
+                <Image
+                  style={{width: wp(8), height: hp(4)}}
+                  source={{uri: 'timeinoffice'}}
+                  resizeMode="contain"
+                />
+                <Text style={[styles.serviceSection]}>
+                  {/* {WorkFromHomeGetHere?.userData?.count == 0
                 ? `--:--:--`
-                : WorkFromHomeGetHere?.userData?.time_in}
-            </Text>
-            <Text style={[styles.bootContText2]}>{`TIME IN`}</Text>
-          </View>
-          <View
-            style={{
-              flex: 0.334,
-              alignItems: 'center',
-              paddingVertical: wp('4'),
-            }}>
-            <Image
-              style={{width: wp(8), height: hp(4)}}
-              source={{uri: 'timeoutoffice'}}
-              resizeMode="contain"
-            />
-            <Text style={[styles.serviceSection]}>
-              {WorkFromHomeGetHere?.userData?.count > 1
-                ? WorkFromHomeGetHere?.userData?.time_out
-                : `--:--:--`}
-            </Text>
-            <Text style={[styles.bootContText2]}>{`TIME OUT`}</Text>
-          </View>
-          <View
-            style={{
-              flex: 0.334,
-              alignItems: 'center',
-              paddingVertical: wp('4'),
-            }}>
-            <Image
-              style={{width: wp(8), height: hp(4)}}
-              source={{uri: 'chkimg'}}
-              resizeMode="contain"
-            />
-            <Text style={[styles.serviceSection]}>
-              {WorkFromHomeGetHere?.userData?.count > 1
-                ? WorkFromHomeGetHere?.userData?.working_hours
-                : `--:--:--`}
-            </Text>
-            <Text style={[styles.bootContText2]}>{`Working hr’s`}</Text>
-          </View>
-        </View>
+                : WorkFromHomeGetHere?.userData?.time_in} */}
+
+                  {WorkFromHomeGetHere?.userData &&
+                  WorkFromHomeGetHere?.userData?.count == 0
+                    ? `--:--:--`
+                    : WorkFromHomeGetHere?.userData?.time_in || `--:--:--`}
+                </Text>
+                <Text style={[styles.bootContText2]}>{`TIME IN`}</Text>
+              </View>
+              <View
+                style={{
+                  flex: 0.334,
+                  alignItems: 'center',
+                  paddingVertical: wp('4'),
+                }}>
+                <Image
+                  style={{width: wp(8), height: hp(4)}}
+                  source={{uri: 'timeoutoffice'}}
+                  resizeMode="contain"
+                />
+                <Text style={[styles.serviceSection]}>
+                  {WorkFromHomeGetHere?.userData?.count > 1
+                    ? WorkFromHomeGetHere?.userData?.time_out
+                    : `--:--:--`}
+                </Text>
+                <Text style={[styles.bootContText2]}>{`TIME OUT`}</Text>
+              </View>
+              <View
+                style={{
+                  flex: 0.334,
+                  alignItems: 'center',
+                  paddingVertical: wp('4'),
+                }}>
+                <Image
+                  style={{width: wp(8), height: hp(4)}}
+                  source={{uri: 'chkimg'}}
+                  resizeMode="contain"
+                />
+                <Text style={[styles.serviceSection]}>
+                  {WorkFromHomeGetHere?.userData?.count > 1
+                    ? WorkFromHomeGetHere?.userData?.working_hours
+                    : `--:--:--`}
+                </Text>
+                <Text style={[styles.bootContText2]}>{`Working hr’s`}</Text>
+              </View>
+            </View>
+          </>
+        )}
       </View>
     </>
   );

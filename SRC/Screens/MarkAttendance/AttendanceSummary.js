@@ -217,42 +217,94 @@ const AttendanceSummary = ({route, ...props}) => {
     );
   };
 
+  // const onPressLeftArrow = () => {
+  //   const newDate = new Date(selectedDate);
+  //   newDate.setMonth(newDate.getMonth() - 1);
+  //   setSelectedDate(newDate);
+  //   setFormattedMonthYear(formatDateToMonthYear(newDate));
+
+  //   dispatch(
+  //     AttendanceSummaryAction({
+  //       values: {
+  //         branch_id: branchId,
+  //         class_id: classId,
+  //         section_id: sectionId,
+  //         att_month: formattedMonthYear,
+  //       },
+  //       authKeyParam,
+  //     }),
+  //   );
+  // };
+
+  // const onPressRightArrow = () => {
+  //   const newDate = new Date(selectedDate);
+  //   newDate.setMonth(newDate.getMonth() + 1);
+  //   setSelectedDate(newDate);
+  //   setFormattedMonthYear(formatDateToMonthYear(newDate));
+
+  //   dispatch(
+  //     AttendanceSummaryAction({
+  //       values: {
+  //         branch_id: branchId,
+  //         class_id: classId,
+  //         section_id: sectionId,
+  //         att_month: formattedMonthYear,
+  //       },
+  //       authKeyParam,
+  //     }),
+  //   );
+  // };
+
   const onPressLeftArrow = () => {
     const newDate = new Date(selectedDate);
     newDate.setMonth(newDate.getMonth() - 1);
-    setSelectedDate(newDate);
-    setFormattedMonthYear(formatDateToMonthYear(newDate));
 
-    dispatch(
-      AttendanceSummaryAction({
-        values: {
-          branch_id: branchId,
-          class_id: classId,
-          section_id: sectionId,
-          att_month: formattedMonthYear,
-        },
-        authKeyParam,
-      }),
-    );
+    const formattedDate = formatDateToMonthYear(newDate);
+
+    // Update the state first
+    setSelectedDate(newDate);
+    setFormattedMonthYear(formattedDate);
+
+    // Dispatch the action after the state is updated
+    setTimeout(() => {
+      dispatch(
+        AttendanceSummaryAction({
+          values: {
+            branch_id: branchId,
+            class_id: classId,
+            section_id: sectionId,
+            att_month: formattedDate,
+          },
+          authKeyParam,
+        }),
+      );
+    }, 0);
   };
 
   const onPressRightArrow = () => {
     const newDate = new Date(selectedDate);
     newDate.setMonth(newDate.getMonth() + 1);
-    setSelectedDate(newDate);
-    setFormattedMonthYear(formatDateToMonthYear(newDate));
 
-    dispatch(
-      AttendanceSummaryAction({
-        values: {
-          branch_id: branchId,
-          class_id: classId,
-          section_id: sectionId,
-          att_month: formattedMonthYear,
-        },
-        authKeyParam,
-      }),
-    );
+    const formattedDate = formatDateToMonthYear(newDate);
+
+    // Update the state first
+    setSelectedDate(newDate);
+    setFormattedMonthYear(formattedDate);
+
+    // Dispatch the action after the state is updated
+    setTimeout(() => {
+      dispatch(
+        AttendanceSummaryAction({
+          values: {
+            branch_id: branchId,
+            class_id: classId,
+            section_id: sectionId,
+            att_month: formattedDate,
+          },
+          authKeyParam,
+        }),
+      );
+    }, 0);
   };
 
   useFocusEffect(

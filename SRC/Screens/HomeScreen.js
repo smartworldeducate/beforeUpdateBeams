@@ -1504,7 +1504,7 @@ const HomeScreen = props => {
 
               {profileHere?.userData?.inspire?.show_banner == 1 && (
                 <TouchableOpacity
-                  activeOpacity={0.5}
+                  activeOpacity={0.8}
                   onPress={() => navigation.navigate('ChallengeSignUp')}
                   // onPress={() => navigation.navigate('MarkAttendance')}
                   style={{
@@ -1754,7 +1754,7 @@ const HomeScreen = props => {
                 </>
               )} */}
 
-              {/* {profileHere?.userData?.wfh_result == 1 && (
+              {profileHere?.userData?.wfh_result == 1 && (
                 <>
                   <View
                     style={{
@@ -1786,7 +1786,7 @@ const HomeScreen = props => {
                     </Text>
                   </TouchableOpacity>
                 </>
-              )} */}
+              )}
 
               {/* {profileHereEmpBirthday == 1 ? (
                 <>

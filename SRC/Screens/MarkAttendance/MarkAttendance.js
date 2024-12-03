@@ -20,6 +20,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useEffect, useState, useCallback} from 'react';
 
+import InspireSuccessModal from '../../Components/Modal/InspireSuccessModal';
+
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -246,6 +248,217 @@ const MarkAttendance = ({route, ...props}) => {
     dispatch(setSelectAllFalse());
   };
 
+  const onPressSaveBtnModalTardyCase = (newStatus, timeInValue, remarks) => {
+    let additionalFields = {};
+    console.log('allValues', newStatus, timeInValue, remarks);
+
+    if (newStatus === 'T') {
+      additionalFields = {
+        att_action: null,
+        remarks: remarks,
+        tardiness: timeInValue,
+      };
+    }
+    dispatch(
+      updateSelectedUsersStatus({
+        newStatus,
+        additionalFields,
+      }),
+    );
+    setAttendanceModal(false);
+    dispatch(clearSelectedUsersList());
+    dispatch(setSelectAllFalse());
+  };
+
+  const [timeInValueTardyCase, setTimeInValueTardyCase] = useState('');
+  const [remarksTardyCase, setRemarksTardyCase] = useState('');
+
+  const [absentSelectedValueAbsentCase, setAbsentSelectedValueAbsentCase] =
+    useState('');
+  const [remarksAbsentCase, setRemarksAbsentCase] = useState('');
+
+  const [remarksLeaveCase, setRemarksLeaveCase] = useState('');
+
+  const [remarksExemptedCase, setRemarksExemptedCase] = useState('');
+
+  const onPressTheSaveTardyBtn = (timeInValue, remarksText) => {
+    console.log('onPressTheSaveTardyBtn', timeInValue, remarksText);
+    setRemarksTardyCase(remarksText);
+    setTimeInValueTardyCase(timeInValue);
+    setModalVisible(false);
+  };
+
+  const onPressTheSaveAbsentBtn = (absentRadioButtonValues, remarksText) => {
+    console.log(
+      'onPressTheSaveAbsentBtn',
+      absentRadioButtonValues,
+      remarksText,
+    );
+    setAbsentSelectedValueAbsentCase(absentRadioButtonValues);
+    setRemarksAbsentCase(remarksText);
+    setModalVisibleAbsent(false);
+  };
+
+  const onPressTheSaveLeaveBtn = remarksText => {
+    console.log('onPressTheSaveLeaveBtn', remarksText);
+    setRemarksLeaveCase(remarksText);
+    setModalVisibleLeave(false);
+  };
+
+  const onPressTheSaveExemptedBtn = remarksText => {
+    console.log('remarksText', remarksText);
+    setRemarksExemptedCase(remarksText);
+    setModalVisibleExempted(false);
+  };
+
+  console.log('remarksTardyCase', remarksTardyCase);
+  console.log('timeInValueTardyCase', timeInValueTardyCase);
+
+  console.log('absentSelectedValueAbsentCase', absentSelectedValueAbsentCase);
+  console.log('remarksAbsentCase', remarksAbsentCase);
+
+  const handleButtonPress = (student_id, currentStatus) => {
+    const nextStatus = getNextStatus(currentStatus);
+    // dispatch(changeAttendStatusSlice(student_id));
+    if (nextStatus === 'T') {
+      console.log('nextStatusInT', nextStatus);
+      let additionalFields = {
+        att_action: null,
+        remarks: remarksTardyCase,
+        tardiness: timeInValueTardyCase,
+      };
+      dispatch(changeAttendStatusSlice({student_id, additionalFields}));
+      setModalVisible(true);
+    } else if (nextStatus === 'A') {
+      console.log('nextStatusInA', nextStatus);
+      let additionalFields = {
+        att_action: absentSelectedValueAbsentCase,
+        remarks: remarksAbsentCase,
+        tardiness: null,
+      };
+
+      dispatch(changeAttendStatusSlice({student_id, additionalFields}));
+      setModalVisibleAbsent(true);
+    } else if (nextStatus === 'L') {
+      console.log('nextStatusInL', nextStatus);
+      let additionalFields = {
+        att_action: null,
+        remarks: remarksAbsentCase,
+        tardiness: null,
+      };
+      // dispatch(changeAttendStatusSlice(student_id));
+      dispatch(changeAttendStatusSlice({student_id, additionalFields}));
+      setModalVisibleLeave(true);
+    } else if (nextStatus === 'E') {
+      console.log('nextStatusInE', nextStatus);
+      let additionalFields = {
+        att_action: null,
+        remarks: remarksExemptedCase,
+        tardiness: null,
+      };
+      // dispatch(changeAttendStatusSlice(student_id));
+      dispatch(changeAttendStatusSlice({student_id, additionalFields}));
+      setModalVisibleExempted(true);
+    } else {
+      console.log('nextStatusInElse', nextStatus);
+      let additionalFields = {};
+      dispatch(changeAttendStatusSlice({student_id, additionalFields}));
+      setModalVisible(false);
+      setModalVisibleAbsent(false);
+      setModalVisibleLeave(false);
+      setModalVisibleExempted(false);
+    }
+  };
+
+  const onPressSaveBtnModalAbsentCase = (
+    newStatus,
+    absentRadioButtonValues,
+    remarks,
+  ) => {
+    let additionalFields = {};
+
+    console.log('val1', newStatus);
+    console.log('val4', absentRadioButtonValues);
+    console.log('val3', remarks);
+
+    if (newStatus === 'A') {
+      additionalFields = {
+        att_action:
+          absentRadioButtonValues !== '' && absentRadioButtonValues != undefined
+            ? absentRadioButtonValues
+            : '3',
+        remarks: remarks,
+      };
+    }
+
+    console.log('additionalFieldsInAbsent', additionalFields);
+
+    dispatch(
+      updateSelectedUsersStatus({
+        newStatus,
+        additionalFields,
+      }),
+    );
+
+    setAttendanceModal(false);
+    dispatch(clearSelectedUsersList());
+    dispatch(setSelectAllFalse());
+  };
+
+  const onPressSaveBtnModalLeaveCase = (newStatus, remarks) => {
+    let additionalFields = {};
+
+    console.log('val1', newStatus);
+    console.log('val3', remarks);
+
+    if (newStatus === 'L') {
+      additionalFields = {
+        att_action: null,
+        remarks: remarks == undefined ? '' : remarks,
+      };
+    }
+
+    console.log('additionalFieldsInLeave', additionalFields);
+
+    dispatch(
+      updateSelectedUsersStatus({
+        newStatus,
+        additionalFields,
+      }),
+    );
+
+    setAttendanceModal(false);
+    dispatch(clearSelectedUsersList());
+    dispatch(setSelectAllFalse());
+  };
+
+  const onPressSaveBtnModalExemptedCase = (newStatus, remarks) => {
+    let additionalFields = {};
+
+    console.log('val1', newStatus);
+    console.log('val3', remarks);
+
+    if (newStatus === 'E') {
+      additionalFields = {
+        att_action: null,
+        remarks: remarks == undefined ? '' : remarks,
+      };
+    }
+
+    console.log('additionalFieldsInExempted', additionalFields);
+
+    dispatch(
+      updateSelectedUsersStatus({
+        newStatus,
+        additionalFields,
+      }),
+    );
+
+    setAttendanceModal(false);
+    dispatch(clearSelectedUsersList());
+    dispatch(setSelectAllFalse());
+  };
+
   const onPressShowDatePicker = () => {
     setDatePickerVisibility(true);
   };
@@ -329,27 +542,6 @@ const MarkAttendance = ({route, ...props}) => {
         return 'PP';
       default:
         return 'PP';
-    }
-  };
-
-  const handleButtonPress = (student_id, currentStatus) => {
-    const nextStatus = getNextStatus(currentStatus);
-
-    dispatch(changeAttendStatusSlice(student_id));
-
-    if (nextStatus === 'T') {
-      setModalVisible(true);
-    } else if (nextStatus === 'A') {
-      setModalVisibleAbsent(true);
-    } else if (nextStatus === 'L') {
-      setModalVisibleLeave(true);
-    } else if (nextStatus === 'E') {
-      setModalVisibleExempted(true);
-    } else {
-      setModalVisible(false);
-      setModalVisibleAbsent(false);
-      setModalVisibleLeave(false);
-      setModalVisibleExempted(false);
     }
   };
 
@@ -544,6 +736,12 @@ const MarkAttendance = ({route, ...props}) => {
     setModalVisibleAbsent(false);
     setModalVisibleLeave(false);
     setModalVisibleExempted(false);
+
+    setTimeInValue(null);
+    setRemarksText('');
+
+    setTimeInValueTardyCase('');
+    setRemarksTardyCase('');
   };
 
   const onPressCloseAbsentBtn = () => {
@@ -551,6 +749,14 @@ const MarkAttendance = ({route, ...props}) => {
     setModalVisibleAbsent(false);
     setModalVisibleLeave(false);
     setModalVisibleExempted(false);
+
+    setInformSH(false);
+    setTicketPRO(false);
+    setNone(true);
+    setRemarksText('');
+
+    setRemarksAbsentCase('');
+    setAbsentSelectedValueAbsentCase('');
   };
 
   const onPressCloseLeaveBtn = () => {
@@ -558,6 +764,9 @@ const MarkAttendance = ({route, ...props}) => {
     setModalVisibleAbsent(false);
     setModalVisibleLeave(false);
     setModalVisibleExempted(false);
+
+    setRemarksText('');
+    setRemarksLeaveCase('');
   };
 
   const onPressCloseExemptedBtn = () => {
@@ -565,23 +774,9 @@ const MarkAttendance = ({route, ...props}) => {
     setModalVisibleAbsent(false);
     setModalVisibleLeave(false);
     setModalVisibleExempted(false);
-  };
 
-  const onPressTheSaveTardyBtn = (timeInValue, remarksText) => {
-    console.log('onPressTheSaveTardyBtn', timeInValue, remarksText);
-    setModalVisible(false);
-  };
-
-  const onPressTheSaveAbsentBtn = () => {
-    setModalVisibleAbsent(false);
-  };
-
-  const onPressTheSaveLeaveBtn = () => {
-    setModalVisibleLeave(false);
-  };
-
-  const onPressTheSaveExemptedBtn = () => {
-    setModalVisibleExempted(false);
+    setRemarksText('');
+    setRemarksExemptedCase('');
   };
 
   const onPressInformSH = () => {
@@ -602,6 +797,19 @@ const MarkAttendance = ({route, ...props}) => {
     setTicketPRO(false);
     setNone(true);
     setAbsentRadioButtonValues('3');
+  };
+
+  const onChangeRekarmsTardyCase = val => {
+    setRemarksTardyCase(val);
+  };
+  const onChangeRekarmsAbsent = val => {
+    setRemarksAbsentCase(val);
+  };
+  const onChangeRekarmsLeave = val => {
+    setRemarksLeaveCase(val);
+  };
+  const onChangeRekarmsExempted = val => {
+    setRemarksExemptedCase(val);
   };
 
   return (
@@ -1000,10 +1208,14 @@ const MarkAttendance = ({route, ...props}) => {
           textLower={'textLower'}
           btnText={'Close'}
           onPressSave={onPressSaveBtnModal}
+          onPressSaveTardy={onPressSaveBtnModalTardyCase}
+          onPressSaveAbsent={onPressSaveBtnModalAbsentCase}
+          onPressSaveLeave={onPressSaveBtnModalLeaveCase}
+          onPressSaveExempted={onPressSaveBtnModalExemptedCase}
         />
       )}
 
-      {showErrorModal && (
+      {/* {showErrorModal && (
         <MessageSuccessModal
           textUpper={'Error!'}
           textLower={uploadStdAttendanceResponseMessageHere}
@@ -1014,6 +1226,24 @@ const MarkAttendance = ({route, ...props}) => {
 
       {showSuccessModal && (
         <MessageSuccessModal
+          textUpper={'Successfully Uploaded'}
+          textLower={uploadStdAttendanceResponseMessageHere}
+          btnText={'OK'}
+          onPressOpacity={closeModal}
+        />
+      )} */}
+
+      {showErrorModal && (
+        <InspireSuccessModal
+          textUpper={'Error!'}
+          textLower={uploadStdAttendanceResponseMessageHere}
+          btnText={'OK'}
+          onPressOpacity={closeModal}
+        />
+      )}
+
+      {showSuccessModal && (
+        <InspireSuccessModal
           textUpper={'Successfully Uploaded'}
           textLower={uploadStdAttendanceResponseMessageHere}
           btnText={'OK'}
@@ -1129,8 +1359,8 @@ const MarkAttendance = ({route, ...props}) => {
                   multiline
                   numberOfLines={6}
                   maxLength={200}
-                  value={remarksText}
-                  onChangeText={onChangeRekarmsText}
+                  value={remarksTardyCase}
+                  onChangeText={onChangeRekarmsTardyCase}
                   placeholder="Remarks"
                   placeholderTextColor={'black'}
                   returnKeyType={'done'}
@@ -1163,7 +1393,7 @@ const MarkAttendance = ({route, ...props}) => {
                 <TouchableOpacity
                   activeOpacity={0.5}
                   onPress={() =>
-                    onPressTheSaveTardyBtn(timeInValue, remarksText)
+                    onPressTheSaveTardyBtn(timeInValue, remarksTardyCase)
                   }
                   style={{
                     flex: 0.3,
@@ -1365,8 +1595,8 @@ const MarkAttendance = ({route, ...props}) => {
                   multiline
                   numberOfLines={6}
                   maxLength={200}
-                  value={remarksText}
-                  onChangeText={onChangeRekarmsText}
+                  value={remarksAbsentCase}
+                  onChangeText={onChangeRekarmsAbsent}
                   placeholder="Remarks"
                   placeholderTextColor={'black'}
                   returnKeyType={'done'}
@@ -1398,7 +1628,13 @@ const MarkAttendance = ({route, ...props}) => {
                 <View style={{flex: 0.4}}></View>
                 <TouchableOpacity
                   activeOpacity={0.5}
-                  onPress={onPressTheSaveAbsentBtn}
+                  // onPressTheSaveTardyBtn(timeInValue, remarksText)
+                  onPress={() =>
+                    onPressTheSaveAbsentBtn(
+                      absentRadioButtonValues,
+                      remarksAbsentCase,
+                    )
+                  }
                   style={{
                     flex: 0.3,
                     backgroundColor: '#1C37A4',
@@ -1488,8 +1724,8 @@ const MarkAttendance = ({route, ...props}) => {
                   multiline
                   numberOfLines={6}
                   maxLength={200}
-                  value={remarksText}
-                  onChangeText={onChangeRekarmsText}
+                  value={remarksLeaveCase}
+                  onChangeText={onChangeRekarmsLeave}
                   placeholder="Remarks"
                   placeholderTextColor={'black'}
                   returnKeyType={'done'}
@@ -1521,7 +1757,7 @@ const MarkAttendance = ({route, ...props}) => {
                 <View style={{flex: 0.4}}></View>
                 <TouchableOpacity
                   activeOpacity={0.5}
-                  onPress={onPressTheSaveLeaveBtn}
+                  onPress={() => onPressTheSaveLeaveBtn(remarksLeaveCase)}
                   style={{
                     flex: 0.3,
                     backgroundColor: '#1C37A4',
@@ -1611,8 +1847,8 @@ const MarkAttendance = ({route, ...props}) => {
                   multiline
                   numberOfLines={6}
                   maxLength={200}
-                  value={remarksText}
-                  onChangeText={onChangeRekarmsText}
+                  value={remarksExemptedCase}
+                  onChangeText={onChangeRekarmsExempted}
                   placeholder="Remarks"
                   placeholderTextColor={'black'}
                   returnKeyType={'done'}
@@ -1644,7 +1880,7 @@ const MarkAttendance = ({route, ...props}) => {
                 <View style={{flex: 0.4}}></View>
                 <TouchableOpacity
                   activeOpacity={0.5}
-                  onPress={onPressTheSaveExemptedBtn}
+                  onPress={() => onPressTheSaveExemptedBtn(remarksExemptedCase)}
                   style={{
                     flex: 0.3,
                     backgroundColor: '#1C37A4',
