@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 import MainHeader from '../Components/Headers/MainHeader';
 import Icon from 'react-native-fontawesome-pro';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -12,10 +12,10 @@ import fontFamily from '../Styles/fontFamily';
 import colors from '../Styles/colors';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useDispatch, useSelector} from 'react-redux';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {LeaveTypeAction} from '../features/LeaveTypeSlice/LeaveTypeSlice';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { LeaveTypeAction } from '../features/LeaveTypeSlice/LeaveTypeSlice';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
 import AttendanceTempModal from '../Components/Modal/AttendanceTempModal';
 
@@ -56,14 +56,14 @@ const ApplicationType = props => {
   }, [dispatch]);
 
   return (
-    <View style={{flex: 1}}>
-      <View style={{flex: hp(0.8)}}>
+    <View style={{ flex: 1 }}>
+      <View style={{ flex: hp(0.8) }}>
         <MainHeader
           text={'Application Type'}
           iconName={'arrow-left'}
           onpressBtn={() => props.navigation.goBack()}
         />
-        <View style={styles.ap1}>
+        {/* <View style={styles.ap1}>
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => props.navigation.navigate('ApplyLeave')}
@@ -336,14 +336,85 @@ const ApplicationType = props => {
               </View>
             </View>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
-        {tempLeaveModal && (
-          <AttendanceTempModal
-            btnText={'GO BACK'}
-            closeModal={() => navigation.navigate("CalanderAttendanceTab")}
-          />
-        )}
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: "#F5F8FC",
+            paddingHorizontal: wp('15'),
+          }}>
+          <TouchableOpacity
+            // onPress={() => props.navigation.goBack()}
+            style={{
+              flex: 0.35,
+            }}></TouchableOpacity>
+
+          <View
+            style={{
+              flex: 0.3,
+              borderRadius: wp('3'),
+
+              backgroundColor: colors.whiteColor,
+              flexDirection: 'column',
+            }}>
+            <View
+              style={{
+                flex: 0.8,
+                paddingHorizontal: wp('4'),
+
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text style={{ color: 'black', fontSize: hp('2.5') }}>
+                Feature Unavailable
+              </Text>
+
+              <Text
+                style={{
+                  color: 'black',
+                  fontSize: hp('1.65'),
+                  marginTop: hp('2.5'),
+                  textAlign: 'center',
+                }}>
+                This feature is currently disabled, but will be live soon. Stay
+                tuned for updates!
+              </Text>
+            </View>
+
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => props.navigation.goBack()}
+              style={{
+                flex: 0.2,
+                paddingHorizontal: wp('4'),
+                backgroundColor: '#1C37A4',
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingHorizontal: wp('3'),
+                borderRadius: wp('50'),
+                marginHorizontal: wp('5'),
+                marginBottom: hp('1.5'),
+              }}>
+              <Text
+                style={{
+                  color: 'white',
+                  textAlign: 'center',
+
+                  fontSize: hp('1.85'),
+                  fontWeight: '500',
+                }}>
+                {"GO BACK"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <TouchableOpacity
+            // onPress={() => props.navigation.goBack()}
+            style={{
+              flex: 0.35,
+            }}></TouchableOpacity>
+        </View>
       </View>
     </View>
   );

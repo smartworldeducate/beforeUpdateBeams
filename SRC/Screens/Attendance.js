@@ -6,7 +6,7 @@ import {
   FlatList,
   RefreshControl,
 } from 'react-native';
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MainHeader from '../Components/Headers/MainHeader';
 import LinearGradient from 'react-native-linear-gradient';
 import {
@@ -16,15 +16,15 @@ import {
 import EStyleSheet from 'react-native-extended-stylesheet';
 import fontFamily from '../Styles/fontFamily';
 
-import {useDispatch, useSelector} from 'react-redux';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import YearSelectionModal from '../Components/Modal/YearSelectionModal';
 import LineSeprator from '../Components/LineSeprator/LineSeprator';
-import {AttendanceCalanderAction} from '../features/AttendanceCalanderSlice/AttendanceCalanderSlice';
+import { AttendanceCalanderAction } from '../features/AttendanceCalanderSlice/AttendanceCalanderSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../Components/Loader/Loader';
 import colors from '../Styles/colors';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
 const Attendance = props => {
   const dispatch = useDispatch();
@@ -56,18 +56,18 @@ const Attendance = props => {
   };
 
   const years = [
-    {id: '01', month: 'January'},
-    {id: '02', month: 'Fabruary'},
-    {id: '03', month: 'March'},
-    {id: '04', month: 'April'},
-    {id: '05', month: 'May'},
-    {id: '06', month: 'June'},
-    {id: '07', month: 'July'},
-    {id: '08', month: 'August'},
-    {id: '09', month: 'September'},
-    {id: '10', month: 'October'},
-    {id: '11', month: 'November'},
-    {id: '12', month: 'December'},
+    { id: '01', month: 'January' },
+    { id: '02', month: 'Fabruary' },
+    { id: '03', month: 'March' },
+    { id: '04', month: 'April' },
+    { id: '05', month: 'May' },
+    { id: '06', month: 'June' },
+    { id: '07', month: 'July' },
+    { id: '08', month: 'August' },
+    { id: '09', month: 'September' },
+    { id: '10', month: 'October' },
+    { id: '11', month: 'November' },
+    { id: '12', month: 'December' },
   ];
 
   const currentDate = new Date();
@@ -89,9 +89,8 @@ const Attendance = props => {
         dispatch(
           AttendanceCalanderAction({
             employee_id: parsedLoginData,
-            month_year: `${
-              initialMonth != null ? initialMonth : currentMonth
-            }/${selectedYear != null ? selectedYear : lastElement}`,
+            month_year: `${initialMonth != null ? initialMonth : currentMonth
+              }/${selectedYear != null ? selectedYear : lastElement}`,
           }),
         );
       } catch (error) {
@@ -111,20 +110,19 @@ const Attendance = props => {
         dispatch(
           AttendanceCalanderAction({
             employee_id: profileHereEmpId,
-            month_year: `${
-              initialMonth != null ? initialMonth : currentMonth
-            }/${selectedYear != null ? selectedYear : lastElement}`,
+            month_year: `${initialMonth != null ? initialMonth : currentMonth
+              }/${selectedYear != null ? selectedYear : lastElement}`,
           }),
         );
       };
     }, []),
   );
 
-  const renderItemYears = ({item, index}) => {
+  const renderItemYears = ({ item, index }) => {
     return (
       <TouchableOpacity
         activeOpacity={0.5}
-        onPress={() => onPressYear({item, index})}
+        onPress={() => onPressYear({ item, index })}
         style={{
           borderBottomColor: 'grey',
           borderBottomWidth: wp('0.15'),
@@ -146,32 +144,37 @@ const Attendance = props => {
     );
   };
 
-  const renderItem = ({item, index}) => {
+  const renderItem = ({ item, index }) => {
     return (
       <LinearGradient
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 0}}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
         colors={
           initialMonth != null
             ? initialMonth == item?.id
               ? ['#1C37A5', '#4D69DC']
               : [colors.appBackGroundColor, colors.appBackGroundColor]
             : currentMonth == item?.id
-            ? ['#1C37A5', '#4D69DC']
-            : [colors.appBackGroundColor, colors.appBackGroundColor]
+              ? ['#1C37A5', '#4D69DC']
+              : [colors.appBackGroundColor, colors.appBackGroundColor]
         }
         style={{
           borderRadius: wp('8'),
           height: hp('4'),
-          width: wp('20'),
+          width: wp('21'),
           justifyContent: 'center',
           alignItems: 'center',
           marginRight: wp('2'),
         }}>
         <TouchableOpacity
           activeOpacity={0.8}
-          onPress={() => onPressMonth({item})}
-          style={{}}>
+          onPress={() => onPressMonth({ item })}
+          style={{
+            height: hp('4'),
+            width: wp('21'),
+            justifyContent:"center",
+            alignItems:"center"
+          }}>
           <Text
             style={{
               color: 'gray',
@@ -182,8 +185,8 @@ const Attendance = props => {
                     ? 'white'
                     : '#1C37A4'
                   : currentMonth == item?.id
-                  ? 'white'
-                  : '#1C37A4',
+                    ? 'white'
+                    : '#1C37A4',
             }}>
             {item.month}
           </Text>
@@ -199,23 +202,21 @@ const Attendance = props => {
     dispatch(
       AttendanceCalanderAction({
         employee_id: profileHereEmpId,
-        month_year: `${item?.item?.id}/${
-          selectedYear != null ? selectedYear : lastElement
-        }`,
+        month_year: `${item?.item?.id}/${selectedYear != null ? selectedYear : lastElement
+          }`,
       }),
     );
   };
 
-  const onPressYear = ({item}) => {
+  const onPressYear = ({ item }) => {
     setSelectedYear(item);
     // console.log('onPressYear');
 
     dispatch(
       AttendanceCalanderAction({
         employee_id: profileHereEmpId,
-        month_year: `${
-          initialMonth != null ? initialMonth : currentMonth
-        }/${item}`,
+        month_year: `${initialMonth != null ? initialMonth : currentMonth
+          }/${item}`,
       }),
     );
     setyearSelectionModal(!yearSelectionModal);
@@ -226,7 +227,7 @@ const Attendance = props => {
   const formattedDate = currentDate1.toISOString().split('T')[0];
   console.log('formattedDate', formattedDate);
 
-  const renderItemAttendance = ({item, index}) => {
+  const renderItemAttendance = ({ item, index }) => {
     const today = item?.att_date;
 
     const [year, month, day] = today.split('-');
@@ -305,16 +306,16 @@ const Attendance = props => {
               item?.late_minutes > 15 && item?.late_ded_run == 'N' ? 1 : 1
             }
 
-            // for Temp commented before Live aab
-            // onPress={
-            //   item?.late_minutes > 15 && item?.late_ded_run == 'N'
-            //     ? () =>
-            //         navigation.navigate('LateArivel', {
-            //           attenValue: item?.att_date,
-            //           lateArrivalTime: item?.emp_in_time,
-            //         })
-            //     : null
-            // }
+          // for Temp commented before Live aab
+          // onPress={
+          //   item?.late_minutes > 15 && item?.late_ded_run == 'N'
+          //     ? () =>
+          //         navigation.navigate('LateArivel', {
+          //           attenValue: item?.att_date,
+          //           lateArrivalTime: item?.emp_in_time,
+          //         })
+          //     : null
+          // }
           >
             {item?.rec_status !== 'Toil' && (
               <Text
@@ -333,33 +334,33 @@ const Attendance = props => {
                     item?.late_exempt == 'Y'
                       ? 'black'
                       : item?.is_late == 'Y'
-                      ? 'red'
-                      : 'black',
+                        ? 'red'
+                        : 'black',
 
                   backgroundColor:
                     item?.late_exempt == 'Y'
                       ? null
                       : item?.is_late == 'Y'
-                      ? '#ffe6e6'
-                      : null,
+                        ? '#ffe6e6'
+                        : null,
                   borderRadius:
                     item?.late_exempt == 'Y'
                       ? null
                       : item?.is_late == 'Y'
-                      ? wp('0')
-                      : null,
+                        ? wp('0')
+                        : null,
                   borderWidth:
                     item?.late_exempt == 'Y'
                       ? null
                       : item?.is_late == 'Y'
-                      ? wp('0.15')
-                      : null,
+                        ? wp('0.15')
+                        : null,
                   borderColor:
                     item?.late_exempt == 'Y'
                       ? null
                       : item?.is_late == 'Y'
-                      ? 'red'
-                      : null,
+                        ? 'red'
+                        : null,
 
                   paddingTop: item?.emp_in_time == null ? hp('1.35') : null,
                   marginTop: item?.emp_in_time !== null ? hp('1.35') : null,
@@ -367,8 +368,8 @@ const Attendance = props => {
                 {item?.holiday_desc != null
                   ? item?.holiday_desc
                   : item?.emp_in_time != null
-                  ? item?.emp_in_time
-                  : '--:--:--'}
+                    ? item?.emp_in_time
+                    : '--:--:--'}
               </Text>
             )}
 
@@ -474,17 +475,17 @@ const Attendance = props => {
                         : 1
                     }
 
-                    // for Temp commented before Live aab
+                  // for Temp commented before Live aab
 
-                    // onPress={
-                    //   item?.early_minutes > 15 && item?.late_ded_run == 'N'
-                    //     ? () =>
-                    //         navigation.navigate('EarlyLeaving', {
-                    //           attenValue: item?.att_date,
-                    //           earlyLeavingTime: item?.emp_out_time,
-                    //         })
-                    //     : null
-                    // }
+                  // onPress={
+                  //   item?.early_minutes > 15 && item?.late_ded_run == 'N'
+                  //     ? () =>
+                  //         navigation.navigate('EarlyLeaving', {
+                  //           attenValue: item?.att_date,
+                  //           earlyLeavingTime: item?.emp_out_time,
+                  //         })
+                  //     : null
+                  // }
                   >
                     {item?.holiday_desc == null ? (
                       <Text
@@ -598,7 +599,7 @@ const Attendance = props => {
           )}
         </View>
         <View
-          style={{flex: 0.3, justifyContent: 'center', alignItems: 'center'}}>
+          style={{ flex: 0.3, justifyContent: 'center', alignItems: 'center' }}>
           {item?.hd_pending == 'Y' ? (
             <></>
           ) : (
@@ -614,7 +615,7 @@ const Attendance = props => {
                   //   })
                   // }
 
-                  style={{justifyContent: 'center', alignItems: 'center'}}>
+                  style={{ justifyContent: 'center', alignItems: 'center' }}>
                   <Text
                     style={{
                       backgroundColor: '#1C37A4',
@@ -633,7 +634,7 @@ const Attendance = props => {
           )}
 
           <>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               {item?.leavetype_desc == 'Annual Leave' && (
                 <View
                   style={{
@@ -643,7 +644,7 @@ const Attendance = props => {
                   <FontAwesomeIcon
                     icon={`fat fa-island-tropical`}
                     size={hp(2.25)}
-                    style={{color: '#41CE68'}}
+                    style={{ color: '#41CE68' }}
                   />
                 </View>
               )}
@@ -657,7 +658,7 @@ const Attendance = props => {
                   <FontAwesomeIcon
                     icon={`fat fa-masks-theater`}
                     size={hp(2.25)}
-                    style={{color: '#B141CE'}}
+                    style={{ color: '#B141CE' }}
                   />
                 </View>
               )}
@@ -671,7 +672,7 @@ const Attendance = props => {
                   <FontAwesomeIcon
                     icon={`fat fa-temperature-half`}
                     size={hp(2.25)}
-                    style={{color: '#CE5141'}}
+                    style={{ color: '#CE5141' }}
                   />
                 </View>
               )}
@@ -685,7 +686,7 @@ const Attendance = props => {
                   <FontAwesomeIcon
                     icon={`fat fa-calendar-range`}
                     size={hp(2.25)}
-                    style={{color: '#4167C4'}}
+                    style={{ color: '#4167C4' }}
                   />
                 </View>
               )}
@@ -699,7 +700,7 @@ const Attendance = props => {
                   <FontAwesomeIcon
                     icon={`fat fa-kaaba`}
                     size={hp(2.25)}
-                    style={{color: '#41CEB4'}}
+                    style={{ color: '#41CEB4' }}
                   />
                 </View>
               )}
@@ -714,7 +715,7 @@ const Attendance = props => {
                   <FontAwesomeIcon
                     icon={`fat fa-money-bill-wave`}
                     size={hp(2.25)}
-                    style={{color: '#7051CE'}}
+                    style={{ color: '#7051CE' }}
                   />
                 </View>
               )}
@@ -739,8 +740,8 @@ const Attendance = props => {
                         item?.status === 'Application Not Raised'
                           ? hp('1.1')
                           : displayedText
-                          ? hp('1.75')
-                          : hp('1.5'),
+                            ? hp('1.75')
+                            : hp('1.5'),
                       // fontFamily: fontFamily.ceraMedium,
                       fontWeight: '500',
                       paddingTop: hp('0.5'),
@@ -749,8 +750,8 @@ const Attendance = props => {
                       ? item?.emp_in_time != null && item?.emp_out_time != null
                         ? item?.total_working_hours
                         : item?.status == ''
-                        ? item?.leavetype_desc
-                        : item?.status
+                          ? item?.leavetype_desc
+                          : item?.status
                       : ''}
                   </Text>
                 )}
@@ -788,9 +789,8 @@ const Attendance = props => {
       dispatch(
         AttendanceCalanderAction({
           employee_id: parsedLoginData,
-          month_year: `${initialMonth != null ? initialMonth : currentMonth}/${
-            selectedYear != null ? selectedYear : lastElement
-          }`,
+          month_year: `${initialMonth != null ? initialMonth : currentMonth}/${selectedYear != null ? selectedYear : lastElement
+            }`,
         }),
       );
     } catch (error) {
@@ -803,7 +803,7 @@ const Attendance = props => {
   const yourRef = useRef(null);
 
   return (
-    <View style={{backgroundColor: colors.appBackGroundColor}}>
+    <View style={{ backgroundColor: colors.appBackGroundColor }}>
       <View>
         <MainHeader
           text={'Attendance'}
@@ -815,7 +815,7 @@ const Attendance = props => {
       </View>
 
       <View
-        style={{height: hp(7), marginTop: hp(2), marginHorizontal: hp(2.5)}}>
+        style={{ height: hp(7), marginTop: hp(3), marginHorizontal: hp(2.5) }}>
         <FlatList
           data={years}
           renderItem={renderItem}
@@ -828,19 +828,19 @@ const Attendance = props => {
           onLayout={() => yourRef.current.scrollToEnd()}
 
 
-          // ref={yourRef}
-          // onContentSizeChange={() =>
-          //   yourRef.current.scrollToIndex({
-          //     animated: true,
-          //     index: selectedMonth,
-          //   })
-          // }
-          // onLayout={() =>
-          //   yourRef.current.scrollToIndex({
-          //     animated: true,
-          //     index: selectedMonth? selectedMonth : 11,
-          //   })
-          // }
+        // ref={yourRef}
+        // onContentSizeChange={() =>
+        //   yourRef.current.scrollToIndex({
+        //     animated: true,
+        //     index: selectedMonth,
+        //   })
+        // }
+        // onLayout={() =>
+        //   yourRef.current.scrollToIndex({
+        //     animated: true,
+        //     index: selectedMonth? selectedMonth : 11,
+        //   })
+        // }
         />
       </View>
 
@@ -881,7 +881,7 @@ const Attendance = props => {
             Late Minutes: {attendanceCalanderHere?.userData?.late_minutes}
           </Text>
           {attendanceCalanderHere?.userData?.late_percentage == null ||
-          undefined ? (
+            undefined ? (
             <></>
           ) : (
             <Text
@@ -899,7 +899,7 @@ const Attendance = props => {
           marginHorizontal: hp(2.5),
         }}>
         <View
-          style={{justifyContent: 'center', alignItems: 'center', flex: 0.1}}>
+          style={{ justifyContent: 'center', alignItems: 'center', flex: 0.1 }}>
           <Text style={styles.lateminut}>Date</Text>
         </View>
         <View
@@ -919,7 +919,7 @@ const Attendance = props => {
           <Text style={styles.lateminut}>Time out</Text>
         </View>
         <View
-          style={{justifyContent: 'center', flex: 0.3, alignItems: 'center'}}>
+          style={{ justifyContent: 'center', flex: 0.3, alignItems: 'center' }}>
           <Text style={styles.lateminut}>Working Hr’s</Text>
         </View>
       </View>

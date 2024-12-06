@@ -80,13 +80,13 @@ const Login = props => {
 
   const [deviceToken, setDeviceToken] = useState();
 
-  useEffect(() => {
-    async function ourFunc() {
-      const hereToken = await AsyncStorage.getItem('fcm');
-      setDeviceToken(hereToken);
-    }
-    ourFunc();
-  }, []);
+  // useEffect(() => {
+  //   async function ourFunc() {
+  //     const hereToken = await AsyncStorage.getItem('fcm');
+  //     setDeviceToken(hereToken);
+  //   }
+  //   ourFunc();
+  // }, []);
 
   const deviceType = Platform.OS;
   const getDeviceId = DeviceInfo.getDeviceId();
@@ -132,7 +132,7 @@ const Login = props => {
           userAppInstallVersion: `${getUserAppInstallVersion}.01`,
           deviceName: deviceName,
           deviceApiLevel: deviceApiLevel.toString(),
-          deviceToken: deviceToken,
+          // deviceToken: deviceToken,
         }),
       );
     } catch (error) {
@@ -271,7 +271,7 @@ const Login = props => {
                 <TextInputCustom
                   value={employeeId}
                   onChangeText={onChangeEmpId}
-                  keyboardType={'default'}
+                  keyboardType={'number-pad'}
                   maxLength={40}
                   returnKeyType={'next'}
                   iconName={'user-tie'}
@@ -299,6 +299,10 @@ const Login = props => {
                   style={styles.textInputCustomStyle}
                 />
               </View>
+
+              
+
+              
             </View>
             <View
               style={{

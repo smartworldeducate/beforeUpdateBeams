@@ -180,13 +180,24 @@ const ProfileCard = ({
                   leftText={'Basic Salary'}
                   rightText={empBasicSalary}
                 />
+
+                <ProfileCardBody
+                  leftText={'House Rent'}
+                  rightText={empHouseRent}
+                />
+                <ProfileCardBody
+                  leftText={'Utilities'}
+                  rightText={empUtilities}
+                />
+
+                <ProfileCardBody
+                  leftText={'Allowances'}
+                  rightText={empAllowance}
+                />
+
                 <ProfileCardBody
                   leftText={'Gross Salary'}
                   rightText={empGrossSalary}
-                />
-                <ProfileCardBody
-                  leftText={'Allowance'}
-                  rightText={empAllowance}
                 />
 
                 {/* <ProfileCardBody
@@ -203,14 +214,14 @@ const ProfileCard = ({
                 />
                 <ProfileCardBody leftText={'EOBI'} rightText={empEOBI} /> */}
 
-                <ProfileCardBody
+                {/* <ProfileCardBody
                   leftText={'House Rent'}
                   rightText={empHouseRent}
                 />
                 <ProfileCardBody
                   leftText={'Utilities'}
                   rightText={empUtilities}
-                />
+                /> */}
               </CollapseBody>
             </Collapse>
           </View>
@@ -311,7 +322,7 @@ const ProfileCard = ({
 const styles = EStyleSheet.create({
   header: {
     fontSize: '0.62rem',
-    // fontFamily: fontFamily.ceraBold,
+    fontFamily: fontFamily.ceraBold,
     color: '#363636',
     fontWeight: '700',
   },

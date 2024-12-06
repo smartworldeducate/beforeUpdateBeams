@@ -85,7 +85,7 @@ const TimeLine = props => {
             <Image
               style={{height: hp(2.5), width: wp(5)}}
               source={{uri: 'timelinecircle'}}
-              resizeMode="cover"
+              resizeMode="contain"
             />
           </View>
           <View

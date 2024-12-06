@@ -45,7 +45,7 @@ const Profile = props => {
         <View
           style={{
             flexDirection: 'row',
-            marginTop: hp('3'),
+            marginTop: hp('7'),
             marginHorizontal: wp('2'),
             height: hp('5'),
           }}>
@@ -62,8 +62,8 @@ const Profile = props => {
           <View
             style={{
               position: 'absolute',
-              marginTop: hp('7.65'),
-              left: wp('37.25'),
+              marginTop: hp('11.65'),
+              left: wp('36.5'),
               zIndex: 1,
 
               borderRadius: wp('50'),
@@ -74,12 +74,12 @@ const Profile = props => {
               source={{uri: profileHere?.userData?.emp_result?.EMP_PHOTO}}
               style={{
                 height: hp('12.5'),
-                width: wp('27'),
+                width: wp('27.5'),
                 borderRadius: wp('50'),
                 borderWidth: wp('0.25'),
                 borderColor: '#cfdbfa',
               }}
-              resizeMode={'contain'}
+              resizeMode={'cover'}
             />
           </View>
 
@@ -88,7 +88,7 @@ const Profile = props => {
               position: 'absolute',
               zIndex: 1,
               marginTop: hp('20.5'),
-              left: wp('59'),
+              left: wp('61'),
               height: hp('1.5'),
               width: wp('3'),
               borderRadius: wp('50'),
@@ -232,11 +232,17 @@ const Profile = props => {
             empBasicSalary={Number(
               profileHere?.userData?.profile_result?.BASIC_SAL,
             ).toLocaleString()}
-            empGrossSalary={Number(
-              profileHere?.userData?.profile_result?.GROSS_SAL,
+            empHouseRent={Number(
+              profileHere?.userData?.profile_result?.HOUSE_RENT,
+            ).toLocaleString()}
+            empUtilities={Number(
+              profileHere?.userData?.profile_result?.UTILITIES,
             ).toLocaleString()}
             empAllowance={Number(
               profileHere?.userData?.profile_result?.ALLOWANCES,
+            ).toLocaleString()}
+            empGrossSalary={Number(
+              profileHere?.userData?.profile_result?.GROSS_SAL,
             ).toLocaleString()}
             // empTakeHomeSalary={Number(
             //   profileHere?.userData?.profile_result?.TAKE_HOME,
@@ -247,12 +253,13 @@ const Profile = props => {
             // empAccounTitle={profileHere?.userData?.profile_result?.AC_TITLE}
             // empEOBI={profileHere?.userData?.profile_result?.EOBI_NUMBER}
 
-            empHouseRent={Number(
-              profileHere?.userData?.profile_result?.HOUSE_RENT,
-            ).toLocaleString()}
-            empUtilities={Number(
-              profileHere?.userData?.profile_result?.UTILITIES,
-            ).toLocaleString()}
+            // empHouseRent={Number(
+            //   profileHere?.userData?.profile_result?.HOUSE_RENT,
+            // ).toLocaleString()}
+            // empUtilities={Number(
+            //   profileHere?.userData?.profile_result?.UTILITIES,
+            // ).toLocaleString()}
+
             empMobilePrimary={profileHere?.userData?.profile_result?.MOB_PHONE}
             empMobileSecondary={profileHere?.userData?.profile_result?.PHONE_NO}
             empEmail={profileHere?.userData?.profile_result?.E_MAIL}
@@ -281,33 +288,33 @@ const styles = EStyleSheet.create({
   },
   empName: {
     fontSize: '0.73rem',
-    // fontFamily: fontFamily.ceraBold,
+    fontFamily: fontFamily.ceraBold,
     color: '#363636',
     fontWeight: '700',
     paddingVertical: hp('0.35'),
   },
   empId: {
     fontSize: '0.5rem',
-    // fontFamily: fontFamily.ceraBold,
+    fontFamily: fontFamily.ceraBold,
     color: '#2D8E00',
     fontWeight: '700',
     textAlign: 'center',
   },
   empDesignation: {
     fontSize: '0.6rem',
-    // fontFamily: fontFamily.ceraMedium,
+    fontFamily: fontFamily.ceraMedium,
     color: '#979797',
     fontWeight: '500',
   },
   firstText: {
     fontSize: '0.62rem',
-    // fontFamily: fontFamily.ceraBold,
+    fontFamily: fontFamily.ceraBold,
     color: '#353535',
     fontWeight: '700',
   },
   secondText: {
     fontSize: '0.55rem',
-    // fontFamily: fontFamily.ceraMedium,
+    fontFamily: fontFamily.ceraMedium,
     color: '#979797',
     fontWeight: '500',
   },

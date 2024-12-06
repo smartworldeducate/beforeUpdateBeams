@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef, useCallback} from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import Ficon from 'react-native-fontawesome-pro';
 import Menu from 'react-native-vector-icons/Entypo';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -8,13 +8,13 @@ import LottieView from 'lottie-react-native';
 
 import Icon from 'react-native-fontawesome-pro';
 import Swiper from 'react-native-swiper';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {library} from '@fortawesome/fontawesome-svg-core';
-import {fat} from '@fortawesome/pro-thin-svg-icons';
-import {fal} from '@fortawesome/pro-light-svg-icons';
-import {far} from '@fortawesome/pro-regular-svg-icons';
-import {fas} from '@fortawesome/pro-solid-svg-icons';
-import {fad} from '@fortawesome/pro-duotone-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fat } from '@fortawesome/pro-thin-svg-icons';
+import { fal } from '@fortawesome/pro-light-svg-icons';
+import { far } from '@fortawesome/pro-regular-svg-icons';
+import { fas } from '@fortawesome/pro-solid-svg-icons';
+import { fad } from '@fortawesome/pro-duotone-svg-icons';
 
 library.add(fat, fal, far, fas, fad);
 
@@ -37,31 +37,31 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {useDispatch, useSelector} from 'react-redux';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
 import colors from '../Styles/colors';
 import HeaderTop from '../Components/Headers/HeaderTop';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Calinder from '../Components/Calinder';
 import fontSize from '../Styles/fontSize';
 import fontFamily from '../Styles/fontFamily';
-import {PieChart} from 'react-native-gifted-charts';
-import {profileAction} from '../features/profileSlice/profileSlice';
+import { PieChart } from 'react-native-gifted-charts';
+import { profileAction } from '../features/profileSlice/profileSlice';
 import Loader from '../Components/Loader/Loader';
-import {messagesAction} from '../features/MessagesSlice/MessagesSlice';
-import {LeaveBalanceAction} from '../features/LeaveBalanceSlice/LeaveBalanceSlice';
+import { messagesAction } from '../features/MessagesSlice/MessagesSlice';
+import { LeaveBalanceAction } from '../features/LeaveBalanceSlice/LeaveBalanceSlice';
 import LineSeprator from '../Components/LineSeprator/LineSeprator';
-import {FinYearAction} from '../features/FinYearSlice/FinYearSlice';
-import {WorkFromHomeAction} from '../features/WorkFromHomeSlice/WorkFromHomeGet';
+import { FinYearAction } from '../features/FinYearSlice/FinYearSlice';
+import { WorkFromHomeAction } from '../features/WorkFromHomeSlice/WorkFromHomeGet';
 import {
   messagesActionHomePage,
   textColr,
 } from '../features/MessagesSlice/MessageSliceHomePage';
-import {SalaryYearsAction} from '../features/SalaryYearsSlice/SalaryYearsSlice';
-import {messageReadAction} from '../features/MessagesSlice/MessageLikeSlice';
+import { SalaryYearsAction } from '../features/SalaryYearsSlice/SalaryYearsSlice';
+import { messageReadAction } from '../features/MessagesSlice/MessageLikeSlice';
 import ViewMessageDetailModal from '../Components/Modal/ViewMessageDetailModal';
-import {messageDetailAction} from '../features/MessagesSlice/MessageDetailSlice';
-import {messageStatusLikeAction} from '../features/MessagesSlice/MessageStatusLike';
+import { messageDetailAction } from '../features/MessagesSlice/MessageDetailSlice';
+import { messageStatusLikeAction } from '../features/MessagesSlice/MessageStatusLike';
 import ReporteeProfileModal from '../Components/Modal/ReporteeProfileModal';
 
 import RNPrint from 'react-native-print';
@@ -106,7 +106,7 @@ const HomeScreen = props => {
     }
 
     try {
-      await RNPrint.print({filePath: pdfUrl});
+      await RNPrint.print({ filePath: pdfUrl });
     } catch (error) {
       console.error('error', error);
       Alert.alert('Error', 'Failed to print PDF');
@@ -210,14 +210,14 @@ const HomeScreen = props => {
     setRefreshing(false);
   };
 
-  const renderItem = ({item, index}) => {
+  const renderItem = ({ item, index }) => {
     return (
       <LinearGradient
         useAngle={true}
         angle={180}
-        angleCenter={{x: 0.5, y: 0.5}}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 0}}
+        angleCenter={{ x: 0.5, y: 0.5 }}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
         colors={['#FFFFFF', '#d9f3fa']}
         locations={[0, 1]}
         style={{
@@ -275,7 +275,7 @@ const HomeScreen = props => {
                   : 'fat fa-check-double'
               }
               size={hp(2.25)}
-              style={{color: item?.IS_READ_STATUS === 'Y' ? '#1C37A4' : 'grey'}}
+              style={{ color: item?.IS_READ_STATUS === 'Y' ? '#1C37A4' : 'grey' }}
             />
           </View>
 
@@ -378,7 +378,7 @@ const HomeScreen = props => {
     console.log('onPressInElse');
   };
 
-  const renderItemReportees = ({item, index}) => {
+  const renderItemReportees = ({ item, index }) => {
     return (
       <TouchableOpacity
         activeOpacity={0.5}
@@ -386,11 +386,11 @@ const HomeScreen = props => {
           index === 5
             ? onPressPlusReportee
             : () =>
-                onPressReporteeItem({
-                  item: item?.EMPLOYEE_ID,
-                  itemBranchId: item?.BRANCH_ID,
-                  itemDeptId: item?.DEPARTMENT_ID,
-                })
+              onPressReporteeItem({
+                item: item?.EMPLOYEE_ID,
+                itemBranchId: item?.BRANCH_ID,
+                itemDeptId: item?.DEPARTMENT_ID,
+              })
         }
         style={{
           justifyContent: 'center',
@@ -526,7 +526,7 @@ const HomeScreen = props => {
     }
   }, [leaveBalanceHere]);
 
-  const renderItemLeaves = ({item, index}) => {
+  const renderItemLeaves = ({ item, index }) => {
     return (
       <>
         {item?.LEAVE_TYPE == 'Casual Leave' && (
@@ -535,14 +535,14 @@ const HomeScreen = props => {
               <FontAwesomeIcon
                 icon="fat fa-masks-theater"
                 size={hp(3.75)}
-                style={{color: '#BB8FCE'}}
+                style={{ color: '#BB8FCE' }}
               />
             </View>
             <View style={styles.LBNestedRightView}>
               <Text style={styles.countText}>
                 {item?.BALANCE == null ||
-                item?.BALANCE == '' ||
-                item?.BALANCE == undefined
+                  item?.BALANCE == '' ||
+                  item?.BALANCE == undefined
                   ? 0
                   : item?.BALANCE}
               </Text>
@@ -557,14 +557,14 @@ const HomeScreen = props => {
               <FontAwesomeIcon
                 icon="fat fa-temperature-half"
                 size={hp(3.75)}
-                style={{color: '#DC7633'}}
+                style={{ color: '#DC7633' }}
               />
             </View>
             <View style={styles.LBNestedRightView}>
               <Text style={styles.countText}>
                 {item?.BALANCE == null ||
-                item?.BALANCE == '' ||
-                item?.BALANCE == undefined
+                  item?.BALANCE == '' ||
+                  item?.BALANCE == undefined
                   ? 0
                   : item?.BALANCE}
               </Text>
@@ -579,18 +579,18 @@ const HomeScreen = props => {
               <FontAwesomeIcon
                 icon="fat fa-island-tropical"
                 size={hp(3.75)}
-                style={{color: '#58D68D'}}
+                style={{ color: '#58D68D' }}
               />
             </View>
             <View style={styles.LBNestedRightView}>
               <Text style={styles.countText}>
                 {item?.BALANCE == null ||
-                item?.BALANCE == '' ||
-                item?.BALANCE == undefined
+                  item?.BALANCE == '' ||
+                  item?.BALANCE == undefined
                   ? 0
                   : item?.BALANCE}
               </Text>
-              <Text style={styles.titleText}>Annual Leavess</Text>
+              <Text style={styles.titleText}>Annual Leaves</Text>
             </View>
           </View>
         )}
@@ -692,10 +692,10 @@ const HomeScreen = props => {
             : colors.appBackGroundColor,
       }}>
       <LinearGradient
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 0}}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
         colors={['#1C37A5', '#4D69DC']}
-        style={{height: hp('0')}}>
+        style={{ height: hp('0') }}>
         <StatusBar
           translucent
           backgroundColor="transparent"
@@ -724,7 +724,7 @@ const HomeScreen = props => {
             <Loader></Loader>
           ) : (
             <ScrollView
-              contentContainerStyle={{flexGrow: 1, backgroundColor: '#F7F8FA'}}
+              contentContainerStyle={{ flexGrow: 1, backgroundColor: '#F7F8FA' }}
               refreshControl={
                 <RefreshControl
                   refreshing={refreshing}
@@ -803,9 +803,9 @@ const HomeScreen = props => {
                 <LinearGradient
                   useAngle={true}
                   angle={180}
-                  angleCenter={{x: 0.5, y: 0.5}}
-                  start={{x: 0, y: 0}}
-                  end={{x: 1, y: 0}}
+                  angleCenter={{ x: 0.5, y: 0.5 }}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
                   colors={['#FEEBD8', '#FFFBF7']}
                   locations={[0, 1]}
                   style={{
@@ -824,16 +824,18 @@ const HomeScreen = props => {
                       paddingLeft: wp('3'),
                       justifyContent: 'center',
                     }}>
-                    <View style={{justifyContent: 'center'}}>
+                    <View style={{ justifyContent: 'center' }}>
                       <Text
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
                         style={[
                           styles.serviceSection,
                           {
                             textAlign: 'left',
                             fontSize: hp('2.5'),
-                            letterSpacing: -1.5,
+                            letterSpacing: -0.5,
                             // fontFamily: fontFamily.ceraBold,
-                            fontWeight: '300',
+                            fontWeight: '500',
                           },
                         ]}>
                         {
@@ -844,10 +846,10 @@ const HomeScreen = props => {
                         <Text
                           style={{
                             fontSize: hp('2.15'),
-                            letterSpacing: -0.5,
+                            letterSpacing: -0.75,
                             // fontFamily: fontFamily.ceraMedium,
                             fontWeight: '300',
-                            color: '#999696',
+                            color: 'black',
                           }}>
                           {`  years`}
                         </Text>
@@ -858,7 +860,7 @@ const HomeScreen = props => {
                           color: '#999696',
                           // fontFamily: fontFamily.ceraMedium,
                           fontWeight: '300',
-                          letterSpacing: 0.05,
+                          letterSpacing: -0.25,
                         }}>
                         {`Service`}
                       </Text>
@@ -873,8 +875,8 @@ const HomeScreen = props => {
                     }}>
                     <FontAwesomeIcon
                       icon="fat fa-calendar-range"
-                      size={hp('5')}
-                      style={{color: '#999696'}}
+                      size={hp('4.5')}
+                      style={{ color: '#999696' }}
                     />
                   </View>
                 </LinearGradient>
@@ -882,9 +884,9 @@ const HomeScreen = props => {
                 <LinearGradient
                   useAngle={true}
                   angle={180}
-                  angleCenter={{x: 0.5, y: 0.5}}
-                  start={{x: 0, y: 0}}
-                  end={{x: 1, y: 0}}
+                  angleCenter={{ x: 0.5, y: 0.5 }}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
                   colors={['#DAFFE6', '#F6FFF7']}
                   locations={[0, 1]}
                   style={{
@@ -903,7 +905,7 @@ const HomeScreen = props => {
                       paddingLeft: wp('3'),
                       justifyContent: 'center',
                     }}>
-                    <View style={{justifyContent: 'center'}}>
+                    <View style={{ justifyContent: 'center' }}>
                       <Text
                         numberOfLines={1}
                         ellipsizeMode={'tail'}
@@ -914,7 +916,7 @@ const HomeScreen = props => {
                             fontSize: hp('2.35'),
 
                             // fontFamily: fontFamily.ceraBold,
-                            fontWeight: '600',
+                            fontWeight: '500',
                           },
                         ]}>
                         {
@@ -928,7 +930,7 @@ const HomeScreen = props => {
                           color: '#999696',
                           // fontFamily: fontFamily.ceraMedium,
                           fontWeight: '300',
-                          letterSpacing: 0.05,
+                          letterSpacing: -0.25,
                         }}>
                         {`Status`}
                       </Text>
@@ -943,8 +945,8 @@ const HomeScreen = props => {
                     }}>
                     <FontAwesomeIcon
                       icon="fat fa-badge-check"
-                      size={hp('5')}
-                      style={{color: '#999696'}}
+                      size={hp('4.5')}
+                      style={{ color: '#999696' }}
                     />
                   </View>
                 </LinearGradient>
@@ -952,15 +954,16 @@ const HomeScreen = props => {
                 <LinearGradient
                   useAngle={true}
                   angle={180}
-                  angleCenter={{x: 0.5, y: 0.5}}
-                  start={{x: 0, y: 0}}
-                  end={{x: 1, y: 0}}
+                  angleCenter={{ x: 0.5, y: 0.5 }}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
                   colors={['#DAEBFF', '#F6FDFF']}
                   locations={[0, 1]}
                   style={{
                     flex: 0.31,
                     justifyContent: 'center',
                     height: hp('14'),
+                   
                     borderRadius: wp('3'),
                     shadowColor: 'rgba(0,0,0,0.5)',
                     shadowOpacity: 0.5,
@@ -973,31 +976,35 @@ const HomeScreen = props => {
                       paddingLeft: wp('3'),
                       justifyContent: 'center',
                     }}>
-                    <View style={{justifyContent: 'center'}}>
+                    <View style={{ justifyContent: 'center' }}>
                       <Text
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
                         style={[
                           styles.serviceSection,
                           {
                             textAlign: 'left',
                             fontSize: hp('2.35'),
-                            letterSpacing: -0.5,
+                            letterSpacing: -1,
                             // fontFamily: fontFamily.ceraBold,
-                            fontWeight: '600',
+                            fontWeight: '500',
                           },
                         ]}>
                         {profileHere?.empTimeIn == null ||
-                        profileHere?.empTimeIn == undefined ||
-                        profileHere?.empTimeIn == ''
+                          profileHere?.empTimeIn == undefined ||
+                          profileHere?.empTimeIn == ''
                           ? '--:--:--'
                           : profileHere?.empTimeIn}
                       </Text>
                       <Text
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
                         style={{
                           fontSize: hp('1.65'),
                           color: '#999696',
                           // fontFamily: fontFamily.ceraMedium,
                           fontWeight: '300',
-                          letterSpacing: 0.05,
+                          letterSpacing: -0.25,
                         }}>
                         {`Attendance`}
                       </Text>
@@ -1011,15 +1018,14 @@ const HomeScreen = props => {
                       paddingRight: wp('2'),
                     }}>
                     <FontAwesomeIcon
-                      icon={`fat fa-clock-${
-                        profileHere?.empTimeIn == null ||
+                      icon={`fat fa-clock-${profileHere?.empTimeIn == null ||
                         profileHere?.empTimeIn == undefined ||
                         profileHere?.empTimeIn == ''
-                          ? 'nine'
-                          : firstValueInWords
-                      }`}
-                      size={hp('5')}
-                      style={{color: '#999696'}}
+                        ? 'nine'
+                        : firstValueInWords
+                        }`}
+                      size={hp('4.5')}
+                      style={{ color: '#999696' }}
                     />
                   </View>
                 </LinearGradient>
@@ -1110,7 +1116,7 @@ const HomeScreen = props => {
                 </TouchableOpacity>
               )}
 
-              <View style={{marginHorizontal: wp('5.5')}}>
+              <View style={{ marginHorizontal: wp('5.5') }}>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -1124,7 +1130,7 @@ const HomeScreen = props => {
                     }}>
                     <Text style={styles.messageText}>Messages</Text>
                   </View>
-                  <View style={{flex: 0.45}}></View>
+                  <View style={{ flex: 0.45 }}></View>
                   <TouchableOpacity
                     activeOpacity={0.8}
                     onPress={() => navigation.navigate('ViewAllMessages')}
@@ -1133,13 +1139,13 @@ const HomeScreen = props => {
                       justifyContent: 'center',
                       alignItems: 'flex-end',
                     }}>
-                    <Text style={[styles.messageText, {fontSize: hp('1.65')}]}>
+                    <Text style={[styles.messageText, { fontSize: hp('1.65') }]}>
                       View All
                     </Text>
                   </TouchableOpacity>
                 </View>
 
-                <View style={{marginHorizontal: wp('-2'), marginTop: hp('-1')}}>
+                <View style={{ marginHorizontal: wp('-2'), marginTop: hp('-1') }}>
                   <FlatList
                     data={messagesSlicedData}
                     renderItem={renderItem}
@@ -1182,9 +1188,9 @@ const HomeScreen = props => {
                   <LinearGradient
                     useAngle={true}
                     angle={180}
-                    angleCenter={{x: 0.5, y: 0.5}}
-                    start={{x: 0, y: 0}}
-                    end={{x: 1, y: 0}}
+                    angleCenter={{ x: 0.5, y: 0.5 }}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
                     colors={['#FFFFFF', '#d9f3fa']}
                     locations={[0, 1]}
                     style={{
@@ -1260,19 +1266,19 @@ const HomeScreen = props => {
                         // onPress={() => navigation.navigate('ApplyLeave')}
                         onPress={onPressTempLeaveModal}
                         style={styles.LBBtnView}>
-                        <Text style={[styles.btnText, {color: '#1C37A4'}]}>
+                        <Text style={[styles.btnText, { color: '#1C37A4' }]}>
                           Apply Leave
                         </Text>
                       </TouchableOpacity>
-                      <View style={{flex: 0.1}}></View>
+                      <View style={{ flex: 0.1 }}></View>
                       <TouchableOpacity
                         activeOpacity={0.8}
                         onPress={() => navigation.navigate('AttendanceTab')}
                         style={[
                           styles.LBBtnView,
-                          {backgroundColor: '#1C37A4'},
+                          { backgroundColor: '#1C37A4' },
                         ]}>
-                        <Text style={[styles.btnText, {color: '#FFFFFF'}]}>
+                        <Text style={[styles.btnText, { color: '#FFFFFF' }]}>
                           View Calendar
                         </Text>
                       </TouchableOpacity>
@@ -1455,7 +1461,7 @@ const HomeScreen = props => {
           <></>
         )}
 
-        <View style={{marginHorizontal: wp('3')}}>
+        <View style={{ marginHorizontal: wp('3') }}>
           {/* <Button title="Print PDF" onPress={handlePrint} /> */}
         </View>
       </>
@@ -1497,7 +1503,7 @@ const styles = EStyleSheet.create({
     marginHorizontal: hp(2.3),
     borderRadius: hp(2),
   },
-  modalText: {color: '#363636', paddingLeft: hp(2)},
+  modalText: { color: '#363636', paddingLeft: hp(2) },
   textInputView: {
     justifyContent: 'center',
     backgroundColor: colors.whiteColor,

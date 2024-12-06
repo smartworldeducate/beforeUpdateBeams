@@ -357,11 +357,11 @@ const LeaveHistory = props => {
   ];
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: colors.appBackGroundColor,
-      }}>
+    // <SafeAreaView
+    //   style={{
+    //     flex: 1,
+    //     backgroundColor: colors.appBackGroundColor,
+    //   }}>
       <>
         <View>
           <MainHeader
@@ -411,7 +411,7 @@ const LeaveHistory = props => {
           </View>
         </ScrollView>
       </>
-    </SafeAreaView>
+    // </SafeAreaView>
   );
 };
 
