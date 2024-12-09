@@ -1092,7 +1092,7 @@ const MarkAttendance = ({route, ...props}) => {
                     fontWeight: '300',
                     fontSize: 16,
                   }}>
-                  Save
+                  Update
                 </Text>
               </View>
             </TouchableOpacity>
@@ -1160,7 +1160,7 @@ const MarkAttendance = ({route, ...props}) => {
                   textAlign: 'center',
                   fontStyle: 'italic',
                 }}>
-                Right now there are no students.
+                Today has been marked as an off day.
               </Text>
             }
           />
@@ -1244,7 +1244,7 @@ const MarkAttendance = ({route, ...props}) => {
 
       {showSuccessModal && (
         <InspireSuccessModal
-          textUpper={'Successfully Uploaded'}
+          textUpper={'Successfully Updated'}
           textLower={uploadStdAttendanceResponseMessageHere}
           btnText={'OK'}
           onPressOpacity={closeModal}
